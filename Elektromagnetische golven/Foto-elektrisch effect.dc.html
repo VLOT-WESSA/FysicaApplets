@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#0e131b"/>
+  <rect x="30" y="35" width="40" height="30" rx="4" fill="none" stroke="#33485f" stroke-width="2"/>
+  <rect x="36" y="40" width="4" height="20" fill="#e6d28a"/>
+  <rect x="60" y="40" width="4" height="20" fill="#9aa3ad"/>
+  <circle cx="44" cy="50" r="2" fill="#6fb0ff"/>
+  <circle cx="52" cy="48" r="2" fill="#6fb0ff"/>
+  <circle cx="20" cy="50" r="3" fill="#7400ff"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#eceae4}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+  select{font-family:inherit}
+</style>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:28px 28px 40px">
+  <div style="max-width:1080px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:4px">
+      <h1 style="font-size:26px;font-weight:700;margin:0;letter-spacing:-.01em">Foto-elektrisch effect</h1>
+      <span style="font-size:13px;color:#8c8576">interactieve simulatie</span>
+    </div>
+    <p style="margin:0 0 20px;font-size:14px;color:#6f685c;max-width:640px;line-height:1.5">Schijn licht op een metalen plaat in een vacuümbuis. Boven een drempelfrequentie maken fotonen elektronen los; de batterijspanning bepaalt of ze de collector bereiken.</p>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+
+      <!-- APPARAAT -->
+      <div style="flex:1 1 480px;min-width:340px;display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <canvas ref="{{ tubeRef }}" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:14px">Lichtbron</div>
+
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:14px;font-weight:500">Intensiteit</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ intensity }}%</span>
+          </div>
+          <input type="range" min="0" max="100" step="1" value="{{ intensity }}" onChange="{{ onIntensity }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:20px">
+
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:14px;font-weight:500">Golflengte</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ wavelength }} nm · {{ regionStr }}</span>
+          </div>
+          <input type="range" min="100" max="850" step="1" value="{{ wavelength }}" onChange="{{ onWavelength }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:10px">
+          <div style="position:relative;height:14px;border-radius:7px;background:linear-gradient(90deg,#2a0640 0%,#7400ff 37.3%,#0040ff 46.7%,#00d5ff 52%,#28ff00 57.3%,#eaff00 64%,#ff9000 66.7%,#ff0000 80%,#7a0000 86.7%,#2a0000 100%)">
+            <div style="position:absolute;top:-4px;width:4px;height:22px;background:#2a2723;border:1.5px solid #fff;border-radius:2px;transform:translateX(-50%);left:{{ markerPct }}"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#a39c8d;margin-top:4px">
+            <span>UV</span><span>zichtbaar licht</span><span>IR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEDIENING -->
+      <div style="flex:0 1 320px;min-width:280px;display:flex;flex-direction:column;gap:14px">
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Doelplaat</div>
+          <select value="{{ materialIndex }}" onChange="{{ onMaterial }}" style="width:100%;padding:9px 10px;border:1px solid #ddd6c8;border-radius:8px;background:#fff;font-size:14px;color:#2a2723">
+            <option value="0">Natrium — 2.28 eV</option>
+            <option value="1">Calcium — 2.90 eV</option>
+            <option value="2">Zink — 4.30 eV</option>
+            <option value="3">Koper — 4.70 eV</option>
+            <option value="4">Platina — 6.35 eV</option>
+          </select>
+          <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:13px">
+            <span style="color:#6f685c">Uittree-energie W</span>
+            <span style="font-family:'IBM Plex Mono',monospace;color:#3a352c">{{ workFnStr }}</span>
+          </div>
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Schakeling</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:14px;font-weight:500">Batterijspanning</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ voltageStr }} V</span>
+          </div>
+          <input type="range" min="-8" max="8" step="0.1" value="{{ voltage }}" onChange="{{ onVoltage }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#f4f1ea;border-radius:10px;padding:12px 14px">
+            <span style="font-size:13px;color:#6f685c">Stroom (ammeter)</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:#1f9e8f">{{ currentStr }}</span>
+          </div>
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Metingen</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
+            <span style="color:#6f685c">Foton-energie</span><span style="font-family:'IBM Plex Mono',monospace">{{ eStr }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
+            <span style="color:#6f685c">Max. kin. energie</span><span style="font-family:'IBM Plex Mono',monospace">{{ keStr }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0">
+            <span style="color:#6f685c">Stopspanning</span><span style="font-family:'IBM Plex Mono',monospace">{{ vstopStr }}</span>
+          </div>
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Grafiek</div>
+            <button onClick="{{ onToggleGraph }}" style="font-family:inherit;font-size:12px;border:1px solid #ddd6c8;background:#fff;border-radius:6px;padding:3px 10px;cursor:pointer;color:#6f685c">{{ toggleLabel }}</button>
+          </div>
+          <sc-if value="{{ showGraph }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;gap:5px;margin-bottom:10px">
+                <button onClick="{{ onGraphCv }}" style="flex:1;font-family:inherit;font-size:11px;border:1px solid #ddd6c8;border-radius:7px;padding:7px 4px;cursor:pointer;line-height:1.2;background:{{ cvBg }};color:{{ cvFg }}">I &ndash; U</button>
+                <button onClick="{{ onGraphCi }}" style="flex:1;font-family:inherit;font-size:11px;border:1px solid #ddd6c8;border-radius:7px;padding:7px 4px;cursor:pointer;line-height:1.2;background:{{ ciBg }};color:{{ ciFg }}">I &ndash; intens.</button>
+                <button onClick="{{ onGraphEf }}" style="flex:1;font-family:inherit;font-size:11px;border:1px solid #ddd6c8;border-radius:7px;padding:7px 4px;cursor:pointer;line-height:1.2;background:{{ efBg }};color:{{ efFg }}">E &ndash; f</button>
+              </div>
+              <canvas ref="{{ graphRef }}" style="width:100%;height:auto;display:block"></canvas>
+            </div>
+          </sc-if>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1080,&quot;height&quot;:720},&quot;electronColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#6fb0ff&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tubeStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dark&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;showGraph&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { materialIndex: 0, wavelength: 400, intensity: 50, voltage: 0, graph: 'cv', showGraph: true };
+  tubeRef = React.createRef();
+  graphRef = React.createRef();
+  materials = [
+    { name: 'Natrium',  W: 2.28, color: '#e6d28a' },
+    { name: 'Calcium',  W: 2.90, color: '#dcd6c6' },
+    { name: 'Zink',     W: 4.30, color: '#c2c7cc' },
+    { name: 'Koper',    W: 4.70, color: '#cf8350' },
+    { name: 'Platina',  W: 6.35, color: '#d3d6da' },
+  ];
+  photons = [];
+  electrons = [];
+  spawnAcc = 0;
+  lastTs = 0;
+  W = 560; H = 400;
+  geo = { lampX: 72, lampY: 205, targetFace: 158, targetEmit: 172, collectorFace: 408, plateTop: 138, plateBot: 268 };
+
+  // ---- physics ----
+  photonE(wl) { return 1240 / wl; }
+  keMax() {
+    const m = this.materials[this.state.materialIndex];
+    return Math.max(0, this.photonE(this.state.wavelength) - m.W);
+  }
+  fracFor(U, KE) {
+    if (KE <= 0) return 0;
+    if (U >= 0) return 1;
+    if (U > -KE) return 1 + U / KE;
+    return 0;
+  }
+  currentVal() {
+    return (this.state.intensity / 100) * this.fracFor(this.state.voltage, this.keMax());
+  }
+
+  // ---- lifecycle ----
+  componentDidMount() {
+    if (this.props.showGraph === false) this.setState({ showGraph: false });
+    this.setupTube();
+    this.drawTube();
+    this.raf = requestAnimationFrame(this.loop);
+    this.drawGraph();
+    this._onResize = () => { this.setupTube(); this.drawGraph(); };
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('resize', this._onResize);
+  }
+  componentDidUpdate() { this.drawGraph(); }
+
+  setupTube() {
+    const c = this.tubeRef.current; if (!c) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    c.width = this.W * dpr; c.height = this.H * dpr; this.dpr = dpr;
+  }
+
+  // ---- animation step ----
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts;
+    this.step(dt);
+    this.drawTube();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  step(dt) {
+    const g = this.geo;
+    const KE = this.keMax();
+    const U = this.state.voltage;
+    // spawn photons
+    if (this.state.intensity > 0) {
+      this.spawnAcc += dt * (this.state.intensity / 100) * 42;
+      while (this.spawnAcc >= 1) {
+        this.spawnAcc -= 1;
+        if (this.photons.length < 420) {
+          const ty = g.plateTop + 8 + Math.random() * (g.plateBot - g.plateTop - 16);
+          this.photons.push({ ty, t: 0, x: g.lampX, y: g.lampY });
+        }
+      }
+    }
+    // move photons
+    const pspeed = 300;
+    for (const p of this.photons) {
+      const dx = g.targetFace - g.lampX, dy = p.ty - g.lampY;
+      const dist = Math.hypot(dx, dy);
+      p.t += pspeed * dt / dist;
+      if (p.t >= 1) {
+        p.dead = true;
+        if (KE > 0 && this.electrons.length < 320) {
+          const Ee = Math.random() * KE;
+          const S = Math.sqrt(2 * 40 * (g.collectorFace - g.targetEmit));
+          this.electrons.push({
+            x: g.targetEmit, y: p.ty,
+            vx: S * Math.sqrt(Ee + 0.03),
+            vy: (Math.random() - 0.5) * 42,
+          });
+        }
+      } else {
+        p.x = g.lampX + dx * p.t; p.y = g.lampY + dy * p.t;
+      }
+    }
+    this.photons = this.photons.filter(p => !p.dead);
+    // electrons
+    const ax = 40 * U;
+    for (const e of this.electrons) {
+      e.vx += ax * dt;
+      e.x += e.vx * dt; e.y += e.vy * dt;
+      if (e.x >= g.collectorFace) e.dead = true;
+      else if (e.x <= g.targetEmit - 4) e.dead = true;
+      if (e.y < g.plateTop - 34 || e.y > g.plateBot + 34) e.dead = true;
+    }
+    this.electrons = this.electrons.filter(e => !e.dead);
+  }
+
+  // ---- colors ----
+  wlColor(wl) {
+    if (wl < 380) { const t = Math.max(0, Math.min(1, (wl - 260) / 120)); return `rgb(${Math.round((0.42 + 0.12 * t) * 255)},0,${Math.round((0.52 + 0.1 * t) * 255)})`; }
+    if (wl > 780) { const t = Math.max(0, Math.min(1, (920 - wl) / 140)); return `rgb(${Math.round(60 + 90 * t)},10,10)`; }
+    let R = 0, G = 0, B = 0, f = 1;
+    if (wl < 440) { R = -(wl - 440) / 60; G = 0; B = 1; }
+    else if (wl < 490) { R = 0; G = (wl - 440) / 50; B = 1; }
+    else if (wl < 510) { R = 0; G = 1; B = -(wl - 510) / 20; }
+    else if (wl < 580) { R = (wl - 510) / 70; G = 1; B = 0; }
+    else if (wl < 645) { R = 1; G = -(wl - 645) / 65; B = 0; }
+    else { R = 1; G = 0; B = 0; }
+    if (wl < 420) f = 0.35 + 0.65 * (wl - 380) / 40;
+    else if (wl > 700) f = 0.35 + 0.65 * (780 - wl) / 80;
+    return `rgb(${Math.round(R * f * 255)},${Math.round(G * f * 255)},${Math.round(B * f * 255)})`;
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  // ---- draw apparatus ----
+  drawTube() {
+    const c = this.tubeRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    const g = this.geo;
+    const wl = this.state.wavelength;
+    const col = this.wlColor(wl);
+    const m = this.materials[this.state.materialIndex];
+    const U = this.state.voltage;
+    const KE = this.keMax();
+    const light = this.props.tubeStyle === 'light';
+
+    ctx.fillStyle = light ? '#f2efe9' : '#0e131b';
+    ctx.fillRect(0, 0, this.W, this.H);
+
+    // wires
+    ctx.lineWidth = 3; ctx.strokeStyle = light ? '#9a948a' : '#5b6573'; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(g.targetFace, g.plateTop); ctx.lineTo(g.targetFace, 104); ctx.lineTo(118, 104); ctx.lineTo(118, 362); ctx.lineTo(252, 362);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(312, 362); ctx.lineTo(524, 362); ctx.lineTo(524, 212);
+    ctx.moveTo(524, 150); ctx.lineTo(524, 104); ctx.lineTo(g.collectorFace, 104); ctx.lineTo(g.collectorFace, g.plateTop);
+    ctx.stroke();
+
+    // battery
+    this.drawBattery(ctx, 282, 362, U);
+    // ammeter
+    this.drawAmmeter(ctx, 524, 181, this.currentVal());
+
+    // tube glass
+    ctx.save();
+    this.rr(ctx, 110, 118, 320, 172, 16);
+    ctx.fillStyle = light ? 'rgba(210,222,232,0.6)' : 'rgba(40,56,78,0.45)';
+    ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = light ? '#b9c2cc' : '#33485f';
+    ctx.stroke();
+    ctx.clip();
+
+    // light beam
+    if (this.state.intensity > 0) {
+      ctx.beginPath();
+      ctx.moveTo(g.lampX, g.lampY - 9);
+      ctx.lineTo(g.targetFace, g.plateTop - 2);
+      ctx.lineTo(g.targetFace, g.plateBot + 2);
+      ctx.lineTo(g.lampX, g.lampY + 9);
+      ctx.closePath();
+      const grad = ctx.createLinearGradient(g.lampX, 0, g.targetFace, 0);
+      grad.addColorStop(0, col);
+      grad.addColorStop(1, col);
+      ctx.globalAlpha = 0.16 + 0.34 * (this.state.intensity / 100);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // photons
+    ctx.fillStyle = col;
+    for (const p of this.photons) {
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, 6.2832); ctx.fill();
+    }
+
+    // electrons
+    const ecol = this.props.electronColor || '#6fb0ff';
+    for (const e of this.electrons) {
+      ctx.globalAlpha = 0.25; ctx.fillStyle = ecol;
+      ctx.beginPath(); ctx.arc(e.x, e.y, 5, 0, 6.2832); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.arc(e.x, e.y, 2.3, 0, 6.2832); ctx.fill();
+    }
+
+    // plates
+    ctx.fillStyle = m.color;
+    this.rr(ctx, g.targetFace - 8, g.plateTop, 9, g.plateBot - g.plateTop, 2); ctx.fill();
+    ctx.fillStyle = light ? '#c9cdd2' : '#9aa3ad';
+    this.rr(ctx, g.collectorFace, g.plateTop, 9, g.plateBot - g.plateTop, 2); ctx.fill();
+    ctx.restore();
+
+    // labels
+    ctx.font = "500 12px 'IBM Plex Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = light ? '#6f685c' : '#9aa6b4';
+    ctx.fillText('doel: ' + m.name, g.targetFace - 3, g.plateBot + 22);
+    ctx.fillText('collector', g.collectorFace + 4, g.plateBot + 22);
+
+    // lamp
+    ctx.fillStyle = light ? '#cfd3d8' : '#2b3340';
+    this.rr(ctx, 18, 178, 50, 54, 8); ctx.fill();
+    ctx.fillStyle = (this.state.intensity > 0) ? col : (light ? '#9a948a' : '#3a4351');
+    this.rr(ctx, 60, 186, 12, 38, 4); ctx.fill();
+    if (this.state.intensity > 0) {
+      ctx.globalAlpha = 0.4; ctx.beginPath(); ctx.arc(70, 205, 16, 0, 6.2832); ctx.fillStyle = col; ctx.fill(); ctx.globalAlpha = 1;
+    }
+  }
+
+  drawBattery(ctx, cx, cy, U) {
+    const posRight = U >= 0;
+    const longX = posRight ? cx + 9 : cx - 9;
+    const shortX = posRight ? cx - 9 : cx + 9;
+    ctx.strokeStyle = '#cfd5dd'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(longX, cy - 13); ctx.lineTo(longX, cy + 13); ctx.stroke();
+    ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(shortX, cy - 7); ctx.lineTo(shortX, cy + 7); ctx.stroke();
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.fillStyle = '#9aa6b4';
+    ctx.fillText('+', longX + (posRight ? 9 : -9), cy - 16);
+    ctx.fillText('\u2212', shortX + (posRight ? -9 : 9), cy - 16);
+    ctx.fillStyle = '#aeb8c4'; ctx.font = "500 12px 'IBM Plex Mono', monospace";
+    ctx.fillText('U = ' + U.toFixed(1) + ' V', cx, cy + 28);
+  }
+
+  drawAmmeter(ctx, cx, cy, I) {
+    ctx.beginPath(); ctx.arc(cx, cy, 30, 0, 6.2832);
+    ctx.fillStyle = '#f7f5f0'; ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#cfd5dd'; ctx.stroke();
+    // needle
+    const ang = -Math.PI / 4 + Math.max(0, Math.min(1, I)) * (Math.PI / 2);
+    ctx.save(); ctx.translate(cx, cy + 8); ctx.rotate(ang);
+    ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -22); ctx.stroke();
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(cx, cy + 8, 3, 0, 6.2832); ctx.fillStyle = '#2a2723'; ctx.fill();
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center';
+    ctx.fillText('A', cx, cy - 14);
+  }
+
+  // ---- draw graph ----
+  drawGraph() {
+    const c = this.graphRef.current; if (!c || !this.state.showGraph) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const W = 300, H = 200;
+    c.width = W * dpr; c.height = H * dpr;
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const L = 44, R = 12, T = 12, B = 34;
+    const px = (t) => L + t * (W - L - R);
+    const py = (t) => (H - B) - t * (H - B - T);
+
+    // axes
+    ctx.strokeStyle = '#ddd6c8'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.lineTo(W - R, H - B); ctx.stroke();
+    ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#a39c8d';
+
+    const m = this.materials[this.state.materialIndex];
+    const KE = this.keMax();
+    ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.2; ctx.lineJoin = 'round';
+
+    if (this.state.graph === 'cv') {
+      // I vs U, x:-8..8 y:0..1
+      const xmap = (U) => px((U + 8) / 16);
+      const ymap = (I) => py(I);
+      // zero-volt gridline
+      ctx.strokeStyle = '#eee8db'; ctx.beginPath(); ctx.moveTo(xmap(0), T); ctx.lineTo(xmap(0), H - B); ctx.stroke();
+      ctx.strokeStyle = '#1f9e8f';
+      ctx.beginPath();
+      for (let i = 0; i <= 80; i++) {
+        const U = -8 + 16 * i / 80;
+        const I = (this.state.intensity / 100) * this.fracFor(U, KE);
+        const X = xmap(U), Y = ymap(I);
+        if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+      }
+      ctx.stroke();
+      this.dot(ctx, xmap(this.state.voltage), ymap(this.currentVal()));
+      ctx.textAlign = 'center'; ctx.fillStyle = '#8c8576';
+      ctx.fillText('-8', xmap(-8), H - B + 14); ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('8', xmap(8), H - B + 14);
+      this.axisTitles(ctx, W, H, B, L, 'Spanning U (V)', 'Stroom I');
+    } else if (this.state.graph === 'ci') {
+      const xmap = (p) => px(p / 100);
+      const ymap = (I) => py(I);
+      const fr = this.fracFor(this.state.voltage, KE);
+      ctx.beginPath();
+      ctx.moveTo(xmap(0), ymap(0)); ctx.lineTo(xmap(100), ymap(fr));
+      ctx.stroke();
+      this.dot(ctx, xmap(this.state.intensity), ymap(this.currentVal()));
+      ctx.textAlign = 'center'; ctx.fillStyle = '#8c8576';
+      ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('100', xmap(100), H - B + 14);
+      this.axisTitles(ctx, W, H, B, L, 'Intensiteit (%)', 'Stroom I');
+    } else {
+      // E vs f, x:0..3 (1e15 Hz) y:0..8 eV
+      const fmax = 3, emax = 8;
+      const xmap = (f) => px(f / fmax);
+      const ymap = (e) => py(e / emax);
+      const h = 4.1357; // eV per 1e15 Hz
+      const fThresh = m.W / h;
+      ctx.beginPath();
+      ctx.moveTo(xmap(fThresh), ymap(0));
+      ctx.lineTo(xmap(fmax), ymap(Math.max(0, h * fmax - m.W)));
+      ctx.stroke();
+      // threshold tick
+      ctx.fillStyle = '#a39c8d'; ctx.textAlign = 'center';
+      const fNow = 299.79 / this.state.wavelength;
+      this.dot(ctx, xmap(Math.min(fmax, fNow)), ymap(Math.min(emax, KE)));
+      ctx.fillStyle = '#8c8576';
+      ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('3', xmap(3), H - B + 14);
+      this.axisTitles(ctx, W, H, B, L, 'Frequentie (10\u00B9\u2075 Hz)', 'Max. E (eV)');
+    }
+  }
+
+  dot(ctx, x, y) {
+    ctx.fillStyle = '#e8643c';
+    ctx.beginPath(); ctx.arc(x, y, 4.5, 0, 6.2832); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  axisTitles(ctx, W, H, B, L, xt, yt) {
+    ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#6f685c';
+    ctx.textAlign = 'center'; ctx.fillText(xt, L + (W - L - 12) / 2, H - 6);
+    ctx.save(); ctx.translate(12, (H - B) / 2 + 6); ctx.rotate(-Math.PI / 2);
+    ctx.fillText(yt, 0, 0); ctx.restore();
+  }
+
+  // ---- render ----
+  renderVals() {
+    const m = this.materials[this.state.materialIndex];
+    const E = this.photonE(this.state.wavelength);
+    const KE = this.keMax();
+    const I = this.currentVal();
+    const wl = this.state.wavelength;
+    const region = wl < 380 ? 'UV' : (wl > 700 ? 'IR' : 'zichtbaar');
+    const active = '#1f9e8f', inactive = '#fff';
+    const g = this.state.graph;
+    const tag = (k) => ({ bg: g === k ? active : inactive, fg: g === k ? '#fff' : '#6f685c' });
+    const cv = tag('cv'), ci = tag('ci'), ef = tag('ef');
+    return {
+      materialIndex: this.state.materialIndex,
+      wavelength: this.state.wavelength,
+      intensity: this.state.intensity,
+      voltage: this.state.voltage,
+      voltageStr: this.state.voltage.toFixed(1),
+      regionStr: region,
+      markerPct: ((wl - 100) / 750 * 100).toFixed(1) + '%',
+      workFnStr: m.W.toFixed(2) + ' eV',
+      eStr: E.toFixed(2) + ' eV',
+      keStr: KE > 0 ? KE.toFixed(2) + ' eV' : '0 (geen emissie)',
+      vstopStr: KE > 0 ? '\u2212' + KE.toFixed(2) + ' V' : '\u2014',
+      currentStr: I.toFixed(3),
+      showGraph: this.state.showGraph,
+      toggleLabel: this.state.showGraph ? 'verberg' : 'toon',
+      cvBg: cv.bg, cvFg: cv.fg, ciBg: ci.bg, ciFg: ci.fg, efBg: ef.bg, efFg: ef.fg,
+      tubeRef: this.tubeRef,
+      graphRef: this.graphRef,
+      onMaterial: (e) => this.setState({ materialIndex: Number(e.target.value) }),
+      onWavelength: (e) => this.setState({ wavelength: Number(e.target.value) }),
+      onIntensity: (e) => this.setState({ intensity: Number(e.target.value) }),
+      onVoltage: (e) => this.setState({ voltage: Number(e.target.value) }),
+      onGraphCv: () => this.setState({ graph: 'cv' }),
+      onGraphCi: () => this.setState({ graph: 'ci' }),
+      onGraphEf: () => this.setState({ graph: 'ef' }),
+      onToggleGraph: () => this.setState({ showGraph: !this.state.showGraph }),
+    };
+  }
+}
+</script>
+</body>
+</html>
