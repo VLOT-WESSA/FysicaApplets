@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#eceae4"/>
+  <rect x="20" y="22" width="26" height="12" rx="3" fill="#1f9e8f"/>
+  <rect x="52" y="22" width="26" height="12" rx="3" fill="#fff" stroke="#d9d3c6"/>
+  <rect x="20" y="44" width="26" height="20" rx="3" fill="#fff" stroke="#d9d3c6"/>
+  <rect x="52" y="44" width="26" height="20" rx="3" fill="#fff" stroke="#d9d3c6"/>
+  <rect x="20" y="70" width="58" height="8" rx="2" fill="#fff" stroke="#d9d3c6"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#eceae4}
+  button{font-family:inherit}
+</style>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:28px 28px 48px">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:4px">
+      <h1 style="font-size:27px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Natuurkunde simulaties</h1>
+      <span style="font-size:13px;color:#8c8576">interactieve applets</span>
+    </div>
+    <p style="margin:0 0 22px;font-size:14px;color:#6f685c;max-width:680px;line-height:1.5">Kies een onderwerp en open een simulatie.</p>
+
+    <!-- TABBLADEN -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px">
+      <sc-for list="{{ tabItems }}" as="tab" hint-placeholder-count="6">
+        <button onClick="{{ tab.onClick }}" style="display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;border:1px solid {{ tab.border }};background:{{ tab.bg }};color:{{ tab.fg }};transition:background .12s,color .12s">
+          <span style="width:9px;height:9px;border-radius:50%;flex:none;background:{{ tab.dot }}"></span>{{ tab.name }}
+        </button>
+      </sc-for>
+    </div>
+
+    <!-- ROOSTER MET APPLETS -->
+    <sc-if value="{{ gridView }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px">
+          <span style="width:13px;height:13px;border-radius:50%;flex:none;background:{{ topicColor }}"></span>
+          <h2 style="font-size:19px;font-weight:600;margin:0">{{ topicName }}</h2>
+          <span style="font-size:13px;color:#a39c8d">{{ appletCountStr }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px">
+          <sc-for list="{{ appletItems }}" as="app" hint-placeholder-count="4">
+            <button onClick="{{ app.onClick }}" style="text-align:left;display:flex;flex-direction:column;gap:8px;min-height:128px;padding:18px;border-radius:14px;border:1px solid {{ app.border }};background:#fffdf9;cursor:{{ app.cursor }};opacity:{{ app.opacity }};box-shadow:0 1px 3px rgba(0,0,0,.05);transition:box-shadow .12s,transform .12s">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                <span style="font-size:16px;font-weight:600;line-height:1.25">{{ app.name }}</span>
+                <span style="flex:none;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:{{ app.badgeBg }};color:{{ app.badgeFg }}">{{ app.badgeText }}</span>
+              </div>
+              <span style="font-size:13px;color:#6f685c;line-height:1.45">{{ app.desc }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- OPEN APPLET: FOTO-ELEKTRISCH EFFECT -->
+    <sc-if value="{{ showFoto }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <button onClick="{{ onBack }}" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#2a2723;background:#fff;border:1px solid #e7e1d5;border-radius:9px;padding:8px 13px;cursor:pointer">&larr; Terug</button>
+          <span style="font-size:13px;color:#a39c8d">{{ topicName }} <span style="color:#cfc7b6">/</span> Foto-elektrisch effect</span>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <dc-import name="Foto-elektrisch effect" hint-size="100%,860px"></dc-import>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- OPEN APPLET: POLARISATIE -->
+    <sc-if value="{{ showPol }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <button onClick="{{ onBack }}" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#2a2723;background:#fff;border:1px solid #e7e1d5;border-radius:9px;padding:8px 13px;cursor:pointer">&larr; Terug</button>
+          <span style="font-size:13px;color:#a39c8d">{{ topicName }} <span style="color:#cfc7b6">/</span> Polarisatie van licht</span>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <dc-import name="Polarisatie" hint-size="100%,760px"></dc-import>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1100,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  topics = [
+    { id: 'elektriciteit', name: 'Elektriciteit', color: 'oklch(0.64 0.13 75)', applets: [
+      { id: 'stroomkring', name: 'Stroomkring (gelijkstroom)', desc: 'Bouw een schakeling met batterijen, lampjes en weerstanden.' },
+      { id: 'ohm', name: 'Wet van Ohm', desc: 'Onderzoek het verband tussen spanning, stroom en weerstand.' },
+      { id: 'condensator', name: 'Condensatoren', desc: 'Laad en ontlaad een condensator en bekijk het veld.' },
+      { id: 'weerstanddraad', name: 'Weerstand van een draad', desc: 'Variëer lengte, doorsnede en materiaal van een draad.' },
+    ]},
+    { id: 'elektromagnetisme', name: 'Elektromagnetisme', color: 'oklch(0.64 0.13 150)', applets: [
+      { id: 'magneten', name: 'Magneten & kompas', desc: 'Verken het magnetisch veld rond een staafmagneet.' },
+      { id: 'inductie', name: 'Elektromagnetische inductie', desc: 'Wek een stroom op door een magneet te bewegen.' },
+      { id: 'generator', name: 'Generator', desc: 'Zet beweging om in elektrische energie.' },
+      { id: 'transformator', name: 'Transformator', desc: 'Onderzoek het omzetten van spanningen.' },
+    ]},
+    { id: 'kernfysica', name: 'Kernfysica', color: 'oklch(0.64 0.13 28)', applets: [
+      { id: 'verval', name: 'Radioactief verval', desc: 'Volg het verval van onstabiele kernen in de tijd.' },
+      { id: 'halvering', name: 'Halveringstijd', desc: 'Meet de halveringstijd van een isotoop.' },
+      { id: 'splijting', name: 'Kernsplijting', desc: 'Start een kettingreactie en regel deze.' },
+      { id: 'straling', name: 'Soorten straling', desc: 'Vergelijk alfa-, bèta- en gammastraling.' },
+    ]},
+    { id: 'mechanica', name: 'Mechanica', color: 'oklch(0.64 0.13 255)', applets: [
+      { id: 'projectiel', name: 'Projectielbeweging', desc: 'Schiet een projectiel af en analyseer de baan.' },
+      { id: 'botsingen', name: 'Botsingen', desc: 'Onderzoek behoud van impuls bij botsingen.' },
+      { id: 'krachtbeweging', name: 'Kracht & beweging', desc: 'Pas krachten toe en bekijk versnelling.' },
+      { id: 'hellendvlak', name: 'Hellend vlak', desc: 'Bestudeer wrijving en versnelling op een helling.' },
+    ]},
+    { id: 'energie', name: 'Energie en arbeid', color: 'oklch(0.64 0.13 320)', applets: [
+      { id: 'skatepark', name: 'Energie-skatepark', desc: 'Volg kinetische en potentiële energie van een skater.' },
+      { id: 'arbeidvermogen', name: 'Arbeid & vermogen', desc: 'Bereken arbeid bij verplaatsing onder een kracht.' },
+      { id: 'pendulumenergie', name: 'Slinger-energie', desc: 'Bekijk energie-omzetting bij een slinger.' },
+    ]},
+    { id: 'golven', name: 'Trillingen & golven', color: 'oklch(0.64 0.13 195)', applets: [
+      { id: 'foto', name: 'Foto-elektrisch effect', desc: 'Schijn licht op een metaal en maak elektronen los.', ready: true },
+      { id: 'polarisatie', name: 'Polarisatie van licht', desc: 'Onderzoek de wet van Malus met instelbare polarisatoren.', ready: true },
+      { id: 'snaar', name: 'Golven op een snaar', desc: 'Wek lopende en staande golven op in een snaar.' },
+      { id: 'geluid', name: 'Geluidsgolven', desc: 'Visualiseer frequentie, amplitude en interferentie.' },
+      { id: 'massaveer', name: 'Massa-veersysteem', desc: 'Onderzoek harmonische trilling van een massa aan een veer.' },
+      { id: 'slinger', name: 'Slinger', desc: 'Meet de periode van een slinger bij verschillende lengtes.' },
+    ]},
+  ];
+
+  state = { topic: 'golven', openApplet: '' };
+
+  componentDidMount() {
+    try {
+      const t = localStorage.getItem('nat_topic');
+      const a = localStorage.getItem('nat_applet');
+      const patch = {};
+      if (t && this.topics.some(x => x.id === t)) patch.topic = t;
+      if (a) patch.openApplet = a;
+      if (Object.keys(patch).length) this.setState(patch);
+    } catch (e) {}
+  }
+
+  persist() {
+    try {
+      localStorage.setItem('nat_topic', this.state.topic);
+      localStorage.setItem('nat_applet', this.state.openApplet);
+    } catch (e) {}
+  }
+
+  selectTopic(id) { this.setState({ topic: id, openApplet: '' }, () => this.persist()); }
+  openApplet(app) { if (app.ready) this.setState({ openApplet: app.id }, () => this.persist()); }
+  back() { this.setState({ openApplet: '' }, () => this.persist()); }
+
+  renderVals() {
+    const topic = this.topics.find(t => t.id === this.state.topic) || this.topics[0];
+    const tabItems = this.topics.map(t => {
+      const active = t.id === topic.id;
+      return {
+        id: t.id, name: t.name,
+        dot: active ? '#ffffff' : t.color,
+        bg: active ? t.color : '#fffdf9',
+        fg: active ? '#ffffff' : '#6f685c',
+        border: active ? t.color : '#e7e1d5',
+        onClick: () => this.selectTopic(t.id),
+      };
+    });
+    const appletItems = topic.applets.map(a => ({
+      id: a.id, name: a.name, desc: a.desc,
+      border: a.ready ? topic.color : '#ece7dc',
+      cursor: a.ready ? 'pointer' : 'default',
+      opacity: a.ready ? '1' : '0.62',
+      badgeText: a.ready ? 'Beschikbaar' : 'Binnenkort',
+      badgeBg: a.ready ? topic.color : '#efe9dd',
+      badgeFg: a.ready ? '#ffffff' : '#9a927f',
+      onClick: () => this.openApplet(a),
+    }));
+    const readyCount = topic.applets.filter(a => a.ready).length;
+    return {
+      tabItems,
+      appletItems,
+      topicName: topic.name,
+      topicColor: topic.color,
+      appletCountStr: topic.applets.length + ' applets · ' + readyCount + ' beschikbaar',
+      gridView: !this.state.openApplet,
+      showFoto: this.state.openApplet === 'foto',
+      showPol: this.state.openApplet === 'polarisatie',
+      onBack: () => this.back(),
+    };
+  }
+}
+</script>
+</body>
+</html>

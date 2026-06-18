@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#eceae4}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+</style>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:28px 28px 40px">
+  <div style="max-width:1080px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:4px">
+      <h1 style="font-size:26px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Polarisatie van licht</h1>
+      <span style="font-size:13px;color:#8c8576">wet van Malus</span>
+    </div>
+    <p style="margin:0 0 20px;font-size:14px;color:#6f685c;max-width:660px;line-height:1.5">Ongepolariseerd licht passeert maximaal drie polarisatoren. Stel de hoek van elke transmissie-as in en zie hoeveel licht wordt doorgelaten: <em>I = I&#8320; &middot; cos&#178;&theta;</em>.</p>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+
+      <!-- STAGE -->
+      <div style="flex:1 1 480px;min-width:340px;display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <canvas ref="{{ stageRef }}" style="width:100%;height:auto;display:block;border-radius:8px"></canvas>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:6px">Doorgelaten intensiteit</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;line-height:1.6">{{ malusStr }}</div>
+          <div style="margin-top:12px;height:12px;border-radius:6px;background:#efeadf;overflow:hidden">
+            <div style="height:100%;background:#1f9e8f;border-radius:6px;transition:width .15s;width:{{ finalPct }}"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div style="flex:0 1 320px;min-width:280px;display:flex;flex-direction:column;gap:14px">
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:15px;font-weight:600">Polarisator 1</span>
+            <button onClick="{{ onP1Toggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:5px 14px;cursor:pointer;background:{{ p1Bg }};color:{{ p1Fg }}">{{ p1Lbl }}</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p1Op }}">
+            <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p1AngStr }}</span>
+          </div>
+          <input type="range" min="0" max="180" step="1" value="{{ p1Ang }}" onChange="{{ onP1Angle }}" disabled="{{ p1Dis }}" style="width:100%;accent-color:#1f9e8f;opacity:{{ p1Op }}">
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:15px;font-weight:600">Polarisator 2</span>
+            <button onClick="{{ onP2Toggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:5px 14px;cursor:pointer;background:{{ p2Bg }};color:{{ p2Fg }}">{{ p2Lbl }}</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p2Op }}">
+            <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p2AngStr }}</span>
+          </div>
+          <input type="range" min="0" max="180" step="1" value="{{ p2Ang }}" onChange="{{ onP2Angle }}" disabled="{{ p2Dis }}" style="width:100%;accent-color:#1f9e8f;opacity:{{ p2Op }}">
+        </div>
+
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:15px;font-weight:600">Polarisator 3</span>
+            <button onClick="{{ onP3Toggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:5px 14px;cursor:pointer;background:{{ p3Bg }};color:{{ p3Fg }}">{{ p3Lbl }}</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p3Op }}">
+            <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p3AngStr }}</span>
+          </div>
+          <input type="range" min="0" max="180" step="1" value="{{ p3Ang }}" onChange="{{ onP3Angle }}" disabled="{{ p3Dis }}" style="width:100%;accent-color:#1f9e8f;opacity:{{ p3Op }}">
+        </div>
+
+        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px">
+          <div style="font-size:12px;color:#6f685c;line-height:1.5">Tip: zet polarisator 1 op 0&deg; en 3 op 90&deg; &mdash; gekruist, geen licht. Zet polarisator 2 (45&deg;) ertussen en er komt weer licht door.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1080,&quot;height&quot;:640}}">
+class Component extends DCLogic {
+  state = { pol: [ { on: true, ang: 0 }, { on: true, ang: 45 }, { on: true, ang: 90 } ] };
+  stageRef = React.createRef();
+  W = 640; H = 340;
+  phase = 0; lastTs = 0;
+  geo = { lampX: 56, beamY: 146, polX: [175, 330, 485], polR: 47, detX: 568, indY: 268, indR: 25 };
+
+  computeStages() {
+    const P = this.state.pol;
+    let cur = 1, prev = null;
+    const seg = [1], polAng = [null], afters = [];
+    for (let k = 0; k < 3; k++) {
+      const p = P[k];
+      if (p.on) {
+        if (prev === null) cur *= 0.5;
+        else { const d = (p.ang - prev) * Math.PI / 180; const c = Math.cos(d); cur *= c * c; }
+        prev = p.ang;
+        afters.push(cur);
+      } else afters.push(null);
+      seg.push(cur); polAng.push(prev);
+    }
+    return { seg, polAng, afters, final: cur };
+  }
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); window.removeEventListener('resize', this._onResize); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    c.width = this.W * dpr; c.height = this.H * dpr; this.dpr = dpr;
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts; this.phase += dt;
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    const g = this.geo;
+    const st = this.computeStages();
+    const lightCol = '255,236,176';
+
+    // beam segments
+    const xs = [g.lampX + 12, g.polX[0], g.polX[1], g.polX[2], g.detX];
+    for (let s = 0; s < 4; s++) {
+      const I = st.seg[s];
+      const x0 = xs[s], x1 = xs[s + 1];
+      // glow band
+      ctx.fillStyle = `rgba(${lightCol},${0.10 + 0.42 * I})`;
+      ctx.fillRect(x0, g.beamY - 11, x1 - x0, 22);
+      ctx.fillStyle = `rgba(${lightCol},${0.18 + 0.6 * I})`;
+      ctx.fillRect(x0, g.beamY - 4, x1 - x0, 8);
+      // travelling wavefronts
+      ctx.strokeStyle = `rgba(${lightCol},${0.25 + 0.5 * I})`;
+      ctx.lineWidth = 1.5;
+      const spacing = 26;
+      const off = (this.phase * 60) % spacing;
+      for (let x = x0 + ((spacing - off) % spacing); x < x1; x += spacing) {
+        ctx.beginPath(); ctx.moveTo(x, g.beamY - 9); ctx.lineTo(x, g.beamY + 9); ctx.stroke();
+      }
+    }
+
+    // source lamp
+    ctx.fillStyle = '#2b3340';
+    this.rr(ctx, 22, g.beamY - 26, 34, 52, 7); ctx.fill();
+    ctx.fillStyle = `rgb(${lightCol})`;
+    this.rr(ctx, 50, g.beamY - 17, 9, 34, 3); ctx.fill();
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.fillText('bron', 39, g.beamY + 44);
+
+    // polarizers
+    for (let k = 0; k < 3; k++) {
+      const p = this.state.pol[k];
+      this.drawPolarizer(ctx, g.polX[k], g.beamY, g.polR, p, k);
+    }
+
+    // detector screen
+    const fin = st.final;
+    ctx.fillStyle = '#1b2230';
+    this.rr(ctx, g.detX, g.beamY - 40, 16, 80, 4); ctx.fill();
+    ctx.fillStyle = `rgba(${lightCol},${0.12 + 0.85 * fin})`;
+    this.rr(ctx, g.detX + 2, g.beamY - 36, 12, 72, 3); ctx.fill();
+    ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.fillText('scherm', g.detX + 8, g.beamY + 56);
+
+    // face-on polarization indicators
+    const gapMid = [(xs[0] + xs[1]) / 2, (xs[1] + xs[2]) / 2, (xs[2] + xs[3]) / 2, (xs[3] + this.W - 10) / 2];
+    for (let s = 0; s < 4; s++) {
+      const cx = Math.min(gapMid[s], this.W - 34);
+      this.drawIndicator(ctx, cx, g.indY, g.indR, st.polAng[s], st.seg[s]);
+    }
+    ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+    ctx.fillText('trillingsrichting', this.W / 2, g.indY + g.indR + 18);
+  }
+
+  drawPolarizer(ctx, cx, cy, R, p, k) {
+    ctx.save();
+    // angle label
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillStyle = p.on ? '#cfe9e4' : '#5b6573';
+    ctx.fillText('P' + (k + 1) + (p.on ? '  ' + p.ang + '\u00B0' : '  uit'), cx, cy - R - 12);
+    // disc
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+    if (p.on) {
+      ctx.fillStyle = 'rgba(31,158,143,0.10)'; ctx.fill();
+      ctx.clip();
+      // grating lines along transmission axis
+      const a = p.ang * Math.PI / 180;
+      const dx = Math.cos(a), dy = -Math.sin(a);
+      const nx = Math.sin(a), ny = Math.cos(a);
+      ctx.strokeStyle = 'rgba(127,212,200,0.85)'; ctx.lineWidth = 1.6;
+      for (let off = -R; off <= R; off += 7) {
+        const L = Math.sqrt(Math.max(0, R * R - off * off));
+        const mx = cx + nx * off, my = cy + ny * off;
+        ctx.beginPath();
+        ctx.moveTo(mx - dx * L, my - dy * L);
+        ctx.lineTo(mx + dx * L, my + dy * L);
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+      ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5; ctx.stroke();
+      // axis arrow
+      const a2 = p.ang * Math.PI / 180;
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx - Math.cos(a2) * (R + 7), cy + Math.sin(a2) * (R + 7));
+      ctx.lineTo(cx + Math.cos(a2) * (R + 7), cy - Math.sin(a2) * (R + 7));
+      ctx.stroke();
+    } else {
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+      ctx.setLineDash([4, 5]); ctx.strokeStyle = '#3a4351'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  drawIndicator(ctx, cx, cy, R, ang, I) {
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+    ctx.fillStyle = '#141b26'; ctx.fill();
+    ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (ang === null) {
+      // unpolarized: many directions, shimmering
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 8;
+        const fl = 0.35 + 0.4 * Math.abs(Math.sin(this.phase * 2 + i));
+        ctx.strokeStyle = `rgba(170,180,195,${fl * (0.4 + 0.6 * I)})`;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(cx - Math.cos(a) * (R - 5), cy + Math.sin(a) * (R - 5));
+        ctx.lineTo(cx + Math.cos(a) * (R - 5), cy - Math.sin(a) * (R - 5));
+        ctx.stroke();
+      }
+    } else {
+      // polarized: double arrow along ang, pulsing
+      const a = ang * Math.PI / 180;
+      const amp = (R - 5) * (0.55 + 0.45 * Math.abs(Math.sin(this.phase * 3)));
+      const dx = Math.cos(a), dy = -Math.sin(a);
+      ctx.strokeStyle = `rgba(255,217,122,${0.45 + 0.55 * I})`;
+      ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx - dx * amp, cy - dy * amp);
+      ctx.lineTo(cx + dx * amp, cy + dy * amp);
+      ctx.stroke();
+      // arrowheads
+      for (const s of [1, -1]) {
+        const ex = cx + dx * amp * s, ey = cy + dy * amp * s;
+        const pa = a + (s > 0 ? 0 : Math.PI);
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - Math.cos(pa - 0.5) * 7, ey + Math.sin(pa - 0.5) * 7);
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - Math.cos(pa + 0.5) * 7, ey + Math.sin(pa + 0.5) * 7);
+        ctx.stroke();
+      }
+    }
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  setPol(i, patch) {
+    this.setState({ pol: this.state.pol.map((p, idx) => idx === i ? { ...p, ...patch } : p) });
+  }
+
+  renderVals() {
+    const st = this.computeStages();
+    const P = this.state.pol;
+    const mk = (i) => {
+      const p = P[i];
+      return {
+        on: p.on, ang: p.ang,
+        angStr: p.on ? p.ang + '\u00B0' : 'uit',
+        bg: p.on ? '#1f9e8f' : '#e7e1d5',
+        fg: p.on ? '#fff' : '#8c8576',
+        lbl: p.on ? 'Aan' : 'Uit',
+        op: p.on ? '1' : '0.4',
+        dis: !p.on,
+      };
+    };
+    const a = mk(0), b = mk(1), c = mk(2);
+    // malus breakdown
+    let prev = null; const terms = [];
+    for (let k = 0; k < 3; k++) {
+      const p = P[k];
+      if (!p.on) continue;
+      if (prev === null) terms.push('\u00BD');
+      else terms.push('cos\u00B2(' + Math.abs(p.ang - prev) + '\u00B0)');
+      prev = p.ang;
+    }
+    const malusStr = terms.length
+      ? 'I = I\u2080 \u00B7 ' + terms.join(' \u00B7 ') + ' = ' + (st.final * 100).toFixed(1) + '%'
+      : 'I = I\u2080 = 100%  (ongepolariseerd)';
+    return {
+      stageRef: this.stageRef,
+      malusStr,
+      finalPct: (st.final * 100).toFixed(1) + '%',
+      p1On: a.on, p1Ang: a.ang, p1AngStr: a.angStr, p1Bg: a.bg, p1Fg: a.fg, p1Lbl: a.lbl, p1Op: a.op, p1Dis: a.dis,
+      p2On: b.on, p2Ang: b.ang, p2AngStr: b.angStr, p2Bg: b.bg, p2Fg: b.fg, p2Lbl: b.lbl, p2Op: b.op, p2Dis: b.dis,
+      p3On: c.on, p3Ang: c.ang, p3AngStr: c.angStr, p3Bg: c.bg, p3Fg: c.fg, p3Lbl: c.lbl, p3Op: c.op, p3Dis: c.dis,
+      onP1Toggle: () => this.setPol(0, { on: !P[0].on }),
+      onP2Toggle: () => this.setPol(1, { on: !P[1].on }),
+      onP3Toggle: () => this.setPol(2, { on: !P[2].on }),
+      onP1Angle: (e) => this.setPol(0, { ang: Number(e.target.value) }),
+      onP2Angle: (e) => this.setPol(1, { ang: Number(e.target.value) }),
+      onP3Angle: (e) => this.setPol(2, { ang: Number(e.target.value) }),
+    };
+  }
+}
+</script>
+</body>
+</html>
