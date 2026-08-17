@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Weerstand van een draad</h1>
+    <span style="font-size:13px;color:#8c8576">R = &rho;L / A</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <!-- LEFT -->
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:none;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 22px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;gap:18px;height:108px">
+        <div style="display:flex;align-items:center;gap:10px;line-height:1">
+          <span style="font-weight:700;color:#1f9e8f;font-size:{{ rSize }}">R</span>
+          <span style="font-size:30px;color:#9a927f;font-weight:400">=</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;line-height:1">
+          <div style="display:flex;align-items:baseline;gap:8px;padding:0 14px 7px">
+            <span style="font-weight:700;color:#d98a2b;font-size:{{ rhoSize }}">&rho;</span>
+            <span style="color:#9a927f;font-size:22px;font-weight:400">&middot;</span>
+            <span style="font-weight:700;color:#3b73c4;font-size:{{ lSize }}">L</span>
+          </div>
+          <div style="height:3px;width:100%;background:#3a352c;border-radius:2px"></div>
+          <div style="padding:7px 14px 0"><span style="font-weight:700;color:#2f9e6b;font-size:{{ aSize }}">A</span></div>
+        </div>
+        <div style="margin-left:14px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:#6f685c;line-height:1.7">
+          <div>{{ calcStr }}</div>
+          <div style="font-size:22px;font-weight:600;color:#1f9e8f">R = {{ rStr }} &Omega;</div>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div style="flex:none;width:316px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#d98a2b"></span>
+          <span style="font-size:15px;font-weight:600">Soortelijke weerstand &rho;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ rhoStr }} &Omega;&middot;cm</span>
+        </div>
+        <input type="range" min="0.01" max="1" step="0.01" value="{{ rho }}" onChange="{{ onRho }}" style="width:100%;accent-color:#d98a2b">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3b73c4"></span>
+          <span style="font-size:15px;font-weight:600">Lengte L</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ lStr }} cm</span>
+        </div>
+        <input type="range" min="0.1" max="20" step="0.1" value="{{ length }}" onChange="{{ onL }}" style="width:100%;accent-color:#3b73c4">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#2f9e6b"></span>
+          <span style="font-size:15px;font-weight:600">Doorsnede A</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ aStr }} cm&sup2;</span>
+        </div>
+        <input type="range" min="0.01" max="15" step="0.01" value="{{ area }}" onChange="{{ onA }}" style="width:100%;accent-color:#2f9e6b">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Weergave</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px">Elektronen</span>
+            <button onClick="{{ toggleElec }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:{{ elecFg }}">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ elecDot }}"></span>{{ elecLabel }}
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px">Roosteratomen</span>
+            <button onClick="{{ toggleAtoms }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ atomsBorder }};background:{{ atomsBg }};color:{{ atomsFg }}">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ atomsDot }}"></span>{{ atomsLabel }}
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px">Conventionele stroomzin</span>
+            <button onClick="{{ toggleArrow }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ arrowBorder }};background:{{ arrowBg }};color:{{ arrowFg }}">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ arrowDot }}"></span>{{ arrowLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:7px">Driftsnelheid</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#3a352c;margin-bottom:6px">v_d = I / (n&middot;A&middot;e)</div>
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">De groene elektronen driften traag (orde mm/s) tegengesteld aan de stroomzin. Bij een dunnere draad (kleinere A) is de driftsnelheid bij dezelfde stroom gr&oacute;ter &mdash; let op hoe ze sneller bewegen als je A verkleint.</div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">De blauwe roosteratomen zijn botsplaatsen: meer soortelijke weerstand &rarr; dichter bezet &rarr; de elektronen botsen vaker en de draad geleidt slechter.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { rho: 0.5, length: 10, area: 7.5, showElec: false, showAtoms: false, showArrow: false };
+  stageRef = React.createRef();
+  W = 800; H = 420; phase = 0; lastTs = 0;
+
+  RHO = { min: 0.01, max: 1 };
+  LEN = { min: 0.1, max: 20 };
+  AREA = { min: 0.01, max: 15 };
+
+  componentDidMount() {
+    this.atomPool = [];
+    let s = 12345;
+    const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+    for (let i = 0; i < 520; i++) this.atomPool.push({ u: rnd(), v: rnd(), r: 2.2 + rnd() * 1.6 });
+    this.elecs = [];
+    for (let i = 0; i < 16; i++) this.elecs.push({ v: rnd(), off: rnd() });
+
+    this.measure();
+    this.ro = new ResizeObserver(() => { this.measure(); this.drawStage(); });
+    if (this.stageRef.current) this.ro.observe(this.stageRef.current);
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this.ro) this.ro.disconnect(); }
+  measure() {
+    const c = this.stageRef.current; if (!c) return;
+    const w = c.clientWidth, h = c.clientHeight; if (!w || !h) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.W = w; this.H = h; this.dpr = dpr;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+  }
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts; this.phase += dt;
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  norm(v, rng) { return (v - rng.min) / (rng.max - rng.min); }
+  rr(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+
+    const { rho, length, area } = this.state;
+    const showAtoms = this.state.showAtoms;
+    const showElectrons = this.state.showElec;
+
+    const nL = this.norm(length, this.LEN);
+    const nA = this.norm(area, this.AREA);
+    const nR = this.norm(rho, this.RHO);
+
+    const wireW = this.W * (0.22 + 0.52 * nL);
+    const wireH = this.H * (0.12 + 0.46 * nA);
+    const cx = this.W / 2, cy = this.H / 2;
+    const x = cx - wireW / 2, y = cy - wireH / 2;
+
+    // connecting leads
+    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(16, cy); ctx.lineTo(x, cy);
+    ctx.moveTo(x + wireW, cy); ctx.lineTo(this.W - 16, cy);
+    ctx.stroke();
+    ctx.fillStyle = '#4a5462';
+    ctx.beginPath(); ctx.arc(16, cy, 7, 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(this.W - 16, cy, 7, 0, 6.2832); ctx.fill();
+
+    // wire body
+    const grad = ctx.createLinearGradient(0, y, 0, y + wireH);
+    grad.addColorStop(0, '#c98a4a'); grad.addColorStop(0.42, '#e3ad6f');
+    grad.addColorStop(0.6, '#b8773c'); grad.addColorStop(1, '#8a5526');
+    this.rr(ctx, x, y, wireW, wireH, 14); ctx.fillStyle = grad; ctx.fill();
+    this.rr(ctx, x, y, wireW, wireH, 14);
+    ctx.strokeStyle = 'rgba(60,34,12,0.55)'; ctx.lineWidth = 2; ctx.stroke();
+
+    ctx.save();
+    this.rr(ctx, x, y, wireW, wireH, 14); ctx.clip();
+    // electrons drift right -> left (electron-flow direction; conventional current is opposite)
+    if (showElectrons) {
+      for (const e of this.elecs) {
+        const ex = x + wireW - ((this.phase * (0.05 + 0.7 / Math.max(0.5, this.state.area)) + e.off) % 1) * wireW;
+        const ey = y + 8 + e.v * (wireH - 16);
+        ctx.beginPath(); ctx.arc(ex, ey, 3.4, 0, 6.2832);
+        ctx.fillStyle = 'rgba(120,200,255,0.95)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(ex, ey, 6.5, 0, 6.2832);
+        ctx.fillStyle = 'rgba(120,200,255,0.16)'; ctx.fill();
+      }
+    }
+    if (showAtoms) {
+      const n = Math.round(6 + nR * 320);
+      for (let i = 0; i < n && i < this.atomPool.length; i++) {
+        const a = this.atomPool[i];
+        const ax = x + a.u * wireW, ay = y + a.v * wireH;
+        ctx.beginPath(); ctx.arc(ax, ay, a.r, 0, 6.2832);
+        ctx.fillStyle = 'rgba(43,92,150,0.92)'; ctx.fill();
+        ctx.strokeStyle = 'rgba(150,195,240,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // conventional current arrow on right lead (opposite to electron drift -> points right)
+    if (this.state.showArrow) {
+      const ax = (x + wireW + this.W - 16) / 2, ay = cy;
+      ctx.fillStyle = '#ffb454';
+      ctx.beginPath(); ctx.moveTo(ax + 11, ay); ctx.lineTo(ax - 7, ay - 8); ctx.lineTo(ax - 7, ay + 8); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ffd9a0'; ctx.font = "700 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+      ctx.fillText('I', ax, ay - 14);
+    }
+
+    // dimension labels
+    ctx.font = "500 12px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = '#9aa3ad'; ctx.textAlign = 'center';
+    const ly = y + wireH + 22;
+    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(x, ly); ctx.lineTo(x + wireW, ly); ctx.stroke();
+    for (const px of [x, x + wireW]) { ctx.beginPath(); ctx.moveTo(px, ly - 4); ctx.lineTo(px, ly + 4); ctx.stroke(); }
+    ctx.fillText('L = ' + length.toFixed(1) + ' cm', cx, ly + 16);
+    ctx.textAlign = 'right';
+    ctx.fillText('A = ' + area.toFixed(2) + ' cm\u00B2', x - 14, cy + 4);
+  }
+
+  fSize(n) { return Math.round(22 + 50 * Math.max(0, Math.min(1, n))) + 'px'; }
+  set(key, e) { this.setState({ [key]: Number(e.target.value) }); }
+
+  renderVals() {
+    const { rho, length, area } = this.state;
+    const R = rho * length / area;
+    const rStr = R >= 100 ? R.toFixed(0) : R >= 10 ? R.toFixed(1) : R.toFixed(2);
+    const rNorm = Math.max(0, Math.min(1, Math.sqrt(R / 2)));
+    const elec = this.state.showElec, atoms = this.state.showAtoms, arr = this.state.showArrow;
+    return {
+      stageRef: this.stageRef,
+      rho, length, area,
+      rhoStr: rho.toFixed(2), lStr: length.toFixed(1), aStr: area.toFixed(2),
+      rhoSize: this.fSize(this.norm(rho, this.RHO)),
+      lSize: this.fSize(this.norm(length, this.LEN)),
+      aSize: this.fSize(this.norm(area, this.AREA)),
+      rSize: this.fSize(rNorm),
+      rStr,
+      calcStr: 'R = (' + rho.toFixed(2) + ' \u00B7 ' + length.toFixed(1) + ') / ' + area.toFixed(2),
+      onRho: (e) => this.set('rho', e),
+      onL: (e) => this.set('length', e),
+      onA: (e) => this.set('area', e),
+      toggleElec: () => this.setState({ showElec: !this.state.showElec }),
+      elecLabel: elec ? 'Aan' : 'Uit',
+      elecBg: elec ? '#2f6fb0' : '#f4f1ea', elecFg: elec ? '#fff' : '#8c8576',
+      elecBorder: elec ? '#2f6fb0' : '#e7e1d5', elecDot: elec ? '#bcd8f2' : '#c3bcad',
+      toggleAtoms: () => this.setState({ showAtoms: !this.state.showAtoms }),
+      atomsLabel: atoms ? 'Aan' : 'Uit',
+      atomsBg: atoms ? '#2b5c96' : '#f4f1ea', atomsFg: atoms ? '#fff' : '#8c8576',
+      atomsBorder: atoms ? '#2b5c96' : '#e7e1d5', atomsDot: atoms ? '#bcd8f2' : '#c3bcad',
+      toggleArrow: () => this.setState({ showArrow: !this.state.showArrow }),
+      arrowLabel: arr ? 'Aan' : 'Uit',
+      arrowBg: arr ? '#d98a2b' : '#f4f1ea', arrowFg: arr ? '#fff' : '#8c8576',
+      arrowBorder: arr ? '#d98a2b' : '#e7e1d5', arrowDot: arr ? '#f2d6ad' : '#c3bcad',
+    };
+  }
+}
+</script>
+</body>
+</html>

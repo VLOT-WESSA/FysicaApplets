@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Interferentie van twee golven</h1>
+    <span style="font-size:13px;color:#8c8576">twee coherente bronnen</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:0;border-top:2px solid #78cdff;display:inline-block"></span>golftop</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:0;border-top:2px dashed #b27edc;display:inline-block"></span>golfdal</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>buiklijn &Delta;x = n&lambda;</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:3px;background:#5b9bff;border-radius:2px;display:inline-block"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:10px;height:10px;border-radius:50%;background:#b57edc;display:inline-block"></span>meetpunt (sleepbaar)</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Golflengte &lambda;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
+        </div>
+        <input type="range" min="1.5" max="5" step="0.1" value="{{ lambdaCm }}" onChange="{{ onLambda }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Afstand bronnen</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ sepStr }}</span>
+        </div>
+        <input type="range" min="3" max="16" step="0.5" value="{{ sepCm }}" onChange="{{ onSep }}" style="width:100%;accent-color:#1f9e8f">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Weergave (uit bij start)</div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onTogFronts }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ frontsBg }};color:{{ frontsFg }}">Golffronten</button>
+          <button onClick="{{ onTogLines }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ linesBg }};color:{{ linesFg }}">Lijnen</button>
+          <button onClick="{{ onTogSlow }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ slowBg }};color:{{ slowFg }}">Vertraagd</button>
+        </div>
+      </div>
+
+      <div style="background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6ee">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8a93a3;font-weight:600;margin-bottom:12px">Meetpunt</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:#aeb6c2">weglengteverschil &Delta;x</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ dsStr }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:13px;color:#aeb6c2">&Delta;x / &lambda;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ ratioStr }}</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;background:{{ verdBg }};color:{{ verdFg }};text-align:center">{{ verdict }}</div>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw</button>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">Twee bronnen trillen in fase. Sleep het meetpunt: waar &Delta;x = n&lambda; versterken de golven elkaar, bij (n+&frac12;)&lambda; doven ze uit. Zet de lossen golven aan om te zien waarom.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { lambdaCm: 3, sepCm: 8, showLines: false, showFronts: false, slow: false, running: false,
+            ds: 0, ratio: 0, verdict: '\u2014' };
+  stageRef = React.createRef();
+  W = 660; H = 460;
+  scale = 18;
+  t = 0; lastTs = 0;
+  f = 0.9;
+  mp = { x: 470, y: 150 };
+  dragging = false;
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+    const cv = this.stageRef.current;
+    this._down = (e) => { e.preventDefault(); this.dragging = true; this.mp = this.evtPt(e); cv.style.cursor = 'grabbing'; try { cv.setPointerCapture(e.pointerId); } catch (_) {} };
+    this._move = (e) => { if (this.dragging) { e.preventDefault(); this.mp = this.evtPt(e); } };
+    this._up = (e) => { this.dragging = false; cv.style.cursor = 'grab'; try { cv.releasePointerCapture(e.pointerId); } catch (_) {} };
+    cv.addEventListener('pointerdown', this._down);
+    cv.addEventListener('pointermove', this._move);
+    window.addEventListener('pointerup', this._up);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf); if (this._acStop) this._acStop();
+    const cv = this.stageRef.current;
+    if (cv) { cv.removeEventListener('pointerdown', this._down); cv.removeEventListener('pointermove', this._move); }
+    window.removeEventListener('pointerup', this._up);
+  }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  sources() {
+    const cx = this.W / 2, cy = this.H / 2;
+    const d = this.state.sepCm * this.scale;
+    return [ { x: cx - d / 2, y: cy }, { x: cx + d / 2, y: cy } ];
+  }
+
+  evtPt(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts;
+    if (this.state.running) this.t += dt * (this.state.slow ? 0.1 : 1);
+    this.drawStage();
+    this.updateReadout();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  updateReadout() {
+    const [s1, s2] = this.sources();
+    const r1 = Math.hypot(this.mp.x - s1.x, this.mp.y - s1.y) / this.scale;
+    const r2 = Math.hypot(this.mp.x - s2.x, this.mp.y - s2.y) / this.scale;
+    const ds = Math.abs(r1 - r2);
+    const ratio = ds / this.state.lambdaCm;
+    const fm = ratio - Math.floor(ratio);
+    let verdict, near;
+    if (fm < 0.12 || fm > 0.88) { verdict = 'versterking'; near = 'con'; }
+    else if (Math.abs(fm - 0.5) < 0.12) { verdict = 'uitdoving'; near = 'des'; }
+    else { verdict = 'tussenliggend'; near = 'mid'; }
+    if (Math.abs(ds - this.state.ds) > 1e-3 || ratio.toFixed(2) !== Number(this.state.ratio).toFixed(2) || verdict !== this.state.verdict) {
+      this.setState({ ds, ratio, verdict, _near: near });
+    }
+  }
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+
+    const [s1, s2] = this.sources();
+    const cx = this.W / 2, cy = this.H / 2;
+    const a = (this.state.sepCm * this.scale) / 2;
+    const lambdaPx = this.state.lambdaCm * this.scale;
+    const k = 2 * Math.PI / lambdaPx;
+    const w = 2 * Math.PI * this.f;
+    const phase = w * this.t;
+    const crestBase = ((((phase / k) % lambdaPx) + lambdaPx) % lambdaPx);
+    const maxR = 900;
+
+    if (this.state.showFronts) {
+      for (const s of [s1, s2]) {
+        ctx.setLineDash([]); ctx.strokeStyle = 'rgba(120,205,255,0.42)'; ctx.lineWidth = 1.6;
+        for (let r = crestBase; r < maxR; r += lambdaPx) { if (r < 3) continue; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, 6.2832); ctx.stroke(); }
+        ctx.setLineDash([3, 6]); ctx.strokeStyle = 'rgba(178,126,220,0.5)'; ctx.lineWidth = 1.3;
+        for (let r = crestBase + lambdaPx / 2; r < maxR; r += lambdaPx) { if (r < 3) continue; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, 6.2832); ctx.stroke(); }
+      }
+      ctx.setLineDash([]);
+    }
+
+    if (this.state.showLines) {
+      const drawHyper = (PD, color, lw) => {
+        ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.setLineDash([]);
+        if (PD < 0.001) { ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, this.H); ctx.stroke(); return; }
+        const A = PD / 2;
+        const b = Math.sqrt(Math.max(0.25, a * a - A * A));
+        const tMax = Math.asinh(this.H / b) + 0.4;
+        for (const sgn of [1, -1]) {
+          ctx.beginPath();
+          let first = true;
+          for (let t = -tMax; t <= tMax; t += tMax / 100) {
+            const x = cx + sgn * A * Math.cosh(t);
+            const y = cy + b * Math.sinh(t);
+            if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+      };
+      for (let n = 1; n * lambdaPx < 2 * a - 0.5; n++) drawHyper(n * lambdaPx, '#e8964c', 2);
+      for (let n = 0; (n + 0.5) * lambdaPx < 2 * a - 0.5; n++) drawHyper((n + 0.5) * lambdaPx, '#5b9bff', 2);
+      drawHyper(0, '#e8964c', 2.6);
+    }
+
+    const r1px = Math.hypot(this.mp.x - s1.x, this.mp.y - s1.y);
+    const r2px = Math.hypot(this.mp.x - s2.x, this.mp.y - s2.y);
+    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(190,140,225,0.9)';
+    ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(this.mp.x, this.mp.y);
+    ctx.moveTo(s2.x, s2.y); ctx.lineTo(this.mp.x, this.mp.y); ctx.stroke(); ctx.setLineDash([]);
+
+    for (const s of [s1, s2]) {
+      ctx.beginPath(); ctx.arc(s.x, s.y, 7, 0, 6.2832);
+      ctx.fillStyle = '#fffdf9'; ctx.fill();
+      ctx.lineWidth = 2.5; ctx.strokeStyle = '#1f9e8f'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(s.x, s.y, 2.6, 0, 6.2832); ctx.fillStyle = '#1f9e8f'; ctx.fill();
+    }
+
+    const dxcm = Math.abs(r1px - r2px) / this.scale;
+    const flip = this.mp.x > this.W - 150;
+    ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = flip ? 'right' : 'left';
+    const tx = this.mp.x + (flip ? -14 : 14);
+    ctx.fillStyle = '#ecdcff'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
+    ctx.fillStyle = '#c9b6e0'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
+    ctx.beginPath(); ctx.arc(this.mp.x, this.mp.y, 9, 0, 6.2832);
+    ctx.fillStyle = '#b57edc'; ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#fffdf9'; ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.4;
+    const bx = 20, by = this.H - 20;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + lambdaPx, by);
+    ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + lambdaPx, by - 4); ctx.lineTo(bx + lambdaPx, by + 4); ctx.stroke();
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
+    ctx.fillText('\u03BB = ' + this.state.lambdaCm.toFixed(1) + ' cm', bx, by - 9);
+  }
+
+  renderVals() {
+    const seg = (on) => ({ bg: on ? '#1f9e8f' : '#fff', fg: on ? '#fff' : '#6f685c' });
+    const ln = seg(this.state.showLines), sl = seg(this.state.slow), fr = seg(this.state.showFronts);
+    const near = this.state._near;
+    const verdColors = near === 'con' ? { bg: 'rgba(232,150,76,0.18)', fg: '#f0a868' }
+      : near === 'des' ? { bg: 'rgba(91,155,255,0.18)', fg: '#7fb0ff' }
+      : { bg: 'rgba(255,255,255,0.08)', fg: '#aeb6c2' };
+    return {
+      stageRef: this.stageRef,
+      lambdaCm: this.state.lambdaCm, sepCm: this.state.sepCm,
+      lambdaStr: this.state.lambdaCm.toFixed(1) + ' cm',
+      sepStr: this.state.sepCm.toFixed(1) + ' cm',
+      linesBg: ln.bg, linesFg: ln.fg, slowBg: sl.bg, slowFg: sl.fg, frontsBg: fr.bg, frontsFg: fr.fg,
+      dsStr: this.state.ds.toFixed(2) + ' cm',
+      ratioStr: Number(this.state.ratio).toFixed(2),
+      verdict: this.state.verdict,
+      verdBg: verdColors.bg, verdFg: verdColors.fg,
+      playLbl: this.state.running ? 'Pauze' : 'Start',
+      onLambda: (e) => this.setState({ lambdaCm: Number(e.target.value) }),
+      onSep: (e) => this.setState({ sepCm: Number(e.target.value) }),
+      onTogLines: () => this.setState({ showLines: !this.state.showLines }),
+      onTogFronts: () => this.setState({ showFronts: !this.state.showFronts }),
+      onTogSlow: () => this.setState({ slow: !this.state.slow }),
+      onPlay: () => this.setState({ running: !this.state.running }),
+      onReset: () => { this.t = 0; this.mp = { x: 470, y: 150 }; this.setState({ lambdaCm: 3, sepCm: 8, running: false, slow: false, showFronts: false, showLines: false }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

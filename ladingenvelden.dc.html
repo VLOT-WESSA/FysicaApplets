@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Ladingen en velden</h1>
+    <span style="font-size:13px;color:#8c8576">E = kq / r&sup2; &middot; F = kq&#8321;q&#8322; / r&sup2;</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f7f4ec;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ addPos }}" style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #e3b3a6;background:#fff;color:#b8472f">
+          <span style="width:20px;height:20px;border-radius:50%;flex:none;background:#d6492f;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px;line-height:1">+</span>Positieve lading
+        </button>
+        <button onClick="{{ addNeg }}" style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #a8b6cf;background:#fff;color:#365087">
+          <span style="width:20px;height:20px;border-radius:50%;flex:none;background:#3461b0;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:17px;line-height:1">&minus;</span>Negatieve lading
+        </button>
+        <button onClick="{{ clearAll }}" style="padding:9px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Wissen</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Wet van Coulomb</div>
+        <sc-if value="{{ hasPair }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px">
+            <span style="font-weight:700;color:#b8472f;font-size:34px;line-height:1">F</span>
+            <span style="font-size:24px;color:#9a927f">=</span>
+            <div style="display:flex;flex-direction:column;align-items:center;line-height:1.1">
+              <div style="padding:0 12px 6px;font-size:18px;white-space:nowrap"><span style="color:#9a927f">k</span> <span style="color:#3a352c;font-weight:600">q&#8321;q&#8322;</span></div>
+              <div style="height:3px;width:100%;background:#3a352c;border-radius:2px"></div>
+              <div style="padding:6px 12px 0;font-size:18px;color:#2f7d9e;font-weight:600">r&sup2;</div>
+            </div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:10px">
+            <div style="display:flex;justify-content:space-between"><span>q&#8321;</span><span style="color:#3a352c">{{ q1Str }} nC</span></div>
+            <div style="display:flex;justify-content:space-between"><span>q&#8322;</span><span style="color:#3a352c">{{ q2Str }} nC</span></div>
+            <div style="display:flex;justify-content:space-between"><span>r</span><span style="color:#3a352c">{{ rStr }} cm</span></div>
+          </div>
+          <div style="margin-top:12px;background:#fbf1ee;border:1px solid #f0d8cf;border-radius:10px;padding:11px 13px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#b8472f">F = {{ fStr }}</div>
+            <div style="font-size:12.5px;color:#a06149;margin-top:3px;font-weight:500">{{ dirStr }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noPair }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;color:#9a927f;line-height:1.5;padding:6px 0">Klik op twee ladingen om ze te selecteren. De kracht ertussen verschijnt hier.</div>
+        </sc-if>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Weergave (uit bij start)</div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
+          <input type="checkbox" checked="{{ fieldOn }}" onChange="{{ toggleField }}" style="width:17px;height:17px;accent-color:#1f9e8f;cursor:pointer">Veldlijnen tonen
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
+          <input type="checkbox" checked="{{ gridOn }}" onChange="{{ toggleGrid }}" style="width:17px;height:17px;accent-color:#1f9e8f;cursor:pointer">Raster &amp; afstand tonen
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
+          <input type="checkbox" checked="{{ forceOn }}" onChange="{{ toggleForce }}" style="width:17px;height:17px;accent-color:#b8472f;cursor:pointer">Krachtpijlen tonen
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
+          <input type="checkbox" checked="{{ sensorOn }}" onChange="{{ toggleSensor }}" style="width:17px;height:17px;accent-color:#caa90f;cursor:pointer">Veldsensor tonen
+        </label>
+      </div>
+
+      <sc-if value="{{ sensorOn }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+            <span style="width:13px;height:13px;border-radius:50%;flex:none;background:#f2d23a;border:1.5px solid #7a6f12"></span>
+            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Veldsensor</span>
+          </div>
+          <div style="display:flex;gap:10px">
+            <div style="flex:1;background:#fbf7e6;border:1px solid #ece2af;border-radius:10px;padding:9px 11px">
+              <div style="font-size:11px;color:#9a8f4a;font-weight:600;letter-spacing:.03em">E-VELD</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#6e6410;margin-top:2px">{{ sMagStr }}</div>
+            </div>
+            <div style="flex:1;background:#fbf7e6;border:1px solid #ece2af;border-radius:10px;padding:9px 11px">
+              <div style="font-size:11px;color:#9a8f4a;font-weight:600;letter-spacing:.03em">RICHTING</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#6e6410;margin-top:2px">{{ sAngStr }}</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#9a927f;margin-top:9px;line-height:1.45">Sleep de gele sensor over het veld om <em>E</em> in een punt te meten.</div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Ladingen ({{ countStr }})</div>
+        <sc-if value="{{ hasCharges }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ chargeRows }}" as="row" hint-placeholder-count="2">
+              <button onClick="{{ row.onClick }}" style="display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:9px;cursor:pointer;text-align:left;border:1.5px solid {{ row.border }};background:{{ row.bg }}">
+                <span style="width:22px;height:22px;border-radius:50%;flex:none;background:{{ row.dot }};color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;line-height:1">{{ row.sign }}</span>
+                <span style="font-size:13.5px;color:#3a352c;font-weight:500">{{ row.label }}</span>
+                <span style="margin-left:auto;font-size:11px;font-weight:600;color:{{ row.tagColor }}">{{ row.tag }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noCharges }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;color:#9a927f;padding:4px 0">Nog geen ladingen. Voeg er twee toe.</div>
+        </sc-if>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55"><b style="color:#3a352c">k</b> = 8,99&middot;10&#8313; N&middot;m&sup2;/C&sup2;. Gelijke ladingen stoten af, ongelijke trekken aan; de kracht neemt af met het kwadraat van de afstand.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  W = 720; H = 480;
+  MPP = 0.0024;
+  K = 8.99e9;
+  stageRef = React.createRef();
+  nextId = 1;
+  drag = null; downPt = null; moved = false;
+
+  state = {
+    charges: [],
+    selected: [],
+    fieldOn: false, gridOn: false, forceOn: false,
+    sensorOn: false, sensor: { x: 360, y: 104 },
+  };
+
+  componentDidMount() {
+    this.add(1, this.W * 0.36, this.H * 0.5);
+    this.add(-1, this.W * 0.64, this.H * 0.5);
+    this.setState({ selected: [1, 2] });
+
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown);
+    window.addEventListener('pointermove', this.onMove);
+    window.addEventListener('pointerup', this.onUp);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('pointermove', this.onMove);
+    window.removeEventListener('pointerup', this.onUp);
+    if (this._acStop) this._acStop();
+  }
+
+  add(q, x, y) {
+    const id = this.nextId++;
+    this.state.charges.push({ id, q, x: x ?? this.W / 2, y: y ?? this.H / 2 });
+    return id;
+  }
+  addPos = () => { const id = this.add(1, this.W / 2 + (Math.random() - .5) * 80, this.H / 2 + (Math.random() - .5) * 80); this.bump(id); };
+  addNeg = () => { const id = this.add(-1, this.W / 2 + (Math.random() - .5) * 80, this.H / 2 + (Math.random() - .5) * 80); this.bump(id); };
+  bump(id) {
+    let sel = this.state.selected.slice();
+    if (!sel.includes(id)) { sel.push(id); if (sel.length > 2) sel = sel.slice(sel.length - 2); }
+    this.setState({ charges: this.state.charges, selected: sel });
+  }
+  clearAll = () => { this.nextId = 1; this.setState({ charges: [], selected: [] }); };
+
+  toggleSelect(id) {
+    let sel = this.state.selected.slice();
+    const i = sel.indexOf(id);
+    if (i >= 0) sel.splice(i, 1);
+    else { sel.push(id); if (sel.length > 2) sel.shift(); }
+    this.setState({ selected: sel });
+  }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  toPx(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
+  }
+  hit(p) {
+    const cs = this.state.charges;
+    for (let i = cs.length - 1; i >= 0; i--) {
+      const c = cs[i];
+      if ((p.x - c.x) ** 2 + (p.y - c.y) ** 2 <= 19 * 19) return c;
+    }
+    return null;
+  }
+  onDown = (e) => {
+    const p = this.toPx(e);
+    const s = this.state.sensor;
+    if (this.state.sensorOn && Math.hypot(p.x - s.x, p.y - s.y) <= 16) {
+      this.drag = { sensor: true }; this.downPt = p; this.moved = false;
+      this.stageRef.current.style.cursor = 'grabbing'; e.preventDefault(); return;
+    }
+    const c = this.hit(p);
+    if (c) { this.drag = c; this.downPt = p; this.moved = false; this.stageRef.current.style.cursor = 'grabbing'; e.preventDefault(); }
+  };
+  onMove = (e) => {
+    if (!this.drag) return;
+    const p = this.toPx(e);
+    if (Math.abs(p.x - this.downPt.x) + Math.abs(p.y - this.downPt.y) > 4) this.moved = true;
+    if (this.drag.sensor) {
+      this.state.sensor.x = Math.max(8, Math.min(this.W - 8, p.x));
+      this.state.sensor.y = Math.max(8, Math.min(this.H - 8, p.y));
+      this.forceUpdate(); return;
+    }
+    this.drag.x = Math.max(16, Math.min(this.W - 16, p.x));
+    this.drag.y = Math.max(16, Math.min(this.H - 16, p.y));
+    this.forceUpdate();
+  };
+  onUp = () => {
+    if (this.drag) {
+      if (!this.drag.sensor && !this.moved) this.toggleSelect(this.drag.id);
+      this.drag = null; this.stageRef.current.style.cursor = 'grab';
+    }
+  };
+
+  loop = () => { this.draw(); this.raf = requestAnimationFrame(this.loop); };
+
+  fieldAt(px, py) {
+    let ex = 0, ey = 0;
+    for (const c of this.state.charges) {
+      const dx = (px - c.x) * this.MPP, dy = (py - c.y) * this.MPP;
+      let r2 = dx * dx + dy * dy; if (r2 < 1e-5) r2 = 1e-5;
+      const r = Math.sqrt(r2);
+      const e = this.K * (c.q * 1e-9) / r2;
+      ex += e * dx / r; ey += e * dy / r;
+    }
+    return { ex, ey };
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  netForce(c) {
+    let fx = 0, fy = 0;
+    for (const o of this.state.charges) {
+      if (o === c) continue;
+      const dx = (c.x - o.x) * this.MPP, dy = (c.y - o.y) * this.MPP;
+      let r2 = dx * dx + dy * dy; if (r2 < 1e-5) r2 = 1e-5;
+      const r = Math.sqrt(r2);
+      const f = this.K * (c.q * o.q) * 1e-18 / r2;
+      fx += f * dx / r; fy += f * dy / r;
+    }
+    return { fx, fy };
+  }
+
+  signature() {
+    return this.state.charges.map(c => c.id + ':' + c.q + ':' + Math.round(c.x) + ',' + Math.round(c.y)).join('|');
+  }
+  getFieldLines() {
+    const sig = this.signature();
+    if (sig === this._sig && this._lines) return this._lines;
+    this._sig = sig; this._lines = this.computeFieldLines();
+    return this._lines;
+  }
+  computeFieldLines() {
+    const chs = this.state.charges;
+    const pos = chs.filter(c => c.q > 0);
+    const sources = pos.length ? pos : chs;
+    const dir = pos.length ? 1 : -1;
+    const seeds = Math.max(6, Math.min(14, Math.round(80 / sources.length)));
+    const step = 7, maxSteps = 320, W = this.W, H = this.H;
+    const lines = [];
+    for (const s of sources) {
+      for (let k = 0; k < seeds; k++) {
+        const a0 = (k / seeds) * Math.PI * 2 + 0.25;
+        let x = s.x + Math.cos(a0) * 17, y = s.y + Math.sin(a0) * 17;
+        const pts = [{ x, y }];
+        for (let i = 0; i < maxSteps; i++) {
+          const { ex, ey } = this.fieldAt(x, y);
+          const mag = Math.hypot(ex, ey); if (mag < 1e-7) break;
+          x += (ex / mag) * step * dir; y += (ey / mag) * step * dir;
+          pts.push({ x, y });
+          if (x < -20 || x > W + 20 || y < -20 || y > H + 20) break;
+          let hit = false;
+          for (const c of chs) { if (c !== s && Math.hypot(x - c.x, y - c.y) < 15) { hit = true; break; } }
+          if (hit) break;
+        }
+        if (pts.length > 2) lines.push(pts);
+      }
+    }
+    return lines;
+  }
+  drawFieldLines(ctx) {
+    const lines = this.getFieldLines();
+    ctx.strokeStyle = 'rgba(96,124,154,0.5)'; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+    for (const pts of lines) {
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(74,104,138,0.92)';
+    for (const pts of lines) {
+      let acc = 0;
+      for (let i = 5; i < pts.length - 1; i++) {
+        acc += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+        if (acc >= 48) {
+          acc = 0;
+          const { ex, ey } = this.fieldAt(pts[i].x, pts[i].y);
+          const mag = Math.hypot(ex, ey); if (mag < 1e-7) continue;
+          this.head(ctx, pts[i].x, pts[i].y, Math.atan2(ey, ex), 6);
+        }
+      }
+    }
+  }
+  head(ctx, x, y, ang, h) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * h, y + Math.sin(ang) * h);
+    ctx.lineTo(x - Math.cos(ang - 0.5) * h, y - Math.sin(ang - 0.5) * h);
+    ctx.lineTo(x - Math.cos(ang + 0.5) * h, y - Math.sin(ang + 0.5) * h);
+    ctx.closePath(); ctx.fill();
+  }
+
+  drawSensor(ctx) {
+    const s = this.state.sensor;
+    const { ex, ey } = this.fieldAt(s.x, s.y);
+    const mag = Math.hypot(ex, ey);
+    if (mag > 1e-6 && this.state.charges.length) {
+      const ang = Math.atan2(ey, ex);
+      const len = 20 + (mag / (mag + 1400)) * 52;
+      this.arrow(ctx, s.x, s.y, ang, len, '#a8910c', 7);
+    }
+    ctx.beginPath(); ctx.arc(s.x, s.y, 9, 0, 6.2832);
+    ctx.fillStyle = '#f2d23a'; ctx.fill();
+    ctx.strokeStyle = '#7a6f12'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(s.x, s.y, 2.4, 0, 6.2832); ctx.fillStyle = '#5a520d'; ctx.fill();
+    const txt = this.state.charges.length ? (mag >= 1000 ? (mag / 1000).toFixed(2) + ' kV/m' : mag.toFixed(0) + ' V/m') : '0 V/m';
+    ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
+    const tw = ctx.measureText(txt).width;
+    const bx = s.x + 13, by = s.y - 27;
+    ctx.fillStyle = 'rgba(255,253,249,0.96)'; ctx.strokeStyle = '#e2d9a0'; ctx.lineWidth = 1;
+    this.rr(ctx, bx, by, tw + 14, 22, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#5a520d'; ctx.fillText(txt, bx + 7, by + 15);
+  }
+
+  arrow(ctx, x, y, ang, len, color, head) {
+    const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
+    ctx.strokeStyle = color; ctx.fillStyle = color;
+    ctx.lineWidth = head > 5 ? 2.4 : 1.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - Math.cos(ang - 0.4) * head, ey - Math.sin(ang - 0.4) * head);
+    ctx.lineTo(ex - Math.cos(ang + 0.4) * head, ey - Math.sin(ang + 0.4) * head);
+    ctx.closePath(); ctx.fill();
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const { charges, selected, fieldOn, gridOn, forceOn, sensorOn } = this.state;
+
+    ctx.fillStyle = '#f7f4ec'; ctx.fillRect(0, 0, this.W, this.H);
+
+    if (gridOn) {
+      ctx.strokeStyle = '#e6e0d2'; ctx.lineWidth = 1;
+      const step = 40;
+      for (let x = step; x < this.W; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, this.H); ctx.stroke(); }
+      for (let y = step; y < this.H; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(this.W, y); ctx.stroke(); }
+    }
+
+    if (fieldOn && charges.length) this.drawFieldLines(ctx);
+
+    if (gridOn && selected.length === 2) {
+      const a = charges.find(c => c.id === selected[0]);
+      const b = charges.find(c => c.id === selected[1]);
+      if (a && b) {
+        ctx.save();
+        ctx.setLineDash([5, 5]); ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        ctx.setLineDash([]);
+        const r_cm = (Math.hypot(a.x - b.x, a.y - b.y) * this.MPP * 100);
+        const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        ctx.font = "600 12px 'IBM Plex Mono', monospace";
+        const txt = 'r = ' + r_cm.toFixed(1) + ' cm';
+        const tw = ctx.measureText(txt).width;
+        ctx.fillStyle = 'rgba(255,253,249,0.9)'; ctx.fillRect(mx - tw / 2 - 5, my - 22, tw + 10, 17);
+        ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.fillText(txt, mx, my - 9);
+        ctx.restore();
+      }
+    }
+
+    if (forceOn && charges.length > 1) {
+      let maxF = 1e-30;
+      const fs = charges.map(c => { const f = this.netForce(c); maxF = Math.max(maxF, Math.hypot(f.fx, f.fy)); return f; });
+      charges.forEach((c, i) => {
+        const f = fs[i]; const mag = Math.hypot(f.fx, f.fy); if (mag < 1e-30) return;
+        const ang = Math.atan2(f.fy, f.fx);
+        const flen = 22 + Math.sqrt(mag / maxF) * 54;
+        this.arrow(ctx, c.x + Math.cos(ang) * 20, c.y + Math.sin(ang) * 20, ang, flen, '#b8472f', 8);
+      });
+    }
+
+    for (const ch of charges) {
+      const sel = selected.includes(ch.id);
+      if (sel) {
+        ctx.beginPath(); ctx.arc(ch.x, ch.y, 22, 0, 6.2832);
+        ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+      }
+      const g = ctx.createRadialGradient(ch.x - 5, ch.y - 6, 3, ch.x, ch.y, 17);
+      if (ch.q > 0) { g.addColorStop(0, '#f08267'); g.addColorStop(1, '#cf3d22'); }
+      else { g.addColorStop(0, '#6f97d8'); g.addColorStop(1, '#2f55a4'); }
+      ctx.beginPath(); ctx.arc(ch.x, ch.y, 16, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = "700 20px 'IBM Plex Sans', sans-serif";
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(ch.q > 0 ? '+' : '\u2212', ch.x, ch.y - 1);
+    }
+    ctx.textBaseline = 'alphabetic';
+
+    if (sensorOn) this.drawSensor(ctx);
+  }
+
+  fmtForce(F) {
+    if (F >= 1e-3) return (F * 1e3).toFixed(2) + ' mN';
+    if (F >= 1e-6) return (F * 1e6).toFixed(2) + ' \u00B5N';
+    if (F >= 1e-9) return (F * 1e9).toFixed(2) + ' nN';
+    return (F * 1e12).toFixed(2) + ' pN';
+  }
+
+  renderVals() {
+    const { charges, selected, fieldOn, gridOn, forceOn, sensorOn, sensor } = this.state;
+    const a = charges.find(c => c.id === selected[0]);
+    const b = charges.find(c => c.id === selected[1]);
+    const hasPair = !!(a && b);
+    let q1Str = '', q2Str = '', rStr = '', fStr = '', dirStr = '';
+    if (hasPair) {
+      const r_m = Math.max(0.012, Math.hypot(a.x - b.x, a.y - b.y) * this.MPP);
+      const F = this.K * Math.abs(a.q * b.q) * 1e-18 / (r_m * r_m);
+      q1Str = (a.q > 0 ? '+' : '\u2212') + Math.abs(a.q).toFixed(0);
+      q2Str = (b.q > 0 ? '+' : '\u2212') + Math.abs(b.q).toFixed(0);
+      rStr = (r_m * 100).toFixed(1);
+      fStr = this.fmtForce(F);
+      dirStr = (a.q * b.q > 0) ? 'afstotend \u2014 gelijke ladingen' : 'aantrekkend \u2014 ongelijke ladingen';
+    }
+    const chargeRows = charges.map((c, i) => {
+      const sel = selected.includes(c.id);
+      return {
+        id: c.id, sign: c.q > 0 ? '+' : '\u2212',
+        label: 'Lading ' + (i + 1) + '  (' + (c.q > 0 ? '+1' : '\u22121') + ' nC)',
+        dot: c.q > 0 ? '#d6492f' : '#3461b0',
+        border: sel ? '#2a2723' : '#ece7dc',
+        bg: sel ? '#f4efe6' : '#fffdf9',
+        tag: sel ? 'geselecteerd' : '',
+        tagColor: '#8c8576',
+        onClick: () => this.toggleSelect(c.id),
+      };
+    });
+    const sf = this.fieldAt(sensor.x, sensor.y);
+    const sMag = Math.hypot(sf.ex, sf.ey);
+    const sMagStr = !charges.length ? '0 V/m' : (sMag >= 1000 ? (sMag / 1000).toFixed(2) + ' kV/m' : sMag.toFixed(0) + ' V/m');
+    let sAngStr = '\u2014';
+    if (charges.length && sMag > 1e-6) {
+      let d = -Math.atan2(sf.ey, sf.ex) * 180 / Math.PI; if (d < 0) d += 360;
+      sAngStr = d.toFixed(0) + '\u00B0';
+    }
+    return {
+      stageRef: this.stageRef,
+      addPos: this.addPos, addNeg: this.addNeg, clearAll: this.clearAll,
+      fieldOn, gridOn, forceOn, sensorOn,
+      toggleField: () => this.setState({ fieldOn: !fieldOn }),
+      toggleGrid: () => this.setState({ gridOn: !gridOn }),
+      toggleForce: () => this.setState({ forceOn: !forceOn }),
+      toggleSensor: () => this.setState({ sensorOn: !sensorOn }),
+      sMagStr, sAngStr,
+      hasPair, noPair: !hasPair,
+      q1Str, q2Str, rStr, fStr, dirStr,
+      chargeRows,
+      hasCharges: charges.length > 0, noCharges: charges.length === 0,
+      countStr: String(charges.length),
+    };
+  }
+}
+</script>
+</body>
+</html>

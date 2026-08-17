@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Polarisatie van licht</h1>
+    <span style="font-size:13px;color:#8c8576">wet van Malus &middot; I = I&#8320;&middot;cos&#178;&theta;</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;display:flex;align-items:center;gap:18px">
+        <div style="flex:1">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ malusStr }}</div>
+        </div>
+        <div style="flex:0 0 180px">
+          <div style="height:12px;border-radius:6px;background:#efeadf;overflow:hidden">
+            <div style="height:100%;background:#1f9e8f;border-radius:6px;transition:width .15s;width:{{ finalPct }}"></div>
+          </div>
+          <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#1f7a6e;font-weight:600;margin-top:5px">{{ finalPct }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:10px 14px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.45">De polarisatoren staan <b>uit</b> bij start &mdash; schakel ze didactisch in. Tip: P1 op 0&deg; en P3 op 90&deg; (gekruist, donker), zet dan P2 op 45&deg; ertussen.</div>
+      </div>
+
+      <sc-for list="{{ polCards }}" as="p" hint-placeholder-count="3">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-size:15px;font-weight:600">{{ p.title }}</span>
+            <button onClick="{{ p.onToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:5px 14px;cursor:pointer;background:{{ p.bg }};color:{{ p.fg }}">{{ p.lbl }}</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p.op }}">
+            <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p.angStr }}</span>
+          </div>
+          <input type="range" min="0" max="180" step="1" value="{{ p.ang }}" onChange="{{ p.onAngle }}" disabled="{{ p.dis }}" style="width:100%;accent-color:#1f9e8f;opacity:{{ p.op }}">
+        </div>
+      </sc-for>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:14px">Trillingsrichting tonen</span>
+        <button onClick="{{ onTogInd }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ indBorder }};background:{{ indBg }};color:{{ indFg }}">
+          <span style="width:8px;height:8px;border-radius:50%;background:{{ indDot }}"></span>{{ indLabel }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { pol: [ { on: false, ang: 0 }, { on: false, ang: 45 }, { on: false, ang: 90 } ], showInd: false };
+  stageRef = React.createRef();
+  W = 660; H = 360;
+  phase = 0; lastTs = 0;
+  geo = { lampX: 56, beamY: 150, polX: [185, 345, 505], polR: 50, detX: 588, indY: 286, indR: 26 };
+
+  computeStages() {
+    const P = this.state.pol;
+    let cur = 1, prev = null;
+    const seg = [1], polAng = [null], afters = [];
+    for (let k = 0; k < 3; k++) {
+      const p = P[k];
+      if (p.on) {
+        if (prev === null) cur *= 0.5;
+        else { const d = (p.ang - prev) * Math.PI / 180; const c = Math.cos(d); cur *= c * c; }
+        prev = p.ang;
+        afters.push(cur);
+      } else afters.push(null);
+      seg.push(cur); polAng.push(prev);
+    }
+    return { seg, polAng, afters, final: cur };
+  }
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts; this.phase += dt;
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    const g = this.geo;
+    const st = this.computeStages();
+    const lightCol = '255,236,176';
+
+    const xs = [g.lampX + 12, g.polX[0], g.polX[1], g.polX[2], g.detX];
+    for (let s = 0; s < 4; s++) {
+      const I = st.seg[s];
+      const x0 = xs[s], x1 = xs[s + 1];
+      ctx.fillStyle = `rgba(${lightCol},${0.10 + 0.42 * I})`;
+      ctx.fillRect(x0, g.beamY - 11, x1 - x0, 22);
+      ctx.fillStyle = `rgba(${lightCol},${0.18 + 0.6 * I})`;
+      ctx.fillRect(x0, g.beamY - 4, x1 - x0, 8);
+      ctx.strokeStyle = `rgba(${lightCol},${0.25 + 0.5 * I})`;
+      ctx.lineWidth = 1.5;
+      const spacing = 26;
+      const off = (this.phase * 60) % spacing;
+      for (let x = x0 + ((spacing - off) % spacing); x < x1; x += spacing) {
+        ctx.beginPath(); ctx.moveTo(x, g.beamY - 9); ctx.lineTo(x, g.beamY + 9); ctx.stroke();
+      }
+    }
+
+    ctx.fillStyle = '#2b3340';
+    this.rr(ctx, 22, g.beamY - 26, 34, 52, 7); ctx.fill();
+    ctx.fillStyle = `rgb(${lightCol})`;
+    this.rr(ctx, 50, g.beamY - 17, 9, 34, 3); ctx.fill();
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.fillText('bron', 39, g.beamY + 44);
+
+    for (let k = 0; k < 3; k++) {
+      const p = this.state.pol[k];
+      this.drawPolarizer(ctx, g.polX[k], g.beamY, g.polR, p, k);
+    }
+
+    const fin = st.final;
+    ctx.fillStyle = '#1b2230';
+    this.rr(ctx, g.detX, g.beamY - 42, 16, 84, 4); ctx.fill();
+    ctx.fillStyle = `rgba(${lightCol},${0.12 + 0.85 * fin})`;
+    this.rr(ctx, g.detX + 2, g.beamY - 38, 12, 76, 3); ctx.fill();
+    ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.fillText('scherm', g.detX + 8, g.beamY + 58);
+
+    if (this.state.showInd) {
+      const gapMid = [(xs[0] + xs[1]) / 2, (xs[1] + xs[2]) / 2, (xs[2] + xs[3]) / 2, (xs[3] + this.W - 10) / 2];
+      for (let s = 0; s < 4; s++) {
+        const cx = Math.min(gapMid[s], this.W - 36);
+        this.drawIndicator(ctx, cx, g.indY, g.indR, st.polAng[s], st.seg[s]);
+      }
+      ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+      ctx.fillText('trillingsrichting', this.W / 2, g.indY + g.indR + 18);
+    }
+  }
+
+  drawPolarizer(ctx, cx, cy, R, p, k) {
+    ctx.save();
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillStyle = p.on ? '#cfe9e4' : '#5b6573';
+    ctx.fillText('P' + (k + 1) + (p.on ? '  ' + p.ang + '\u00B0' : '  uit'), cx, cy - R - 12);
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+    if (p.on) {
+      ctx.fillStyle = 'rgba(31,158,143,0.10)'; ctx.fill();
+      ctx.clip();
+      const a = p.ang * Math.PI / 180;
+      const dx = Math.cos(a), dy = -Math.sin(a);
+      const nx = Math.sin(a), ny = Math.cos(a);
+      ctx.strokeStyle = 'rgba(127,212,200,0.85)'; ctx.lineWidth = 1.6;
+      for (let off = -R; off <= R; off += 7) {
+        const L = Math.sqrt(Math.max(0, R * R - off * off));
+        const mx = cx + nx * off, my = cy + ny * off;
+        ctx.beginPath();
+        ctx.moveTo(mx - dx * L, my - dy * L);
+        ctx.lineTo(mx + dx * L, my + dy * L);
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+      ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5; ctx.stroke();
+      const a2 = p.ang * Math.PI / 180;
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx - Math.cos(a2) * (R + 7), cy + Math.sin(a2) * (R + 7));
+      ctx.lineTo(cx + Math.cos(a2) * (R + 7), cy - Math.sin(a2) * (R + 7));
+      ctx.stroke();
+    } else {
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+      ctx.setLineDash([4, 5]); ctx.strokeStyle = '#3a4351'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  drawIndicator(ctx, cx, cy, R, ang, I) {
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
+    ctx.fillStyle = '#141b26'; ctx.fill();
+    ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (ang === null) {
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 8;
+        const fl = 0.35 + 0.4 * Math.abs(Math.sin(this.phase * 2 + i));
+        ctx.strokeStyle = `rgba(170,180,195,${fl * (0.4 + 0.6 * I)})`;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(cx - Math.cos(a) * (R - 5), cy + Math.sin(a) * (R - 5));
+        ctx.lineTo(cx + Math.cos(a) * (R - 5), cy - Math.sin(a) * (R - 5));
+        ctx.stroke();
+      }
+    } else {
+      const a = ang * Math.PI / 180;
+      const amp = (R - 5) * (0.55 + 0.45 * Math.abs(Math.sin(this.phase * 3)));
+      const dx = Math.cos(a), dy = -Math.sin(a);
+      ctx.strokeStyle = `rgba(255,217,122,${0.45 + 0.55 * I})`;
+      ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx - dx * amp, cy - dy * amp);
+      ctx.lineTo(cx + dx * amp, cy + dy * amp);
+      ctx.stroke();
+      for (const s of [1, -1]) {
+        const ex = cx + dx * amp * s, ey = cy + dy * amp * s;
+        const pa = a + (s > 0 ? 0 : Math.PI);
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - Math.cos(pa - 0.5) * 7, ey + Math.sin(pa - 0.5) * 7);
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - Math.cos(pa + 0.5) * 7, ey + Math.sin(pa + 0.5) * 7);
+        ctx.stroke();
+      }
+    }
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  setPol(i, patch) {
+    this.setState({ pol: this.state.pol.map((p, idx) => idx === i ? { ...p, ...patch } : p) });
+  }
+
+  renderVals() {
+    const st = this.computeStages();
+    const P = this.state.pol;
+    const polCards = P.map((p, i) => ({
+      title: 'Polarisator ' + (i + 1),
+      on: p.on, ang: p.ang,
+      angStr: p.on ? p.ang + '\u00B0' : 'uit',
+      bg: p.on ? '#1f9e8f' : '#e7e1d5',
+      fg: p.on ? '#fff' : '#8c8576',
+      lbl: p.on ? 'Aan' : 'Uit',
+      op: p.on ? '1' : '0.4',
+      dis: !p.on,
+      onToggle: () => this.setPol(i, { on: !P[i].on }),
+      onAngle: (e) => this.setPol(i, { ang: Number(e.target.value) }),
+    }));
+    let prev = null; const terms = [];
+    for (let k = 0; k < 3; k++) {
+      const p = P[k];
+      if (!p.on) continue;
+      if (prev === null) terms.push('\u00BD');
+      else terms.push('cos\u00B2(' + Math.abs(p.ang - prev) + '\u00B0)');
+      prev = p.ang;
+    }
+    const anyOn = P.some(p => p.on);
+    const malusStr = terms.length
+      ? 'I = I\u2080 \u00B7 ' + terms.join(' \u00B7 ') + ' = ' + (st.final * 100).toFixed(1) + '%'
+      : 'I = I\u2080 = 100%  (geen polarisator actief)';
+    const ind = this.state.showInd;
+    return {
+      stageRef: this.stageRef,
+      malusStr,
+      finalPct: (st.final * 100).toFixed(1) + '%',
+      polCards,
+      onTogInd: () => this.setState({ showInd: !this.state.showInd }),
+      indLabel: ind ? 'Aan' : 'Uit',
+      indBg: ind ? '#2f6fb0' : '#f4f1ea', indFg: ind ? '#fff' : '#8c8576',
+      indBorder: ind ? '#2f6fb0' : '#e7e1d5', indDot: ind ? '#bcd8f2' : '#c3bcad',
+    };
+  }
+}
+</script>
+</body>
+</html>

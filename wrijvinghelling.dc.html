@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#eef1f4"/>
+  <path d="M14 78 L86 78 L14 40 Z" fill="#cdd4dc" stroke="#8d99a6" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="34" y="46" width="16" height="16" rx="2" fill="#caa45f" stroke="#6f5527" stroke-width="2" transform="rotate(28 42 54)"/>
+  <line x1="42" y1="54" x2="42" y2="78" stroke="#3a7ad9" stroke-width="2.5"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Wrijving op een hellend vlak</h1>
+    <span style="font-size:13px;color:#8c8576">statische &amp; kinetische wrijving</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#eef1f4;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#3a7ad9;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f9a63;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#d2622e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
+        <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#6b5bd6;border-radius:2px;display:inline-block"></span>motorkracht F<sub>m</sub></div>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #9bb4d8"></span>componenten van g</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="display:flex;gap:4px;flex:none;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
+        <button onClick="{{ onModeBlock }}" style="{{ blockTabStyle }}">Blok glijdt af</button>
+        <button onClick="{{ onModeCar }}" style="{{ carTabStyle }}">Auto rijdt omhoog</button>
+      </div>
+
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onRelease }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#2f6f5e;color:#fff">{{ releaseLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Hellingshoek &theta;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
+        </div>
+        <input type="range" min="0" max="60" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Massa m</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ massStr }}</span>
+        </div>
+        <input type="range" min="0.5" max="10" step="0.5" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:#2f6f5e">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Statische wrijving &mu;&#8347;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ musStr }}</span>
+        </div>
+        <input type="range" min="0" max="1.2" step="0.01" value="{{ mus }}" onInput="{{ onMus }}" style="width:100%;accent-color:#d2622e;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Kinetische wrijving &mu;&#8342;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c9772f">{{ mukStr }}</span>
+        </div>
+        <input type="range" min="0" max="1.2" step="0.01" value="{{ muk }}" onInput="{{ onMuk }}" style="width:100%;accent-color:#e0903a">
+        <div style="font-size:11px;color:#b3ab9b;margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
+      </div>
+
+      <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:14px;font-weight:500">Motorkracht F<sub>m</sub></span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#5b53c4">{{ fmotorStr }}</span>
+          </div>
+          <input type="range" min="0" max="120" step="1" value="{{ fmotor }}" onInput="{{ onFmotor }}" style="width:100%;accent-color:#6b5bd6">
+        </div>
+      </sc-if>
+
+      <div style="background:{{ stCardBg }};border:1px solid {{ stCardBorder }};border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
+          <span style="font-size:14px;font-weight:700">{{ statusLabel }}</span>
+        </div>
+        <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#5b53c4">{{ motorStr }}</span></div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Hellingscomponent F<sub>z</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ drivingStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Max. statische wrijving &mu;&#8347;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ maxStaticStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f9a63">{{ normalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#d2622e">{{ frictionStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Versnelling a</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ accelStr }}</span></div>
+      </div>
+
+      <sc-if value="{{ isBlock }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+          <div style="font-size:12px;color:#6f685c;line-height:1.55">Het blok glijdt zodra de hellingscomponent groter wordt dan de maximale statische wrijving: <b>tan&thinsp;&theta; &gt; &mu;&#8347;</b> (hier bij &theta; &gt; {{ slipAngleStr }}).</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+          <div style="font-size:12px;color:#6f685c;line-height:1.55">De auto rijdt omhoog zodra de motorkracht groter is dan de hellingscomponent plus de maximale statische wrijving: <b>F<sub>m</sub> &gt; F<sub>z</sub>&middot;sin&theta; + &mu;&#8347;&middot;F<sub>N</sub></b>.</div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;zwaartekracht&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Aarde&quot;,&quot;Maan&quot;,&quot;Mars&quot;],&quot;default&quot;:&quot;Aarde&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;toonComponenten&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 760; H = 520;
+
+  pivot = { x: 92, y: 450 };
+  Lpx = 470;
+  Lm = 6;
+  block = 46;
+  dMin = 0.55;
+
+  theta = 25; mass = 3; mus = 0.50; muk = 0.35;
+  mode = 'block'; Fmotor = 55;
+  d = 6 * 0.62; v = 0; released = false; moving = false;
+  state = { tick: 0 };
+
+  g() {
+    const p = this.props && this.props.zwaartekracht;
+    if (p === 'Maan') return 1.62;
+    if (p === 'Mars') return 3.71;
+    return 9.81;
+  }
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => this.setupCanvas();
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current || this._cv; if (!c) return; this._cv = c;
+        this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  slips() { return Math.tan(this.theta * Math.PI / 180) > this.mus + 1e-9; }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const th = this.theta * Math.PI / 180;
+    if (this.mode === 'car') {
+      if (this.released) {
+        const G = this.g(); const Fz = this.mass * G;
+        const N = Fz * Math.cos(th); const down = Fz * Math.sin(th); const Fm = this.Fmotor;
+        if (!this.moving && Fm > down + this.mus * N) this.moving = true;
+        if (this.moving) {
+          const a = (Fm - down - this.muk * N) / this.mass;
+          this.v += a * dt;
+          if (this.v <= 0) { this.v = 0; this.moving = false; }
+          else {
+            this.d += (this.v * dt) / this.Lm;
+            const dMax = this.Lm - 1.0;
+            if (this.d >= dMax) { this.d = dMax; this.v = 0; this.moving = false; }
+          }
+        }
+      }
+    } else if (this.released && this.slips()) {
+      const a = this.g() * (Math.sin(th) - this.muk * Math.cos(th));
+      if (a > 0) {
+        this.moving = true;
+        this.v += a * dt;
+        this.d -= (this.v * dt) / this.Lpx * (this.Lpx / this.Lm); // meters
+        if (this.d <= this.dMin) { this.d = this.dMin; this.v = 0; this.moving = false; }
+      }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.12) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  arrow(ctx, x, y, dx, dy, col, w, label) {
+    const len = Math.hypot(dx, dy); if (len < 1) return;
+    const ex = x + dx, ey = y + dy;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+    const a = Math.atan2(dy, dx), hl = 11, ha = 0.45;
+    ctx.beginPath(); ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - hl * Math.cos(a - ha), ey - hl * Math.sin(a - ha));
+    ctx.lineTo(ex - hl * Math.cos(a + ha), ey - hl * Math.sin(a + ha));
+    ctx.closePath(); ctx.fill();
+    if (label) {
+      const mainF = "600 13px 'IBM Plex Sans',sans-serif";
+      const subF = "600 9px 'IBM Plex Sans',sans-serif";
+      ctx.fillStyle = col; ctx.textBaseline = 'middle';
+      const lx = ex + (dx / len) * 16, ly = ey + (dy / len) * 16;
+      const us = label.indexOf('_');
+      if (us < 0) {
+        ctx.font = mainF; ctx.textAlign = 'center';
+        ctx.fillText(label, lx, ly);
+      } else {
+        const main = label.slice(0, us), sub = label.slice(us + 1);
+        ctx.textAlign = 'left';
+        ctx.font = mainF; const mw = ctx.measureText(main).width;
+        ctx.font = subF; const sw = ctx.measureText(sub).width;
+        const total = mw + sw; const sx = lx - total / 2;
+        ctx.font = mainF; ctx.fillText(main, sx, ly);
+        ctx.font = subF; ctx.fillText(sub, sx + mw, ly + 4);
+      }
+    }
+  }
+
+  roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  draw() {
+    const c = this.stageRef.current || this._cv; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#eef1f4'; ctx.fillRect(0, 0, this.W, this.H);
+
+    const th = this.theta * Math.PI / 180;
+    const ux = Math.cos(th), uy = -Math.sin(th);      // up-slope
+    const nx = -Math.sin(th), ny = -Math.cos(th);     // outward normal
+    const P = this.pivot;
+    const top = { x: P.x + this.Lpx * ux, y: P.y + this.Lpx * uy };
+    const foot = { x: P.x + this.Lpx * ux, y: P.y };
+
+    // ground
+    ctx.strokeStyle = '#b9c2cc'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(20, P.y); ctx.lineTo(this.W - 20, P.y); ctx.stroke();
+    for (let x = 24; x < this.W - 20; x += 16) { ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x - 7, P.y + 8); ctx.strokeStyle = 'rgba(150,162,176,0.5)'; ctx.lineWidth = 1; ctx.stroke(); }
+
+    // ramp triangle
+    ctx.beginPath(); ctx.moveTo(P.x, P.y); ctx.lineTo(top.x, top.y); ctx.lineTo(foot.x, foot.y); ctx.closePath();
+    const grd = ctx.createLinearGradient(P.x, P.y, top.x, top.y);
+    grd.addColorStop(0, '#cdd4dc'); grd.addColorStop(1, '#dde3e9');
+    ctx.fillStyle = grd; ctx.fill();
+    ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+
+    // angle arc + label
+    ctx.strokeStyle = '#7a8694'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(P.x, P.y, 42, -th, 0); ctx.stroke();
+    ctx.fillStyle = '#566069'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round(this.theta) + '\u00B0', P.x + 50, P.y - 20 * Math.sin(th / 2 + 0.1) - 4);
+
+    // object on the slope (one side parallel to the incline)
+    const isCar = this.mode === 'car';
+    const distPx = this.d / this.Lm * this.Lpx;
+    const S = { x: P.x + distPx * ux, y: P.y + distPx * uy };
+    const objH = isCar ? 30 : this.block;
+    const half = objH / 2;
+    const C = { x: S.x + nx * half, y: S.y + ny * half };
+
+    ctx.save(); ctx.translate(C.x, C.y); ctx.rotate(-th);
+    if (isCar) {
+      const L = 80, bh = 30, hx = L / 2, hy = bh / 2;
+      // wheels rest on the surface (local y = +hy)
+      for (const wx of [-hx * 0.56, hx * 0.56]) {
+        ctx.fillStyle = '#2b2b2b'; ctx.beginPath(); ctx.arc(wx, hy - 7, 7, 0, 2 * Math.PI); ctx.fill();
+        ctx.fillStyle = '#9a9a9a'; ctx.beginPath(); ctx.arc(wx, hy - 7, 3.2, 0, 2 * Math.PI); ctx.fill();
+      }
+      // body
+      const bg = ctx.createLinearGradient(0, -hy, 0, hy);
+      bg.addColorStop(0, '#d3563f'); bg.addColorStop(1, '#b23f2c');
+      ctx.fillStyle = bg; ctx.strokeStyle = '#7e2a1c'; ctx.lineWidth = 2;
+      this.roundRect(ctx, -hx, hy - 22, L, 16, 4); ctx.fill(); ctx.stroke();
+      // cabin
+      ctx.fillStyle = '#e8d9b0'; ctx.strokeStyle = '#7e2a1c';
+      this.roundRect(ctx, -hx * 0.36, -hy + 2, hx * 0.72, 12, 3); ctx.fill(); ctx.stroke();
+    } else {
+      const hb = this.block / 2;
+      const bg = ctx.createLinearGradient(-hb, -hb, hb, hb);
+      bg.addColorStop(0, '#caa45f'); bg.addColorStop(1, '#a9823f');
+      ctx.fillStyle = bg; ctx.strokeStyle = '#6f5527'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.rect(-hb, -hb, this.block, this.block); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(-hb + 4, -hb + 4, this.block - 8, 6);
+      ctx.fillStyle = '#5e481f'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('m', 0, 1);
+    }
+    ctx.restore();
+
+    // forces
+    const G = this.g();
+    const Wt = this.mass * G;
+    const N = Wt * Math.cos(th);
+    const driving = Wt * Math.sin(th);
+    const slips = this.slips();
+    let f, fdir = 1, Fm = 0;
+    if (isCar) {
+      Fm = this.Fmotor;
+      if (this.moving) { f = this.muk * N; fdir = -1; }       // friction down-slope, opposing upward motion
+      else {
+        const net = Fm - driving;
+        f = Math.min(Math.abs(net), this.mus * N);
+        fdir = net >= 0 ? -1 : 1;
+      }
+    } else {
+      if (this.released && slips && this.moving) f = this.muk * N;
+      else if (slips) f = this.mus * N;            // about to slip (max static)
+      else f = driving;                             // static equilibrium
+    }
+    const sc = Math.min(1.5, 150 / Math.max(40, Wt));  // px per N, gentle cap
+    const showComp = !(this.props && this.props.toonComponenten === false);
+
+    // gravity components (dashed)
+    if (showComp) {
+      ctx.save(); ctx.setLineDash([6, 5]);
+      this.arrow(ctx, C.x, C.y, -ux * driving * sc, -uy * driving * sc, '#9bb4d8', 2, null); // down-slope (= Fz sinθ)
+      this.arrow(ctx, C.x, C.y, -nx * N * sc, -ny * N * sc, '#9bb4d8', 2, null);             // into surface (= Fz cosθ)
+      ctx.setLineDash([]); ctx.restore();
+    }
+    // motor force (car, up-slope)
+    if (isCar) this.arrow(ctx, C.x, C.y, ux * Fm * sc, uy * Fm * sc, '#6b5bd6', 3.2, 'F_m');
+    // weight (down)
+    this.arrow(ctx, C.x, C.y, 0, Wt * sc, '#3a7ad9', 3.2, 'F_z');
+    // normal (outward)
+    this.arrow(ctx, C.x, C.y, nx * N * sc, ny * N * sc, '#2f9a63', 3.2, 'F_N');
+    // friction (opposing the motion tendency)
+    this.arrow(ctx, C.x, C.y, fdir * ux * f * sc, fdir * uy * f * sc, '#d2622e', 3.4, 'F_W');
+  }
+
+  renderVals() {
+    const G = this.g();
+    const th = this.theta * Math.PI / 180;
+    const W = this.mass * G;
+    const N = W * Math.cos(th);
+    const driving = W * Math.sin(th);
+    const maxStatic = this.mus * N;
+    const isCar = this.mode === 'car';
+    const slips = this.slips();
+    let status, dot, f, a, stBg, stBorder;
+    if (isCar) {
+      const Fm = this.Fmotor;
+      if (this.moving) {
+        status = 'Rijdt omhoog'; dot = '#3a8a55'; f = this.muk * N;
+        a = (Fm - driving - this.muk * N) / this.mass; stBg = '#eef6f0'; stBorder = '#cbe5d4';
+      } else if (this.released) {
+        if (Fm > driving + maxStatic) { status = 'Motor sterk genoeg \u2014 komt in beweging'; dot = '#c9a23f'; }
+        else { status = 'Motor te zwak \u2014 blijft staan'; dot = '#b8472f'; }
+        f = Math.min(Math.abs(Fm - driving), maxStatic); a = 0; stBg = '#fdf3e7'; stBorder = '#ecd2a8';
+      } else {
+        status = 'Motor uit'; dot = '#8c8576'; f = Math.min(driving, maxStatic); a = 0;
+        stBg = '#f1eee7'; stBorder = '#e2dccf';
+      }
+    } else if (slips) {
+      if (this.released && this.moving) { status = 'Glijdt \u2014 kinetische wrijving'; dot = '#b8472f'; f = this.muk * N; a = G * (Math.sin(th) - this.muk * Math.cos(th)); }
+      else if (this.released) { status = 'Tot stilstand gekomen'; dot = '#c9a23f'; f = this.muk * N; a = 0; }
+      else { status = 'Op het punt van glijden'; dot = '#c9a23f'; f = maxStatic; a = 0; }
+      stBg = '#fdf3e7'; stBorder = '#ecd2a8';
+    } else {
+      status = this.released ? 'Blijft in rust' : 'In rust (statisch)'; dot = '#3a8a55';
+      f = driving; a = 0; stBg = '#eef6f0'; stBorder = '#cbe5d4';
+    }
+    const slipAngle = Math.atan(this.mus) * 180 / Math.PI;
+    const fmt = (x) => x.toFixed(1) + ' N';
+    const tabOn = 'flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;cursor:pointer;background:#2f6f5e;color:#fff';
+    const tabOff = 'flex:1;font-family:inherit;font-size:13px;font-weight:500;border:none;border-radius:9px;padding:8px 6px;cursor:pointer;background:transparent;color:#6f685c';
+    return {
+      stageRef: this.stageRef,
+      theta: this.theta, mass: this.mass, mus: this.mus, muk: this.muk,
+      thetaStr: Math.round(this.theta) + '\u00B0',
+      massStr: this.mass.toFixed(1) + ' kg',
+      musStr: this.mus.toFixed(2), mukStr: this.muk.toFixed(2),
+      isCar: isCar, isBlock: !isCar,
+      fmotor: this.Fmotor, fmotorStr: this.Fmotor.toFixed(0) + ' N', motorStr: fmt(this.Fmotor),
+      blockTabStyle: isCar ? tabOff : tabOn, carTabStyle: isCar ? tabOn : tabOff,
+      onModeBlock: () => { this.mode = 'block'; this.released = false; this.resetMotion(); this.forceUpdate(); },
+      onModeCar: () => { this.mode = 'car'; this.released = false; this.resetMotion(); this.forceUpdate(); },
+      onFmotor: (e) => { this.Fmotor = parseFloat(e.target.value); this.moving = false; this.forceUpdate(); },
+      onTheta: (e) => { this.theta = parseFloat(e.target.value); this.resetMotion(); this.forceUpdate(); },
+      onMass: (e) => { this.mass = parseFloat(e.target.value); this.forceUpdate(); },
+      onMus: (e) => { this.mus = parseFloat(e.target.value); this.resetMotion(); this.forceUpdate(); },
+      onMuk: (e) => { this.muk = parseFloat(e.target.value); this.forceUpdate(); },
+      onRelease: () => { this.released = !this.released; if (!this.released) this.resetMotion(); this.forceUpdate(); },
+      onReset: () => { this.released = false; this.resetMotion(); this.forceUpdate(); },
+      releaseLabel: isCar ? (this.released ? 'Motor uit' : 'Start motor') : (this.released ? 'Vastzetten' : 'Laat los'),
+      statusLabel: status, statusDot: dot, stCardBg: stBg, stCardBorder: stBorder,
+      drivingStr: fmt(driving), maxStaticStr: fmt(maxStatic), normalStr: fmt(N), frictionStr: fmt(f),
+      accelStr: a.toFixed(2) + ' m/s\u00B2',
+      slipAngleStr: slipAngle.toFixed(1) + '\u00B0',
+    };
+  }
+
+  resetMotion() { this.d = this.mode === 'car' ? this.dMin : this.Lm * 0.62; this.v = 0; this.moving = false; }
+}
+</script>
+</body>
+</html>

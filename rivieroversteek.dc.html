@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Onafhankelijkheidsbeginsel</h1>
+    <span style="font-size:13px;color:#8c8576">boot steekt rivier over &middot; vectoroptelling</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#1f9e8f;border-radius:2px;display:inline-block"></span>boot t.o.v. water</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#5b9bff;border-radius:2px;display:inline-block"></span>stroming</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>werkelijke snelheid</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:322px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw</button>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Vaarsnelheid boot</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vbStr }}</span>
+        </div>
+        <input type="range" min="1" max="8" step="0.1" value="{{ vb }}" onChange="{{ onVb }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Stuurhoek</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ angStr }}</span>
+        </div>
+        <input type="range" min="-70" max="70" step="1" value="{{ ang }}" onChange="{{ onAng }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:4px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#a39c8d;margin-bottom:16px"><span>opwaarts</span><span>recht</span><span>afwaarts</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Stroomsnelheid</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vrStr }}</span>
+        </div>
+        <input type="range" min="0" max="6" step="0.1" value="{{ vr }}" onChange="{{ onVr }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Breedte rivier</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ widthStr }}</span>
+        </div>
+        <input type="range" min="20" max="120" step="5" value="{{ width }}" onChange="{{ onWidth }}" style="width:100%;accent-color:#1f9e8f">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Vectoren (uit bij start)</span>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:14px;height:3px;background:#1f9e8f;border-radius:2px"></span>boot t.o.v. water</span>
+          <button onClick="{{ onTogBoot }}" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid {{ bootBorder }};background:{{ bootBg }};color:{{ bootFg }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ bootDot }}"></span>{{ bootLabel }}</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:14px;height:3px;background:#5b9bff;border-radius:2px"></span>stroming</span>
+          <button onClick="{{ onTogStroom }}" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid {{ stroomBorder }};background:{{ stroomBg }};color:{{ stroomFg }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ stroomDot }}"></span>{{ stroomLabel }}</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px"></span>werkelijke snelheid</span>
+          <button onClick="{{ onTogRes }}" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid {{ resBorder }};background:{{ resBg }};color:{{ resFg }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ resDot }}"></span>{{ resLabel }}</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:14px;height:0;border-top:2px dashed #b9b3a6"></span>parallellogram</span>
+          <button onClick="{{ onTogPara }}" style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid {{ paraBorder }};background:{{ paraBg }};color:{{ paraFg }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ paraDot }}"></span>{{ paraLabel }}</button>
+        </div>
+        <button onClick="{{ onStraight }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:10px;cursor:pointer;background:#fff;color:#1f7a6e;margin-top:2px">&#x21E7; Stuurhoek voor loodrecht oversteken</button>
+      </div>
+
+      <div style="background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6ee">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8a93a3;font-weight:600;margin-bottom:12px">Resultaat</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:#aeb6c2">werkelijke snelheid</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#f0a868">{{ vResStr }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:#aeb6c2">overtijd</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ timeStr }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:13px;color:#aeb6c2">verplaatsing langs oever</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ driftStr }}</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;background:{{ verdBg }};color:{{ verdFg }};text-align:center">{{ verdict }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { vb: 4, ang: 0, vr: 2, width: 60, running: false, arrived: false, showBoot: false, showStroom: false, showRes: false, showPara: false };
+  stageRef = React.createRef();
+  W = 640; H = 460;
+  topBank = 64; botBank = 404;
+  startX = 120;
+  K = 20;
+  timeScale = 2.2;
+  flow = 0;
+  bx = 0; by = 0;
+  trail = [];
+  lastTs = 0;
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.resetBoat();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  pxPerM() { return (this.botBank - this.topBank) / this.state.width; }
+  resetBoat() { this.bx = 0; this.by = 0; this.trail = []; }
+
+  vel() {
+    const th = this.state.ang * Math.PI / 180;
+    const bAcross = this.state.vb * Math.cos(th);
+    const bDown = this.state.vb * Math.sin(th);
+    const down = this.state.vr + bDown;
+    return { across: bAcross, down: down };
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts;
+    this.flow += dt * this.state.vr * 30;
+    if (this.state.running && !this.state.arrived) {
+      const v = this.vel();
+      const sdt = dt * this.timeScale;
+      this.by += v.across * sdt;
+      this.bx += v.down * sdt;
+      if (this.by >= this.state.width) { this.by = this.state.width; this.setState({ running: false, arrived: true }); }
+      const ppm = this.pxPerM();
+      this.trail.push({ x: this.startX + this.bx * ppm, y: this.botBank - this.by * ppm });
+      if (this.trail.length > 2000) this.trail.shift();
+    }
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  arrow(ctx, x, y, dx, dy, color, wdt) {
+    const len = Math.hypot(dx, dy); if (len < 0.5) return;
+    const ex = x + dx, ey = y + dy;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = wdt || 3; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+    const ang = Math.atan2(dy, dx), hl = 10, ha = 0.5;
+    ctx.beginPath(); ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - hl * Math.cos(ang - ha), ey - hl * Math.sin(ang - ha));
+    ctx.lineTo(ex - hl * Math.cos(ang + ha), ey - hl * Math.sin(ang + ha));
+    ctx.closePath(); ctx.fill();
+  }
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#1c2a1f'; ctx.fillRect(0, 0, this.W, this.topBank);
+    ctx.fillStyle = '#1c2a1f'; ctx.fillRect(0, this.botBank, this.W, this.H - this.botBank);
+    ctx.fillStyle = '#10283a'; ctx.fillRect(0, this.topBank, this.W, this.botBank - this.topBank);
+    ctx.strokeStyle = 'rgba(95,155,255,0.22)'; ctx.lineWidth = 2; ctx.setLineDash([26, 30]);
+    const off = (this.flow % 56);
+    for (let y = this.topBank + 18; y < this.botBank; y += 26) {
+      ctx.beginPath(); ctx.lineDashOffset = -off; ctx.moveTo(-20, y); ctx.lineTo(this.W + 20, y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.strokeStyle = '#3a5a3f'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, this.topBank); ctx.lineTo(this.W, this.topBank);
+    ctx.moveTo(0, this.botBank); ctx.lineTo(this.W, this.botBank); ctx.stroke();
+    ctx.fillStyle = '#7f8896'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillText('overkant', this.W / 2, this.topBank - 8);
+    ctx.fillText('vertrekoever', this.W / 2, this.botBank + 18);
+
+    const ppm = this.pxPerM();
+    ctx.beginPath(); ctx.arc(this.startX, this.botBank, 4, 0, 6.2832); ctx.fillStyle = '#9aa3b0'; ctx.fill();
+    ctx.fillStyle = '#7f8896'; ctx.fillText('start', this.startX, this.botBank + 32);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 5]);
+    ctx.beginPath(); ctx.moveTo(this.startX, this.botBank); ctx.lineTo(this.startX, this.topBank); ctx.stroke(); ctx.setLineDash([]);
+
+    const v = this.vel();
+    if (v.across > 0.001) {
+      const T = this.state.width / v.across;
+      const driftPx = v.down * T * ppm;
+      const lx = this.startX + driftPx, ly = this.topBank;
+      ctx.strokeStyle = 'rgba(240,168,104,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(this.startX, this.botBank); ctx.lineTo(lx, ly); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, 6.2832); ctx.fillStyle = '#f0a868'; ctx.fill();
+    }
+
+    if (this.trail.length > 1) {
+      ctx.strokeStyle = 'rgba(240,168,104,0.9)'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      for (const p of this.trail) ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+
+    const bx = this.startX + this.bx * ppm, by = this.botBank - this.by * ppm;
+    const th = this.state.ang * Math.PI / 180;
+    const hx = Math.sin(th), hy = -Math.cos(th);
+    ctx.save(); ctx.translate(bx, by); ctx.rotate(Math.atan2(hy, hx) + Math.PI / 2);
+    ctx.fillStyle = '#1f9e8f'; ctx.strokeStyle = '#0e131b'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, -13); ctx.lineTo(7, 6); ctx.lineTo(4, 11); ctx.lineTo(-4, 11); ctx.lineTo(-7, 6);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+
+    const vBoatX = hx * this.state.vb * this.K, vBoatY = hy * this.state.vb * this.K;
+    const vStrX = this.state.vr * this.K, vStrY = 0;
+    const vResX = vBoatX + vStrX, vResY = vBoatY + vStrY;
+    // nearly-transparent parallelogram making the graphical vector sum explicit
+    if (this.state.showPara && (this.state.showBoot || this.state.showStroom || this.state.showRes)) {
+      ctx.save();
+      ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.30)';
+      // boot vector translated to tip of stroming, and vice versa
+      ctx.beginPath(); ctx.moveTo(bx + vStrX, by + vStrY); ctx.lineTo(bx + vResX, by + vResY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx + vBoatX, by + vBoatY); ctx.lineTo(bx + vResX, by + vResY); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(232,150,76,0.07)';
+      ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + vBoatX, by + vBoatY); ctx.lineTo(bx + vResX, by + vResY); ctx.lineTo(bx + vStrX, by + vStrY); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+    if (this.state.showBoot) this.arrow(ctx, bx, by, vBoatX, vBoatY, '#1f9e8f', 3);
+    if (this.state.showStroom) this.arrow(ctx, bx, by, vStrX, vStrY, '#5b9bff', 3);
+    if (this.state.showRes) this.arrow(ctx, bx, by, vResX, vResY, '#e8964c', 3.5);
+
+    ctx.fillStyle = '#7f8896'; ctx.font = "500 11px 'IBM Plex Mono', monospace";
+    ctx.save(); ctx.translate(this.W - 14, (this.topBank + this.botBank) / 2); ctx.rotate(Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText('breedte ' + this.state.width + ' m', 0, 0); ctx.restore();
+  }
+
+  renderVals() {
+    const th = this.state.ang * Math.PI / 180;
+    const across = this.state.vb * Math.cos(th);
+    const down = this.state.vr + this.state.vb * Math.sin(th);
+    const vRes = Math.hypot(across, down);
+    let timeStr = '\u2014', driftStr = '\u2014', verdict, verdBg, verdFg;
+    if (across > 0.001) {
+      const T = this.state.width / across;
+      const drift = down * T;
+      timeStr = T.toFixed(1) + ' s';
+      const ad = Math.abs(drift);
+      driftStr = ad.toFixed(1) + ' m ' + (ad < 0.5 ? '' : (drift > 0 ? 'afw.' : 'opw.'));
+      if (ad < 1) { verdict = 'steekt recht over'; verdBg = 'rgba(31,158,143,0.2)'; verdFg = '#5fd3c2'; }
+      else if (drift > 0) { verdict = 'drijft stroomafwaarts'; verdBg = 'rgba(91,155,255,0.16)'; verdFg = '#7fb0ff'; }
+      else { verdict = 'drijft stroomopwaarts'; verdBg = 'rgba(232,150,76,0.16)'; verdFg = '#f0a868'; }
+    } else { verdict = 'boot vaart niet vooruit'; verdBg = 'rgba(255,255,255,0.08)'; verdFg = '#aeb6c2'; }
+    const tg = (on, col) => ({ bg: on ? col : '#f4f1ea', fg: on ? '#fff' : '#8c8576', border: on ? col : '#e7e1d5', dot: on ? '#ffffff' : '#c3bcad', label: on ? 'Aan' : 'Uit' });
+    const tb = tg(this.state.showBoot, '#1f9e8f'), ts = tg(this.state.showStroom, '#2f6fb0'), tr = tg(this.state.showRes, '#d98a2b'), tp = tg(this.state.showPara, '#6f685c');
+    return {
+      stageRef: this.stageRef,
+      vb: this.state.vb, ang: this.state.ang, vr: this.state.vr, width: this.state.width,
+      vbStr: this.state.vb.toFixed(1) + ' m/s',
+      angStr: (this.state.ang > 0 ? '+' : '') + this.state.ang + '\u00B0',
+      vrStr: this.state.vr.toFixed(1) + ' m/s',
+      widthStr: this.state.width + ' m',
+      vResStr: vRes.toFixed(2) + ' m/s',
+      timeStr, driftStr, verdict, verdBg, verdFg,
+      playLbl: this.state.arrived ? 'Opnieuw' : (this.state.running ? 'Pauze' : 'Start'),
+      onVb: (e) => { this.resetBoat(); this.setState({ vb: Number(e.target.value), running: false, arrived: false }); },
+      onAng: (e) => { this.resetBoat(); this.setState({ ang: Number(e.target.value), running: false, arrived: false }); },
+      onVr: (e) => { this.resetBoat(); this.setState({ vr: Number(e.target.value), running: false, arrived: false }); },
+      onWidth: (e) => { this.resetBoat(); this.setState({ width: Number(e.target.value), running: false, arrived: false }); },
+      onTogBoot: () => this.setState({ showBoot: !this.state.showBoot }),
+      onTogStroom: () => this.setState({ showStroom: !this.state.showStroom }),
+      onTogRes: () => this.setState({ showRes: !this.state.showRes }),
+      onTogPara: () => this.setState({ showPara: !this.state.showPara }),
+      bootLabel: tb.label, bootBg: tb.bg, bootFg: tb.fg, bootBorder: tb.border, bootDot: tb.dot,
+      stroomLabel: ts.label, stroomBg: ts.bg, stroomFg: ts.fg, stroomBorder: ts.border, stroomDot: ts.dot,
+      resLabel: tr.label, resBg: tr.bg, resFg: tr.fg, resBorder: tr.border, resDot: tr.dot,
+      paraLabel: tp.label, paraBg: tp.bg, paraFg: tp.fg, paraBorder: tp.border, paraDot: tp.dot,
+      onStraight: () => {
+        this.resetBoat();
+        let a = 0;
+        if (this.state.vr <= this.state.vb) a = Math.round(Math.asin(this.state.vr / this.state.vb) * 180 / Math.PI);
+        else a = 70;
+        this.setState({ ang: -a, running: false, arrived: false });
+      },
+      onPlay: () => {
+        if (this.state.arrived) { this.resetBoat(); this.setState({ running: true, arrived: false }); }
+        else this.setState({ running: !this.state.running });
+      },
+      onReset: () => { this.resetBoat(); this.setState({ running: false, arrived: false }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Staande golf door reflectie</h1>
+    <span style="font-size:13px;color:#8c8576">interferentie van twee golven</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;align-items:center">
+        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#a39c8d;font-weight:600;margin-right:4px">Componenten (uit bij start)</span>
+        <button onClick="{{ onTogInc }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ incBg }};color:{{ incFg }}"><span style="width:22px;height:3px;background:#7fb4ff;border-radius:2px;display:inline-block;opacity:{{ incDot }}"></span>heenlopend</button>
+        <button onClick="{{ onTogRef }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ refBg }};color:{{ refFg }}"><span style="width:22px;height:3px;background:#e8964c;border-radius:2px;display:inline-block;opacity:{{ refDot }}"></span>teruglopend</button>
+        <button onClick="{{ onTogRes }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ resBg }};color:{{ resFg }}"><span style="width:22px;height:4px;background:#1f9e8f;border-radius:2px;display:inline-block;opacity:{{ resDot }}"></span>resultaat</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Uiteinde</div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onEndFixed }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ fixedBg }};color:{{ fixedFg }}">Vast</button>
+          <button onClick="{{ onEndLoose }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ looseBg }};color:{{ looseFg }}">Los</button>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Golflengte</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
+        </div>
+        <input type="range" min="6" max="24" step="0.5" value="{{ lambdaCm }}" onChange="{{ onLambda }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Amplitude</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ ampStr }}</span>
+        </div>
+        <input type="range" min="1" max="7" step="0.5" value="{{ ampCm }}" onChange="{{ onAmp }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Snelheid</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ speedStr }}</span>
+        </div>
+        <input type="range" min="2" max="30" step="1" value="{{ speedCm }}" onChange="{{ onSpeed }}" style="width:100%;accent-color:#1f9e8f">
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw</button>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">Druk op <b>Start</b>; de heenlopende golf vertrekt links en weerkaatst rechts. Vast uiteinde &rarr; knoop tegen de wand; los uiteinde &rarr; buik. Zet de losse golven aan om de optelling te zien.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { end: 'vast', showInc: false, showRef: false, showRes: true,
+            lambdaCm: 12, ampCm: 4, speedCm: 10, running: false };
+  stageRef = React.createRef();
+  W = 640; H = 320;
+  t = 0; lastTs = 0;
+  x0 = 70; xL = 560; axisY = 160;
+  pxPerCm = 22;
+  ampPxPerCm = 9;
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    let dt = (ts - this.lastTs) / 1000; if (dt > 0.05) dt = 0.05;
+    this.lastTs = ts;
+    if (this.state.running) this.t += dt;
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    const x0 = this.x0, xL = this.xL, ay = this.axisY;
+    const Lpx = xL - x0;
+    const lambdaPx = this.state.lambdaCm * this.pxPerCm;
+    const k = 2 * Math.PI / lambdaPx;
+    const vPx = this.state.speedCm * this.pxPerCm;
+    const w = k * vPx;
+    const A = this.state.ampCm * this.ampPxPerCm;
+    const sign = this.state.end === 'vast' ? -1 : 1;
+
+    const travelled = vPx * this.t;
+    const frontInc = Math.min(travelled, Lpx);
+    const overflow = Math.max(0, travelled - Lpx);
+    const frontRef = Math.min(overflow, Lpx);
+
+    ctx.strokeStyle = '#202a36'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.beginPath(); ctx.moveTo(x0, ay); ctx.lineTo(xL, ay); ctx.stroke(); ctx.setLineDash([]);
+
+    const yi = (X) => (X <= frontInc) ? A * Math.sin(w * this.t - k * X) : 0;
+    const yr = (X) => (frontRef > 0 && (Lpx - X) <= frontRef) ? sign * A * Math.sin(w * this.t - k * (2 * Lpx - X)) : 0;
+
+    if (this.state.showInc) {
+      ctx.strokeStyle = 'rgba(127,180,255,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      for (let x = x0; x <= xL; x += 2) {
+        const yy = ay - yi(x - x0);
+        if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+      }
+      ctx.stroke();
+      ctx.fillStyle = '#aacdff';
+      for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
+        if (X > frontInc) break;
+        ctx.beginPath(); ctx.arc(x0 + X, ay - yi(X), 2.4, 0, 6.2832); ctx.fill();
+      }
+    }
+    if (this.state.showRef) {
+      ctx.strokeStyle = 'rgba(232,150,76,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      for (let x = x0; x <= xL; x += 2) {
+        const yy = ay - yr(x - x0);
+        if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+      }
+      ctx.stroke();
+      ctx.fillStyle = '#f3b884';
+      for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
+        if ((Lpx - X) > frontRef) continue;
+        ctx.beginPath(); ctx.arc(x0 + X, ay - yr(X), 2.4, 0, 6.2832); ctx.fill();
+      }
+    }
+    if (this.state.showRes) {
+      ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 3.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.beginPath();
+      for (let x = x0; x <= xL; x += 2) {
+        const yy = ay - (yi(x - x0) + yr(x - x0));
+        if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+      }
+      ctx.stroke();
+      ctx.fillStyle = '#7fe0d0';
+      for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
+        ctx.beginPath(); ctx.arc(x0 + X, ay - (yi(X) + yr(X)), 2.6, 0, 6.2832); ctx.fill();
+      }
+    }
+
+    if (this.state.showInc && frontInc < Lpx && frontInc > 0) {
+      ctx.fillStyle = '#7fb4ff';
+      ctx.beginPath(); ctx.arc(x0 + frontInc, ay - yi(frontInc), 4, 0, 6.2832); ctx.fill();
+    }
+    if (this.state.showRef && frontRef > 0 && frontRef < Lpx) {
+      const xr = Lpx - frontRef;
+      ctx.fillStyle = '#e8964c';
+      ctx.beginPath(); ctx.arc(x0 + xr, ay - yr(xr), 4, 0, 6.2832); ctx.fill();
+    }
+
+    ctx.fillStyle = '#1b2230'; ctx.fillRect(xL, ay - 80, 16, 160);
+    ctx.strokeStyle = '#3a4658'; ctx.lineWidth = 1.5;
+    for (let yy = ay - 78; yy < ay + 78; yy += 11) { ctx.beginPath(); ctx.moveTo(xL, yy + 11); ctx.lineTo(xL + 16, yy); ctx.stroke(); }
+    if (this.state.end === 'los') {
+      ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(xL, ay - 80); ctx.lineTo(xL, ay + 80); ctx.stroke();
+    }
+
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+    ctx.fillText(this.state.end === 'vast' ? 'vast uiteinde' : 'los uiteinde', xL - 50, ay + 100);
+    ctx.strokeStyle = '#445'; ctx.fillStyle = '#6f7886'; ctx.lineWidth = 1; ctx.textAlign = 'left';
+    ctx.beginPath(); ctx.moveTo(x0, ay + 110); ctx.lineTo(x0 + lambdaPx, ay + 110); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x0, ay + 106); ctx.lineTo(x0, ay + 114); ctx.moveTo(x0 + lambdaPx, ay + 106); ctx.lineTo(x0 + lambdaPx, ay + 114); ctx.stroke();
+    ctx.fillText('\u03BB = ' + this.state.lambdaCm + ' cm', x0 + 6, ay + 102);
+  }
+
+  renderVals() {
+    const seg = (active) => ({ bg: active ? '#1f9e8f' : '#fff', fg: active ? '#fff' : '#6f685c' });
+    const fx = seg(this.state.end === 'vast');
+    const ls = seg(this.state.end === 'los');
+    const tog = (on) => ({ bg: on ? '#eef6f4' : '#fff', fg: on ? '#1f7a6e' : '#a39c8d', dot: on ? '1' : '0.3' });
+    const ti = tog(this.state.showInc), tr = tog(this.state.showRef), ts = tog(this.state.showRes);
+    return {
+      stageRef: this.stageRef,
+      lambdaCm: this.state.lambdaCm, ampCm: this.state.ampCm, speedCm: this.state.speedCm,
+      lambdaStr: this.state.lambdaCm + ' cm',
+      ampStr: this.state.ampCm + ' cm',
+      speedStr: this.state.speedCm + ' cm/s',
+      fixedBg: fx.bg, fixedFg: fx.fg, looseBg: ls.bg, looseFg: ls.fg,
+      incBg: ti.bg, incFg: ti.fg, incDot: ti.dot,
+      refBg: tr.bg, refFg: tr.fg, refDot: tr.dot,
+      resBg: ts.bg, resFg: ts.fg, resDot: ts.dot,
+      playLbl: this.state.running ? 'Pauze' : 'Start',
+      onTogInc: () => this.setState({ showInc: !this.state.showInc }),
+      onTogRef: () => this.setState({ showRef: !this.state.showRef }),
+      onTogRes: () => this.setState({ showRes: !this.state.showRes }),
+      onEndFixed: () => { this.t = 0; this.setState({ end: 'vast' }); },
+      onEndLoose: () => { this.t = 0; this.setState({ end: 'los' }); },
+      onLambda: (e) => this.setState({ lambdaCm: Number(e.target.value) }),
+      onAmp: (e) => this.setState({ ampCm: Number(e.target.value) }),
+      onSpeed: (e) => this.setState({ speedCm: Number(e.target.value) }),
+      onPlay: () => this.setState({ running: !this.state.running }),
+      onReset: () => { this.t = 0; this.setState({ running: false }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

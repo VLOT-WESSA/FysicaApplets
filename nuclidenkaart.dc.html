@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<script src="nuclide-data.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Nuclidenkaart</h1>
+    <span style="font-size:13px;color:#8c8576">NUBASE2020 &middot; N&nbsp;&rarr; horizontaal, Z&nbsp;&uarr; verticaal</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:8px">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <div style="position:relative;height:100%;width:100%">
+          <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;background:#f7f4ee;cursor:crosshair"></canvas>
+          <div style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:6px">
+            <button onClick="{{ onZoomIn }}" style="width:34px;height:34px;border-radius:9px;border:1px solid #e0d9ca;background:#fffdf9;color:#3a352c;font-size:19px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)">+</button>
+            <button onClick="{{ onZoomOut }}" style="width:34px;height:34px;border-radius:9px;border:1px solid #e0d9ca;background:#fffdf9;color:#3a352c;font-size:19px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)">&minus;</button>
+            <button onClick="{{ onFit }}" title="Volledige kaart" style="width:34px;height:34px;border-radius:9px;border:1px solid #e0d9ca;background:#fffdf9;color:#3a352c;font-size:14px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)">&#9633;</button>
+          </div>
+          <div ref="{{ tipRef }}" style="position:absolute;display:none;pointer-events:none;z-index:5;background:#2a2723;color:#f7f4ee;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.45;box-shadow:0 4px 16px rgba(0,0,0,.28);min-width:128px"></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#b3ab9b;font-family:'IBM Plex Mono',monospace;flex:none">{{ countStr }} &middot; sleep om te verschuiven, scroll om te zoomen</div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px">
+          <span style="font-size:15px;font-weight:700">Primaire vervalmodus</span>
+          <button onClick="{{ onClearMode }}" style="font-size:11px;color:#8a3b2c;background:none;border:none;cursor:pointer;font-weight:500;padding:0;opacity:{{ clearOpacity }}">alles tonen</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 12px">
+          <sc-for list="{{ legendItems }}" as="m" hint-placeholder-count="15">
+            <button onClick="{{ m.onClick }}" style="display:flex;align-items:center;gap:8px;padding:3px 4px;border:none;background:none;cursor:pointer;text-align:left;border-radius:6px;opacity:{{ m.opacity }}">
+              <span style="width:15px;height:15px;border-radius:3px;flex:none;border:{{ m.swBorder }};background:{{ m.color }}"></span>
+              <span style="font-size:12.5px;color:#3a352c;font-weight:{{ m.weight }}">{{ m.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ selHas }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">
+            <span style="width:42px;height:42px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:{{ selTextColor }};background:{{ selModeColor }}">{{ selSym }}</span>
+            <div>
+              <div style="font-size:17px;font-weight:700;line-height:1.1">{{ selName }}</div>
+              <div style="font-size:12px;color:#8c8576;font-family:'IBM Plex Mono',monospace">Z={{ selZ }} &middot; N={{ selN }} &middot; A={{ selA }}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#6f685c">
+              <span>Primair verval</span>
+              <span style="display:flex;align-items:center;gap:6px;font-weight:600;color:#2a2723"><span style="width:11px;height:11px;border-radius:3px;background:{{ selModeColor }}"></span>{{ selModeLabel }}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#6f685c">
+              <span>Halveringstijd</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ selHl }}</span>
+            </div>
+          </div>
+          <p style="margin:10px 0 0;font-size:12px;color:#9a927f;line-height:1.5">{{ selNote }}</p>
+        </div>
+      </sc-if>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55">De stabiele kernen (zwart) vormen de <em>vallei van stabiliteit</em>. Neutronrijk &rarr; <b style="color:#cf6b3a">&beta;&#8315;</b>, protonrijk &rarr; <b style="color:#3a93c4">&beta;&#8314;/e-vangst</b>, zware kernen &rarr; <b style="color:#b89a1a">&alpha;</b> of splijting.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  tipRef = React.createRef();
+  W = 920; H = 660;
+
+  SYM = ('n H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn '
+    + 'Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd '
+    + 'Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th '
+    + 'Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og').split(' ');
+
+  MODES = {
+    stabiel:  { label: 'Stabiel',      full: 'Stabiel',                  color: '#1b1b1b' },
+    bmin:     { label: '\u03B2\u207B', full: '\u03B2\u207B (b\u00E8ta-min)', color: '#ec9168' },
+    b2min:    { label: '2\u03B2\u207B', full: 'dubbel-\u03B2\u207B',      color: '#ef4738' },
+    bplus:    { label: '\u03B2\u207A', full: '\u03B2\u207A / e-vangst',   color: '#6cccef' },
+    ec:       { label: 'e-vangst',     full: 'elektronvangst',            color: '#22d6a0' },
+    b2plus:   { label: '2\u03B2\u207A', full: 'dubbel-\u03B2\u207A / 2e-vangst', color: '#5aa7e6' },
+    alfa:     { label: '\u03B1',       full: '\u03B1 (alfa-verval)',      color: '#f5e23b' },
+    splijting:{ label: 'Splijting',    full: 'spontane splijting',        color: '#57c64a' },
+    p:        { label: 'p',            full: 'protonenemissie',           color: '#5b7ce9' },
+    p2:       { label: '2p',           full: 'twee-protonenemissie',      color: '#7a4fd6' },
+    p3:       { label: '3p',           full: 'drie-protonenemissie',      color: '#ab6fe6' },
+    n:        { label: 'n',            full: 'neutronenemissie',          color: '#ee3a5e' },
+    n2:       { label: '2n',           full: 'twee-neutronenemissie',     color: '#d51f93' },
+    it:       { label: 'IT',           full: 'isomere overgang',          color: '#c8b88a' },
+    onbekend: { label: 'onbekend',     full: 'verval onbekend',           color: '#b8b0a0' },
+  };
+  legendOrder = ['stabiel','bmin','b2min','bplus','ec','b2plus','alfa','splijting','p','p2','p3','n','n2','it','onbekend'];
+
+  state = { activeMode: null, selKey: null, loaded: false };
+  view = { cs: 5, ox: 30, oy: 8 };
+  hover = null; selKey = null;
+
+  build() {
+    const data = (typeof window !== 'undefined' && window.NUCLIDE_DATA) || [];
+    this.map = new Map(); this.list = [];
+    let Nmax = 0, Zmax = 0;
+    for (const row of data) {
+      const Z = row[0], N = row[1], mode = this.MODES[row[2]] ? row[2] : 'onbekend', hl = row[3] || '';
+      const o = { Z, N, A: Z + N, mode, hl };
+      this.map.set(N + ',' + Z, o);
+      this.list.push(o);
+      if (N > Nmax) Nmax = N;
+      if (Z > Zmax) Zmax = Z;
+    }
+    this.Nmax = Nmax; this.Zmax = Zmax;
+  }
+
+  componentDidMount() {
+    this._tries = 0;
+    const start = () => {
+      if (window.NUCLIDE_DATA) {
+        this.build();
+        this.setState({ loaded: true });
+        this.setupCanvas();
+        this.fit();
+        this.attach();
+      } else if (this._tries++ < 60) {
+        setTimeout(start, 40);
+      }
+    };
+    start();
+  }
+  componentWillUnmount() {
+    const c = this.stageRef.current;
+    if (c && this._h) c.removeEventListener('wheel', this._h.wheel);
+    if (this._acStop) this._acStop();
+  }
+  componentDidUpdate() { this.scheduleDraw(); }
+
+  setupCanvas() {
+        const c = this.stageRef.current;
+    if (c) { this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+    this._rz = () => { this.setupCanvas(); this.scheduleDraw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+
+  fit() {
+    const left = 28, bottom = 22, top = 0, right = 10;
+    const cs = Math.min((this.W - left - right) / (this.Nmax + 1), (this.H - top - bottom) / (this.Zmax + 1));
+    this.minCs = cs;
+    this.view = { cs, ox: left, oy: top };
+    this.clampView();
+    this.scheduleDraw();
+  }
+
+  clampView() {
+    const PL = 28, PR = this.W, PT = 0, PB = this.H - 22, cs = this.view.cs;
+    const contentW = (this.Nmax + 1) * cs;
+    if (contentW <= PR - PL) this.view.ox = PL;
+    else this.view.ox = Math.min(PL, Math.max(PR - contentW, this.view.ox));
+    const contentH = (this.Zmax + 1) * cs;
+    if (contentH <= PB - PT) this.view.oy = PB - contentH;
+    else this.view.oy = Math.min(PT, Math.max(PB - contentH, this.view.oy));
+  }
+
+  scheduleDraw() {
+    if (this._dq) return;
+    this._dq = requestAnimationFrame(() => { this._dq = null; this.draw(); });
+  }
+
+  sx(N) { return this.view.ox + N * this.view.cs; }
+  syTop(Z) { return this.view.oy + (this.Zmax - Z) * this.view.cs; }
+
+  hexLum(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  }
+  textColor(mode) {
+    if (mode === 'stabiel') return '#ffffff';
+    return this.hexLum(this.MODES[mode].color) < 0.5 ? '#ffffff' : '#1c1916';
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c || !this.list) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const W = this.W, H = this.H, cs = this.view.cs;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f7f4ee'; ctx.fillRect(0, 0, W, H);
+
+    const st = this.state, active = st.activeMode;
+
+    const showSym = cs >= 12;
+    const g = cs > 3 ? 1 : 0.4;
+    const symFont = '600 ' + Math.min(cs * 0.42, 13).toFixed(1) + "px 'IBM Plex Sans',sans-serif";
+    for (const o of this.list) {
+      const x = this.sx(o.N), y = this.syTop(o.Z);
+      if (x < 28 - cs || x > W || y < -cs || y > H) continue;
+      const dim = active && o.mode !== active;
+      ctx.globalAlpha = dim ? 0.1 : 1;
+      ctx.fillStyle = this.MODES[o.mode].color;
+      ctx.fillRect(x, y, cs - g, cs - g);
+      if (showSym && !dim) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = this.textColor(o.mode);
+        ctx.font = symFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        const cx = x + (cs - g) / 2, cy = y + (cs - g) / 2;
+        if (cs >= 30) {
+          ctx.fillText(this.SYM[o.Z], cx, cy - cs * 0.13);
+          ctx.font = "500 " + (cs * 0.26).toFixed(1) + "px 'IBM Plex Mono',monospace";
+          ctx.fillText(o.A, cx, cy + cs * 0.27);
+        } else {
+          ctx.fillText(this.SYM[o.Z], cx, cy);
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    {
+      const kmax = Math.min(this.Nmax, this.Zmax);
+      const off = (cs - g) / 2;
+      const x0 = this.sx(0) + off, y0 = this.syTop(0) + off;
+      const x1 = this.sx(kmax) + off, y1 = this.syTop(kmax) + off;
+      ctx.save();
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = 'rgba(40,36,30,0.30)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      ctx.setLineDash([]);
+      if (x1 > 30 && x1 < W - 34 && y1 > 14) {
+        ctx.fillStyle = 'rgba(40,36,30,0.42)';
+        ctx.font = "500 11px 'IBM Plex Mono',monospace";
+        ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+        ctx.fillText('N = Z', x1 + 5, y1 - 2);
+      }
+      ctx.restore();
+    }
+
+    if (this.hover) {
+      const o = this.map.get(this.hover);
+      if (o) { const x = this.sx(o.N), y = this.syTop(o.Z); ctx.strokeStyle = '#1b1b1b'; ctx.lineWidth = 2; ctx.strokeRect(x - 1, y - 1, cs + 1, cs + 1); }
+    }
+    if (this.selKey) {
+      const o = this.map.get(this.selKey);
+      if (o) { const x = this.sx(o.N), y = this.syTop(o.Z); ctx.strokeStyle = '#b8472f'; ctx.lineWidth = 2.5; ctx.strokeRect(x - 1.5, y - 1.5, cs + 2, cs + 2); }
+    }
+
+    // ---- real axes ----
+    const axX = 30, axY = H - 20;
+    ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(axX, 4); ctx.lineTo(axX, axY); ctx.lineTo(W - 4, axY); ctx.stroke();
+    ctx.fillStyle = '#5a544a'; ctx.font = "600 11px 'IBM Plex Mono',monospace";
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    for (let N = 0; N <= this.Nmax; N += 20) {
+      const x = this.sx(N) + cs / 2; if (x < axX + 4 || x > W - 6) continue;
+      ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(x, axY); ctx.lineTo(x, axY + 5); ctx.stroke();
+      ctx.fillStyle = '#5a544a'; ctx.fillText(N, x, axY + 7);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let Z = 0; Z <= this.Zmax; Z += 20) {
+      const y = this.syTop(Z) + cs / 2; if (y < 8 || y > axY - 4) continue;
+      ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(axX - 5, y); ctx.lineTo(axX, y); ctx.stroke();
+      ctx.fillStyle = '#5a544a'; ctx.fillText(Z, axX - 7, y);
+    }
+    ctx.fillStyle = '#3a352c'; ctx.font = "700 12px 'IBM Plex Sans',sans-serif";
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText('N →', W - 6, axY - 4);
+    ctx.save(); ctx.translate(axX + 13, 8); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('Z →', 0, 0); ctx.restore();
+  }
+
+  attach() {
+    const c = this.stageRef.current; if (!c) return;
+    const toLogical = (e) => {
+      const r = c.getBoundingClientRect();
+      const s = Math.min(r.width / this.W, r.height / this.H);
+      const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+      return { mx: (e.clientX - r.left - ox) / s, my: (e.clientY - r.top - oy) / s, r };
+    };
+    const cellAt = (mx, my) => {
+      const N = Math.floor((mx - this.view.ox) / this.view.cs);
+      const Z = this.Zmax - Math.floor((my - this.view.oy) / this.view.cs);
+      return this.map.get(N + ',' + Z) ? (N + ',' + Z) : null;
+    };
+
+    c.onmousedown = (e) => {
+      this._drag = { x: e.clientX, y: e.clientY, ox: this.view.ox, oy: this.view.oy, moved: false };
+    };
+    window.addEventListener('mouseup', () => {
+      if (this._drag && !this._drag.moved) {
+        if (this.hover) { this.selKey = this.hover; this.setState({ selKey: this.hover }); }
+      }
+      this._drag = null;
+    });
+    c.onmousemove = (e) => {
+      const { mx, my, r } = toLogical(e);
+      if (this._drag) {
+        const dx = (e.clientX - this._drag.x) * (this.W / r.width);
+        const dy = (e.clientY - this._drag.y) * (this.H / r.height);
+        if (Math.abs(e.clientX - this._drag.x) + Math.abs(e.clientY - this._drag.y) > 3) this._drag.moved = true;
+        this.view.ox = this._drag.ox + dx; this.view.oy = this._drag.oy + dy;
+        this.clampView();
+        this.hideTip(); this.scheduleDraw();
+        return;
+      }
+      const key = cellAt(mx, my);
+      if (key !== this.hover) { this.hover = key; this.scheduleDraw(); }
+      if (key) this.showTip(this.map.get(key), e.clientX - r.left, e.clientY - r.top, r.width);
+      else this.hideTip();
+    };
+    c.onmouseleave = () => { this.hover = null; this.hideTip(); this.scheduleDraw(); };
+
+    const wheel = (e) => {
+      e.preventDefault();
+      const { mx, my } = toLogical(e);
+      const f = Math.exp(-e.deltaY * 0.0014);
+      const ncs = Math.max(this.minCs || 2.4, Math.min(46, this.view.cs * f));
+      const wn = (mx - this.view.ox) / this.view.cs, wz = (my - this.view.oy) / this.view.cs;
+      this.view.cs = ncs;
+      this.view.ox = mx - wn * ncs; this.view.oy = my - wz * ncs;
+      this.clampView();
+      this.hideTip(); this.scheduleDraw();
+    };
+    c.addEventListener('wheel', wheel, { passive: false });
+    this._h = { wheel };
+  }
+
+  showTip(o, cx, cy, cardW) {
+    const tip = this.tipRef.current; if (!tip) return;
+    const m = this.MODES[o.mode];
+    const hl = o.mode === 'stabiel' ? 'stabiel' : (o.hl || 'onbekend');
+    tip.innerHTML =
+      '<div style="font-weight:700;font-size:14px;margin-bottom:3px">' + this.SYM[o.Z] + '-' + o.A + '</div>' +
+      '<div style="font-family:IBM Plex Mono,monospace;font-size:11px;color:#cfc7b8">Z=' + o.Z + ' \u00B7 N=' + o.N + '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;margin-top:5px;font-size:12px"><span style="width:10px;height:10px;border-radius:2px;background:' + m.color + '"></span>' + m.full + '</div>' +
+      '<div style="font-family:IBM Plex Mono,monospace;font-size:11px;color:#cfc7b8;margin-top:3px">t\u00BD = ' + hl + '</div>';
+    tip.style.display = 'block';
+    const tw = tip.offsetWidth || 150;
+    let left = cx + 16; if (left + tw > cardW) left = cx - tw - 14;
+    tip.style.left = Math.max(2, left) + 'px';
+    tip.style.top = Math.max(2, cy + 14) + 'px';
+  }
+  hideTip() { const t = this.tipRef.current; if (t) t.style.display = 'none'; }
+
+  zoomBy(f) {
+    const mx = this.W / 2, my = this.H / 2;
+    const ncs = Math.max(this.minCs || 2.4, Math.min(46, this.view.cs * f));
+    const wn = (mx - this.view.ox) / this.view.cs, wz = (my - this.view.oy) / this.view.cs;
+    this.view.cs = ncs; this.view.ox = mx - wn * ncs; this.view.oy = my - wz * ncs;
+    this.clampView();
+    this.scheduleDraw();
+  }
+
+  renderVals() {
+    const st = this.state;
+    const legendItems = this.legendOrder.map(k => {
+      const m = this.MODES[k], on = st.activeMode === k, dim = st.activeMode && st.activeMode !== k;
+      return {
+        key: k, label: m.label, color: m.color,
+        swBorder: (k === 'stabiel' || k === 'onbekend') ? '1px solid #999' : 'none',
+        opacity: dim ? '0.38' : '1', weight: on ? '700' : '500',
+        onClick: () => this.setState(s => ({ activeMode: s.activeMode === k ? null : k })),
+      };
+    });
+    const sel = st.selKey && this.map ? this.map.get(st.selKey) : null;
+    let selVals = { selHas: false };
+    if (sel) {
+      const m = this.MODES[sel.mode];
+      let note;
+      if (sel.mode === 'stabiel') note = 'Stabiele kern: geen waargenomen verval.';
+      else if (sel.mode === 'onbekend') note = 'Waargenomen kern; vervalmodus nog niet bepaald.';
+      else if (sel.mode === 'bmin' || sel.mode === 'b2min') note = 'Neutronrijk: een neutron verandert in een proton; de kern schuift naar de vallei van stabiliteit.';
+      else if (sel.mode === 'bplus' || sel.mode === 'ec' || sel.mode === 'b2plus') note = 'Protonrijk: een proton verandert in een neutron (\u03B2\u207A of elektronvangst).';
+      else if (sel.mode === 'alfa') note = 'Zware kern: stoot een \u03B1-deeltje (2 protonen + 2 neutronen) uit.';
+      else if (sel.mode === 'splijting') note = 'Zware kern: splijt spontaan in twee lichtere kernen.';
+      else note = 'Voorbij de drip-lijn: de kern stoot direct een nucleon uit.';
+      selVals = {
+        selHas: true, selSym: this.SYM[sel.Z], selName: this.SYM[sel.Z] + '-' + sel.A,
+        selZ: sel.Z, selN: sel.N, selA: sel.A,
+        selModeLabel: m.full, selModeColor: m.color, selTextColor: this.textColor(sel.mode),
+        selHl: sel.mode === 'stabiel' ? 'stabiel' : (sel.hl || 'onbekend'),
+        selNote: note,
+      };
+    }
+    const n = (this.list ? this.list.length : 0);
+    return {
+      stageRef: this.stageRef, tipRef: this.tipRef,
+      legendItems,
+      clearOpacity: st.activeMode ? '1' : '0.35',
+      onClearMode: () => this.setState({ activeMode: null }),
+      onZoomIn: () => this.zoomBy(1.4), onZoomOut: () => this.zoomBy(1 / 1.4), onFit: () => this.fit(),
+      countStr: (st.loaded ? n + ' bekende nucliden' : 'laden\u2026') + ' \u00B7 NUBASE2020 / IAEA',
+      ...selVals,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c0392b;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c0392b;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Magneetveld rond een draad</h1>
+    <span style="font-size:13px;color:#8c8576">rechterhandregel</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;cursor:grab;touch-action:none"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center">
+        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #b8472f;background:#b8472f;color:#fff">&#8645; Ompolen stroom</button>
+        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset kompas</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:600;color:#3a352c">Stroomsterkte</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ ampStr }}</span>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Sterkere stroom &rarr; sterker veld &rarr; meer veldlijnen</div>
+        <input type="range" min="1" max="10" step="0.5" value="{{ amps }}" onInput="{{ onAmps }}" style="width:100%;accent-color:#c0392b">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>1 A</span><span>10 A</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>
+          <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stroomrichting</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ curDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Elektronen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ elecDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Veld bij kompas</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ compassStr }}</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave (uit bij start)</span>
+        <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ curState }}</span>
+        </button>
+        <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Veldlijnen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
+        </button>
+        <button onClick="{{ toggleElec }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3fa86a"></span>Elektronen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ elecState }}</span>
+        </button>
+        <button onClick="{{ toggleCompass }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ compBorder }};background:{{ compBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#cf4636"></span>Kompasnaald <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ compState }}</span>
+        </button>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Rechterhandregel</span>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+            <span style="font-size:12.5px;font-weight:600;width:64px;color:#3a352c">Duim</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#e0503a;flex:none"></span>
+            <span style="font-size:12.5px;color:#4a443a">met de stroom mee</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+            <span style="font-size:12.5px;font-weight:600;width:64px;color:#3a352c">Vingers</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#6f9bd8;flex:none"></span>
+            <span style="font-size:12.5px;color:#4a443a">krullen mee met het veld</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ banner }}</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;veldlijnen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;weinig&quot;,&quot;normaal&quot;,&quot;veel&quot;],&quot;default&quot;:&quot;normaal&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;draadDikte&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:10,&quot;min&quot;:6,&quot;max&quot;:18,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;},&quot;stageThema&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;donker&quot;,&quot;licht&quot;],&quot;default&quot;:&quot;donker&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;beginStroom&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:6,&quot;min&quot;:1,&quot;max&quot;:10,&quot;step&quot;:0.5,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 560; H = 470;
+
+  yaw = -0.34; pitch = 0.62; scale = 1.0; persp = 1300;
+  cx = 280; cy = 250;
+
+  wireHalf = 150;
+  comp = { x: 92, z: 30 };
+
+  state = {
+    curDir: 1, amps: 6,
+    showField: false, showCurrent: false, showElec: false, showCompass: false,
+  };
+  elecPhase = 0;
+  dragging = false;
+
+  componentDidMount() {
+    const bv = this.props && this.props.beginStroom;
+    if (typeof bv === 'number') this.setState({ amps: bv });
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    this._down = (e) => this.onPointerDown(e);
+    this._move = (e) => this.onPointerMove(e);
+    this._up = () => { this.dragging = false; if (c) c.style.cursor = 'grab'; };
+    c.addEventListener('pointerdown', this._down);
+    window.addEventListener('pointermove', this._move);
+    window.addEventListener('pointerup', this._up);
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    const c = this.stageRef.current;
+    if (c) c.removeEventListener('pointerdown', this._down);
+    window.removeEventListener('pointermove', this._move);
+    window.removeEventListener('pointerup', this._up);
+    if (this._acStop) this._acStop();
+  }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  loop = (ts) => {
+    const cc = this.stageRef.current;
+    if (!this.lastTs) this.lastTs = ts;
+    const dt = Math.min(0.05, (ts - this.lastTs) / 1000); this.lastTs = ts;
+    this.elecPhase += dt * (0.18 + 0.05 * this.state.amps) * this.state.curDir;
+    this.draw();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  view(p) {
+    const ca = Math.cos(this.yaw), sa = Math.sin(this.yaw);
+    const x1 = p.x * ca + p.z * sa;
+    const z1 = -p.x * sa + p.z * ca;
+    const y1 = p.y;
+    const cb = Math.cos(this.pitch), sb = Math.sin(this.pitch);
+    const y2 = y1 * cb - z1 * sb;
+    const z2 = y1 * sb + z1 * cb;
+    return { x: x1, y: y2, depth: z2 };
+  }
+  proj(p) {
+    const v = this.view(p);
+    const sc = this.scale * (this.persp / (this.persp - v.depth));
+    return { x: this.cx + v.x * sc, y: this.cy - v.y * sc, depth: v.depth };
+  }
+  unproject(sx, sy, h) {
+    h = h || 0;
+    const ca = Math.cos(this.yaw), sa = Math.sin(this.yaw);
+    const cb = Math.cos(this.pitch), sb = Math.sin(this.pitch);
+    const K = this.scale * this.persp;
+    const DX = sx - this.cx, DY = this.cy - sy;
+    const z1 = (K * h * cb - DY * this.persp + DY * h * sb) / (K * sb - DY * cb);
+    const depth = h * sb + z1 * cb;
+    const sc = this.scale * (this.persp / (this.persp - depth));
+    const x1 = DX / sc;
+    return { x: ca * x1 - sa * z1, z: sa * x1 + ca * z1 };
+  }
+  line3(ctx, a, b, color, w) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+  }
+  arrow3(ctx, a, b, color, w, head) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    const ang = Math.atan2(B.y - A.y, B.x - A.x);
+    ctx.beginPath();
+    ctx.moveTo(B.x, B.y);
+    ctx.lineTo(B.x - head * Math.cos(ang - 0.42), B.y - head * Math.sin(ang - 0.42));
+    ctx.lineTo(B.x - head * Math.cos(ang + 0.42), B.y - head * Math.sin(ang + 0.42));
+    ctx.closePath(); ctx.fill();
+  }
+  fieldDir(x, z) {
+    const r = Math.hypot(x, z) || 1;
+    const rx = x / r, rz = z / r;
+    const d = this.state.curDir;
+    return { x: d * rz, z: d * (-rx) };
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+
+    const light = (this.props && this.props.stageThema) === 'licht';
+    const bg = ctx.createLinearGradient(0, 0, 0, this.H);
+    if (light) { bg.addColorStop(0, '#e9edf2'); bg.addColorStop(1, '#d6dce4'); }
+    else { bg.addColorStop(0, '#141b24'); bg.addColorStop(1, '#0d1219'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = light ? 'rgba(0,0,0,0.022)' : 'rgba(255,255,255,0.018)';
+    for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
+
+    const st = this.state;
+    const dens = (this.props && this.props.veldlijnen) || 'normaal';
+    const densBonus = dens === 'weinig' ? -1 : (dens === 'veel' ? 1 : 0);
+    // sterkere stroom -> meer veldlijnen rond de draad
+    const nRings = Math.max(2, Math.min(7, Math.round(2 + (st.amps - 1) / 9 * 3) + densBonus));
+    const baseR = 34, spacing = 30;
+    let radii = []; for (let i = 0; i < nRings; i++) radii.push(baseR + i * spacing);
+    let planes = nRings >= 5 ? [52, 0, -66] : [34, -58];
+    this.compPlaneY = planes[0];
+    const wireW = (this.props && typeof this.props.draadDikte === 'number') ? this.props.draadDikte : 10;
+
+    if (st.showField) {
+      for (const yy of planes) for (const R of radii) this.drawRing(ctx, R, yy, false);
+    }
+
+    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#8a8378' : '#cdc7bb', wireW);
+    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#b6b0a4' : '#8c877f', wireW * 0.42);
+
+    if (st.showField) {
+      for (const yy of planes) for (const R of radii) this.drawRing(ctx, R, yy, true);
+    }
+
+    if (st.showElec) {
+      const n = 9;
+      for (let i = 0; i < n; i++) {
+        let frac = (i / n + (this.elecPhase % 1) * -1 + 5) % 1;
+        const y = -this.wireHalf + frac * (2 * this.wireHalf);
+        const P = this.proj({ x: 0, y, z: 0 });
+        const sc = this.scale * (this.persp / (this.persp - this.view({ x: 0, y, z: 0 }).depth));
+        ctx.fillStyle = '#3fa86a';
+        ctx.beginPath(); ctx.arc(P.x, P.y, Math.max(2.2, 3.0 * sc / 1.1), 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.7; ctx.stroke();
+      }
+    }
+
+    if (st.showCurrent) {
+      const d = st.curDir;
+      const xo = 0;
+      this.arrow3(ctx, { x: xo, y: -54 * d, z: 0 }, { x: xo, y: 54 * d, z: 0 }, '#e0503a', 4.5, 13);
+      const lp = this.proj({ x: 0, y: 0, z: 0 });
+      ctx.fillStyle = '#e0503a'; ctx.font = '700 15px "IBM Plex Sans",sans-serif';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('I', lp.x + 12, lp.y);
+    }
+
+    this.drawPoles(ctx);
+
+    if (st.showCompass) this.drawCompass(ctx, light);
+
+    this.drawLegend(ctx, light);
+  }
+
+  drawRing(ctx, R, y, frontOnly) {
+    const N = 90;
+    ctx.strokeStyle = frontOnly ? 'rgba(135,176,229,0.95)' : 'rgba(111,155,216,0.86)';
+    ctx.lineWidth = frontOnly ? 2.1 : 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    let pen = false;
+    for (let i = 0; i <= N; i++) {
+      const th = (i / N) * 2 * Math.PI;
+      const z = R * Math.sin(th);
+      if (frontOnly && z < 0) { pen = false; continue; }
+      const P = this.proj({ x: R * Math.cos(th), y, z });
+      if (!pen) { ctx.moveTo(P.x, P.y); pen = true; } else ctx.lineTo(P.x, P.y);
+    }
+    ctx.stroke();
+    if (frontOnly) {
+      const angs = [Math.PI * 0.28, Math.PI * 0.72];
+      for (const th of angs) {
+        const x = R * Math.cos(th), z = R * Math.sin(th);
+        const t = this.fieldDir(x, z);
+        const s = 7;
+        this.arrow3(ctx, { x: x - t.x * s, y, z: z - t.z * s }, { x: x + t.x * s, y, z: z + t.z * s }, '#8fb6e8', 1.6, 8);
+      }
+    }
+  }
+
+  drawPoles(ctx) {
+    const d = this.state.curDir;
+    const topY = this.wireHalf + 20, botY = -this.wireHalf - 20;
+    const topP = this.proj({ x: 0, y: topY, z: 0 });
+    const botP = this.proj({ x: 0, y: botY, z: 0 });
+    const plus = (P) => { ctx.fillStyle = '#e0503a'; ctx.font = '700 20px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', P.x, P.y); };
+    const minus = (P) => { ctx.fillStyle = '#9aa2ab'; ctx.font = '700 22px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u2212', P.x, P.y); };
+    ctx.fillStyle = '#5b5650';
+    [topP, botP].forEach(P => { ctx.beginPath(); ctx.arc(P.x, P.y, 4, 0, Math.PI * 2); ctx.fill(); });
+    if (d === 1) { minus(this.proj({ x: 0, y: topY + 18, z: 0 })); plus(this.proj({ x: 0, y: botY - 18, z: 0 })); }
+    else { plus(this.proj({ x: 0, y: topY + 18, z: 0 })); minus(this.proj({ x: 0, y: botY - 18, z: 0 })); }
+  }
+
+  drawCompass(ctx, light) {
+    const cx = this.comp.x, cz = this.comp.z;
+    const hy = this.compPlaneY || 0;
+    const t = this.fieldDir(cx, cz);
+    const L = 30, Wd = 9;
+    const N = 28; ctx.beginPath();
+    for (let i = 0; i <= N; i++) { const th = (i / N) * 2 * Math.PI; const P = this.proj({ x: cx + 38 * Math.cos(th), y: hy, z: cz + 38 * Math.sin(th) }); i ? ctx.lineTo(P.x, P.y) : ctx.moveTo(P.x, P.y); }
+    ctx.closePath();
+    ctx.fillStyle = light ? 'rgba(255,255,255,0.82)' : 'rgba(20,28,38,0.78)'; ctx.fill();
+    ctx.strokeStyle = light ? '#b9c2cc' : '#46505c'; ctx.lineWidth = 2; ctx.stroke();
+    const pdir = { x: -t.z, z: t.x };
+    const C = this.proj({ x: cx, y: hy, z: cz });
+    const N1 = this.proj({ x: cx + t.x * L, y: hy, z: cz + t.z * L });
+    const S1 = this.proj({ x: cx - t.x * L, y: hy, z: cz - t.z * L });
+    const Wp = this.proj({ x: cx + pdir.x * Wd, y: hy, z: cz + pdir.z * Wd });
+    const Wm = this.proj({ x: cx - pdir.x * Wd, y: hy, z: cz - pdir.z * Wd });
+    ctx.fillStyle = '#cf4636'; ctx.beginPath(); ctx.moveTo(N1.x, N1.y); ctx.lineTo(Wp.x, Wp.y); ctx.lineTo(Wm.x, Wm.y); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#3fa86a'; ctx.beginPath(); ctx.moveTo(S1.x, S1.y); ctx.lineTo(Wp.x, Wp.y); ctx.lineTo(Wm.x, Wm.y); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#1c242e'; ctx.beginPath(); ctx.arc(C.x, C.y, 3.2, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = light ? '#9a3022' : '#f1b3a8'; ctx.font = '700 11px "IBM Plex Sans",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', N1.x + (N1.x - C.x) * 0.16, N1.y + (N1.y - C.y) * 0.16);
+  }
+
+  drawLegend(ctx, light) {
+    const st = this.state;
+    const items = [];
+    if (st.showCurrent) items.push(['#e0503a', 'stroom']);
+    if (st.showField) items.push(['#6f9bd8', 'veld']);
+    if (st.showElec) items.push(['#3fa86a', 'elektronen']);
+    if (!items.length) {
+      if (st.showCompass) { ctx.textAlign = 'left'; ctx.fillStyle = light ? '#6b7178' : '#7f8893'; ctx.font = '500 11.5px "IBM Plex Sans",sans-serif'; ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14); }
+      return;
+    }
+    let x = this.W - 14; const y = 18;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.font = '500 12px "IBM Plex Mono",monospace';
+    for (let i = items.length - 1; i >= 0; i--) {
+      const [col, lab] = items[i];
+      const w = ctx.measureText(lab).width;
+      ctx.fillStyle = light ? '#4a4f57' : '#b9b3a6'; ctx.fillText(lab, x, y); x -= (w + 8);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 1, y, 5, 0, Math.PI * 2); ctx.fill();
+      x -= 16;
+    }
+    if (st.showCompass) {
+      ctx.textAlign = 'left'; ctx.fillStyle = light ? '#6b7178' : '#7f8893';
+      ctx.font = '500 11.5px "IBM Plex Sans",sans-serif';
+      ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14);
+    }
+  }
+
+  screenFromEvent(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { sx: (e.clientX - r.left - ox) / s, sy: (e.clientY - r.top - oy) / s };
+  }
+  onPointerDown(e) {
+    if (!this.state.showCompass) return;
+    const { sx, sy } = this.screenFromEvent(e);
+    const C = this.proj({ x: this.comp.x, y: this.compPlaneY || 0, z: this.comp.z });
+    if (Math.hypot(sx - C.x, sy - C.y) < 46) {
+      this.dragging = true; const c = this.stageRef.current; if (c) c.style.cursor = 'grabbing';
+      e.preventDefault();
+    }
+  }
+  onPointerMove(e) {
+    if (!this.dragging) return;
+    const { sx, sy } = this.screenFromEvent(e);
+    const g = this.unproject(sx, sy, this.compPlaneY || 0);
+    let r = Math.hypot(g.x, g.z);
+    const rmin = 26, rmax = 138;
+    if (r < 1) { g.x = rmin; g.z = 0; r = rmin; }
+    if (r < rmin) { const k = rmin / r; g.x *= k; g.z *= k; }
+    if (r > rmax) { const k = rmax / r; g.x *= k; g.z *= k; }
+    this.comp = { x: g.x, z: g.z };
+    this.draw();
+  }
+
+  reverse = () => this.setState(s => ({ curDir: -s.curDir }));
+  reset = () => { this.comp = { x: 92, z: 30 }; this.draw(); };
+  setAmps = (e) => { const v = parseFloat(e.target.value); this.setState({ amps: v }); };
+
+  renderVals() {
+    const st = this.state;
+    const t = this.fieldDir(this.comp.x, this.comp.z);
+    const ang = (Math.atan2(t.z, t.x) * 180 / Math.PI);
+    const banner = 'Sleep het kompas rond de draad en kijk hoe de naald steeds langs de cirkelvormige veldlijn wijst. Druk op \u201cOmpolen stroom\u201d en de naald klapt om. De elektronen (groen) bewegen tegengesteld aan de conventionele stroom (rood).';
+    const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
+    const cu = pill(st.showCurrent), fi = pill(st.showField), el = pill(st.showElec), co = pill(st.showCompass);
+    return {
+      stageRef: this.stageRef,
+      banner,
+      onReverse: this.reverse,
+      onReset: this.reset,
+      amps: st.amps,
+      ampStr: 'I = ' + st.amps.toFixed(1) + ' A',
+      onAmps: this.setAmps,
+      statusLabel: st.curDir === 1 ? 'Stroom omhoog' : 'Stroom omlaag',
+      curDirStr: st.curDir === 1 ? 'omhoog' : 'omlaag',
+      elecDirStr: st.curDir === 1 ? 'omlaag' : 'omhoog',
+      compassStr: 'naald \u2192 ' + (((ang % 360) + 360) % 360).toFixed(0) + '\u00B0',
+      toggleCurrent: () => this.setState(s => ({ showCurrent: !s.showCurrent })),
+      toggleField: () => this.setState(s => ({ showField: !s.showField })),
+      toggleElec: () => this.setState(s => ({ showElec: !s.showElec })),
+      toggleCompass: () => this.setState(s => ({ showCompass: !s.showCompass })),
+      curBg: cu.bg, curBorder: cu.border, curState: cu.state,
+      fieldBg: fi.bg, fieldBorder: fi.border, fieldState: fi.state,
+      elecBg: el.bg, elecBorder: el.border, elecState: el.state,
+      compBg: co.bg, compBorder: co.border, compState: co.state,
+    };
+  }
+}
+</script>
+</body>
+</html>

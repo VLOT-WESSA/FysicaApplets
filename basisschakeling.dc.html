@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Basis schakeling</h1>
+    <span style="font-size:13px;color:#8c8576">batterij &middot; schakelaar &middot; lamp</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <!-- LEFT: simulation -->
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+      <div style="display:flex;gap:12px;flex:none">
+        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#8c8576;font-weight:600">Stroom (totaal)</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#c0392b;margin-top:2px">{{ iStr }}</div>
+        </div>
+        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#8c8576;font-weight:600">Vervangingsweerstand</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#1f9e8f;margin-top:2px">{{ rTotStr }}</div>
+        </div>
+        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#8c8576;font-weight:600">Vermogen (totaal)</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#d98a2b;margin-top:2px">{{ pStr }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: controls -->
+    <div style="flex:none;width:316px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:15px;font-weight:600">Schakelaar</span>
+        <button onClick="{{ toggleSwitch }}" style="display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ swBorder }};background:{{ swBg }};color:{{ swFg }}">
+          <span style="width:9px;height:9px;border-radius:50%;background:{{ swDot }}"></span>{{ swLabel }}
+        </button>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Lampen</div>
+        <div style="display:flex;gap:7px">
+          <sc-for list="{{ modeItems }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#2f6fb0"></span>
+          <span style="font-size:15px;font-weight:600">Spanning U</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;margin-left:auto">{{ uStr }} V</span>
+        </div>
+        <input type="range" min="0" max="12" step="0.1" value="{{ voltage }}" onChange="{{ onU }}" style="width:100%;accent-color:#2f6fb0">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#1f9e8f"></span>
+          <span style="font-size:15px;font-weight:600">Weerstand per lamp R</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;margin-left:auto">{{ rStr }} &Omega;</span>
+        </div>
+        <input type="range" min="20" max="200" step="1" value="{{ resistance }}" onChange="{{ onR }}" style="width:100%;accent-color:#1f9e8f">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Weergave</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px">Elektronenstroom</span>
+            <button onClick="{{ toggleElec }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:{{ elecFg }}">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ elecDot }}"></span>{{ elecLabel }}
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px">Conventionele stroomzin</span>
+            <button onClick="{{ toggleArrow }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ arrowBorder }};background:{{ arrowBg }};color:{{ arrowFg }}">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ arrowDot }}"></span>{{ arrowLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ hintStr }}</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { voltage: 6, resistance: 60, closed: false, mode: 'enkel', showElec: false, showArrow: false };
+  stageRef = React.createRef();
+  W = 800; H = 460;
+  phase = 0;
+
+  componentDidMount() {
+    this.measure();
+    this.ro = new ResizeObserver(() => { this.measure(); this.draw(); });
+    if (this.stageRef.current) this.ro.observe(this.stageRef.current);
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this.ro) this.ro.disconnect(); }
+  measure() {
+    const c = this.stageRef.current; if (!c) return;
+    const w = c.clientWidth, h = c.clientHeight; if (!w || !h) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.W = w; this.H = h; this.dpr = dpr;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+  }
+  loop = (ts) => { this.phase = ts / 1000; this.draw(); this.raf = requestAnimationFrame(this.loop); };
+
+  model() {
+    const U = this.state.voltage, R = this.state.resistance, on = this.state.closed ? 1 : 0;
+    let Itot = 0, Ia = 0, Ib = 0, Pa = 0, Pb = 0, Rtot = R, twoB = false;
+    if (this.state.mode === 'enkel') {
+      Rtot = R; Itot = on * U / R; Ia = Itot; Pa = Ia * Ia * R;
+    } else if (this.state.mode === 'serie') {
+      twoB = true; Rtot = 2 * R; Itot = on * U / (2 * R); Ia = Ib = Itot; Pa = Pb = Itot * Itot * R;
+    } else {
+      twoB = true; Rtot = R / 2; Ia = on * U / R; Ib = on * U / R; Itot = Ia + Ib; Pa = on * U * U / R; Pb = Pa;
+    }
+    return { U, R, on, Itot, Ia, Ib, Pa, Pb, Rtot, twoB };
+  }
+  glow(P) { return Math.max(0, Math.min(1, Math.sqrt(P / 4))); }
+
+  drawWire(ctx, x1, y1, x2, y2) {
+    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  // electrons travel from (x1,y1) -> (x2,y2): pass coords in electron-flow direction
+  electrons(ctx, x1, y1, x2, y2, cur) {
+    if (!this.state.showElec || cur < 1e-4) return;
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    const n = Math.max(1, Math.round(len / 30));
+    for (let i = 0; i < n; i++) {
+      let t = ((i / n) + this.phase * (0.25 + cur * 1.1)) % 1;
+      if (t < 0) t += 1;
+      const ex = x1 + (x2 - x1) * t, ey = y1 + (y2 - y1) * t;
+      ctx.beginPath(); ctx.arc(ex, ey, 3.4, 0, 6.2832);
+      ctx.fillStyle = '#78c8ff'; ctx.fill();
+      ctx.strokeStyle = 'rgba(10,18,28,.55)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#0a121c'; ctx.font = '700 6px IBM Plex Sans, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u2212', ex, ey + 0.5);
+    }
+    ctx.textBaseline = 'alphabetic';
+  }
+  // conventional-current arrowhead at midpoint pointing (dx,dy)
+  currentArrow(ctx, x, y, dx, dy, on) {
+    if (!this.state.showArrow || !on) return;
+    const a = Math.atan2(dy, dx);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(a);
+    ctx.fillStyle = '#ffb454';
+    ctx.beginPath(); ctx.moveTo(11, 0); ctx.lineTo(-7, -8); ctx.lineTo(-7, 8); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#ffd9a0'; ctx.font = '700 12px IBM Plex Mono, monospace'; ctx.textAlign = 'center';
+    ctx.save(); ctx.rotate(-a); ctx.fillText('I', 0, -14); ctx.restore();
+    ctx.restore();
+  }
+
+  // IEC DC source: long thin plate (+) top, short thick plate (-) bottom; wires connect to plate ends
+  battery(ctx, x, ymid, uStr) {
+    const gap = 9;
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#e8e3d8';
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - 17, ymid - gap); ctx.lineTo(x + 17, ymid - gap); ctx.stroke();
+    ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(x - 9, ymid + gap); ctx.lineTo(x + 9, ymid + gap); ctx.stroke();
+    ctx.fillStyle = '#aeb6bf'; ctx.font = "600 14px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('+', x + 22, ymid - gap);
+    ctx.fillText('\u2212', x + 22, ymid + gap);
+    ctx.fillStyle = '#cdd4dc'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+    ctx.fillText(uStr + ' V', x - 24, ymid);
+    ctx.textBaseline = 'alphabetic';
+  }
+  switchSym(ctx, x, y, closed) {
+    ctx.fillStyle = '#cdd4dc';
+    ctx.beginPath(); ctx.arc(x - 18, y, 3.5, 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 18, y, 3.5, 0, 6.2832); ctx.fill();
+    ctx.strokeStyle = closed ? '#7fd8cb' : '#c0392b'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - 18, y);
+    if (closed) ctx.lineTo(x + 18, y); else ctx.lineTo(x + 13, y - 15);
+    ctx.stroke();
+    ctx.fillStyle = '#7f8a98'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillText('S', x, y - 22);
+  }
+  lamp(ctx, x, y, glow, label) {
+    ctx.save(); ctx.translate(x, y);
+    if (glow > 0.02) {
+      const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 44);
+      g.addColorStop(0, `rgba(255,224,130,${0.45 + glow * 0.5})`);
+      g.addColorStop(1, 'rgba(255,224,130,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 44, 0, 6.2832); ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, 15, 0, 6.2832);
+    ctx.fillStyle = glow > 0.02 ? `rgba(255,233,160,${0.35 + glow * 0.6})` : '#141c25';
+    ctx.fill(); ctx.strokeStyle = '#9aa3ad'; ctx.lineWidth = 2; ctx.stroke();
+    // cross inside lamp symbol
+    ctx.strokeStyle = glow > 0.02 ? '#fff3cf' : '#5b6573'; ctx.lineWidth = 1.7;
+    const r = 10.6;
+    ctx.beginPath(); ctx.moveTo(-r, -r); ctx.lineTo(r, r); ctx.moveTo(-r, r); ctx.lineTo(r, -r); ctx.stroke();
+    if (label) { ctx.fillStyle = '#9aa3ad'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText(label, 0, -26); }
+    ctx.restore();
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    const md = this.model();
+    if (this.state.mode === 'parallel') this.drawParallel(ctx, md);
+    else this.drawLoop(ctx, md);
+  }
+
+  drawLoop(ctx, md) {
+    const W = this.W, H = this.H;
+    const x0 = Math.max(150, W * 0.20), x1 = W - Math.max(120, W * 0.16);
+    const y0 = H * 0.27, y1 = H * 0.73, ymid = (y0 + y1) / 2, gap = 9;
+    // wire rectangle, left side split by battery
+    this.drawWire(ctx, x0, y0, x1, y0);            // top
+    this.drawWire(ctx, x1, y0, x1, y1);            // right
+    this.drawWire(ctx, x1, y1, x0, y1);            // bottom
+    this.drawWire(ctx, x0, y0, x0, ymid - gap);    // left upper -> + plate
+    this.drawWire(ctx, x0, ymid + gap, x0, y1);    // left lower -> - plate
+    // electrons (flow: out of - bottom plate, down, along bottom L->R, up right, top R->L, into + top plate)
+    const I = md.Itot;
+    this.electrons(ctx, x0, ymid + gap, x0, y1, I);
+    this.electrons(ctx, x0, y1, x1, y1, I);
+    this.electrons(ctx, x1, y1, x1, y0, I);
+    this.electrons(ctx, x1, y0, x0, y0, I);
+    this.electrons(ctx, x0, y0, x0, ymid - gap, I);
+    // components
+    this.battery(ctx, x0, ymid, this.state.voltage.toFixed(1));
+    const xSw = x0 + (x1 - x0) * 0.22;
+    this.switchSym(ctx, xSw, y0, this.state.closed);
+    if (md.twoB) {
+      this.lamp(ctx, x0 + (x1 - x0) * 0.55, y0, this.glow(md.Pa), 'L1');
+      this.lamp(ctx, x0 + (x1 - x0) * 0.78, y0, this.glow(md.Pb), 'L2');
+    } else {
+      this.lamp(ctx, (x0 + x1) / 2, y0, this.glow(md.Pa), null);
+    }
+    // conventional current arrows (opposite to electrons): top L->R, right down, bottom R->L
+    this.currentArrow(ctx, (x0 + x1) * 0.5 - (x1 - x0) * 0.12, y0, 1, 0, md.on);
+    this.currentArrow(ctx, x1, ymid, 0, 1, md.on);
+    this.currentArrow(ctx, (x0 + x1) / 2, y1, -1, 0, md.on);
+    // open-circuit note
+    if (!this.state.closed) {
+      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+      ctx.fillText('Kring open \u2014 geen stroom', (x0 + x1) / 2, y1 + 26);
+    }
+  }
+
+  drawParallel(ctx, md) {
+    const W = this.W, H = this.H;
+    const xL = Math.max(150, W * 0.20), xB = W - Math.max(120, W * 0.18);
+    const xA = xL + (xB - xL) * 0.55;
+    const yT = H * 0.27, yB = H * 0.73, ymid = (yT + yB) / 2, gap = 9;
+    // buses
+    this.drawWire(ctx, xL, yT, xB, yT);
+    this.drawWire(ctx, xL, yB, xB, yB);
+    this.drawWire(ctx, xA, yT, xA, yB);
+    this.drawWire(ctx, xB, yT, xB, yB);
+    // full left lead (continuous conductor; battery symbol drawn on top)
+    this.drawWire(ctx, xL, yT, xL, yB);
+    // electrons: out of - (bottom) -> bottom bus L->R, up branches, top bus R->L -> + (top)
+    this.electrons(ctx, xL, ymid + gap, xL, yB, md.Itot);
+    this.electrons(ctx, xL, yB, xA, yB, md.Itot);
+    this.electrons(ctx, xA, yB, xB, yB, md.Ib);
+    this.electrons(ctx, xA, yB, xA, yT, md.Ia);
+    this.electrons(ctx, xB, yB, xB, yT, md.Ib);
+    this.electrons(ctx, xB, yT, xA, yT, md.Ib);
+    this.electrons(ctx, xA, yT, xL, yT, md.Itot);
+    this.electrons(ctx, xL, yT, xL, ymid - gap, md.Itot);
+    // components
+    this.battery(ctx, xL, ymid, this.state.voltage.toFixed(1));
+    this.switchSym(ctx, xL + (xA - xL) * 0.5, yT, this.state.closed);
+    this.lamp(ctx, xA, ymid, this.glow(md.Pa), 'L1');
+    this.lamp(ctx, xB, ymid, this.glow(md.Pb), 'L2');
+    // conventional current arrows
+    this.currentArrow(ctx, xL + (xA - xL) * 0.78, yT, 1, 0, md.on);
+    this.currentArrow(ctx, xA, ymid - (yB - yT) * 0.28, 0, 1, md.on);
+    this.currentArrow(ctx, xB, ymid - (yB - yT) * 0.28, 0, 1, md.on);
+    if (!this.state.closed) {
+      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+      ctx.fillText('Kring open \u2014 geen stroom', (xL + xB) / 2, yB + 26);
+    }
+  }
+
+  fmtI(I) {
+    if (I >= 1) return I.toFixed(2) + ' A';
+    if (I >= 0.001) return (I * 1000).toFixed(0) + ' mA';
+    return '0 mA';
+  }
+  fmtR(R) { return R >= 1000 ? (R / 1000).toFixed(2) + ' k\u03A9' : Math.round(R) + ' \u03A9'; }
+  fmtP(P) { return P >= 1 ? P.toFixed(2) + ' W' : (P * 1000).toFixed(0) + ' mW'; }
+
+  renderVals() {
+    const md = this.model();
+    const modes = [
+      { id: 'enkel', label: '1 lamp' },
+      { id: 'serie', label: '2 in serie' },
+      { id: 'parallel', label: '2 parallel' },
+    ];
+    const modeItems = modes.map(m => {
+      const active = m.id === this.state.mode;
+      return {
+        id: m.id, label: m.label,
+        bg: active ? '#1f9e8f' : '#fffdf9', fg: active ? '#fff' : '#6f685c',
+        border: active ? '#1f9e8f' : '#e7e1d5',
+        onClick: () => this.setState({ mode: m.id }),
+      };
+    });
+    const hints = {
+      enkel: 'E\u00e9n lamp in een gesloten kring. Stroom volgt uit de wet van Ohm: I = U/R.',
+      serie: 'In serie tellen de weerstanden op (2R), dus de stroom halveert en beide lampen branden zwakker.',
+      parallel: 'Parallel staat elke lamp op de volle spanning: even helder als \u00e9\u00e9n lamp, maar de batterij levert dubbele stroom.',
+    };
+    const on = this.state.closed;
+    const elec = this.state.showElec, arr = this.state.showArrow;
+    return {
+      stageRef: this.stageRef,
+      voltage: this.state.voltage, resistance: this.state.resistance,
+      uStr: this.state.voltage.toFixed(1), rStr: Math.round(this.state.resistance).toString(),
+      iStr: this.fmtI(md.Itot), rTotStr: this.fmtR(md.Rtot), pStr: this.fmtP(md.Pa + md.Pb),
+      onU: (e) => this.setState({ voltage: Number(e.target.value) }),
+      onR: (e) => this.setState({ resistance: Number(e.target.value) }),
+      modeItems,
+      toggleSwitch: () => this.setState({ closed: !this.state.closed }),
+      swLabel: on ? 'Gesloten' : 'Open',
+      swBg: on ? '#1f9e8f' : '#fbecea', swFg: on ? '#fff' : '#b8472f',
+      swBorder: on ? '#1f9e8f' : '#eccfca', swDot: on ? '#bff0e6' : '#c0392b',
+      toggleElec: () => this.setState({ showElec: !this.state.showElec }),
+      elecLabel: elec ? 'Aan' : 'Uit',
+      elecBg: elec ? '#2f6fb0' : '#f4f1ea', elecFg: elec ? '#fff' : '#8c8576',
+      elecBorder: elec ? '#2f6fb0' : '#e7e1d5', elecDot: elec ? '#bcd8f2' : '#c3bcad',
+      toggleArrow: () => this.setState({ showArrow: !this.state.showArrow }),
+      arrowLabel: arr ? 'Aan' : 'Uit',
+      arrowBg: arr ? '#d98a2b' : '#f4f1ea', arrowFg: arr ? '#fff' : '#8c8576',
+      arrowBorder: arr ? '#d98a2b' : '#e7e1d5', arrowDot: arr ? '#f2d6ad' : '#c3bcad',
+      hintStr: hints[this.state.mode],
+    };
+  }
+}
+</script>
+</body>
+</html>

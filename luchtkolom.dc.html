@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#f7f4ee"/>
+  <rect x="12" y="38" width="76" height="24" fill="#fff" stroke="#cdc6b7" stroke-width="2"/>
+  <path d="M12 50 Q 31 30 50 50 Q 69 70 88 50" fill="none" stroke="#1f8a8a" stroke-width="3"/>
+  <path d="M12 50 Q 31 70 50 50 Q 69 30 88 50" fill="none" stroke="#1f8a8a" stroke-width="3" opacity="0.4"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a8a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a8a;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Staande golf in een kolom</h1>
+    <span style="font-size:13px;color:#8c8576">resonantie &middot; knopen &amp; buiken</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f7f4ee;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:11px;height:11px;border-radius:50%;border:2px solid #b8472f;display:inline-block"></span>knoop (node)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:12px;height:12px;background:#1f8a8a;display:inline-block;transform:rotate(45deg)"></span>buik (antinode)</div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#6f685c">{{ endDesc }}</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Randvoorwaarden</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+          <button onClick="{{ onBB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bbBorder }};background:{{ bbBg }};color:{{ bbFg }}">buik &ndash; buik</button>
+          <button onClick="{{ onNB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nbBorder }};background:{{ nbBg }};color:{{ nbFg }}">knoop &ndash; buik</button>
+          <button onClick="{{ onBN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bnBorder }};background:{{ bnBg }};color:{{ bnFg }}">buik &ndash; knoop</button>
+          <button onClick="{{ onNN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nnBorder }};background:{{ nnBg }};color:{{ nnFg }}">knoop &ndash; knoop</button>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:9px">{{ boundHint }}</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Visualisatie</div>
+        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
+          <button onClick="{{ onTrans }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ transBg }};color:{{ transFg }};box-shadow:{{ transSh }}">Transversaal</button>
+          <button onClick="{{ onLong }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ longBg }};color:{{ longFg }};box-shadow:{{ longSh }}">Longitudinaal</button>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Harmonische n</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#1f7a7a">{{ harmStr }}</span>
+        </div>
+        <input type="range" min="1" max="6" step="1" value="{{ n }}" onInput="{{ onN }}" style="width:100%;accent-color:#1f8a8a;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Lengte kolom L</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lenStr }}</span>
+        </div>
+        <input type="range" min="0.2" max="2" step="0.05" value="{{ len }}" onInput="{{ onLen }}" style="width:100%;accent-color:#1f8a8a;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Golfsnelheid v</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vStr }}</span>
+        </div>
+        <input type="range" min="100" max="400" step="1" value="{{ v }}" onInput="{{ onV }}" style="width:100%;accent-color:#1f8a8a">
+      </div>
+
+      <div style="background:#0e1417;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6e6">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#88989a;font-weight:600;margin-bottom:11px">Resonantie</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:#aeb8b8">golflengte &lambda;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#54d6c4">{{ lambdaStr }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:#aeb8b8">frequentie f</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600">{{ freqStr }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:13px;color:#aeb8b8">knopen &middot; buiken</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ countStr }}</span>
+        </div>
+        <div style="font-size:12px;color:#7e8f90;line-height:1.5;font-family:'IBM Plex Mono',monospace">{{ formulaStr }}</div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55">Een staande golf ontstaat alleen bij de toegestane golflengtes die in de kolom passen. Kies een randvoorwaarde en blader met n door de boventonen.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;golfKleur&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1f8a8a&quot;,&quot;options&quot;:[&quot;#1f8a8a&quot;,&quot;#b8472f&quot;,&quot;#3a7ad9&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;toonEnvelope&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 820; H = 470;
+
+  n = 2; len = 1.0; v = 343; phase = 0;
+  state = { bound: 'bb', mode: 'trans' };
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => this.setupCanvas();
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+        this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    this.phase += dt * (Math.PI * 2 / 1.5);
+    if (this.phase > Math.PI * 2) this.phase -= Math.PI * 2;
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.14) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  shapeParams() {
+    const b = this.state.bound, n = this.n, L = this.len;
+    if (b === 'bb') return { k: n * Math.PI / L, kind: 'cos' };
+    if (b === 'nn') return { k: n * Math.PI / L, kind: 'sin' };
+    if (b === 'nb') return { k: (2 * n - 1) * Math.PI / (2 * L), kind: 'sin' };
+    return { k: (2 * n - 1) * Math.PI / (2 * L), kind: 'cos' }; // bn
+  }
+  shapeAt(xm, sp) { return sp.kind === 'cos' ? Math.cos(sp.k * xm) : Math.sin(sp.k * xm); }
+
+  // returns arrays of x-fractions (0..1) for nodes and antinodes
+  features(sp) {
+    const L = this.len, nodes = [], anti = [];
+    const Nz = 400; let prev = this.shapeAt(0, sp);
+    if (Math.abs(prev) < 0.02) nodes.push(0);
+    for (let i = 1; i <= Nz; i++) {
+      const xm = L * i / Nz, val = this.shapeAt(xm, sp);
+      if ((prev < 0 && val >= 0) || (prev > 0 && val <= 0)) nodes.push(i / Nz);
+      prev = val;
+    }
+    // antinodes where |shape| ~ 1
+    const M = 12;
+    for (let j = 0; j <= M; j++) {
+      const xm = L * j / M, a = Math.abs(this.shapeAt(xm, sp));
+      if (a > 0.985) anti.push(j / M);
+    }
+    return { nodes, anti };
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const W = this.W, H = this.H;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f7f4ee'; ctx.fillRect(0, 0, W, H);
+
+    const x0 = 92, x1 = W - 80, yMid = H / 2 - 6, th = 132;
+    const sp = this.shapeParams();
+    const b = this.state.bound;
+    const leftOpen = (b === 'bb' || b === 'bn');   // buik on left = open end
+    const rightOpen = (b === 'bb' || b === 'nb');  // buik on right = open end
+    const wave = (this.props && this.props.golfKleur) || '#1f8a8a';
+    const showEnv = !(this.props && this.props.toonEnvelope === false);
+
+    // tube body
+    ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#cdc6b7'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.rect(x0, yMid - th / 2, x1 - x0, th); ctx.fill(); ctx.stroke();
+    // closed-end walls
+    const wall = (x) => { ctx.fillStyle = '#6f6a60'; ctx.fillRect(x - 7, yMid - th / 2 - 4, 14, th + 8); };
+    const lip = (x, dir) => {
+      ctx.strokeStyle = '#b7b0a1'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x, yMid - th / 2); ctx.lineTo(x + dir * 14, yMid - th / 2 - 10); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, yMid + th / 2); ctx.lineTo(x + dir * 14, yMid + th / 2 + 10); ctx.stroke();
+    };
+    if (!leftOpen) wall(x0); else lip(x0, -1);
+    if (!rightOpen) wall(x1); else lip(x1, 1);
+
+    const mapX = (frac) => x0 + frac * (x1 - x0);
+    const xmOf = (px) => (px - x0) / (x1 - x0) * this.len;
+
+    if (this.state.mode === 'trans') {
+      const A = th * 0.42;
+      // envelope
+      if (showEnv) {
+        ctx.strokeStyle = 'rgba(31,138,138,0.30)'; ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]);
+        for (const sgn of [1, -1]) {
+          ctx.beginPath();
+          for (let px = x0; px <= x1; px += 3) { const y = yMid - sgn * A * this.shapeAt(xmOf(px), sp); px === x0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y); }
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+      }
+      // centre axis
+      ctx.strokeStyle = 'rgba(0,0,0,0.10)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x0, yMid); ctx.lineTo(x1, yMid); ctx.stroke();
+      // animated string
+      const cph = Math.cos(this.phase);
+      ctx.strokeStyle = wave; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      for (let px = x0; px <= x1; px += 2) { const y = yMid - A * this.shapeAt(xmOf(px), sp) * cph; px === x0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y); }
+      ctx.stroke();
+    } else {
+      // longitudinal: particle field displaced in x
+      const cols = 78, rows = 5, A = (x1 - x0) / cols * 1.8;
+      const cph = Math.cos(this.phase);
+      ctx.fillStyle = wave;
+      for (let r = 0; r < rows; r++) {
+        const y = yMid - th / 2 + (th) * (r + 0.5) / rows;
+        for (let i = 0; i < cols; i++) {
+          const rx = x0 + (i + 0.5) / cols * (x1 - x0);
+          const dx = A * this.shapeAt(xmOf(rx), sp) * cph;
+          ctx.globalAlpha = 0.82;
+          ctx.beginPath(); ctx.arc(rx + dx, y, 2.4, 0, 6.2832); ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // node / antinode markers (from displacement pattern)
+    const f = this.features(sp);
+    for (const fr of f.nodes) {
+      const x = mapX(fr);
+      ctx.strokeStyle = '#b8472f'; ctx.lineWidth = 2; ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(x, yMid, 5, 0, 6.2832); ctx.fill(); ctx.stroke();
+    }
+    for (const fr of f.anti) {
+      const x = mapX(fr);
+      ctx.save(); ctx.translate(x, yMid); ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = '#1f8a8a'; ctx.fillRect(-5, -5, 10, 10); ctx.restore();
+    }
+
+    // length dimension
+    ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+    ctx.beginPath(); ctx.moveTo(x0, yMid + th / 2 + 24); ctx.lineTo(x1, yMid + th / 2 + 24); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#6f685c'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('L = ' + this.len.toFixed(2) + ' m', (x0 + x1) / 2, yMid + th / 2 + 30);
+
+    // end labels
+    ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = leftOpen ? '#1f7a7a' : '#8a3b2c'; ctx.textAlign = 'left';
+    ctx.fillText(leftOpen ? 'open' : 'gesloten', x0 - 2, yMid - th / 2 - 16);
+    ctx.fillStyle = rightOpen ? '#1f7a7a' : '#8a3b2c'; ctx.textAlign = 'right';
+    ctx.fillText(rightOpen ? 'open' : 'gesloten', x1 + 2, yMid - th / 2 - 16);
+  }
+
+  renderVals() {
+    const b = this.state.bound, n = this.n, L = this.len, v = this.v;
+    const half = (b === 'bb' || b === 'nn');
+    const lambda = half ? (2 * L / n) : (4 * L / (2 * n - 1));
+    const freq = v / lambda;
+    const harmonic = half ? n : (2 * n - 1);
+    const sp = this.shapeParams();
+    const f = this.features(sp);
+    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? '#1f7a7a' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
+    const tr = seg(this.state.mode === 'trans'), lo = seg(this.state.mode === 'long');
+    const pick = (id, lbl) => {
+      const on = b === id;
+      return { bg: on ? '#1f8a8a' : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? '#1f8a8a' : '#ddd6c8' };
+    };
+    const bb = pick('bb'), nb = pick('nb'), bn = pick('bn'), nn = pick('nn');
+    const endTxt = { bb: 'open \u2013 open', nn: 'gesloten \u2013 gesloten', nb: 'gesloten \u2013 open', bn: 'open \u2013 gesloten' }[b];
+    const hint = half
+      ? 'Beide uiteinden gelijk: alle harmonischen passen, \u03bb = 2L/n.'
+      : 'Ongelijke uiteinden: alleen oneven harmonischen, \u03bb = 4L/(2n\u22121).';
+    return {
+      stageRef: this.stageRef,
+      n: this.n, len: this.len, v: this.v,
+      harmStr: 'n = ' + n + (half ? '' : '  (' + harmonic + 'e)'),
+      lenStr: L.toFixed(2) + ' m', vStr: Math.round(v) + ' m/s',
+      lambdaStr: lambda.toFixed(2) + ' m', freqStr: Math.round(freq) + ' Hz',
+      countStr: f.nodes.length + ' \u00b7 ' + f.anti.length,
+      formulaStr: half ? ('f = n\u00b7v / 2L = ' + n + '\u00b7' + Math.round(v) + ' / ' + (2 * L).toFixed(2)) : ('f = (2n\u22121)\u00b7v / 4L = ' + harmonic + '\u00b7' + Math.round(v) + ' / ' + (4 * L).toFixed(2)),
+      endDesc: 'uiteinden: ' + endTxt,
+      boundHint: hint,
+      onN: (e) => { this.n = parseInt(e.target.value); this.forceUpdate(); },
+      onLen: (e) => { this.len = parseFloat(e.target.value); this.forceUpdate(); },
+      onV: (e) => { this.v = parseFloat(e.target.value); this.forceUpdate(); },
+      onBB: () => this.setState({ bound: 'bb' }), onNB: () => this.setState({ bound: 'nb' }),
+      onBN: () => this.setState({ bound: 'bn' }), onNN: () => this.setState({ bound: 'nn' }),
+      onTrans: () => this.setState({ mode: 'trans' }), onLong: () => this.setState({ mode: 'long' }),
+      bbBg: bb.bg, bbFg: bb.fg, bbBorder: bb.border, nbBg: nb.bg, nbFg: nb.fg, nbBorder: nb.border,
+      bnBg: bn.bg, bnFg: bn.fg, bnBorder: bn.border, nnBg: nn.bg, nnFg: nn.fg, nnBorder: nn.border,
+      transBg: tr.bg, transFg: tr.fg, transSh: tr.sh, longBg: lo.bg, longFg: lo.fg, longSh: lo.sh,
+    };
+  }
+}
+</script>
+</body>
+</html>

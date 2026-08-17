@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#0b0e14"/>
+  <path d="M50 50 C 80 26, 80 74, 50 50 C 20 26, 20 74, 50 50 Z" fill="none" stroke="#38d9c4" stroke-width="3.5"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Lissajous-figuren</h1>
+    <span style="font-size:13px;color:#8c8576">twee loodrechte trillingen samengesteld</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#0b0e14;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#38d9c4;border-radius:2px;display:inline-block"></span>Lissajous-figuur</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>x-trilling (boven)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#6f9bd8;border-radius:2px;display:inline-block"></span>y-trilling (links)</div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#6f685c">verhouding <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ ratioStr }}</span></div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Amplitudes</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">A<sub>x</sub></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ axStr }}</span>
+        </div>
+        <input type="range" min="0.1" max="1" step="0.01" value="{{ ax }}" onInput="{{ onAx }}" style="width:100%;accent-color:#e8964c;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">A<sub>y</sub></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3f6aa3">{{ ayStr }}</span>
+        </div>
+        <input type="range" min="0.1" max="1" step="0.01" value="{{ ay }}" onInput="{{ onAy }}" style="width:100%;accent-color:#6f9bd8">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Frequenties</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">f<sub>x</sub></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ fxStr }}</span>
+        </div>
+        <input type="range" min="1" max="6" step="1" value="{{ fx }}" onInput="{{ onFx }}" style="width:100%;accent-color:#e8964c;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">f<sub>y</sub></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3f6aa3">{{ fyStr }}</span>
+        </div>
+        <input type="range" min="1" max="6" step="1" value="{{ fy }}" onInput="{{ onFy }}" style="width:100%;accent-color:#6f9bd8">
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:500">Faseverschil &phi;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ phaseStr }}</span>
+        </div>
+        <input type="range" min="0" max="360" step="1" value="{{ phaseVal }}" onInput="{{ onPhase }}" style="width:100%;accent-color:#1f9e8f">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+        <button onClick="{{ onToggleBol }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ bolBorder }};background:{{ bolBg }};color:{{ bolFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ bolDot }}"></span>{{ bolLabel }}</button>
+        <button onClick="{{ onAuto }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ autoBorder }};background:{{ autoBg }};color:{{ autoFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ autoDot }}"></span>{{ autoLabel }}</button>
+        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
+          <button onClick="{{ onModeFase }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ faseTabBg }};color:{{ faseTabFg }};box-shadow:{{ faseTabSh }}">varieer faseverschil</button>
+          <button onClick="{{ onModeRatio }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ ratioTabBg }};color:{{ ratioTabFg }};box-shadow:{{ ratioTabSh }}">varieer verhouding</button>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55">x = A<sub>x</sub>&middot;sin(f<sub>x</sub>t + &phi;) &nbsp;&middot;&nbsp; y = A<sub>y</sub>&middot;sin(f<sub>y</sub>t). Bij een gehele verhouding f<sub>x</sub>:f<sub>y</sub> ontstaat een gesloten, stilstaande figuur.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;traceColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#38d9c4&quot;,&quot;options&quot;:[&quot;#38d9c4&quot;,&quot;#ffd23a&quot;,&quot;#ff7a9c&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;rasterAan&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 640; H = 640;
+
+  ax = 0.85; ay = 0.85; fx = 3; fy = 2; phaseDeg = 90; tau = 0;
+  state = { auto: false, autoMode: 'fase', showBol: true };
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => { this.setupCanvas(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+        this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    this.tau += dt * 1.6; if (this.tau > Math.PI * 2) this.tau -= Math.PI * 2;
+    if (this.state.auto) {
+      if (this.state.autoMode === 'fase') { this.phaseDeg = (this.phaseDeg + dt * 42) % 360; }
+      else { this._ft = (this._ft || 0) + dt; if (this._ft > 2.2) { this._ft = 0; this.fy = this.fy % 6 + 1; } }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.12) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  gcd(a, b) { return b ? this.gcd(b, a % b) : a; }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const W = this.W, H = this.H;
+    ctx.fillStyle = '#0b0e14'; ctx.fillRect(0, 0, W, H);
+
+    const pad = 14, Lw = 78, Th = 78, gap = 14;
+    const mX0 = pad + Lw + gap, mY0 = pad + Th + gap, mX1 = W - pad, mY1 = H - pad;
+    const cx = (mX0 + mX1) / 2, cy = (mY0 + mY1) / 2, half = (mX1 - mX0) / 2;
+    const ph = this.phaseDeg * Math.PI / 180;
+    const xf = (t) => this.ax * Math.sin(this.fx * t + ph);
+    const yf = (t) => this.ay * Math.sin(this.fy * t);
+    const MX = (v) => cx + v * half, MY = (v) => cy - v * half;
+    const TWO = Math.PI * 2;
+    const traceCol = (this.props && this.props.traceColor) || '#38d9c4';
+    const grid = !(this.props && this.props.rasterAan === false);
+    const showBol = this.state.showBol !== false;
+
+    // panels
+    ctx.fillStyle = '#11161f'; ctx.fillRect(mX0, mY0, mX1 - mX0, mY1 - mY0);
+    ctx.fillStyle = '#0e1822'; ctx.fillRect(mX0, pad, mX1 - mX0, Th); // top strip
+    ctx.fillStyle = '#0e1822'; ctx.fillRect(pad, mY0, Lw, mY1 - mY0); // left strip
+
+    if (grid) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+      for (let i = 1; i < 8; i++) {
+        const x = mX0 + (mX1 - mX0) * i / 8, y = mY0 + (mY1 - mY0) * i / 8;
+        ctx.beginPath(); ctx.moveTo(x, mY0); ctx.lineTo(x, mY1); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(mX0, y); ctx.lineTo(mX1, y); ctx.stroke();
+      }
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(mX0, cy); ctx.lineTo(mX1, cy); ctx.moveTo(cx, mY0); ctx.lineTo(cx, mY1); ctx.stroke();
+
+    // x(t) on top strip (time runs downward)
+    ctx.strokeStyle = '#e8964c'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i++) { const t = TWO * i / 240; const X = MX(xf(t)), Y = pad + (t / TWO) * Th; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    ctx.stroke();
+    // y(t) on left strip (time runs rightward)
+    ctx.strokeStyle = '#6f9bd8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i++) { const t = TWO * i / 240; const X = pad + (t / TWO) * Lw, Y = MY(yf(t)); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    ctx.stroke();
+
+    // full Lissajous trace
+    ctx.save();
+    ctx.beginPath(); ctx.rect(mX0, mY0, mX1 - mX0, mY1 - mY0); ctx.clip();
+    ctx.strokeStyle = traceCol; ctx.globalAlpha = showBol ? 0.5 : 0.95; ctx.lineWidth = showBol ? 1.6 : 2.2; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let i = 0; i <= 600; i++) { const t = TWO * i / 600; const X = MX(xf(t)), Y = MY(yf(t)); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    ctx.stroke();
+    // bright comet of recent motion (the travelling ball)
+    if (showBol) {
+      ctx.globalAlpha = 1;
+      for (let k = 0; k < 26; k++) {
+        const t = this.tau - k * 0.025;
+        const X = MX(xf(t)), Y = MY(yf(t));
+        ctx.globalAlpha = (1 - k / 26) * 0.9;
+        ctx.strokeStyle = traceCol; ctx.lineWidth = 3;
+        if (k === 0) { ctx.beginPath(); ctx.moveTo(X, Y); }
+        else ctx.lineTo(X, Y);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+
+    if (showBol) {
+      const dotX = MX(xf(this.tau)), dotY = MY(yf(this.tau));
+      const topMY = pad + (this.tau / TWO) * Th;
+      const leftMX = pad + (this.tau / TWO) * Lw;
+
+      // projection lines
+      ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(232,150,76,0.55)';
+      ctx.beginPath(); ctx.moveTo(dotX, topMY); ctx.lineTo(dotX, dotY); ctx.stroke();
+      ctx.strokeStyle = 'rgba(111,155,216,0.55)';
+      ctx.beginPath(); ctx.moveTo(leftMX, dotY); ctx.lineTo(dotX, dotY); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // markers
+      ctx.fillStyle = '#e8964c'; ctx.beginPath(); ctx.arc(dotX, topMY, 3.4, 0, TWO); ctx.fill();
+      ctx.fillStyle = '#6f9bd8'; ctx.beginPath(); ctx.arc(leftMX, dotY, 3.4, 0, TWO); ctx.fill();
+      // main dot (the ball)
+      ctx.save(); ctx.shadowColor = traceCol; ctx.shadowBlur = 12;
+      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(dotX, dotY, 4.4, 0, TWO); ctx.fill();
+      ctx.restore();
+    }
+
+    // labels
+    ctx.fillStyle = '#6b7682'; ctx.font = "500 11px 'IBM Plex Mono',monospace";
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('x(t)', mX0 + 4, pad + 3);
+    ctx.save(); ctx.translate(pad + 3, mY0 + 4); ctx.fillText('y(t)', 0, 0); ctx.restore();
+  }
+
+  renderVals() {
+    const st = this.state;
+    const g = this.gcd(this.fx, this.fy) || 1;
+    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? '#1f9e8f' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
+    const f = seg(st.autoMode === 'fase'), r = seg(st.autoMode === 'verhouding');
+    return {
+      stageRef: this.stageRef,
+      ax: this.ax, ay: this.ay, fx: this.fx, fy: this.fy, phaseVal: Math.round(this.phaseDeg),
+      axStr: this.ax.toFixed(2), ayStr: this.ay.toFixed(2),
+      fxStr: this.fx + ' \u00D7', fyStr: this.fy + ' \u00D7',
+      phaseStr: Math.round(this.phaseDeg) + '\u00B0',
+      ratioStr: (this.fx / g) + ' : ' + (this.fy / g),
+      onAx: (e) => { this.ax = parseFloat(e.target.value); this.forceUpdate(); },
+      onAy: (e) => { this.ay = parseFloat(e.target.value); this.forceUpdate(); },
+      onFx: (e) => { this.fx = parseInt(e.target.value); this.forceUpdate(); },
+      onFy: (e) => { this.fy = parseInt(e.target.value); this.forceUpdate(); },
+      onPhase: (e) => { this.phaseDeg = parseFloat(e.target.value); this.forceUpdate(); },
+      onAuto: () => this.setState(s => ({ auto: !s.auto })),
+      onToggleBol: () => this.setState(s => ({ showBol: !s.showBol })),
+      bolLabel: st.showBol !== false ? 'Bewegende bol aan' : 'Bewegende bol uit',
+      bolBg: st.showBol !== false ? '#1f9e8f' : '#fff', bolFg: st.showBol !== false ? '#fff' : '#3a352c',
+      bolBorder: st.showBol !== false ? '#1f9e8f' : '#d9d3c6', bolDot: st.showBol !== false ? '#fff' : '#c3bcad',
+      onModeFase: () => this.setState({ autoMode: 'fase' }),
+      onModeRatio: () => this.setState({ autoMode: 'verhouding' }),
+      autoLabel: st.auto ? 'Automatisch aan' : 'Automatisch uit',
+      autoBg: st.auto ? '#1f9e8f' : '#fff', autoFg: st.auto ? '#fff' : '#3a352c',
+      autoBorder: st.auto ? '#1f9e8f' : '#d9d3c6', autoDot: st.auto ? '#fff' : '#c3bcad',
+      faseTabBg: f.bg, faseTabFg: f.fg, faseTabSh: f.sh,
+      ratioTabBg: r.bg, ratioTabFg: r.fg, ratioTabSh: r.sh,
+    };
+  }
+}
+</script>
+</body>
+</html>

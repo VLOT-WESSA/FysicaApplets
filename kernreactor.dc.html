@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#eceae4"/>
+  <rect x="28" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
+  <rect x="36" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
+  <rect x="44" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
+  <rect x="52" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
+  <rect x="25" y="56" width="34" height="32" rx="6" fill="#f0ede6" stroke="#3a352c" stroke-width="2"/>
+  <rect x="31" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
+  <rect x="40" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
+  <rect x="49" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
+  <rect x="68" y="38" width="14" height="36" rx="6" fill="#f0ede6" stroke="#3a352c" stroke-width="1.5"/>
+</svg>
+</template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer}
+  @media(max-width:760px){html,body{height:auto}.applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}.applet-main{flex-direction:column !important;align-items:stretch !important}.applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}.applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}}
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
+<script src="./applet-core.js"></script>
+</helmet>
+
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Kernsplijtingsreactor</h1>
+    <span style="font-size:13px;color:#8c8576">gestuurde kettingreactie</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="position:relative;flex:1;min-height:0;background:#fbfaf6;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+        <sc-if value="{{ showWarn }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#b8311f;color:#fff;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.25)">&#9888; {{ warnText }}</div>
+        </sc-if>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ onToggleRun }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ runBorder }};background:{{ runBg }};color:{{ runFg }}">{{ runLabel }}</button>
+        <button onClick="{{ onScram }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid #b8311f;background:#fff;color:#b8311f">&#9632; SCRAM &mdash; noodstop</button>
+        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:336px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:13.5px;font-weight:600;color:#3a352c;margin-bottom:8px">Splijtstof</div>
+        <select value="{{ fuel }}" onChange="{{ onFuel }}" style="width:100%;font-family:inherit;font-size:13px;color:#2a2723;background:#fff;border:1px solid #d9d3c6;border-radius:9px;padding:9px 10px;cursor:pointer">
+          <option value="natuur">Natuurlijk uranium (0,7% U-235)</option>
+          <option value="laag">Laagverrijkt uranium (3,5% U-235)</option>
+          <option value="mox">MOX (uranium + plutonium)</option>
+        </select>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Hogere verrijking of MOX &rarr; meer splijtbare kernen &rarr; hogere reactiviteit.</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:13.5px;font-weight:600;color:#3a352c;margin-bottom:8px">Moderator</div>
+        <select value="{{ moderator }}" onChange="{{ onModerator }}" style="width:100%;font-family:inherit;font-size:13px;color:#2a2723;background:#fff;border:1px solid #d9d3c6;border-radius:9px;padding:9px 10px;cursor:pointer">
+          <option value="licht">Licht water (H&#8322;O)</option>
+          <option value="grafiet">Grafiet</option>
+          <option value="zwaar">Zwaar water (D&#8322;O)</option>
+        </select>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt neutronen. Zwaar water en grafiet laten neutrons beter modereren dan licht water.</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:13.5px;font-weight:600;color:#3a352c">Regelstaven</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ rodStr }}</span>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; reactie dooft uit</div>
+        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:#b8472f">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
+          <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Splijtingen / s</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ fisRateStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vrije neutronen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ neutronStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vermenigvuldiging k</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ kStr }}</span></div>
+        <div style="height:1px;background:#efe9dd;margin:1px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Thermisch vermogen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ powerStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kerntemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ tempColor }}">{{ tempStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stoomproductie</span><span style="font-family:'IBM Plex Mono',monospace;color:#3f6aa3">{{ steamStr }}</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave</span>
+        <button onClick="{{ toggleNeutrons }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ nBorder }};background:{{ nBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>Neutronen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ nState }}</span>
+        </button>
+        <button onClick="{{ toggleLabels }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ lBorder }};background:{{ lBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f685c"></span>Onderdeellabels <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ lState }}</span>
+        </button>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Vermogen in de tijd</span>
+        </div>
+        <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px"><b style="color:#3f6aa3">k&lt;1</b> dooft uit &middot; <b style="color:#3a8a55">k=1</b> constant &middot; <b style="color:#b8472f">k&gt;1</b> loopt op. Hogere temperatuur verlaagt k (terugkoppeling).</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;beginRegelstaven&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:60,&quot;min&quot;:0,&quot;max&quot;:100,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  chartRef  = React.createRef();
+  W = 880; H = 560;
+  CW = 300; CH = 150;
+
+  shield = { x0: 150, y0: 78, x1: 452, y1: 496 };
+  vessel = { x0: 196, y0: 112, x1: 408, y1: 478 };
+  core   = { x0: 220, y0: 178, x1: 390, y1: 424 };
+  hx     = { x0: 576, y0: 138, x1: 668, y1: 452 };
+
+  GAS = 0.70;   // fixed cooling fraction
+
+  fuelTerms = { natuur: 0.808, laag: 0.962, mox: 1.00 };
+  modTerms  = { licht: 0.920, grafiet: 1.00, zwaar: 1.094 };
+
+  fuelX = []; ctrlX = []; blocks = []; gasCh = [];
+
+  state = { running: false, rod: 0.6, showNeutrons: false, showLabels: false, fuel: 'laag', moderator: 'grafiet' };
+
+  N = 40; T = 250; totalFis = 0; fisRate = 0; kEff = 1; steam = 0; power = 0;
+  neutrons = []; flashes = []; hist = [];
+  fanAngle = 0; flowPhase = 0; pulse = 0;
+
+  componentDidMount() {
+    const c = this.core, w = c.x1 - c.x0;
+    const nBlocks = 3, bw = 48;
+    const gap = (w - nBlocks * bw) / (nBlocks + 1);
+    this.blockW = bw; let cur = c.x0;
+    for (let i = 0; i < nBlocks; i++) {
+      this.gasCh.push(cur + gap / 2); cur += gap;
+      const bx = cur + bw / 2;
+      this.blocks.push({ x: bx, ctrlL: bx - bw * 0.30, fuel: bx, ctrlR: bx + bw * 0.30 });
+      cur += bw;
+    }
+    this.gasCh.push(cur + gap / 2);
+    this.fuelX = this.blocks.map(b => b.fuel);
+    this.ctrlX = this.blocks.flatMap(b => [b.ctrlL, b.ctrlR]);
+    const p = this.props || {};
+    const rod = typeof p.beginRegelstaven === 'number' ? p.beginRegelstaven / 100 : 0.6;
+    this.setState({ rod });
+    for (let i = 0; i < 24; i++) this.spawnNeutron();
+    this.setupCanvas(); this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => this.setupCanvas();
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+        const c = this.stageRef.current;
+    if (c) { this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+    const ch = this.chartRef.current;
+    if (ch) { this.cdpr = AppletCore.fitCanvas(ch, this.CW, this.CH); }
+  }
+
+  spawnNeutron() {
+    const c = this.core;
+    this.neutrons.push({
+      x: c.x0 + Math.random() * (c.x1 - c.x0), y: c.y0 + Math.random() * (c.y1 - c.y0),
+      vx: (Math.random() - 0.5) * 140, vy: (Math.random() - 0.5) * 140,
+    });
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    this.pulse += dt;
+    if (this.state.running) this.step(dt);
+    this.fanAngle += this.GAS * 6 * dt * (this.power > 1 ? 1 : 0);
+    this.flowPhase += (this.power > 1 ? this.GAS : 0) * 1.4 * dt;
+    this.animateNeutrons(dt);
+    this.draw(); this.drawChart();
+    this._acc = (this._acc || 0) + dt;
+    if (this._acc > 0.12) { this._acc = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  kFromState() {
+    const f = this.fuelTerms[this.state.fuel] || 1;
+    const m = this.modTerms[this.state.moderator] || 1;
+    const kRod = f * m * (1.30 - 0.62 * this.state.rod);
+    const kT = -0.00045 * (this.T - 300);
+    return kRod + kT;
+  }
+
+  step(dt) {
+    const k = this.kFromState();
+    this.kEff = k;
+    const S = 2.5, l = 1.1;
+    this.N = Math.max(0, this.N + (((k - 1) / l) * this.N + S) * dt);
+    if (this.N > 4000) this.N = 4000;
+    this.fisRate = 9 * this.N; this.totalFis += this.fisRate * dt;
+    this.power = 0.55 * this.N;
+    const cool = this.GAS * 0.30 * (this.T - 250);
+    this.T += (this.power * 0.9 - cool) * 0.05;
+    if (this.T < 250) this.T = 250;
+    this.steam = Math.max(0, this.GAS * 0.30 * (this.T - 250));
+    this._ht = (this._ht || 0) + dt;
+    if (this._ht > 0.4) { this._ht = 0; this.hist.push(this.power); if (this.hist.length > 100) this.hist.shift(); }
+  }
+
+  animateNeutrons(dt) {
+    const c = this.core;
+    const target = Math.max(3, Math.min(140, Math.round(this.N / 6)));
+    while (this.neutrons.length < target) this.spawnNeutron();
+    while (this.neutrons.length > target) this.neutrons.pop();
+    for (const n of this.neutrons) {
+      n.x += n.vx * dt; n.y += n.vy * dt;
+      if (n.x < c.x0) { n.x = c.x0; n.vx = Math.abs(n.vx); }
+      if (n.x > c.x1) { n.x = c.x1; n.vx = -Math.abs(n.vx); }
+      if (n.y < c.y0) { n.y = c.y0; n.vy = Math.abs(n.vy); }
+      if (n.y > c.y1) { n.y = c.y1; n.vy = -Math.abs(n.vy); }
+    }
+    if (this.state.running) {
+      const rate = Math.min(45, this.N * 0.16);
+      this._fa = (this._fa || 0) + rate * dt;
+      while (this._fa >= 1) {
+        this._fa -= 1;
+        const fx = this.fuelX[(Math.random() * this.fuelX.length) | 0];
+        const fy = c.y0 + Math.random() * (c.y1 - c.y0);
+        this.flashes.push({ x: fx + (Math.random() - 0.5) * 8, y: fy, t: 0 });
+      }
+    }
+    for (const f of this.flashes) f.t += dt;
+    this.flashes = this.flashes.filter(f => f.t < 0.45);
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    if (typeof r === 'number') r = [r, r, r, r];
+    ctx.beginPath();
+    ctx.moveTo(x + r[0], y);
+    ctx.lineTo(x + w - r[1], y); ctx.arcTo(x + w, y, x + w, y + r[1], r[1]);
+    ctx.lineTo(x + w, y + h - r[2]); ctx.arcTo(x + w, y + h, x + w - r[2], y + h, r[2]);
+    ctx.lineTo(x + r[3], y + h); ctx.arcTo(x, y + h, x, y + h - r[3], r[3]);
+    ctx.lineTo(x, y + r[0]); ctx.arcTo(x, y, x + r[0], y, r[0]);
+    ctx.closePath();
+  }
+  fan(ctx, cx, cy, r, ang, col) {
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
+    ctx.fillStyle = col;
+    for (let i = 0; i < 5; i++) {
+      ctx.rotate(Math.PI * 2 / 5);
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r, -0.42, 0.42); ctx.closePath(); ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2); ctx.fillStyle = '#4a5560'; ctx.fill();
+    ctx.restore();
+    ctx.strokeStyle = '#6f7378'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, r + 2, 0, Math.PI * 2); ctx.stroke();
+  }
+  arrow(ctx, x0, y0, x1, y1, col, w, head) {
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.beginPath(); ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - head * Math.cos(a - 0.4), y1 - head * Math.sin(a - 0.4));
+    ctx.lineTo(x1 - head * Math.cos(a + 0.4), y1 - head * Math.sin(a + 0.4));
+    ctx.closePath(); ctx.fill();
+  }
+  arrowHead(ctx, x, y, ang, col) {
+    const h = 9; ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    ctx.fillStyle = col; ctx.beginPath();
+    ctx.moveTo(h, 0); ctx.lineTo(-h * 0.7, h * 0.7); ctx.lineTo(-h * 0.7, -h * 0.7);
+    ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  label(ctx, tx, ty, text, align, lx, ly) {
+    ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(align === 'right' ? tx - 4 : tx + 4, ty); ctx.lineTo(lx, ly); ctx.stroke();
+    ctx.fillStyle = '#9a927f'; ctx.beginPath(); ctx.arc(lx, ly, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#5a544a'; ctx.font = '600 11.5px "IBM Plex Sans",sans-serif';
+    ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(text, tx, ty);
+  }
+  modColor() {
+    const m = this.state.moderator;
+    if (m === 'zwaar') return '#5a7a8e';
+    if (m === 'licht') return '#6a8ea2';
+    return '#b0a894';
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbfaf6'; ctx.fillRect(0, 0, this.W, this.H);
+
+    const V = this.vessel, S = this.shield, CO = this.core, HX = this.hx;
+    const running = this.state.running, hot = Math.min(1, (this.T - 250) / 750);
+
+    const ductFill = '#f6efce', duStroke = '#3a352c';
+    const hotPath  = [[V.x1 - 18, 150], [V.x1 - 18, 124], [HX.x0 + 22, 124], [HX.x0 + 22, HX.y0]];
+    const gcx = 506, gcy = 506;
+    const coolPath = [[HX.x0 + 22, HX.y1], [HX.x0 + 22, gcy], [gcx + 16, gcy], [gcx - 16, gcy], [V.x0 + 22, gcy], [V.x0 + 22, V.y1 - 28]];
+    const drawPipe = (pts) => {
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = duStroke; ctx.lineWidth = 20;
+      ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+      ctx.strokeStyle = ductFill; ctx.lineWidth = 16;
+      ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+    };
+    drawPipe(hotPath); drawPipe(coolPath);
+
+    if (this.power > 1) {
+      ctx.save(); ctx.setLineDash([5, 13]); ctx.lineCap = 'round';
+      ctx.lineDashOffset = -this.flowPhase * 40;
+      ctx.strokeStyle = hot > 0.4 ? 'rgba(200,90,30,0.6)' : 'rgba(150,120,40,0.5)'; ctx.lineWidth = 3.5;
+      ctx.beginPath(); hotPath.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+      ctx.strokeStyle = 'rgba(80,110,150,0.55)';
+      ctx.beginPath(); coolPath.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+      ctx.restore();
+      this.arrowHead(ctx, HX.x0 + 22, 124, 0, '#9a7a2a');
+      this.arrowHead(ctx, (V.x1 - 18 + HX.x0 + 22) / 2, 124, Math.PI / 2, '#9a7a2a');
+      this.arrowHead(ctx, gcx - 60, gcy, Math.PI, '#4f6f9a');
+      this.arrowHead(ctx, V.x0 + 22, V.y1 - 40, -Math.PI / 2, '#4f6f9a');
+    }
+
+    // Radiation shield (green border)
+    ctx.strokeStyle = '#6cae6f'; ctx.lineWidth = 15;
+    this.rr(ctx, S.x0, S.y0, S.x1 - S.x0, S.y1 - S.y0, 14); ctx.stroke();
+    ctx.strokeStyle = '#4f9655'; ctx.lineWidth = 1.5;
+    this.rr(ctx, S.x0 - 7.5, S.y0 - 7.5, S.x1 - S.x0 + 15, S.y1 - S.y0 + 15, 20); ctx.stroke();
+    this.rr(ctx, S.x0 + 7.5, S.y0 + 7.5, S.x1 - S.x0 - 15, S.y1 - S.y0 - 15, 8); ctx.stroke();
+
+    // Pressure vessel (oval-topped)
+    this.rr(ctx, V.x0, V.y0, V.x1 - V.x0, V.y1 - V.y0, [46, 46, 96, 96]);
+    ctx.fillStyle = '#f6efce'; ctx.fill();
+    ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
+
+    // Blocks: moderator + fuel rod + control rods
+    const bw = this.blockW, byTop = CO.y0, byBot = CO.y1, bh = byBot - byTop;
+    const tipY = byTop + this.state.rod * bh;
+    const handleY = 50;
+    for (const b of this.blocks) {
+      this.rr(ctx, b.x - bw / 2, byTop - 4, bw, bh + 8, 4);
+      ctx.fillStyle = this.mix(this.modColor(), '#c43a1c', hot * 0.7); ctx.fill();
+      ctx.strokeStyle = '#8f897d'; ctx.lineWidth = 1; ctx.stroke();
+      const ft = this.fuelTint();
+      const g = ctx.createLinearGradient(b.fuel - 5, 0, b.fuel + 5, 0);
+      g.addColorStop(0, ft[0]); g.addColorStop(0.5, ft[1]); g.addColorStop(1, ft[0]);
+      if (hot > 0.05) { ctx.save(); ctx.globalAlpha = 0.5 * hot; ctx.fillStyle = '#e0662f'; this.rr(ctx, b.x - bw / 2, byTop - 4, bw, bh + 8, 4); ctx.fill(); ctx.restore(); }
+      ctx.fillStyle = g; this.rr(ctx, b.fuel - 5, byTop + 2, 10, bh - 4, 3); ctx.fill();
+      for (const cx of [b.ctrlL, b.ctrlR]) {
+        ctx.strokeStyle = '#cfc8b9'; ctx.lineWidth = 4.5; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(cx, handleY + 4); ctx.lineTo(cx, byTop); ctx.stroke();
+        ctx.strokeStyle = '#262626'; ctx.lineWidth = 4.5;
+        ctx.beginPath(); ctx.moveTo(cx, handleY); ctx.lineTo(cx, tipY); ctx.stroke();
+        ctx.fillStyle = '#262626'; ctx.beginPath(); ctx.arc(cx, tipY, 3.2, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    // Gas channel flow arrows
+    if (this.power > 1) {
+      ctx.save();
+      const ph = (this.flowPhase * 40) % 34;
+      const col = hot > 0.4 ? '#d98b3a' : '#b59a4a';
+      ctx.globalAlpha = 0.55 + 0.3 * hot;
+      for (const gx of this.gasCh) {
+        for (let yy = byBot - 4; yy > byTop + 8; yy -= 34) {
+          const y = yy - ph;
+          if (y > byTop + 8 && y < byBot - 2) this.arrow(ctx, gx, y, gx, y - 13, col, 2, 5);
+        }
+      }
+      ctx.restore();
+    }
+
+    // Control rod bridge
+    const ch0 = Math.min(...this.ctrlX), ch1 = Math.max(...this.ctrlX);
+    ctx.fillStyle = '#3a352c'; this.rr(ctx, ch0 - 7, handleY - 12, ch1 - ch0 + 14, 11, 3); ctx.fill();
+
+    // Fission flashes + neutrons (clipped to core)
+    ctx.save();
+    this.rr(ctx, CO.x0 - 6, CO.y0 - 6, CO.x1 - CO.x0 + 12, CO.y1 - CO.y0 + 12, 8); ctx.clip();
+    for (const f of this.flashes) {
+      const a = 1 - f.t / 0.45, R = 4 + f.t * 26;
+      ctx.globalAlpha = a * 0.8; ctx.fillStyle = '#ffd24a';
+      ctx.beginPath(); ctx.arc(f.x, f.y, R, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = a; ctx.fillStyle = '#fff6d8';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (this.state.showNeutrons) {
+      for (const n of this.neutrons) {
+        ctx.fillStyle = '#2f7d4d';
+        ctx.beginPath(); ctx.arc(n.x, n.y, 2.1, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(95,174,122,0.5)'; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.x - n.vx * 0.03, n.y - n.vy * 0.03); ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // Gas circulator fan
+    this.fan(ctx, gcx, gcy, 17, this.fanAngle, '#d8c79a');
+
+    // Heat exchanger
+    this.rr(ctx, HX.x0, HX.y0, HX.x1 - HX.x0, HX.y1 - HX.y0, 30);
+    ctx.fillStyle = '#f6efce'; ctx.fill(); ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
+    const rows = 8, rx0 = HX.x0 + 32, rx1 = HX.x1 - 32, ry0 = HX.y0 + 34, ry1 = HX.y1 - 28;
+    const rgap = (ry1 - ry0) / (rows - 1);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let i = 0; i < rows; i++) {
+      const y = ry0 + rgap * i, t = 1 - i / (rows - 1), warm = running ? hot : 0;
+      const r = Math.round(90 + 200 * t * (0.4 + 0.6 * warm) + 30 * warm);
+      const b = Math.round(190 - 150 * t * (0.4 + 0.6 * warm));
+      const gg = Math.round(120 + 40 * (1 - t));
+      ctx.strokeStyle = 'rgb(' + Math.min(235, r) + ',' + gg + ',' + Math.max(60, b) + ')';
+      ctx.lineWidth = 6;
+      const even = i % 2 === 0;
+      ctx.beginPath();
+      if (even) { ctx.moveTo(rx1, y); ctx.lineTo(rx0, y); } else { ctx.moveTo(rx0, y); ctx.lineTo(rx1, y); }
+      ctx.stroke();
+      if (i < rows - 1) {
+        const onLeft = even, side = onLeft ? rx0 : rx1;
+        ctx.beginPath(); ctx.arc(side, y + rgap / 2, rgap / 2, -Math.PI / 2, Math.PI / 2, onLeft); ctx.stroke();
+      }
+    }
+    const steamN = Math.min(1, this.steam / 220);
+    const steamCol = running && hot > 0.05 ? '#e0503a' : '#c79086';
+    const waterCol = '#5b8fd4';
+    const sy = ry0;
+    ctx.strokeStyle = steamCol; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(rx1, sy); ctx.lineTo(HX.x1 + 6, sy); ctx.stroke();
+    this.arrow(ctx, HX.x1 + 6, sy, HX.x1 + 62 + 28 * steamN, sy, steamCol, 4 + 3 * steamN, 12);
+    if (running && steamN > 0.04) {
+      ctx.save(); ctx.globalAlpha = 0.6;
+      for (let i = 0; i < 4; i++) {
+        const px = HX.x1 + 22 + i * 22, off = (this.flowPhase * 30 + i * 14) % 40;
+        ctx.fillStyle = 'rgba(220,90,60,0.5)';
+        ctx.beginPath(); ctx.arc(px, sy - 14 - off * 0.2 * steamN, 3 + steamN * 3, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    }
+    const wcx = HX.x1 + 36, wcy = ry1;
+    ctx.strokeStyle = waterCol; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(rx1, ry1); ctx.lineTo(wcx, wcy); ctx.stroke();
+    this.fan(ctx, wcx, wcy, 15, this.fanAngle * 1.1, '#6f9bd8');
+    this.arrow(ctx, wcx + 80, wcy, wcx + 19, wcy, waterCol, 5, 12);
+
+    // Canvas labels (toggle)
+    if (this.state.showLabels) {
+      this.label(ctx, 138, 96,  'Regelstaven',        'right', this.ctrlX[0],         62);
+      this.label(ctx, 138, 152, 'Stralings-',         'right', S.x0,                  176);
+      ctx.fillText('afscherming', 138, 166);
+      this.label(ctx, 138, 224, 'Drukvat',            'right', V.x0,                  236);
+      this.label(ctx, 138, 292, 'Grafiet-',           'right', this.blocks[0].x - this.blockW / 2, 296);
+      ctx.fillText('moderator', 138, 306);
+      this.label(ctx, 138, 358, 'Splijtstof-',        'right', this.fuelX[0],          372);
+      ctx.fillText('staven', 138, 372);
+      this.label(ctx, 138, 424, 'Gaskanaal',          'right', this.gasCh[2],          408);
+      this.label(ctx, 742, 110, 'Heetgaskanaal',      'left',  (HX.x0 + 22 + V.x1 - 18) / 2, 124);
+      this.label(ctx, 742, 150, 'Stoom',              'left',  HX.x1 + 50,             sy);
+      this.label(ctx, 742, 252, 'Warmte-',            'left',  rx1,                    252);
+      ctx.fillText('wisselaar', 742, 266);
+      this.label(ctx, 742, 474, 'Water-',             'left',  wcx,                    wcy + 14);
+      ctx.fillText('circulator', 742, 488);
+      this.label(ctx, 802, 410, 'Water',              'left',  wcx + 60,               wcy);
+      this.label(ctx, 560, 542, 'Gascirculator',      'left',  gcx,                    gcy + 16);
+      this.label(ctx, 742, 506, 'Koelgaskanaal',      'left',  HX.x0 + 22,             gcy);
+    }
+  }
+
+  mix(a, b, t) {
+    const pa = parseInt(a.replace('#',''), 16), pb = parseInt(b.replace('#',''), 16);
+    const ar=(pa>>16)&255,ag=(pa>>8)&255,ab=pa&255,br=(pb>>16)&255,bg=(pb>>8)&255,bb=pb&255;
+    return 'rgb('+Math.round(ar+(br-ar)*t)+','+Math.round(ag+(bg-ag)*t)+','+Math.round(ab+(bb-ab)*t)+')';
+  }
+  fuelTint() {
+    const f = this.state.fuel;
+    if (f === 'mox') return ['#b85f2c', '#e08a3a'];
+    if (f === 'laag') return ['#d96f2c', '#ef8a3e'];
+    return ['#b9762f', '#d39a52'];
+  }
+
+  drawChart() {
+    const ch = this.chartRef.current; if (!ch) return;
+    const ctx = ch.getContext('2d'); const dpr = this.cdpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const W = this.CW, H = this.CH;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#faf7f0'; this.rr(ctx, 0, 0, W, H, 8); ctx.fill();
+    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) { const y = H * i / 4; ctx.beginPath(); ctx.moveTo(8, y); ctx.lineTo(W - 8, y); ctx.stroke(); }
+    const data = this.hist, maxV = Math.max(60, ...data) * 1.15;
+    ctx.fillStyle = '#a39c8d'; ctx.font = '500 10px "IBM Plex Mono",monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(Math.round(maxV) + ' MW', 10, 6);
+    ctx.textBaseline = 'bottom'; ctx.fillText('0', 10, H - 6);
+    if (data.length > 1) {
+      const x = (i) => 8 + (W - 16) * i / (data.length - 1 || 1);
+      const y = (v) => H - 10 - (H - 20) * v / maxV;
+      ctx.beginPath(); ctx.moveTo(x(0), H - 10);
+      data.forEach((v, i) => ctx.lineTo(x(i), y(v)));
+      ctx.lineTo(x(data.length - 1), H - 10); ctx.closePath();
+      ctx.fillStyle = 'rgba(184,71,47,0.12)'; ctx.fill();
+      ctx.beginPath(); data.forEach((v, i) => i ? ctx.lineTo(x(i), y(v)) : ctx.moveTo(x(i), y(v)));
+      ctx.strokeStyle = '#b8472f'; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+    }
+  }
+
+  toggleRun = () => this.setState(s => ({ running: !s.running }));
+  scram = () => { this.setState({ rod: 1, running: true }); };
+  reset = () => {
+    this.N = 40; this.T = 250; this.totalFis = 0; this.fisRate = 0; this.power = 0; this.steam = 0;
+    this.hist = []; this.flashes = [];
+    const p = this.props || {};
+    const rod = typeof p.beginRegelstaven === 'number' ? p.beginRegelstaven / 100 : 0.6;
+    this.setState({ running: false, rod });
+  };
+  onRod = (e) => this.setState({ rod: parseFloat(e.target.value) / 100 });
+  fmt(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(2) + ' \u00D7 10\u2076';
+    if (n >= 1e3) return Math.round(n).toLocaleString('nl-NL');
+    return Math.round(n).toString();
+  }
+
+  renderVals() {
+    const st = this.state, on = st.running;
+    this.kEff = this.kFromState();
+    const k = this.kEff;
+    let status, dot;
+    if (!on) { status = 'Reactor uitgeschakeld'; dot = '#b8b1a2'; }
+    else if (this.T > 1000) { status = 'Waarschuwing: oververhit'; dot = '#b8311f'; }
+    else if (k > 1.012) { status = 'Superkritisch \u2014 loopt op'; dot = '#c9a23f'; }
+    else if (k < 0.988) { status = 'Subkritisch \u2014 dooft uit'; dot = '#3f6aa3'; }
+    else { status = 'Kritisch \u2014 stabiel'; dot = '#5fae7a'; }
+    const kColor = k > 1.012 ? '#b8472f' : (k < 0.988 ? '#3f6aa3' : '#3a8a55');
+    const tempColor = this.T > 1000 ? '#b8311f' : (this.T > 700 ? '#c9772f' : '#2a2723');
+    const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
+    const nn = pill(st.showNeutrons), ll = pill(st.showLabels);
+    return {
+      stageRef: this.stageRef, chartRef: this.chartRef,
+      runLabel: on ? '\u25A0 Reactor stoppen' : '\u25B6 Reactor starten',
+      runBg: on ? '#fff' : '#b8472f', runFg: on ? '#3a352c' : '#fff', runBorder: on ? '#d9d3c6' : '#b8472f',
+      onToggleRun: this.toggleRun, onScram: this.scram, onReset: this.reset,
+      rodVal: Math.round(st.rod * 100), rodStr: Math.round(st.rod * 100) + '% in', onRod: this.onRod,
+      fuel: st.fuel, moderator: st.moderator,
+      onFuel: (e) => this.setState({ fuel: e.target.value }),
+      onModerator: (e) => this.setState({ moderator: e.target.value }),
+      statusLabel: status, statusDot: dot,
+      fisRateStr: on ? this.fmt(this.fisRate) + '/s' : '0/s',
+      neutronStr: on ? Math.round(this.N).toLocaleString('nl-NL') : '0',
+      kStr: k.toFixed(3), kColor,
+      powerStr: this.power.toFixed(0) + ' MW',
+      tempStr: this.T.toFixed(0) + ' \u00B0C', tempColor,
+      steamStr: Math.round(this.steam) + ' kg/s',
+      showWarn: on && this.T > 1000, warnText: 'Kern oververhit \u2014 breng regelstaven in',
+      toggleNeutrons: () => this.setState(s => ({ showNeutrons: !s.showNeutrons })),
+      toggleLabels: () => this.setState(s => ({ showLabels: !s.showLabels })),
+      nBg: nn.bg, nBorder: nn.border, nState: nn.state,
+      lBg: ll.bg, lBorder: ll.border, lState: ll.state,
+    };
+  }
+}
+</script>
+</body>
+</html>

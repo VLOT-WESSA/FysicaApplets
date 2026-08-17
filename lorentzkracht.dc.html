@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c0392b;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c0392b;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Lorentzkracht</h1>
+    <span style="font-size:13px;color:#8c8576">F = B&middot;I&middot;L</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ onToggleRun }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ runBorder }};background:{{ runBg }};color:{{ runFg }}">{{ runLabel }}</button>
+        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#8646; Ompolen stroom</button>
+        <button onClick="{{ onRotate }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#8635; Magneet draaien</button>
+        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:600;color:#3a352c">Stroomsterkte</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ ampStr }}</span>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Grotere stroom &rarr; grotere kracht &rarr; verder uitzwaaien</div>
+        <input type="range" min="0" max="10" step="0.5" value="{{ amps }}" onInput="{{ onAmps }}" style="width:100%;accent-color:#c0392b">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0 A</span><span>10 A</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
+          <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stroom I</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ iStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stroomrichting</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ curDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Veld B</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ fieldDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kracht F</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ forceStr }}</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave (uit bij start)</span>
+        <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ curState }}</span>
+        </button>
+        <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
+        </button>
+        <button onClick="{{ toggleForce }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ forceBorder }};background:{{ forceBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#1c1c1c;border:1px solid #c9c2b4"></span>Lorentzkracht <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ forceState }}</span>
+        </button>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Rechterhandregel</span>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+            <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Duim</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#1c1c1c;flex:none"></span>
+            <span style="font-size:12.5px;color:#4a443a">Kracht F</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+            <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Wijsvinger</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#e0503a;flex:none"></span>
+            <span style="font-size:12.5px;color:#4a443a">Stroom I</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+            <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Middelvinger</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#6f9bd8;flex:none"></span>
+            <span style="font-size:12.5px;color:#4a443a">Veld B</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ banner }}</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;veldlijnen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;weinig&quot;,&quot;normaal&quot;,&quot;veel&quot;],&quot;default&quot;:&quot;normaal&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;stageThema&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;donker&quot;,&quot;licht&quot;],&quot;default&quot;:&quot;donker&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;beginStroom&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:6,&quot;min&quot;:0,&quot;max&quot;:10,&quot;step&quot;:0.5,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 560; H = 470;
+
+  yaw = -0.62; pitch = 0.24; scale = 1.18; persp = 1200;
+  cx = 280; cy = 232;
+
+  pivotY = 170;
+  Lsw = 170;
+  barHalf = 76;
+  suspZ = 54;
+  poleY = 58;
+  poleZ = 48;
+  armT = 30;
+  magX0 = -150;
+  magBackX1 = -120;
+  magTip = 110;
+  maxBarX = 80;
+
+  state = {
+    powered: false, amps: 6, curDir: 1, fieldDir: 1,
+    showField: false, showCurrent: false, showForce: false,
+  };
+  phi = 0; phiV = 0;
+
+  componentDidMount() {
+    const bv = this.props && this.props.beginStroom;
+    if (typeof bv === 'number') this.setState({ amps: bv });
+    this.setupCanvas();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  isOn() { return this.state.powered && this.state.amps > 0; }
+  forceSign() { return this.state.curDir * this.state.fieldDir; }
+  phiTarget() {
+    if (!this.isOn()) return 0;
+    const phiMax = Math.asin(Math.min(0.98, this.maxBarX / this.Lsw));
+    const phi = Math.min(Math.atan(0.06 * this.state.amps), phiMax);
+    return phi * this.forceSign();
+  }
+
+  loop = (ts) => {
+    const cc = this.stageRef.current;
+    if (!this.lastTs) this.lastTs = ts;
+    const dt = Math.min(0.05, (ts - this.lastTs) / 1000); this.lastTs = ts;
+    const w0 = 6.0, zeta = 0.32;
+    const tgt = this.phiTarget();
+    this.phiV += (-w0 * w0 * (this.phi - tgt) - 2 * zeta * w0 * this.phiV) * dt;
+    this.phi += this.phiV * dt;
+    this.draw();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  view(p) {
+    const ca = Math.cos(this.yaw), sa = Math.sin(this.yaw);
+    const x1 = p.x * ca + p.z * sa;
+    const z1 = -p.x * sa + p.z * ca;
+    const y1 = p.y;
+    const cb = Math.cos(this.pitch), sb = Math.sin(this.pitch);
+    const y2 = y1 * cb - z1 * sb;
+    const z2 = y1 * sb + z1 * cb;
+    return { x: x1, y: y2, depth: z2 };
+  }
+  proj(p) {
+    const v = this.view(p);
+    const sc = this.scale * (this.persp / (this.persp - v.depth));
+    return { x: this.cx + v.x * sc, y: this.cy - v.y * sc, depth: v.depth };
+  }
+  line3(ctx, a, b, color, w) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+  }
+  poly3(ctx, pts, close, color, w) {
+    ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    pts.forEach((p, i) => { const P = this.proj(p); i ? ctx.lineTo(P.x, P.y) : ctx.moveTo(P.x, P.y); });
+    if (close) ctx.closePath();
+    ctx.stroke();
+  }
+  fillPoly3(ctx, pts, fill) {
+    ctx.fillStyle = fill;
+    ctx.beginPath();
+    pts.forEach((p, i) => { const P = this.proj(p); i ? ctx.lineTo(P.x, P.y) : ctx.moveTo(P.x, P.y); });
+    ctx.closePath(); ctx.fill();
+  }
+  arrow3(ctx, a, b, color, w, head) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    const ang = Math.atan2(B.y - A.y, B.x - A.x);
+    ctx.beginPath();
+    ctx.moveTo(B.x, B.y);
+    ctx.lineTo(B.x - head * Math.cos(ang - 0.42), B.y - head * Math.sin(ang - 0.42));
+    ctx.lineTo(B.x - head * Math.cos(ang + 0.42), B.y - head * Math.sin(ang + 0.42));
+    ctx.closePath(); ctx.fill();
+  }
+
+  barPos() {
+    return { x: this.Lsw * Math.sin(this.phi), y: this.pivotY - this.Lsw * Math.cos(this.phi) };
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+
+    const light = (this.props && this.props.stageThema) === 'licht';
+    const bg = ctx.createLinearGradient(0, 0, 0, this.H);
+    if (light) { bg.addColorStop(0, '#e9edf2'); bg.addColorStop(1, '#d6dce4'); }
+    else { bg.addColorStop(0, '#141b24'); bg.addColorStop(1, '#0d1219'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = light ? 'rgba(0,0,0,0.022)' : 'rgba(255,255,255,0.018)';
+    for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
+
+    const on = this.isOn();
+    const bp = this.barPos();
+    const sh = this.suspZ;
+
+    const barF = { x: bp.x, y: bp.y, z: this.barHalf };
+    const barB = { x: bp.x, y: bp.y, z: -this.barHalf };
+    const susF = { x: bp.x, y: bp.y, z: sh };
+    const susB = { x: bp.x, y: bp.y, z: -sh };
+
+    const copper = '#d98b3a';
+    const red = '#e0503a';
+    const d = this.state.curDir;
+    const showC = this.state.showCurrent && on;
+    const leadCurrent = (Z) => {
+      const mid = { x: bp.x / 2, y: (this.pivotY + bp.y) / 2, z: Z };
+      if (Z === -sh * d) this.arrow3(ctx, { x: 0, y: this.pivotY, z: Z }, mid, red, 2.4, 8);
+      else this.arrow3(ctx, mid, { x: 0, y: this.pivotY, z: Z }, red, 2.4, 8);
+    };
+
+    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: 0, y: this.pivotY, z: sh + 14 }, light ? '#8b8478' : '#6a655e', 6);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: -10, y: this.pivotY + 26, z: -sh - 14 }, light ? '#9a9388' : '#544f49', 4);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: sh + 14 }, { x: -10, y: this.pivotY + 26, z: sh + 14 }, light ? '#9a9388' : '#544f49', 4);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh }, susB, copper, 4.5);
+    if (showC) leadCurrent(-sh);
+
+    if (this.state.showField) {
+      ctx.save(); ctx.globalAlpha = light ? 0.7 : 0.85;
+      const dens = (this.props && this.props.veldlijnen) || 'normaal';
+      let xs = [-80, -34, 14, 62], zs = [-24, 24];
+      if (dens === 'weinig') { xs = [-56, 0, 56]; zs = [0]; }
+      else if (dens === 'veel') { xs = [-96, -64, -32, 0, 32, 64, 92]; zs = [-26, 0, 26]; }
+      const top = this.poleY - 4, bot = -this.poleY + 4;
+      for (const xx of xs) for (const zz of zs) {
+        if (this.state.fieldDir === 1) this.arrow3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#6f9bd8', 1.5, 7);
+        else this.arrow3(ctx, { x: xx, y: bot, z: zz }, { x: xx, y: top, z: zz }, '#6f9bd8', 1.5, 7);
+      }
+      ctx.restore();
+    }
+
+    this.drawMagnet(ctx, light);
+
+    this.line3(ctx, { x: 0, y: this.pivotY, z: sh }, susF, copper, 4.5);
+    if (showC) leadCurrent(sh);
+    this.line3(ctx, barB, barF, copper, 8);
+    if (showC) {
+      const bm = { x: bp.x, y: bp.y, z: 0 };
+      this.arrow3(ctx, { x: bm.x, y: bm.y, z: -22 * d }, { x: bm.x, y: bm.y, z: 22 * d }, red, 3, 9);
+    }
+
+    if (this.state.showForce && on) {
+      const s = this.forceSign();
+      const L = 24 + 2.4 * this.state.amps;
+      const bm = { x: bp.x, y: bp.y, z: 0 };
+      const fcol = light ? '#1c1c1c' : '#f1ede1';
+      this.arrow3(ctx, bm, { x: bm.x + L * s, y: bm.y, z: 0 }, fcol, 4.5, 12);
+    }
+
+    this.drawBattery(ctx, on, light);
+    this.drawLegend(ctx, on, light);
+  }
+
+  drawMagnet(ctx, light) {
+    const pz = this.poleZ, faces = [];
+    const add = (x0, x1, y0, y1, z0, z1, cols) => {
+      const P = (x, y, z) => ({ x, y, z });
+      const list = [
+        { pts: [P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)], c: cols.front },
+        { pts: [P(x1, y0, z0), P(x0, y0, z0), P(x0, y1, z0), P(x1, y1, z0)], c: cols.back },
+        { pts: [P(x0, y1, z1), P(x1, y1, z1), P(x1, y1, z0), P(x0, y1, z0)], c: cols.top },
+        { pts: [P(x0, y0, z0), P(x1, y0, z0), P(x1, y0, z1), P(x0, y0, z1)], c: cols.bottom },
+        { pts: [P(x1, y0, z1), P(x1, y0, z0), P(x1, y1, z0), P(x1, y1, z1)], c: cols.right },
+        { pts: [P(x0, y0, z0), P(x0, y0, z1), P(x0, y1, z1), P(x0, y1, z0)], c: cols.left },
+      ];
+      for (const f of list) { f.depth = f.pts.reduce((a, p) => a + this.view(p).depth, 0) / 4; faces.push(f); }
+    };
+    const cols = (base) => ({
+      front: this.shade(base, -0.04), back: this.shade(base, -0.34), top: this.shade(base, 0.12),
+      bottom: this.shade(base, -0.26), right: this.shade(base, -0.14), left: this.shade(base, -0.28),
+    });
+    const red = '#b8432f', green = '#2f9a63';
+    const nCol = this.state.fieldDir === 1 ? red : green;
+    const sCol = this.state.fieldDir === 1 ? green : red;
+    const X0 = this.magX0, XB = this.magBackX1, XT = this.magTip, py = this.poleY, at = this.armT;
+    add(X0, XT, py, py + at, -pz, pz, cols(nCol));
+    add(X0, XB, 0, py, -pz, pz, cols(nCol));
+    add(X0, XT, -py - at, -py, -pz, pz, cols(sCol));
+    add(X0, XB, -py, 0, -pz, pz, cols(sCol));
+
+    faces.sort((a, b) => a.depth - b.depth);
+    for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(16,12,8,0.22)', 1); }
+
+    const topLab = this.state.fieldDir === 1 ? 'N' : 'S';
+    const botLab = this.state.fieldDir === 1 ? 'S' : 'N';
+    const Nl = this.proj({ x: -84, y: py + at / 2, z: pz + 0.6 });
+    const Sl = this.proj({ x: -84, y: -py - at / 2, z: pz + 0.6 });
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '700 17px "IBM Plex Sans",sans-serif';
+    ctx.fillStyle = '#fff0ea'; ctx.fillText(topLab, Nl.x, Nl.y);
+    ctx.fillStyle = '#eafaf0'; ctx.fillText(botLab, Sl.x, Sl.y);
+  }
+
+  shade(hex, amt) {
+    const n = parseInt(hex.slice(1), 16);
+    let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    r = Math.max(0, Math.min(255, Math.round(r * (1 + amt))));
+    g = Math.max(0, Math.min(255, Math.round(g * (1 + amt))));
+    b = Math.max(0, Math.min(255, Math.round(b * (1 + amt))));
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  // European DC source symbol: long thin (+) over short thick (-) plate, NO enclosing box
+  drawBattery(ctx, on, light) {
+    const d = this.state.curDir, sh = this.suspZ;
+    const downZ = -sh * d, upZ = sh * d;
+    const posPiv = this.proj({ x: 0, y: this.pivotY, z: downZ });
+    const negPiv = this.proj({ x: 0, y: this.pivotY, z: upZ });
+    const live = on;
+    const posCol = live ? '#e0503a' : '#9a9082';
+    const negCol = live ? '#e0503a' : '#6a6f78';
+
+    const cxc = 32, mY = 92, gap = 9;
+    const plusY = mY - gap, minusY = mY + gap;
+
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const railHi = Math.max(8, Math.min(posPiv.y, negPiv.y) - 14);
+    const railLo = railHi + 13;
+    // + wire from + plate -> up -> across -> back pivot
+    ctx.strokeStyle = posCol; ctx.lineWidth = 3.4;
+    ctx.beginPath(); ctx.moveTo(cxc, plusY); ctx.lineTo(cxc, railHi); ctx.lineTo(posPiv.x, railHi); ctx.lineTo(posPiv.x, posPiv.y); ctx.stroke();
+    // - wire from - plate -> down/out -> lower rail -> front pivot
+    ctx.strokeStyle = negCol; ctx.lineWidth = 3.4;
+    ctx.beginPath(); ctx.moveTo(cxc, minusY); ctx.lineTo(10, minusY); ctx.lineTo(10, railLo); ctx.lineTo(negPiv.x, railLo); ctx.lineTo(negPiv.x, negPiv.y); ctx.stroke();
+
+    const term = (P, col) => {
+      ctx.fillStyle = '#cdc7bb'; ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(P.x - 5, P.y - 4, 10, 8, 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(P.x, P.y, 2.4, 0, Math.PI * 2); ctx.fill();
+    };
+    term(posPiv, posCol); term(negPiv, negCol);
+
+    if (live) {
+      const my = (railHi + posPiv.y) / 2;
+      ctx.fillStyle = '#e0503a'; ctx.beginPath();
+      ctx.moveTo(posPiv.x - 4, my - 4); ctx.lineTo(posPiv.x + 4, my - 4); ctx.lineTo(posPiv.x, my + 4); ctx.closePath(); ctx.fill();
+    }
+
+    // cell plates
+    ctx.strokeStyle = '#cfcabe'; ctx.lineCap = 'round';
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cxc - 16, plusY); ctx.lineTo(cxc + 16, plusY); ctx.stroke();  // long (+)
+    ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(cxc - 8, minusY); ctx.lineTo(cxc + 8, minusY); ctx.stroke();  // short (-)
+    ctx.font = '700 15px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = on ? '#e0503a' : '#9c8f7d'; ctx.fillText('+', cxc + 22, plusY);
+    ctx.fillStyle = '#9aa2ab'; ctx.fillText('\u2212', cxc + 22, minusY);
+    ctx.fillStyle = '#b9b3a6'; ctx.font = '600 11px "IBM Plex Mono",monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(this.state.amps.toFixed(1) + ' A', cxc, minusY + 12);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  drawLegend(ctx, on, light) {
+    const items = [];
+    if (this.state.showCurrent && on) items.push(['#e0503a', 'stroom']);
+    if (this.state.showField) items.push(['#6f9bd8', 'veld']);
+    if (this.state.showForce && on) items.push([light ? '#1c1c1c' : '#f1ede1', 'kracht']);
+    if (!items.length) return;
+    let x = this.W - 14; const y = 18;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.font = '500 12px "IBM Plex Mono",monospace';
+    for (let i = items.length - 1; i >= 0; i--) {
+      const [col, lab] = items[i];
+      const w = ctx.measureText(lab).width;
+      ctx.fillStyle = light ? '#4a4f57' : '#b9b3a6'; ctx.fillText(lab, x, y); x -= (w + 8);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 1, y, 5, 0, Math.PI * 2); ctx.fill();
+      x -= 16;
+    }
+  }
+
+  toggleRun = () => this.setState(s => ({ powered: !s.powered }));
+  reset = () => { this.phi = 0; this.phiV = 0; this.setState({ powered: false, curDir: 1, fieldDir: 1, amps: (this.props && typeof this.props.beginStroom === 'number') ? this.props.beginStroom : 6 }); };
+  reverse = () => this.setState(s => ({ curDir: -s.curDir }));
+  rotate = () => this.setState(s => ({ fieldDir: -s.fieldDir }));
+  setAmps = (e) => { const v = parseFloat(e.target.value); this.setState({ amps: v }); };
+
+  renderVals() {
+    const st = this.state;
+    const on = this.isOn();
+    const s = this.forceSign();
+    const banner = !st.powered
+      ? 'Zet de stroom aan en schuif de stroomsterkte omhoog. Zet daarna de lagen aan. Met \u201cOmpolen stroom\u201d of \u201cMagneet draaien\u201d keert de kracht om.'
+      : (st.amps === 0
+        ? 'De stroom staat aan, maar de sterkte is 0 A \u2014 er werkt geen kracht. Verhoog de stroomsterkte.'
+        : 'De Lorentzkracht (zwart) duwt de draad zijwaarts uit het veld. Let op de rechterhandregel.');
+    const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
+    const f = pill(st.showField), cu = pill(st.showCurrent), fo = pill(st.showForce);
+    return {
+      stageRef: this.stageRef,
+      banner,
+      runLabel: st.powered ? '\u25A0 Uit' : '\u25B6 Aan',
+      runBg: st.powered ? '#fff' : '#b8472f',
+      runFg: st.powered ? '#3a352c' : '#fff',
+      runBorder: st.powered ? '#d9d3c6' : '#b8472f',
+      onToggleRun: this.toggleRun,
+      onReset: this.reset,
+      onReverse: this.reverse,
+      onRotate: this.rotate,
+      amps: st.amps,
+      ampStr: 'I = ' + st.amps.toFixed(1) + ' A',
+      onAmps: this.setAmps,
+      statusDot: on ? '#5fae7a' : (st.powered ? '#c9a23f' : '#b8b1a2'),
+      statusLabel: on ? 'Draad zwaait uit' : (st.powered ? 'Aan \u2014 0 A' : 'Geen stroom'),
+      iStr: (st.powered ? st.amps : 0).toFixed(1) + ' A',
+      curDirStr: st.curDir === 1 ? 'naar achter' : 'naar voor',
+      fieldDirStr: st.fieldDir === 1 ? 'omlaag (N\u2192S)' : 'omhoog (S\u2192N)',
+      forceStr: !on ? 'geen' : (s > 0 ? 'naar rechts' : 'naar links'),
+      toggleField: () => this.setState(s => ({ showField: !s.showField })),
+      toggleCurrent: () => this.setState(s => ({ showCurrent: !s.showCurrent })),
+      toggleForce: () => this.setState(s => ({ showForce: !s.showForce })),
+      fieldBg: f.bg, fieldBorder: f.border, fieldState: f.state,
+      curBg: cu.bg, curBorder: cu.border, curState: cu.state,
+      forceBg: fo.bg, forceBorder: fo.border, forceState: fo.state,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f9e8f"/>
+  <circle cx="50" cy="50" r="20" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(30 50 50)"/>
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#fffdf9" stroke-width="3" transform="rotate(-30 50 50)"/>
+  <circle cx="50" cy="50" r="5" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
+
+  @media (max-width:760px){
+    /* mobile-stack */
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Golven op een snaar</h1>
+    <span style="font-size:13px;color:#8c8576">lopende golven &amp; reflectie</span>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Aandrijving</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button onClick="{{ onOsc }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ oscBg }};color:{{ oscFg }}">Oscilleren</button>
+          <button onClick="{{ onPuls }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ pulsBg }};color:{{ pulsFg }}">Puls</button>
+        </div>
+        <sc-if value="{{ isPuls }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onSendPulse }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:8px;padding:9px;cursor:pointer;background:#1f9e8f;color:#fff">Stuur puls</button>
+        </sc-if>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Uiteinde rechts</div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onEndVast }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ vastBg }};color:{{ vastFg }}">Vast</button>
+          <button onClick="{{ onEndLos }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ losBg }};color:{{ losFg }}">Los</button>
+          <button onClick="{{ onEndGeen }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ geenBg }};color:{{ geenFg }}">Geen</button>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ snelheid }}%</span></div>
+        <input type="range" min="10" max="150" step="5" value="{{ snelheid }}" onChange="{{ onSnelheid }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Amplitude</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ amp }} cm</span></div>
+        <input type="range" min="5" max="55" step="1" value="{{ amp }}" onChange="{{ onAmp }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Frequentie</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ freq }} Hz</span></div>
+        <input type="range" min="1" max="6" step="0.5" value="{{ freq }}" onChange="{{ onFreq }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Spanning</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ tension }}%</span></div>
+        <input type="range" min="20" max="100" step="2" value="{{ tension }}" onChange="{{ onTension }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Demping</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ damping }}%</span></div>
+        <input type="range" min="0" max="100" step="2" value="{{ damping }}" onChange="{{ onDamping }}" style="width:100%;accent-color:#1f9e8f">
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { mode: 'osc', end: 'geen', amp: 32, freq: 2.5, tension: 100, damping: 0, snelheid: 45, running: false };
+  stepAcc = 0;
+  stageRef = React.createRef();
+  W = 660; H = 300;
+  N = 150; x0 = 60; x1 = 600; axisY = 150;
+  phase = 0; pulseActive = false; pulsePhase = 0; lastTs = 0;
+
+  componentDidMount() {
+    this.y = new Float64Array(this.N);
+    this.yp = new Float64Array(this.N);
+    this.yn = new Float64Array(this.N);
+    this.setupCanvas();
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+    this._onResize = () => { this.setupCanvas(); this.drawStage(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const dpr = (window.devicePixelRatio || 1);
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    c.style.aspectRatio = this.W + ' / ' + this.H;
+  }
+
+  C2() { return this.state.tension / 100; }
+  dampV() { return this.state.damping / 100 * 0.05; }
+  dPhase() { return this.state.freq * 0.05; }
+
+  step() {
+    const N = this.N, y = this.y, yp = this.yp, yn = this.yn;
+    const C2 = this.C2(), damp = this.dampV();
+    for (let i = 1; i < N - 1; i++) {
+      yn[i] = 2 * y[i] - yp[i] + C2 * (y[i + 1] - 2 * y[i] + y[i - 1]) - damp * (y[i] - yp[i]);
+    }
+    if (this.state.mode === 'osc' && this.state.running) {
+      this.phase += this.dPhase();
+      yn[0] = this.state.amp * Math.sin(this.phase);
+    } else if (this.pulseActive) {
+      this.pulsePhase += this.dPhase() * 1.2;
+      if (this.pulsePhase < Math.PI) yn[0] = this.state.amp * Math.sin(this.pulsePhase);
+      else { yn[0] = 0; this.pulseActive = false; }
+    } else {
+      yn[0] = 0;
+    }
+    const end = this.state.end;
+    if (end === 'vast') yn[N - 1] = 0;
+    else if (end === 'los') yn[N - 1] = yn[N - 2];
+    else { const c = Math.sqrt(C2); const co = (c - 1) / (c + 1); yn[N - 1] = y[N - 2] + co * (yn[N - 2] - y[N - 1]); }
+    this.yp = y; this.y = yn; this.yn = yp;
+  }
+
+  loop = (ts) => {
+    if (!this.lastTs) this.lastTs = ts;
+    this.lastTs = ts;
+    if (this.state.running || this.pulseActive) {
+      this.stepAcc += this.state.snelheid / 100 * 1.4;
+      while (this.stepAcc >= 1) { this.step(); this.stepAcc -= 1; }
+    }
+    this.drawStage();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  px(i) { return this.x0 + i * (this.x1 - this.x0) / (this.N - 1); }
+
+  drawStage() {
+    const c = this.stageRef.current; if (!c || !this.y) return;
+    const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    const ay = this.axisY, N = this.N;
+
+    ctx.strokeStyle = '#202a36'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.beginPath(); ctx.moveTo(this.x0, ay); ctx.lineTo(this.x1, ay); ctx.stroke(); ctx.setLineDash([]);
+
+    ctx.strokeStyle = '#39c2ac'; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const x = this.px(i), yy = ay - this.y[i];
+      if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+    }
+    ctx.stroke();
+    ctx.fillStyle = '#7fe0d0';
+    for (let i = 0; i < N; i += 7) {
+      ctx.beginPath(); ctx.arc(this.px(i), ay - this.y[i], 2.6, 0, 6.2832); ctx.fill();
+    }
+
+    const dy0 = ay - this.y[0];
+    ctx.fillStyle = '#2b3340'; this.rr(ctx, this.x0 - 30, ay - 36, 24, 72, 6); ctx.fill();
+    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(this.x0 - 18, ay, 11, 0, 6.2832); ctx.stroke();
+    const ph = this.phase;
+    ctx.strokeStyle = '#39c2ac'; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(this.x0 - 18, ay); ctx.lineTo(this.x0 - 18 + Math.cos(ph) * 9, ay + Math.sin(ph) * 9); ctx.stroke();
+    ctx.fillStyle = '#39c2ac';
+    ctx.beginPath(); ctx.arc(this.x0, dy0, 5, 0, 6.2832); ctx.fill();
+
+    const dyN = ay - this.y[N - 1];
+    if (this.state.end === 'vast') {
+      ctx.fillStyle = '#1b2230'; ctx.fillRect(this.x1, ay - 60, 14, 120);
+      ctx.strokeStyle = '#3a4658'; ctx.lineWidth = 1.5;
+      for (let yy = ay - 58; yy < ay + 58; yy += 10) { ctx.beginPath(); ctx.moveTo(this.x1, yy + 10); ctx.lineTo(this.x1 + 14, yy); ctx.stroke(); }
+    } else if (this.state.end === 'los') {
+      ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(this.x1, ay - 60); ctx.lineTo(this.x1, ay + 60); ctx.stroke();
+      ctx.strokeStyle = '#7fe0d0'; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.arc(this.x1, dyN, 8, 0, 6.2832); ctx.stroke();
+    } else {
+      ctx.fillStyle = '#1b2230'; this.rr(ctx, this.x1 - 4, ay - 18, 22, 36, 5); ctx.fill();
+      ctx.fillStyle = '#39c2ac';
+    }
+    ctx.beginPath(); ctx.arc(this.x1, dyN, 4.5, 0, 6.2832);
+    ctx.fillStyle = this.state.end === 'los' ? '#7fe0d0' : '#39c2ac'; ctx.fill();
+
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+    const lbl = this.state.end === 'vast' ? 'vast' : (this.state.end === 'los' ? 'los' : 'geen (absorberend)');
+    ctx.fillText(lbl, this.x1 - 4, ay + 80);
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  reset() {
+    this.y.fill(0); this.yp.fill(0); this.yn.fill(0);
+    this.phase = 0; this.pulseActive = false; this.pulsePhase = 0;
+  }
+
+  renderVals() {
+    const seg = (a) => ({ bg: a ? '#1f9e8f' : '#fff', fg: a ? '#fff' : '#6f685c' });
+    const o = seg(this.state.mode === 'osc'), p = seg(this.state.mode === 'puls');
+    const ev = seg(this.state.end === 'vast'), el = seg(this.state.end === 'los'), eg = seg(this.state.end === 'geen');
+    return {
+      stageRef: this.stageRef,
+      amp: this.state.amp, freq: this.state.freq, tension: this.state.tension, damping: this.state.damping, snelheid: this.state.snelheid,
+      isPuls: this.state.mode === 'puls',
+      oscBg: o.bg, oscFg: o.fg, pulsBg: p.bg, pulsFg: p.fg,
+      vastBg: ev.bg, vastFg: ev.fg, losBg: el.bg, losFg: el.fg, geenBg: eg.bg, geenFg: eg.fg,
+      playLbl: this.state.running ? 'Pauze' : 'Start',
+      onOsc: () => this.setState({ mode: 'osc' }),
+      onPuls: () => this.setState({ mode: 'puls' }),
+      onSendPulse: () => { this.pulseActive = true; this.pulsePhase = 0; if (!this.state.running) this.setState({ running: true }); },
+      onEndVast: () => this.setState({ end: 'vast' }),
+      onEndLos: () => this.setState({ end: 'los' }),
+      onEndGeen: () => this.setState({ end: 'geen' }),
+      onAmp: (e) => this.setState({ amp: Number(e.target.value) }),
+      onFreq: (e) => this.setState({ freq: Number(e.target.value) }),
+      onTension: (e) => this.setState({ tension: Number(e.target.value) }),
+      onDamping: (e) => this.setState({ damping: Number(e.target.value) }),
+      onSnelheid: (e) => this.setState({ snelheid: Number(e.target.value) }),
+      onPlay: () => this.setState({ running: !this.state.running }),
+      onReset: () => { this.reset(); this.setState({ running: false }); },
+    };
+  }
+}
+</script>
+</body>
+</html>
