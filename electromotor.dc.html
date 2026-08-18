@@ -44,7 +44,6 @@
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Gelijkstroommotor</h1>
-    <span style="font-size:13px;color:#8c8576">F = B&middot;I&middot;L &nbsp;(Lorentzkracht)</span>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -56,7 +55,8 @@
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center">
         <button onClick="{{ onToggleRun }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ runBorder }};background:{{ runBg }};color:{{ runFg }}">{{ runLabel }}</button>
-        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#8635; Polariteit omkeren</button>
+        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#8635; Polariteit bron</button>
+        <button onClick="{{ onReverseMagnet }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#8635; Magneet omkeren <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9a927f">{{ magLabel }}</span></button>
         <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset</button>
       </div>
     </div>
@@ -134,13 +134,15 @@ class Component extends DCLogic {
   yaw = -0.60; pitch = 0.26; scale = 1.22; persp = 1200;
   cx = 268; cy = 214;
 
+  INSUL_W = 8;          // breedte van de isolatiespleet, gelijk aan de rand en binnenin
+  omega = 0;
   r = 56; halfZ = 84;
   poleY = 90; poleZ = 50;
   ringR = 22; commZ = 0;
   R_int = 2.4;
 
   state = {
-    powered: false, volts: 6, dir: 1,
+    powered: false, volts: 6, dir: 1, magDir: 1,
     showField: false, showCurrent: false, showForce: false,
   };
   theta = -0.35;
@@ -170,9 +172,14 @@ class Component extends DCLogic {
     const cc = this.stageRef.current;
     if (!this.lastTs) this.lastTs = ts;
     const dt = Math.min(0.05, (ts - this.lastTs) / 1000); this.lastTs = ts;
-    if (this.isOn()) {
-      const omega = 0.46 * this.state.volts * this.state.dir;
-      this.theta += omega * dt;
+    // Aandrijving valt weg zodra de borstels op de isolatie staan; de spoel loopt dan
+    // op zijn traagheid door tot het koper weer contact maakt.
+    const drive = this.isOn() && !this.insulAtBrush(this.theta);
+    const target = 0.46 * this.state.volts * this.state.dir * this.state.magDir;
+    if (drive) this.omega += (target - this.omega) * Math.min(1, 7 * dt);
+    else this.omega *= Math.max(0, 1 - 1.1 * dt);
+    if (this.isOn() || Math.abs(this.omega) > 1e-3) {
+      this.theta += this.omega * dt;
       this._acc = (this._acc || 0) + dt;
       if (this._acc > 0.16) { this._acc = 0; this.forceUpdate(); }
     }
@@ -242,8 +249,11 @@ class Component extends DCLogic {
     for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
 
     const th = this.theta;
-    const stp = Math.sin(th);
-    if (Math.abs(stp) > 0.05) this.s = this.state.dir * Math.sign(stp);
+    this.brushOnInsul = this.insulAtBrush(th);
+    // De kracht keert om wanneer de koperhelften onder de borstels wisselen, dus bij
+    // th = 90 en 270 graden. Tijdens de spleet houdt s zijn waarde; de pijlen zijn dan
+    // toch verborgen omdat er geen stroom loopt.
+    if (!this.brushOnInsul) this.s = this.state.dir * Math.sign(Math.cos(th) || 1);
     const s = this.s;
     const on = this.isOn();
     const r = this.r, hz = this.halfZ;
@@ -263,9 +273,10 @@ class Component extends DCLogic {
       let xs = [-44, 0, 44], zs = [-26, 26];
       if (dens === 'weinig') { xs = [-38, 38]; zs = [0]; }
       else if (dens === 'veel') { xs = [-60, -30, 0, 30, 60]; zs = [-28, 0, 28]; }
-      const top = this.poleY - 20, bot = -this.poleY + 20;
+      // pijlen lopen precies van poolvlak tot poolvlak: van de noord- naar de zuidpool
+      const yN = this.state.magDir === 1 ? this.poleY : -this.poleY;
       for (const xx of xs) for (const zz of zs)
-        this.arrow3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#6f9bd8', 1.5, 7);
+        this.arrow3(ctx, { x: xx, y: yN, z: zz }, { x: xx, y: -yN, z: zz }, '#6f9bd8', 2.2, 9);
       ctx.restore();
     }
 
@@ -274,14 +285,14 @@ class Component extends DCLogic {
     this.line3(ctx, A, B, copper, 7);
     this.line3(ctx, D, C, copper, 7);
 
-    if (this.state.showForce && on) {
-      const L = 42;
+    if (this.state.showForce && on && !this.brushOnInsul) {
+      const L = 42, fs = s * this.state.magDir;
       const m1 = { x: c1.x, y: c1.y, z: 0 }, m2 = { x: c2.x, y: c2.y, z: 0 };
-      this.arrow3(ctx, m1, { x: c1.x - L * s, y: c1.y, z: 0 }, '#f1ede1', 4, 11);
-      this.arrow3(ctx, m2, { x: c2.x + L * s, y: c2.y, z: 0 }, '#f1ede1', 4, 11);
+      this.arrow3(ctx, m1, { x: c1.x - L * fs, y: c1.y, z: 0 }, '#f1ede1', 4, 11);
+      this.arrow3(ctx, m2, { x: c2.x + L * fs, y: c2.y, z: 0 }, '#f1ede1', 4, 11);
     }
 
-    if (this.state.showCurrent && on) {
+    if (this.state.showCurrent && on && !this.brushOnInsul) {
       const red = '#e0503a';
       const seg = (P, Q) => {
         const mx = (P.x + Q.x) / 2, my = (P.y + Q.y) / 2, mz = (P.z + Q.z) / 2;
@@ -313,10 +324,17 @@ class Component extends DCLogic {
       ];
       for (const f of list) { f.depth = f.pts.reduce((a, p) => a + this.view(p).depth, 0) / 4; faces.push(f); }
     };
-    add(-104, 70, 90, 116, -pz, pz, { def: '#6f7378', front: '#b8432f', bottom: '#9c3826', top: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' });
-    add(-104, 70, -116, -90, -pz, pz, { def: '#6f7378', front: '#2f9a63', top: '#268a56', bottom: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' });
-    add(-130, -104, 0, 116, -pz, pz, { def: '#6f7378', front: '#b8432f', top: '#7e8287', bottom: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' });
-    add(-130, -104, -116, 0, -pz, pz, { def: '#6f7378', front: '#2f9a63', top: '#7e8287', bottom: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' });
+    const mag = this.state.magDir;
+    const nTop = { def: '#6f7378', front: '#b8432f', bottom: '#9c3826', top: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' };
+    const sTop = { def: '#6f7378', front: '#2f9a63', bottom: '#268a56', top: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' };
+    const nBot = { def: '#6f7378', front: '#b8432f', top: '#9c3826', bottom: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' };
+    const sBot = { def: '#6f7378', front: '#2f9a63', top: '#268a56', bottom: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' };
+    const arm = (c) => ({ def: '#6f7378', front: c.front, top: '#7e8287', bottom: '#7e8287', right: c.right, left: '#5f6368', back: '#494c50' });
+    const upper = mag === 1 ? nTop : sTop, lower = mag === 1 ? sBot : nBot;
+    add(-104, 70, 90, 116, -pz, pz, upper);
+    add(-104, 70, -116, -90, -pz, pz, lower);
+    add(-130, -104, 0, 116, -pz, pz, arm(upper));
+    add(-130, -104, -116, 0, -pz, pz, arm(lower));
 
     faces.sort((a, b) => a.depth - b.depth);
     for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(16,12,8,0.22)', 1); }
@@ -325,18 +343,23 @@ class Component extends DCLogic {
     const Sl = this.proj({ x: -18, y: -103, z: pz + 0.5 });
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.font = '700 17px "IBM Plex Sans",sans-serif';
-    ctx.fillStyle = '#ffe1d7'; ctx.fillText('N', Nl.x, Nl.y);
-    ctx.fillStyle = '#d6f2e3'; ctx.fillText('S', Sl.x, Sl.y);
+    ctx.fillStyle = mag === 1 ? '#ffe1d7' : '#d6f2e3'; ctx.fillText(mag === 1 ? 'N' : 'S', Nl.x, Nl.y);
+    ctx.fillStyle = mag === 1 ? '#d6f2e3' : '#ffe1d7'; ctx.fillText(mag === 1 ? 'S' : 'N', Sl.x, Sl.y);
+  }
+
+  // De koolborstels staan op (0, ±R). De scheiding tussen de twee koperhelften is een
+  // rechte spleet met vaste breedte INSUL_W door het midden, in de richting th.
+  // De borstel raakt de isolatie zodra zijn loodrechte afstand tot die spleetas
+  // kleiner is dan de halve spleetbreedte: R*|cos th| < INSUL_W/2.
+  insulAtBrush(th) {
+    return Math.abs(Math.cos(th)) < (this.INSUL_W / 2) / this.ringR;
   }
 
   drawCommutator(ctx, th, s, on, endA, endD) {
     const R = this.ringR, zF = this.commZ, zB = this.commZ - 10;
-    const g = 0.45;
     const copper = on ? '#e9a24a' : '#b89a6e';
     const dim = '#7a736a';
-    const thMod = ((th % Math.PI) + Math.PI) % Math.PI;
-    const brushOnInsul = Math.min(thMod, Math.PI - thMod) < g;
-    this.brushOnInsul = brushOnInsul;
+    const brushOnInsul = this.brushOnInsul;
     const segColor = brushOnInsul ? dim : copper;
     const uA = th, uB = th + Math.PI;
     const nubA = { x: R * Math.cos(uA), y: R * Math.sin(uA), z: zF };
@@ -344,42 +367,43 @@ class Component extends DCLogic {
 
     const fwdA = { x: endA.x, y: endA.y, z: zF };
     const fwdD = { x: endD.x, y: endD.y, z: zF };
-    this.line3(ctx, endA, fwdA, '#c9832f', 4);
-    this.line3(ctx, fwdA, nubA, '#c9832f', 4);
-    this.line3(ctx, endD, fwdD, '#c9832f', 4);
-    this.line3(ctx, fwdD, nubB, '#c9832f', 4);
+    this.line3(ctx, endA, fwdA, '#d98b3a', 7);
+    this.line3(ctx, fwdA, nubA, '#d98b3a', 7);
+    this.line3(ctx, endD, fwdD, '#d98b3a', 7);
+    this.line3(ctx, fwdD, nubB, '#d98b3a', 7);
 
-    const N = 40;
-    for (let i = 0; i < N; i++) {
-      const u0 = (i / N) * 2 * Math.PI, u1 = ((i + 1) / N) * 2 * Math.PI;
-      this.fillPoly3(ctx, [
-        { x: R * Math.cos(u0), y: R * Math.sin(u0), z: zF },
-        { x: R * Math.cos(u1), y: R * Math.sin(u1), z: zF },
-        { x: R * Math.cos(u1), y: R * Math.sin(u1), z: zB },
-        { x: R * Math.cos(u0), y: R * Math.sin(u0), z: zB },
-      ], this.shade(segColor, -0.22));
-    }
-    const disc = [];
-    for (let i = 0; i <= N; i++) { const a = (i / N) * 2 * Math.PI; disc.push({ x: R * Math.cos(a), y: R * Math.sin(a), z: zF }); }
-    this.fillPoly3(ctx, disc, segColor);
-    this.poly3(ctx, disc, true, this.shade(segColor, -0.3), 1.1);
+    // Twee koperhelften, gescheiden door een rechte spleet van vaste breedte.
+    // De helften zijn cirkelsegmenten begrensd door een koorde op afstand INSUL_W/2
+    // van het midden, dus de isolatie is aan de rand even breed als binnenin.
+    const insul = '#1b1713';
+    const half = this.INSUL_W / 2;
+    const al = Math.asin(Math.min(0.9, half / R));
+    const arcPts = (a0, a1, z) => {
+      const n = Math.max(2, Math.round(Math.abs(a1 - a0) / 0.14));
+      const out = [];
+      for (let i = 0; i <= n; i++) {
+        const u = a0 + (a1 - a0) * (i / n);
+        out.push({ x: R * Math.cos(u), y: R * Math.sin(u), z });
+      }
+      return out;
+    };
+    const segs = [[th + al, th + Math.PI - al], [th + Math.PI + al, th + 2 * Math.PI - al]];
 
-    // insulating gap splits the whole disc in two (front face + through the thickness)
-    const u = { x: Math.cos(th + Math.PI / 2), y: Math.sin(th + Math.PI / 2) };
-    const Ls = R + 1.5;
-    for (const zz of [zB - 0.4, zF + 0.4]) {
-      const gA = this.proj({ x: u.x * Ls, y: u.y * Ls, z: zz });
-      const gB = this.proj({ x: -u.x * Ls, y: -u.y * Ls, z: zz });
-      ctx.strokeStyle = '#0c0c0c'; ctx.lineWidth = 9; ctx.lineCap = 'butt';
-      ctx.beginPath(); ctx.moveTo(gA.x, gA.y); ctx.lineTo(gB.x, gB.y); ctx.stroke();
+    // volledige schijf in isolatiekleur, koper komt er als segmenten bovenop
+    const rim = arcPts(0, Math.PI * 2, zF), rimB = arcPts(0, Math.PI * 2, zB);
+    for (let i = 0; i < rim.length - 1; i++) {
+      this.fillPoly3(ctx, [rim[i], rim[i + 1], rimB[i + 1], rimB[i]], this.shade(insul, -0.22));
     }
-    // fill the gap band across the cylinder thickness so the split is visible on the edge
-    for (const sgn of [1, -1]) {
-      const eF = this.proj({ x: u.x * sgn * R, y: u.y * sgn * R, z: zF });
-      const eB = this.proj({ x: u.x * sgn * R, y: u.y * sgn * R, z: zB });
-      ctx.strokeStyle = '#0c0c0c'; ctx.lineWidth = 9; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(eF.x, eF.y); ctx.lineTo(eB.x, eB.y); ctx.stroke();
+    this.fillPoly3(ctx, rim, insul);
+
+    for (const [a0, a1] of segs) {
+      const fr = arcPts(a0, a1, zF), bk = arcPts(a0, a1, zB);
+      for (let i = 0; i < fr.length - 1; i++) {
+        this.fillPoly3(ctx, [fr[i], fr[i + 1], bk[i + 1], bk[i]], this.shade(segColor, -0.22));
+      }
+      this.fillPoly3(ctx, fr, segColor);
     }
+    this.poly3(ctx, rim, true, this.shade(segColor, -0.3), 1.1);
 
     this.brushTop = this.proj({ x: 0, y: R, z: zF });
     this.brushBot = this.proj({ x: 0, y: -R, z: zF });
@@ -410,12 +434,14 @@ class Component extends DCLogic {
     const railB = Math.min(this.H - 16, bot.y + 20);
     const cxc = Math.max(30, Math.min(top.x, bot.x) - 150);
     const mY = (top.y + bot.y) / 2, gap = 8;
-    const plusY = mY - gap, minusY = mY + gap;
+    // bij ompolen wisselen de platen van plaats: + naar onder, − naar boven
+    const plusUp = this.state.dir === 1;
+    const plusY = plusUp ? mY - gap : mY + gap, minusY = plusUp ? mY + gap : mY - gap;
 
     // leads from each plate to its brush (conductors touch + and - poles)
     ctx.strokeStyle = col; ctx.lineWidth = 2.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.beginPath(); ctx.moveTo(cxc, plusY); ctx.lineTo(cxc, railT); ctx.lineTo(top.x, railT); ctx.lineTo(top.x, top.y - 9); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cxc, minusY); ctx.lineTo(cxc, railB); ctx.lineTo(bot.x, railB); ctx.lineTo(bot.x, bot.y + 10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cxc, mY - gap); ctx.lineTo(cxc, railT); ctx.lineTo(top.x, railT); ctx.lineTo(top.x, top.y - 9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cxc, mY + gap); ctx.lineTo(cxc, railB); ctx.lineTo(bot.x, railB); ctx.lineTo(bot.x, bot.y + 10); ctx.stroke();
 
     if (live) {
       const tri = (x, y, d) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x, y - 4); ctx.lineTo(x + 7 * d, y); ctx.lineTo(x, y + 4); ctx.closePath(); ctx.fill(); };
@@ -456,16 +482,17 @@ class Component extends DCLogic {
   }
 
   toggleRun = () => this.setState(s => ({ powered: !s.powered }));
-  reset = () => { this.theta = -0.35; this.s = 1; this.setState({ powered: false, dir: 1, volts: (this.props && typeof this.props.beginSpanning === 'number') ? this.props.beginSpanning : 6 }); };
+  reset = () => { this.theta = -0.35; this.s = 1; this.omega = 0; this.setState({ powered: false, dir: 1, volts: (this.props && typeof this.props.beginSpanning === 'number') ? this.props.beginSpanning : 6 }); };
   reverse = () => this.setState(s => ({ dir: -s.dir }));
+  reverseMagnet = () => this.setState(s => ({ magDir: -s.magDir }));
   setVolts = (e) => { const v = parseFloat(e.target.value); this.setState({ volts: v }); };
 
   renderVals() {
     const st = this.state;
     const on = this.isOn();
-    const omega = 0.46 * st.volts * st.dir;
-    const rpm = Math.round(Math.abs(omega) * 60 / (2 * Math.PI));
-    const current = st.powered ? st.volts / this.R_int : 0;
+    const rpm = Math.round(Math.abs(this.omega) * 60 / (2 * Math.PI));
+    const contact = !this.insulAtBrush(this.theta);
+    const current = st.powered && contact ? st.volts / this.R_int : 0;
     const deg = ((this.theta * 180 / Math.PI) % 360 + 360) % 360;
     const banner = !st.powered
       ? 'Schakel de motor in en schuif de spanningsbron omhoog. Zet daarna de lagen aan. Met \u201cPolariteit omkeren\u201d draait de motor de andere kant op.'
@@ -484,13 +511,15 @@ class Component extends DCLogic {
       onToggleRun: this.toggleRun,
       onReset: this.reset,
       onReverse: this.reverse,
+      onReverseMagnet: this.reverseMagnet,
+      magLabel: st.magDir === 1 ? 'N boven' : 'S boven',
       volts: st.volts,
       voltStr: 'U = ' + st.volts.toFixed(1) + ' V',
       onVolts: this.setVolts,
       statusDot: on ? '#5fae7a' : (st.powered ? '#c9a23f' : '#b8b1a2'),
-      statusLabel: on ? 'Motor draait' : (st.powered ? 'Ingeschakeld \u2014 0 V' : 'Motor staat stil'),
+      statusLabel: on ? (contact ? 'Motor draait' : 'Borstels op de isolatie \u2014 geen stroom') : (st.powered ? 'Ingeschakeld \u2014 0 V' : 'Motor staat stil'),
       iStr: current.toFixed(2) + ' A',
-      rpmStr: on ? rpm + ' /min' : '0 /min',
+      rpmStr: rpm + ' /min',
       angleStr: deg.toFixed(0) + '\u00B0',
       toggleField: () => this.setState(s => ({ showField: !s.showField })),
       toggleCurrent: () => this.setState(s => ({ showCurrent: !s.showCurrent })),

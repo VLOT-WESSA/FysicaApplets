@@ -7,20 +7,6 @@
 </head>
 <body>
 <x-dc>
-<template id="__bundler_thumbnail">
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100" height="100" fill="#eceae4"/>
-  <rect x="28" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
-  <rect x="36" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
-  <rect x="44" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
-  <rect x="52" y="18" width="3" height="38" rx="1" fill="#2b2b2b"/>
-  <rect x="25" y="56" width="34" height="32" rx="6" fill="#f0ede6" stroke="#3a352c" stroke-width="2"/>
-  <rect x="31" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
-  <rect x="40" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
-  <rect x="49" y="60" width="5" height="24" rx="2" fill="#d96f2c"/>
-  <rect x="68" y="38" width="14" height="36" rx="6" fill="#f0ede6" stroke="#3a352c" stroke-width="1.5"/>
-</svg>
-</template>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,6 +15,8 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
   button{font-family:inherit}
   input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -44,7 +32,6 @@
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Kernsplijtingsreactor</h1>
-    <span style="font-size:13px;color:#8c8576">gestuurde kettingreactie</span>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -63,7 +50,37 @@
       </div>
     </div>
 
-    <div style="flex:none;width:336px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:358px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+          <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
+          <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vermenigvuldigingsfactor k</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ kColor }}">{{ kStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Splijtingen per seconde</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ fisRateStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vrije neutronen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ neutronStr }}</span></div>
+        <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Thermisch vermogen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ powerStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Elektrisch vermogen</span><span style="font-family:'IBM Plex Mono',monospace;color:#3a8a55">{{ elecStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Rendement</span><span style="font-family:'IBM Plex Mono',monospace;color:#6f685c">{{ etaStr }}</span></div>
+        <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kerntemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ tempColor }}">{{ tempStr }}</span></div>
+        <div style="position:relative;height:9px;border-radius:5px;margin-top:3px;background:linear-gradient(90deg,#87a9d4 0%,#87a9d4 27%,#5fae7a 31%,#5fae7a 46%,#c9a23f 51%,#d98b3a 61%,#b8311f 83%,#8f1f12 100%)">
+          <div style="position:absolute;top:-4px;width:3px;height:17px;border-radius:2px;background:#2a2723;box-shadow:0 0 0 1.5px #fffdf9;left:{{ tempPct }}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#b3ab9b"><span>250 &deg;C</span><span style="color:#3a8a55">600&ndash;780 bedrijf</span><span style="color:#b8311f">1200 schade</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:13.5px;font-weight:600;color:#3a352c">Regelstaven</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ rodStr }}</span>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; k zakt</div>
+        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:#b8472f">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
+      </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="font-size:13.5px;font-weight:600;color:#3a352c;margin-bottom:8px">Splijtstof</div>
@@ -72,7 +89,7 @@
           <option value="laag">Laagverrijkt uranium (3,5% U-235)</option>
           <option value="mox">MOX (uranium + plutonium)</option>
         </select>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Hogere verrijking of MOX &rarr; meer splijtbare kernen &rarr; hogere reactiviteit.</div>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Meer splijtbare kernen &rarr; een thermisch neutron veroorzaakt vaker splijting dan invang.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -82,31 +99,16 @@
           <option value="grafiet">Grafiet</option>
           <option value="zwaar">Zwaar water (D&#8322;O)</option>
         </select>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt neutronen. Zwaar water en grafiet laten neutrons beter modereren dan licht water.</div>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt snelle neutronen tot thermische. Grafiet en zwaar water doen dat met minder verlies dan licht water.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <span style="font-size:13.5px;font-weight:600;color:#3a352c">Regelstaven</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ rodStr }}</span>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Thermisch vermogen</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#b3ab9b">laatste 60 s</span>
         </div>
-        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; reactie dooft uit</div>
-        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:#b8472f">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
-      </div>
-
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
-          <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
-          <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Splijtingen / s</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ fisRateStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vrije neutronen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ neutronStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Vermenigvuldiging k</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ kStr }}</span></div>
-        <div style="height:1px;background:#efe9dd;margin:1px 0"></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Thermisch vermogen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ powerStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kerntemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ tempColor }}">{{ tempStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stoomproductie</span><span style="font-family:'IBM Plex Mono',monospace;color:#3f6aa3">{{ steamStr }}</span></div>
+        <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px"><b style="color:#3f6aa3">k&lt;1</b> dooft uit &middot; <b style="color:#3a8a55">k=1</b> constant &middot; <b style="color:#b8472f">k&gt;1</b> loopt op. De letters markeren je ingrepen.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
@@ -117,44 +119,112 @@
         <button onClick="{{ toggleLabels }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ lBorder }};background:{{ lBg }};color:#3a352c">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f685c"></span>Onderdeellabels <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ lState }}</span>
         </button>
+        <button onClick="{{ toggleExtra }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ xBorder }};background:{{ xBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#8a3b2c"></span>Uitbreiding (6e jaar) <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ xState }}</span>
+        </button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Vermogen in de tijd</span>
+      <sc-if value="{{ showExtra }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Invloed van je keuzes op k</span>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ kTerms }}" as="term" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font-size:12px;color:#6f685c;width:96px;flex:none">{{ term.name }}</span>
+                <span style="position:relative;flex:1;height:7px;border-radius:4px;background:#efe9dd">
+                  <span style="position:absolute;top:0;bottom:0;width:1px;background:#d3ccbd;left:50%"></span>
+                  <span style="position:absolute;top:0;bottom:0;border-radius:4px;background:{{ term.color }};left:{{ term.barLeft }};width:{{ term.barWidth }}"></span>
+                </span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3a352c;width:42px;text-align:right;flex:none">{{ term.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Elk getal is de richting en de sterkte waarmee die keuze aan k trekt: plus duwt k omhoog, min omlaag. Het zijn geen factoren om te vermenigvuldigen &mdash; k zelf wordt bovenaan gemeten aan de neutronen in de kern.</div>
+          <div style="height:1px;background:#efe9dd"></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Reactiviteit &rho; = (k&minus;1)/k</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ rhoStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Tijdconstante &tau;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ tauStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Verdubbelingstijd</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ doubleStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Splijtstoftemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ fuelTempStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Staven, werkelijke stand</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rodPosStr }}</span></div>
+          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">&tau; = &#8467;/(k&minus;1) met effectieve generatietijd &#8467; = 0,085 s (inclusief vertraagde neutronen). Verdubbelingstijd = &tau; &middot; ln 2.</div>
+          <div style="height:1px;background:#efe9dd"></div>
+          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Neutronenbalans</span>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Snel / thermisch</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ mixStr }}</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ balance }}" as="row" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="width:9px;height:9px;border-radius:2px;flex:none;background:{{ row.color }}"></span>
+                <span style="font-size:12px;color:#6f685c;flex:1">{{ row.name }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3a352c">{{ row.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Aandeel van alle neutronen die in de laatste seconden verdwenen. Splijting levert 2 of 3 nieuwe neutronen, de rest is verlies.</div>
         </div>
-        <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px"><b style="color:#3f6aa3">k&lt;1</b> dooft uit &middot; <b style="color:#3a8a55">k=1</b> constant &middot; <b style="color:#b8472f">k&gt;1</b> loopt op. Hogere temperatuur verlaagt k (terugkoppeling).</div>
-      </div>
+      </sc-if>
 
     </div>
   </div>
 </div>
+
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;beginRegelstaven&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:60,&quot;min&quot;:0,&quot;max&quot;:100,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:820},&quot;beginRegelstaven&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:60,&quot;min&quot;:0,&quot;max&quot;:100,&quot;step&quot;:1,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Beginsituatie&quot;},&quot;uitbreiding&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Beginsituatie&quot;}}">
 class Component extends DCLogic {
   stageRef = React.createRef();
   chartRef  = React.createRef();
-  W = 880; H = 560;
-  CW = 300; CH = 150;
+  W = 1100; H = 560;
+  CW = 330; CH = 178;
 
   shield = { x0: 150, y0: 78, x1: 452, y1: 496 };
   vessel = { x0: 196, y0: 112, x1: 408, y1: 478 };
   core   = { x0: 220, y0: 178, x1: 390, y1: 424 };
   hx     = { x0: 576, y0: 138, x1: 668, y1: 452 };
+  turb   = { x0: 862, y0: 132, x1: 962, y1: 212 };
+  cond   = { x0: 856, y0: 376, x1: 968, y1: 448 };
+  gen    = { x: 1016, y: 172, r: 26 };
 
-  GAS = 0.70;   // fixed cooling fraction
+  GAS = 0.70;
 
-  fuelTerms = { natuur: 0.808, laag: 0.962, mox: 1.00 };
-  modTerms  = { licht: 0.920, grafiet: 1.00, zwaar: 1.094 };
+  // Kernfysische constanten
+  E_FIS = 3.2e-17;   // MW*s per splijting (200 MeV)
+  LEFF  = 0.085;     // effectieve generatietijd incl. vertraagde neutronen (s)
+  S_EXT = 3.0e14;    // externe bron (n/s)
+  K_SCALE = 25;      // schaal van monsterreactiviteit naar reactorreactiviteit
+  P_NOM = 1000;      // nominaal thermisch vermogen (MW)
+
+  // Thermohydraulica
+  T_IN = 250; T_NOM = 700; C_TH = 44; K_COOL = 2.222;
+  C_F = 3; H_FC = 3.5; TF_NOM = 986;   // splijtstoftemperatuur, prompte terugkoppeling
+  T_LO = 600; T_HI = 780; T_WARN = 900; T_CLAD = 1200;
+  ETA = 0.36;
+  ROD_SPEED = 0.055; SCRAM_SPEED = 0.55;   // staafsnelheid (deel van de slag per s)
+
+  // Deeltjesmodel
+  POP = 240;
+  V_FAST = 250; V_TH = 92; N_COLL = 3;
+  R_MOD = 13.0;
+  R_FIS_TH = 34; R_CAP_TH = 9;
+  R_FIS_FAST = 1.3; R_CAP_FAST = 4;
+  R_ROD_TH = 30; R_ROD_FAST = 6;
+  R_MOD_CAP = 0.12;
+  P_REFL = 0.82;
+
+  fuelQ = { natuur: 0.70, laag: 1.00, mox: 1.14 };
+  modQ  = { licht: 0.84, grafiet: 1.00, zwaar: 1.18 };
+  modLoss = { licht: 3.0, grafiet: 1.0, zwaar: 0.5 };
 
   fuelX = []; ctrlX = []; blocks = []; gasCh = [];
 
-  state = { running: false, rod: 0.6, showNeutrons: false, showLabels: false, fuel: 'laag', moderator: 'grafiet' };
+  state = { running: false, rod: 0.6, showNeutrons: true, showLabels: false, showExtra: false, fuel: 'laag', moderator: 'grafiet' };
 
-  N = 40; T = 250; totalFis = 0; fisRate = 0; kEff = 1; steam = 0; power = 0;
-  neutrons = []; flashes = []; hist = [];
-  fanAngle = 0; flowPhase = 0; pulse = 0;
+  N = 5e16; T = 250; Tf = 250; fisRate = 0; power = 0; elec = 0; steam = 0; kMeas = 1;
+  rodPos = 0.6; scramming = false;
+  neutrons = []; flashes = []; hist = []; marks = []; simT = 0;
+  bins = []; binT = 0; fisFrac = 0.33;
+  births = 0; deaths = 0; fissions = 0; eta = 0;
+  tally = { fis: 0, rod: 0, cap: 0, leak: 0 };
+  nFast = 0; nTh = 0;
+  fanAngle = 0; flowPhase = 0; genAngle = 0; pulse = 0;
 
   componentDidMount() {
     const c = this.core, w = c.x1 - c.x0;
@@ -172,92 +242,240 @@ class Component extends DCLogic {
     this.ctrlX = this.blocks.flatMap(b => [b.ctrlL, b.ctrlR]);
     const p = this.props || {};
     const rod = typeof p.beginRegelstaven === 'number' ? p.beginRegelstaven / 100 : 0.6;
-    this.setState({ rod });
-    for (let i = 0; i < 24; i++) this.spawnNeutron();
+    const ex = typeof p.uitbreiding === 'boolean' ? p.uitbreiding : false;
+    this.rodPos = rod;
+    this.setState({ rod, showExtra: ex });
+    for (let i = 0; i < this.POP; i++) this.spawnNeutron(true);
     this.setupCanvas(); this.last = performance.now();
     this.raf = requestAnimationFrame(this.loop);
     this._rz = () => this.setupCanvas();
     this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
   }
+
   componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
 
   setupCanvas() {
-        const c = this.stageRef.current;
+    const c = this.stageRef.current;
     if (c) { this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
     const ch = this.chartRef.current;
     if (ch) { this.cdpr = AppletCore.fitCanvas(ch, this.CW, this.CH); }
   }
 
-  spawnNeutron() {
+  spawnNeutron(anywhere, x, y, fast) {
     const c = this.core;
+    const isFast = fast === undefined ? true : fast;
+    const v = isFast ? this.V_FAST : this.V_TH;
+    const a = Math.random() * Math.PI * 2;
     this.neutrons.push({
-      x: c.x0 + Math.random() * (c.x1 - c.x0), y: c.y0 + Math.random() * (c.y1 - c.y0),
-      vx: (Math.random() - 0.5) * 140, vy: (Math.random() - 0.5) * 140,
+      x: x === undefined ? c.x0 + Math.random() * (c.x1 - c.x0) : x,
+      y: y === undefined ? c.y0 + Math.random() * (c.y1 - c.y0) : y,
+      vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+      fast: isFast, coll: anywhere ? this.N_COLL : 0,
     });
+    if (anywhere && Math.random() < 0.55) { const n = this.neutrons[this.neutrons.length - 1]; this.makeThermal(n); }
+  }
+
+  makeThermal(n) {
+    n.fast = false; n.coll = this.N_COLL;
+    const a = Math.random() * Math.PI * 2;
+    n.vx = Math.cos(a) * this.V_TH; n.vy = Math.sin(a) * this.V_TH;
+  }
+
+  tempFactor() {
+    const f = 1 - 0.00038 * (this.Tf - this.TF_NOM);
+    return Math.max(0.55, Math.min(1.10, f));
+  }
+
+  regionAt(x, y) {
+    const bw = this.blockW;
+    const tipY = this.core.y0 + this.rodPos * (this.core.y1 - this.core.y0);
+    for (const b of this.blocks) {
+      if (x < b.x - bw / 2 || x > b.x + bw / 2) continue;
+      if (Math.abs(x - b.fuel) < 5.5) return 'fuel';
+      if ((Math.abs(x - b.ctrlL) < 3.2 || Math.abs(x - b.ctrlR) < 3.2) && y < tipY) return 'rod';
+      return 'mod';
+    }
+    return 'gas';
+  }
+
+  prob(rate, dt) { return 1 - Math.exp(-rate * dt); }
+
+  physics(dt) {
+    const c = this.core, tf = this.tempFactor();
+    const fq = this.fuelQ[this.state.fuel] || 1;
+    const mq = (this.modQ[this.state.moderator] || 1) * tf;
+    const loss = this.modLoss[this.state.moderator] || 1;
+    const pRefl = this.P_REFL * tf;
+    const keep = [];
+    let fast = 0, th = 0;
+
+    for (const n of this.neutrons) {
+      n.x += n.vx * dt; n.y += n.vy * dt;
+
+      // buiten de kern: reflectie op de moderatorwand, anders lek
+      let out = false;
+      if (n.x < c.x0 || n.x > c.x1 || n.y < c.y0 || n.y > c.y1) {
+        if (Math.random() < pRefl) {
+          if (n.x < c.x0) { n.x = c.x0; n.vx = Math.abs(n.vx); }
+          if (n.x > c.x1) { n.x = c.x1; n.vx = -Math.abs(n.vx); }
+          if (n.y < c.y0) { n.y = c.y0; n.vy = Math.abs(n.vy); }
+          if (n.y > c.y1) { n.y = c.y1; n.vy = -Math.abs(n.vy); }
+        } else { out = true; }
+      }
+      if (out) { this.tally.leak++; this.deaths++; continue; }
+
+      const reg = this.regionAt(n.x, n.y);
+      let dead = false;
+
+      if (reg === 'rod') {
+        const r = n.fast ? this.R_ROD_FAST : this.R_ROD_TH;
+        if (Math.random() < this.prob(r, dt)) { this.tally.rod++; this.deaths++; dead = true; }
+      } else if (reg === 'fuel') {
+        const rf = n.fast ? this.R_FIS_FAST * fq : this.R_FIS_TH * fq;
+        const rc = n.fast ? this.R_CAP_FAST : this.R_CAP_TH;
+        if (Math.random() < this.prob(rf, dt)) {
+          this.tally.fis++; this.deaths++; this.fissions++; dead = true;
+          const nu = Math.random() < 0.55 ? 2 : 3;
+          this.births += nu;
+          for (let i = 0; i < nu; i++) keep.push(this.newFast(n.x, n.y));
+          this.flashes.push({ x: n.x, y: n.y, t: 0 });
+        } else if (Math.random() < this.prob(rc, dt)) {
+          this.tally.cap++; this.deaths++; dead = true;
+        }
+      } else if (reg === 'mod') {
+        if (n.fast && Math.random() < this.prob(this.R_MOD * mq, dt)) {
+          n.coll++;
+          const a = Math.random() * Math.PI * 2;
+          const v = this.V_FAST * (1 - 0.28 * n.coll);
+          n.vx = Math.cos(a) * v; n.vy = Math.sin(a) * v;
+          if (n.coll >= this.N_COLL) this.makeThermal(n);
+        } else if (Math.random() < this.prob(this.R_MOD_CAP * loss, dt)) {
+          this.tally.cap++; this.deaths++; dead = true;   // invang in de moderator
+        }
+      }
+
+      if (dead) continue;
+      if (n.fast) fast++; else th++;
+      keep.push(n);
+    }
+
+    // externe bron
+    this._sa = (this._sa || 0) + 7 * dt;
+    while (this._sa >= 1) { this._sa -= 1; keep.push(this.newFast()); }
+
+    // populatie op peil houden (zuiver visueel, wordt niet meegeteld)
+    let pop = keep.length;
+    if (pop > this.POP * 1.45) {
+      const target = Math.round(this.POP * 1.1);
+      while (keep.length > target) keep.splice((Math.random() * keep.length) | 0, 1);
+    } else if (pop > 0 && pop < this.POP * 0.65) {
+      const target = Math.round(this.POP * 0.9);
+      while (keep.length < target) {
+        const s = keep[(Math.random() * pop) | 0];
+        keep.push({ x: s.x, y: s.y, vx: -s.vx, vy: -s.vy, fast: s.fast, coll: s.coll });
+      }
+    }
+    this.neutrons = keep;
+    this.nFast = fast; this.nTh = th;
+  }
+
+  newFast(x, y) {
+    const c = this.core, a = Math.random() * Math.PI * 2;
+    return {
+      x: x === undefined ? c.x0 + Math.random() * (c.x1 - c.x0) : x,
+      y: y === undefined ? c.y0 + Math.random() * (c.y1 - c.y0) : y,
+      vx: Math.cos(a) * this.V_FAST, vy: Math.sin(a) * this.V_FAST, fast: true, coll: 0,
+    };
+  }
+
+  measureK(dt) {
+    this.binT += dt;
+    if (this.binT >= 0.35) {
+      this.binT = 0;
+      this.bins.push({ b: this.births, d: this.deaths, f: this.fissions });
+      this.births = 0; this.deaths = 0; this.fissions = 0;
+      if (this.bins.length > 16) this.bins.shift();
+      let B = 0, D = 0, F = 0;
+      for (const x of this.bins) { B += x.b; D += x.d; F += x.f; }
+      if (D > 8) {
+        // De zichtbare kern is een klein, sterk reactief monster. De reactiviteit die
+        // eruit volgt wordt op de schaal van een echte staafbank gebracht (K_SCALE),
+        // zodat de staafwaarde realistisch is en de meting bruikbaar rustig.
+        const kRaw = 1 + (B / D - 1) / this.K_SCALE;
+        this.kMeas += (kRaw - this.kMeas) * 0.12;
+        this.fisFrac += (F / D - this.fisFrac) * 0.12;
+      }
+    }
+  }
+
+  step(dt) {
+    this.simT += dt;
+    this.moveRods(dt);
+    this.physics(dt);
+    this.measureK(dt);
+
+    const k = this.kMeas;
+    this.N = this.N + (((k - 1) / this.LEFF) * this.N + this.S_EXT) * dt;
+    this.N = Math.max(1e12, Math.min(6e19, this.N));
+
+    this.fisRate = this.N * Math.max(0.05, this.fisFrac) / this.LEFF;
+    this.power = this.fisRate * this.E_FIS;
+
+    // splijtstof reageert prompt, het koelgas volgt langzaam
+    const q = this.H_FC * (this.Tf - this.T);
+    this.Tf += (this.power - q) / this.C_F * dt;
+    this.T += (q - this.K_COOL * (this.T - this.T_IN)) / this.C_TH * dt;
+    if (this.T < this.T_IN) this.T = this.T_IN;
+    if (this.Tf < this.T) this.Tf = this.T;
+
+    const eta = this.T > 380 ? this.ETA * Math.min(1, (this.T - 380) / 220) : 0;
+    this.eta = eta;
+    this.elec = eta * this.power;
+    this.steam = Math.max(0, this.power * 0.40);
+
+    const dec = Math.exp(-dt / 4);   // balans over de laatste seconden
+    this.tally.fis *= dec; this.tally.rod *= dec; this.tally.cap *= dec; this.tally.leak *= dec;
+
+    this._ht = (this._ht || 0) + dt;
+    if (this._ht > 0.4) {
+      this._ht = 0;
+      this.hist.push({ t: this.simT, p: this.power });
+      while (this.hist.length && this.simT - this.hist[0].t > 62) this.hist.shift();
+      this.marks = this.marks.filter(m => this.simT - m.t <= 62);
+    }
+  }
+
+  moveRods(dt) {
+    const target = this.state.rod;
+    const v = (this.scramming ? this.SCRAM_SPEED : this.ROD_SPEED) * dt;
+    const d = target - this.rodPos;
+    if (Math.abs(d) <= v) { this.rodPos = target; if (this.scramming && target >= 1) this.scramming = false; }
+    else this.rodPos += Math.sign(d) * v;
+  }
+
+  mark(label) {
+    if (!this.state.running) return;
+    const last = this.marks[this.marks.length - 1];
+    if (last && this.simT - last.t < 0.6) { last.label = label; return; }
+    this.marks.push({ t: this.simT, label, i: (this._mi = (this._mi || 0) + 1) });
   }
 
   loop = (ts) => {
     const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
     this.pulse += dt;
     if (this.state.running) this.step(dt);
-    this.fanAngle += this.GAS * 6 * dt * (this.power > 1 ? 1 : 0);
+    else { this.moveRods(dt); this.physics(dt); }
+    const spin = this.power > 1 ? 1 : 0;
+    this.fanAngle += this.GAS * 6 * dt * spin;
+    this.genAngle += dt * 3.2 * Math.min(2, this.elec / 200) ;
     this.flowPhase += (this.power > 1 ? this.GAS : 0) * 1.4 * dt;
-    this.animateNeutrons(dt);
+    for (const f of this.flashes) f.t += dt;
+    this.flashes = this.flashes.filter(f => f.t < 0.45);
     this.draw(); this.drawChart();
     this._acc = (this._acc || 0) + dt;
     if (this._acc > 0.12) { this._acc = 0; this.forceUpdate(); }
     this.raf = requestAnimationFrame(this.loop);
   };
-
-  kFromState() {
-    const f = this.fuelTerms[this.state.fuel] || 1;
-    const m = this.modTerms[this.state.moderator] || 1;
-    const kRod = f * m * (1.30 - 0.62 * this.state.rod);
-    const kT = -0.00045 * (this.T - 300);
-    return kRod + kT;
-  }
-
-  step(dt) {
-    const k = this.kFromState();
-    this.kEff = k;
-    const S = 2.5, l = 1.1;
-    this.N = Math.max(0, this.N + (((k - 1) / l) * this.N + S) * dt);
-    if (this.N > 4000) this.N = 4000;
-    this.fisRate = 9 * this.N; this.totalFis += this.fisRate * dt;
-    this.power = 0.55 * this.N;
-    const cool = this.GAS * 0.30 * (this.T - 250);
-    this.T += (this.power * 0.9 - cool) * 0.05;
-    if (this.T < 250) this.T = 250;
-    this.steam = Math.max(0, this.GAS * 0.30 * (this.T - 250));
-    this._ht = (this._ht || 0) + dt;
-    if (this._ht > 0.4) { this._ht = 0; this.hist.push(this.power); if (this.hist.length > 100) this.hist.shift(); }
-  }
-
-  animateNeutrons(dt) {
-    const c = this.core;
-    const target = Math.max(3, Math.min(140, Math.round(this.N / 6)));
-    while (this.neutrons.length < target) this.spawnNeutron();
-    while (this.neutrons.length > target) this.neutrons.pop();
-    for (const n of this.neutrons) {
-      n.x += n.vx * dt; n.y += n.vy * dt;
-      if (n.x < c.x0) { n.x = c.x0; n.vx = Math.abs(n.vx); }
-      if (n.x > c.x1) { n.x = c.x1; n.vx = -Math.abs(n.vx); }
-      if (n.y < c.y0) { n.y = c.y0; n.vy = Math.abs(n.vy); }
-      if (n.y > c.y1) { n.y = c.y1; n.vy = -Math.abs(n.vy); }
-    }
-    if (this.state.running) {
-      const rate = Math.min(45, this.N * 0.16);
-      this._fa = (this._fa || 0) + rate * dt;
-      while (this._fa >= 1) {
-        this._fa -= 1;
-        const fx = this.fuelX[(Math.random() * this.fuelX.length) | 0];
-        const fy = c.y0 + Math.random() * (c.y1 - c.y0);
-        this.flashes.push({ x: fx + (Math.random() - 0.5) * 8, y: fy, t: 0 });
-      }
-    }
-    for (const f of this.flashes) f.t += dt;
-    this.flashes = this.flashes.filter(f => f.t < 0.45);
-  }
 
   rr(ctx, x, y, w, h, r) {
     if (typeof r === 'number') r = [r, r, r, r];
@@ -302,6 +520,10 @@ class Component extends DCLogic {
     ctx.fillStyle = '#5a544a'; ctx.font = '600 11.5px "IBM Plex Sans",sans-serif';
     ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(text, tx, ty);
   }
+  caption(ctx, x, y, text) {
+    ctx.fillStyle = '#5a544a'; ctx.font = '600 11.5px "IBM Plex Sans",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, x, y);
+  }
   modColor() {
     const m = this.state.moderator;
     if (m === 'zwaar') return '#5a7a8e';
@@ -317,6 +539,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#fbfaf6'; ctx.fillRect(0, 0, this.W, this.H);
 
     const V = this.vessel, S = this.shield, CO = this.core, HX = this.hx;
+    const TB = this.turb, CD = this.cond, G = this.gen;
     const running = this.state.running, hot = Math.min(1, (this.T - 250) / 750);
 
     const ductFill = '#f6efce', duStroke = '#3a352c';
@@ -346,21 +569,18 @@ class Component extends DCLogic {
       this.arrowHead(ctx, V.x0 + 22, V.y1 - 40, -Math.PI / 2, '#4f6f9a');
     }
 
-    // Radiation shield (green border)
     ctx.strokeStyle = '#6cae6f'; ctx.lineWidth = 15;
     this.rr(ctx, S.x0, S.y0, S.x1 - S.x0, S.y1 - S.y0, 14); ctx.stroke();
     ctx.strokeStyle = '#4f9655'; ctx.lineWidth = 1.5;
     this.rr(ctx, S.x0 - 7.5, S.y0 - 7.5, S.x1 - S.x0 + 15, S.y1 - S.y0 + 15, 20); ctx.stroke();
     this.rr(ctx, S.x0 + 7.5, S.y0 + 7.5, S.x1 - S.x0 - 15, S.y1 - S.y0 - 15, 8); ctx.stroke();
 
-    // Pressure vessel (oval-topped)
     this.rr(ctx, V.x0, V.y0, V.x1 - V.x0, V.y1 - V.y0, [46, 46, 96, 96]);
     ctx.fillStyle = '#f6efce'; ctx.fill();
     ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
 
-    // Blocks: moderator + fuel rod + control rods
     const bw = this.blockW, byTop = CO.y0, byBot = CO.y1, bh = byBot - byTop;
-    const tipY = byTop + this.state.rod * bh;
+    const tipY = byTop + this.rodPos * bh;
     const handleY = 50;
     for (const b of this.blocks) {
       this.rr(ctx, b.x - bw / 2, byTop - 4, bw, bh + 8, 4);
@@ -380,7 +600,6 @@ class Component extends DCLogic {
       }
     }
 
-    // Gas channel flow arrows
     if (this.power > 1) {
       ctx.save();
       const ph = (this.flowPhase * 40) % 34;
@@ -395,11 +614,9 @@ class Component extends DCLogic {
       ctx.restore();
     }
 
-    // Control rod bridge
     const ch0 = Math.min(...this.ctrlX), ch1 = Math.max(...this.ctrlX);
     ctx.fillStyle = '#3a352c'; this.rr(ctx, ch0 - 7, handleY - 12, ch1 - ch0 + 14, 11, 3); ctx.fill();
 
-    // Fission flashes + neutrons (clipped to core)
     ctx.save();
     this.rr(ctx, CO.x0 - 6, CO.y0 - 6, CO.x1 - CO.x0 + 12, CO.y1 - CO.y0 + 12, 8); ctx.clip();
     for (const f of this.flashes) {
@@ -412,18 +629,29 @@ class Component extends DCLogic {
     ctx.globalAlpha = 1;
     if (this.state.showNeutrons) {
       for (const n of this.neutrons) {
-        ctx.fillStyle = '#2f7d4d';
-        ctx.beginPath(); ctx.arc(n.x, n.y, 2.1, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(95,174,122,0.5)'; ctx.lineWidth = 1.4;
+        const col = n.fast ? '#c9622f' : '#2f7d4d';
+        const trail = n.fast ? 'rgba(216,139,58,0.55)' : 'rgba(95,174,122,0.5)';
+        ctx.strokeStyle = trail; ctx.lineWidth = 1.4;
         ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(n.x - n.vx * 0.03, n.y - n.vy * 0.03); ctx.stroke();
+        ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.fast ? 2.4 : 2.1, 0, Math.PI * 2); ctx.fill();
       }
     }
     ctx.restore();
 
-    // Gas circulator fan
+    if (this.state.showNeutrons) {
+      const ly = 528;
+      ctx.font = '500 11.5px "IBM Plex Sans",sans-serif'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.fillStyle = '#c9622f'; ctx.beginPath(); ctx.arc(158, ly, 3.4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6f685c'; ctx.fillText('snel neutron', 168, ly);
+      ctx.fillStyle = '#2f7d4d'; ctx.beginPath(); ctx.arc(258, ly, 3.4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6f685c'; ctx.fillText('thermisch (traag)', 268, ly);
+      ctx.fillStyle = '#ffd24a'; ctx.beginPath(); ctx.arc(390, ly, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6f685c'; ctx.fillText('splijting', 400, ly);
+    }
+
     this.fan(ctx, gcx, gcy, 17, this.fanAngle, '#d8c79a');
 
-    // Heat exchanger
     this.rr(ctx, HX.x0, HX.y0, HX.x1 - HX.x0, HX.y1 - HX.y0, 30);
     ctx.fillStyle = '#f6efce'; ctx.fill(); ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
     const rows = 8, rx0 = HX.x0 + 32, rx1 = HX.x1 - 32, ry0 = HX.y0 + 34, ry1 = HX.y1 - 28;
@@ -445,48 +673,102 @@ class Component extends DCLogic {
         ctx.beginPath(); ctx.arc(side, y + rgap / 2, rgap / 2, -Math.PI / 2, Math.PI / 2, onLeft); ctx.stroke();
       }
     }
-    const steamN = Math.min(1, this.steam / 220);
+    const steamN = Math.min(1, this.steam / 400);
     const steamCol = running && hot > 0.05 ? '#e0503a' : '#c79086';
     const waterCol = '#5b8fd4';
     const sy = ry0;
-    ctx.strokeStyle = steamCol; ctx.lineWidth = 6; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(rx1, sy); ctx.lineTo(HX.x1 + 6, sy); ctx.stroke();
-    this.arrow(ctx, HX.x1 + 6, sy, HX.x1 + 62 + 28 * steamN, sy, steamCol, 4 + 3 * steamN, 12);
+
+    // stoomleiding naar de turbine
+    ctx.strokeStyle = steamCol; ctx.lineWidth = 5 + 2 * steamN; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(rx1, sy); ctx.lineTo(TB.x0, sy); ctx.stroke();
+    this.arrowHead(ctx, (rx1 + TB.x0) / 2 + 30, sy, 0, steamCol);
     if (running && steamN > 0.04) {
-      ctx.save(); ctx.globalAlpha = 0.6;
-      for (let i = 0; i < 4; i++) {
-        const px = HX.x1 + 22 + i * 22, off = (this.flowPhase * 30 + i * 14) % 40;
+      ctx.save(); ctx.globalAlpha = 0.55;
+      for (let i = 0; i < 5; i++) {
+        const px = HX.x1 + 26 + i * 34, off = (this.flowPhase * 30 + i * 14) % 40;
         ctx.fillStyle = 'rgba(220,90,60,0.5)';
         ctx.beginPath(); ctx.arc(px, sy - 14 - off * 0.2 * steamN, 3 + steamN * 3, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
     }
+
+    // turbine
+    ctx.beginPath();
+    ctx.moveTo(TB.x0, sy - 20); ctx.lineTo(TB.x1, TB.y0); ctx.lineTo(TB.x1, TB.y1); ctx.lineTo(TB.x0, sy + 20);
+    ctx.closePath();
+    ctx.fillStyle = '#f6efce'; ctx.fill(); ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.save(); ctx.strokeStyle = 'rgba(58,53,44,0.35)'; ctx.lineWidth = 1.6;
+    for (let i = 1; i <= 4; i++) {
+      const xx = TB.x0 + (TB.x1 - TB.x0) * i / 5;
+      const t = i / 5, half = 20 + (Math.abs(TB.y1 - TB.y0) / 2 - 20) * t;
+      ctx.beginPath(); ctx.moveTo(xx, sy - half + 4); ctx.lineTo(xx, sy + half - 4); ctx.stroke();
+    }
+    ctx.restore();
+
+    // as en generator
+    ctx.strokeStyle = '#5b6570'; ctx.lineWidth = 7; ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(TB.x1, sy); ctx.lineTo(G.x - G.r, sy); ctx.stroke();
+    ctx.beginPath(); ctx.arc(G.x, G.y, G.r, 0, Math.PI * 2);
+    ctx.fillStyle = running && this.elec > 1 ? '#eef4ea' : '#f2efe8'; ctx.fill();
+    ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.save(); ctx.translate(G.x, G.y); ctx.rotate(this.genAngle);
+    ctx.strokeStyle = running && this.elec > 1 ? '#3a8a55' : '#b3ab9b'; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(-G.r * 0.55, 0); ctx.lineTo(G.r * 0.55, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -G.r * 0.55); ctx.lineTo(0, G.r * 0.55); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#3a352c'; ctx.font = '700 15px "IBM Plex Sans",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('G', G.x, G.y - G.r - 13);
+
+    const elCol = this.elec > 1 ? '#3a8a55' : '#b3ab9b';
+    this.arrow(ctx, G.x + G.r + 4, G.y, this.W - 14, G.y, elCol, 4, 11);
+    ctx.fillStyle = elCol; ctx.font = '600 12.5px "IBM Plex Mono",monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText(Math.round(this.elec) + ' MW', this.W - 14, G.y - 9);
+
+    // turbine-uitlaat naar condensor
+    ctx.strokeStyle = waterCol; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo((TB.x0 + TB.x1) / 2, TB.y1); ctx.lineTo((TB.x0 + TB.x1) / 2, CD.y0); ctx.stroke();
+    if (this.power > 1) this.arrowHead(ctx, (TB.x0 + TB.x1) / 2, (TB.y1 + CD.y0) / 2, Math.PI / 2, waterCol);
+
+    // condensor
+    this.rr(ctx, CD.x0, CD.y0, CD.x1 - CD.x0, CD.y1 - CD.y0, 12);
+    ctx.fillStyle = '#eef2f7'; ctx.fill(); ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.strokeStyle = '#8fa8c6'; ctx.lineWidth = 3;
+    for (let i = 0; i < 4; i++) {
+      const yy = CD.y0 + 16 + i * 13;
+      ctx.beginPath(); ctx.moveTo(CD.x0 + 12, yy); ctx.lineTo(CD.x1 - 12, yy); ctx.stroke();
+    }
+
     const wcx = HX.x1 + 36, wcy = ry1;
-    ctx.strokeStyle = waterCol; ctx.lineWidth = 6;
+    ctx.strokeStyle = waterCol; ctx.lineWidth = 6; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(rx1, ry1); ctx.lineTo(wcx, wcy); ctx.stroke();
     this.fan(ctx, wcx, wcy, 15, this.fanAngle * 1.1, '#6f9bd8');
+    ctx.strokeStyle = waterCol; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(CD.x0, wcy); ctx.lineTo(wcx + 82, wcy); ctx.stroke();
     this.arrow(ctx, wcx + 80, wcy, wcx + 19, wcy, waterCol, 5, 12);
 
-    // Canvas labels (toggle)
     if (this.state.showLabels) {
-      this.label(ctx, 138, 96,  'Regelstaven',        'right', this.ctrlX[0],         62);
-      this.label(ctx, 138, 152, 'Stralings-',         'right', S.x0,                  176);
+      this.label(ctx, 138, 96,  'Regelstaven',   'right', this.ctrlX[0], 62);
+      this.label(ctx, 138, 152, 'Stralings-',    'right', S.x0, 176);
       ctx.fillText('afscherming', 138, 166);
-      this.label(ctx, 138, 224, 'Drukvat',            'right', V.x0,                  236);
-      this.label(ctx, 138, 292, 'Grafiet-',           'right', this.blocks[0].x - this.blockW / 2, 296);
-      ctx.fillText('moderator', 138, 306);
-      this.label(ctx, 138, 358, 'Splijtstof-',        'right', this.fuelX[0],          372);
+      this.label(ctx, 138, 224, 'Drukvat',       'right', V.x0, 236);
+      this.label(ctx, 138, 292, 'Moderator',     'right', this.blocks[0].x - this.blockW / 2, 296);
+      this.label(ctx, 138, 358, 'Splijtstof-',   'right', this.fuelX[0], 372);
       ctx.fillText('staven', 138, 372);
-      this.label(ctx, 138, 424, 'Gaskanaal',          'right', this.gasCh[2],          408);
-      this.label(ctx, 742, 110, 'Heetgaskanaal',      'left',  (HX.x0 + 22 + V.x1 - 18) / 2, 124);
-      this.label(ctx, 742, 150, 'Stoom',              'left',  HX.x1 + 50,             sy);
-      this.label(ctx, 742, 252, 'Warmte-',            'left',  rx1,                    252);
+      this.label(ctx, 138, 424, 'Gaskanaal',     'right', this.gasCh[2], 408);
+      this.label(ctx, 700, 108, 'Heetgaskanaal', 'left',  (HX.x0 + 22 + V.x1 - 18) / 2, 124);
+      this.label(ctx, 742, 252, 'Warmte-',       'left',  rx1, 252);
       ctx.fillText('wisselaar', 742, 266);
-      this.label(ctx, 742, 474, 'Water-',             'left',  wcx,                    wcy + 14);
-      ctx.fillText('circulator', 742, 488);
-      this.label(ctx, 802, 410, 'Water',              'left',  wcx + 60,               wcy);
-      this.label(ctx, 560, 542, 'Gascirculator',      'left',  gcx,                    gcy + 16);
-      this.label(ctx, 742, 506, 'Koelgaskanaal',      'left',  HX.x0 + 22,             gcy);
+      this.label(ctx, 700, 474, 'Water-',        'left',  wcx, wcy + 14);
+      ctx.fillText('circulator', 700, 488);
+      this.label(ctx, 560, 542, 'Gascirculator', 'left',  gcx, gcy + 16);
+      this.label(ctx, 700, 506, 'Koelgaskanaal', 'left',  HX.x0 + 22, gcy);
+      this.caption(ctx, (rx1 + TB.x0) / 2 + 30, sy - 34, 'Stoom');
+      this.caption(ctx, (TB.x0 + TB.x1) / 2, TB.y1 + 20, 'Turbine');
+      this.caption(ctx, G.x, G.y + G.r + 18, 'Generator');
+      this.caption(ctx, (CD.x0 + CD.x1) / 2, CD.y1 + 16, 'Condensor');
+      this.caption(ctx, this.W - 72, G.y + 24, 'Naar het net');
     }
   }
 
@@ -509,78 +791,196 @@ class Component extends DCLogic {
     const W = this.CW, H = this.CH;
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#faf7f0'; this.rr(ctx, 0, 0, W, H, 8); ctx.fill();
+
+    const mL = 42, mR = 10, mT = 22, mB = 26;
+    const px0 = mL, px1 = W - mR, py0 = mT, py1 = H - mB;
+    const data = this.hist;
+    const peak = data.reduce((a, d) => Math.max(a, d.p), 0);
+    const raw = Math.max(this.P_NOM * 1.2, peak * 1.12);
+    const step = [125, 250, 500, 750, 1000, 1500, 2000, 2500].find(s => s * 4 >= raw) || 3000;
+    const maxV = step * 4;
+    const tNow = Math.max(60, this.simT);
+    const t0 = tNow - 60;
+    const X = (t) => px0 + (px1 - px0) * Math.min(1, Math.max(0, (t - t0) / 60));
+    const Y = (v) => py1 - (py1 - py0) * Math.min(1, v / maxV);
+
     ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1;
-    for (let i = 1; i < 4; i++) { const y = H * i / 4; ctx.beginPath(); ctx.moveTo(8, y); ctx.lineTo(W - 8, y); ctx.stroke(); }
-    const data = this.hist, maxV = Math.max(60, ...data) * 1.15;
-    ctx.fillStyle = '#a39c8d'; ctx.font = '500 10px "IBM Plex Mono",monospace';
-    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(Math.round(maxV) + ' MW', 10, 6);
-    ctx.textBaseline = 'bottom'; ctx.fillText('0', 10, H - 6);
+    ctx.fillStyle = '#a39c8d'; ctx.font = '500 9.5px "IBM Plex Mono",monospace';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let i = 0; i <= 4; i++) {
+      const v = maxV * i / 4, y = Y(v);
+      ctx.beginPath(); ctx.moveTo(px0, y); ctx.lineTo(px1, y); ctx.stroke();
+      ctx.fillText(Math.round(v), px0 - 5, y);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let s = 0; s <= 60; s += 20) {
+      const x = px0 + (px1 - px0) * s / 60;
+      ctx.fillText('\u2212' + (60 - s), x, py1 + 6);
+    }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#8c8576'; ctx.font = '600 9.5px "IBM Plex Sans",sans-serif';
+    ctx.fillText('MW', 6, 6);
+    ctx.textAlign = 'right';
+    ctx.fillText('tijd (s)', px1, py1 + 6);
+
+    // nominaal vermogen
+    ctx.save(); ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = '#3a8a55'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(px0, Y(this.P_NOM)); ctx.lineTo(px1, Y(this.P_NOM)); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#3a8a55'; ctx.font = '600 9px "IBM Plex Mono",monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('nominaal ' + this.P_NOM, px0 + 3, Y(this.P_NOM) - 2);
+
     if (data.length > 1) {
-      const x = (i) => 8 + (W - 16) * i / (data.length - 1 || 1);
-      const y = (v) => H - 10 - (H - 20) * v / maxV;
-      ctx.beginPath(); ctx.moveTo(x(0), H - 10);
-      data.forEach((v, i) => ctx.lineTo(x(i), y(v)));
-      ctx.lineTo(x(data.length - 1), H - 10); ctx.closePath();
+      ctx.beginPath(); ctx.moveTo(X(data[0].t), py1);
+      data.forEach(d => ctx.lineTo(X(d.t), Y(d.p)));
+      ctx.lineTo(X(data[data.length - 1].t), py1); ctx.closePath();
       ctx.fillStyle = 'rgba(184,71,47,0.12)'; ctx.fill();
-      ctx.beginPath(); data.forEach((v, i) => i ? ctx.lineTo(x(i), y(v)) : ctx.moveTo(x(i), y(v)));
+      ctx.beginPath();
+      data.forEach((d, i) => i ? ctx.lineTo(X(d.t), Y(d.p)) : ctx.moveTo(X(d.t), Y(d.p)));
       ctx.strokeStyle = '#b8472f'; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
     }
+
+    for (const m of this.marks) {
+      if (m.t < t0) continue;
+      const x = X(m.t);
+      ctx.save(); ctx.setLineDash([2, 3]);
+      ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, py0); ctx.lineTo(x, py1); ctx.stroke();
+      ctx.restore();
+      const letter = String.fromCharCode(65 + ((m.i - 1) % 26));
+      ctx.fillStyle = m.label === 'scram' ? '#b8311f' : '#6f685c';
+      ctx.beginPath(); ctx.arc(x, py0 - 8, 6.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = '700 8.5px "IBM Plex Sans",sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(letter, x, py0 - 7.5);
+    }
+
+    ctx.strokeStyle = '#d3ccbd'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px0, py0); ctx.lineTo(px0, py1); ctx.lineTo(px1, py1); ctx.stroke();
   }
 
-  toggleRun = () => this.setState(s => ({ running: !s.running }));
-  scram = () => { this.setState({ rod: 1, running: true }); };
+  toggleRun = () => this.setState(s => ({ running: !s.running }), () => this.mark('run'));
+  scram = () => { this.scramming = true; this.setState({ rod: 1, running: true }, () => this.mark('scram')); };
   reset = () => {
-    this.N = 40; this.T = 250; this.totalFis = 0; this.fisRate = 0; this.power = 0; this.steam = 0;
-    this.hist = []; this.flashes = [];
+    this.N = 5e16; this.T = 250; this.Tf = 250; this.fisRate = 0; this.power = 0; this.elec = 0; this.steam = 0;
+    this.scramming = false;
+    this.kMeas = 1; this.fisFrac = 0.33; this.bins = []; this.births = 0; this.deaths = 0; this.fissions = 0;
+    this.tally = { fis: 0, rod: 0, cap: 0, leak: 0 };
+    this.hist = []; this.marks = []; this.flashes = []; this.simT = 0; this._mi = 0;
+    this.neutrons = [];
+    for (let i = 0; i < this.POP; i++) this.spawnNeutron(true);
     const p = this.props || {};
     const rod = typeof p.beginRegelstaven === 'number' ? p.beginRegelstaven / 100 : 0.6;
+    this.rodPos = rod;
     this.setState({ running: false, rod });
   };
-  onRod = (e) => this.setState({ rod: parseFloat(e.target.value) / 100 });
+  onRod = (e) => { this.scramming = false; this.setState({ rod: parseFloat(e.target.value) / 100 }, () => this.mark('staven')); };
+
   fmt(n) {
-    if (n >= 1e6) return (n / 1e6).toFixed(2) + ' \u00D7 10\u2076';
-    if (n >= 1e3) return Math.round(n).toLocaleString('nl-NL');
-    return Math.round(n).toString();
+    if (n >= 1e4) {
+      const e = Math.floor(Math.log10(n));
+      const m = n / Math.pow(10, e);
+      const sup = String(e).split('').map(d => '\u2070\u00B9\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079'[+d]).join('');
+      return m.toFixed(1).replace('.', ',') + ' \u00B7 10' + sup;
+    }
+    return Math.round(n).toLocaleString('nl-NL');
   }
+  nl(n, d) { return n.toFixed(d).replace('.', ','); }
 
   renderVals() {
     const st = this.state, on = st.running;
-    this.kEff = this.kFromState();
-    const k = this.kEff;
+    const k = this.kMeas;
+    const tf = this.tempFactor();
     let status, dot;
     if (!on) { status = 'Reactor uitgeschakeld'; dot = '#b8b1a2'; }
-    else if (this.T > 1000) { status = 'Waarschuwing: oververhit'; dot = '#b8311f'; }
-    else if (k > 1.012) { status = 'Superkritisch \u2014 loopt op'; dot = '#c9a23f'; }
-    else if (k < 0.988) { status = 'Subkritisch \u2014 dooft uit'; dot = '#3f6aa3'; }
+    else if (this.T > this.T_CLAD) { status = 'Kritieke temperatuur \u2014 schade'; dot = '#8f1f12'; }
+    else if (this.T > this.T_WARN) { status = 'Waarschuwing: oververhit'; dot = '#b8311f'; }
+    else if (k > 1.008) { status = 'Superkritisch \u2014 vermogen loopt op'; dot = '#c9a23f'; }
+    else if (k < 0.992) { status = 'Subkritisch \u2014 dooft uit'; dot = '#3f6aa3'; }
     else { status = 'Kritisch \u2014 stabiel'; dot = '#5fae7a'; }
-    const kColor = k > 1.012 ? '#b8472f' : (k < 0.988 ? '#3f6aa3' : '#3a8a55');
-    const tempColor = this.T > 1000 ? '#b8311f' : (this.T > 700 ? '#c9772f' : '#2a2723');
+    const kColor = k > 1.008 ? '#b8472f' : (k < 0.992 ? '#3f6aa3' : '#3a8a55');
+    const tempColor = this.T > this.T_WARN ? '#b8311f' : (this.T > this.T_HI ? '#c9772f' : (this.T >= this.T_LO ? '#3a8a55' : '#2a2723'));
     const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
-    const nn = pill(st.showNeutrons), ll = pill(st.showLabels);
+    const nn = pill(st.showNeutrons), ll = pill(st.showLabels), xx = pill(st.showExtra);
+
+    const tempPct = Math.max(0, Math.min(100, (this.T - 250) / 1150 * 100));
+
+    const rho = (k - 1) / k;
+    const supercrit = k > 1.0008;
+    const tau = supercrit ? this.LEFF / (k - 1) : null;
+
+    const term = (name, v) => {
+      const d = v - 1;
+      const dev = Math.max(-0.45, Math.min(0.45, d));
+      const w = Math.abs(dev) / 0.45 * 50;
+      return {
+        name,
+        value: (d >= 0 ? '+' : '\u2212') + this.nl(Math.abs(d), 2),
+        color: d >= 0 ? '#3a8a55' : '#b8472f',
+        barLeft: (dev >= 0 ? 50 : 50 - w) + '%',
+        barWidth: w + '%',
+      };
+    };
+    const rodTerm = 1 - 0.62 * this.rodPos;
+    const kTerms = [
+      term('Splijtstof', this.fuelQ[st.fuel] || 1),
+      term('Moderator', this.modQ[st.moderator] || 1),
+      term('Regelstaven', rodTerm),
+      term('Temperatuur', tf),
+    ];
+
+    const tt = this.tally, tot = tt.fis + tt.rod + tt.cap + tt.leak;
+    const pc = (v) => tot > 0 ? this.nl(v / tot * 100, 0) + ' %' : '\u2013';
+    const balance = [
+      { name: 'Splijting', value: pc(tt.fis), color: '#ffd24a' },
+      { name: 'Invang in regelstaaf', value: pc(tt.rod), color: '#262626' },
+      { name: 'Invang zonder splijting', value: pc(tt.cap), color: '#8a6f4a' },
+      { name: 'Ontsnapt uit de kern', value: pc(tt.leak), color: '#6f9bd8' },
+    ];
+    const popTot = Math.max(1, this.nFast + this.nTh);
+
     return {
       stageRef: this.stageRef, chartRef: this.chartRef,
       runLabel: on ? '\u25A0 Reactor stoppen' : '\u25B6 Reactor starten',
       runBg: on ? '#fff' : '#b8472f', runFg: on ? '#3a352c' : '#fff', runBorder: on ? '#d9d3c6' : '#b8472f',
       onToggleRun: this.toggleRun, onScram: this.scram, onReset: this.reset,
-      rodVal: Math.round(st.rod * 100), rodStr: Math.round(st.rod * 100) + '% in', onRod: this.onRod,
+      rodVal: Math.round(st.rod * 100), onRod: this.onRod,
+      rodStr: Math.abs(this.rodPos - st.rod) > 0.005
+        ? Math.round(this.rodPos * 100) + ' % \u2192 ' + Math.round(st.rod * 100) + ' %'
+        : Math.round(this.rodPos * 100) + ' % in',
       fuel: st.fuel, moderator: st.moderator,
-      onFuel: (e) => this.setState({ fuel: e.target.value }),
-      onModerator: (e) => this.setState({ moderator: e.target.value }),
+      onFuel: (e) => this.setState({ fuel: e.target.value }, () => this.mark('splijtstof')),
+      onModerator: (e) => this.setState({ moderator: e.target.value }, () => this.mark('moderator')),
       statusLabel: status, statusDot: dot,
-      fisRateStr: on ? this.fmt(this.fisRate) + '/s' : '0/s',
-      neutronStr: on ? Math.round(this.N).toLocaleString('nl-NL') : '0',
-      kStr: k.toFixed(3), kColor,
-      powerStr: this.power.toFixed(0) + ' MW',
-      tempStr: this.T.toFixed(0) + ' \u00B0C', tempColor,
-      steamStr: Math.round(this.steam) + ' kg/s',
-      showWarn: on && this.T > 1000, warnText: 'Kern oververhit \u2014 breng regelstaven in',
+      kStr: this.nl(k, 3), kColor,
+      fisRateStr: on ? this.fmt(this.fisRate) + ' /s' : '0 /s',
+      neutronStr: on ? this.fmt(this.N) : '0',
+      powerStr: this.nl(this.power, 0) + ' MW',
+      elecStr: this.nl(this.elec, 0) + ' MW',
+      etaStr: this.nl((this.eta || 0) * 100, 0) + ' %',
+      tempStr: this.nl(this.T, 0) + ' \u00B0C', tempColor, tempPct: tempPct.toFixed(1) + '%',
+      showWarn: on && this.T > this.T_WARN,
+      warnText: this.T > this.T_CLAD ? 'Brandstofmantel beschadigd \u2014 SCRAM' : 'Kern oververhit \u2014 breng regelstaven in',
       toggleNeutrons: () => this.setState(s => ({ showNeutrons: !s.showNeutrons })),
       toggleLabels: () => this.setState(s => ({ showLabels: !s.showLabels })),
+      toggleExtra: () => this.setState(s => ({ showExtra: !s.showExtra })),
       nBg: nn.bg, nBorder: nn.border, nState: nn.state,
       lBg: ll.bg, lBorder: ll.border, lState: ll.state,
+      xBg: xx.bg, xBorder: xx.border, xState: xx.state,
+      showExtra: st.showExtra,
+      kTerms, balance,
+      rhoStr: this.nl(rho * 1e5, 0) + ' pcm',
+      tauStr: supercrit ? this.nl(tau, 1) + ' s' : '\u2013',
+      doubleStr: supercrit ? this.nl(tau * Math.LN2, 1) + ' s' : '\u2013',
+      mixStr: this.nl(this.nFast / popTot * 100, 0) + ' % / ' + this.nl(this.nTh / popTot * 100, 0) + ' %',
+      fuelTempStr: this.nl(this.Tf, 0) + ' \u00B0C',
+      rodPosStr: this.nl(this.rodPos * 100, 0) + ' %',
     };
   }
 }
+
 </script>
 </body>
 </html>

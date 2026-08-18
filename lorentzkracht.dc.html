@@ -44,7 +44,6 @@
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Lorentzkracht</h1>
-    <span style="font-size:13px;color:#8c8576">F = B&middot;I&middot;L</span>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -284,10 +283,10 @@ class Component extends DCLogic {
       let xs = [-80, -34, 14, 62], zs = [-24, 24];
       if (dens === 'weinig') { xs = [-56, 0, 56]; zs = [0]; }
       else if (dens === 'veel') { xs = [-96, -64, -32, 0, 32, 64, 92]; zs = [-26, 0, 26]; }
-      const top = this.poleY - 4, bot = -this.poleY + 4;
+      const top = this.poleY, bot = -this.poleY;
       for (const xx of xs) for (const zz of zs) {
-        if (this.state.fieldDir === 1) this.arrow3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#6f9bd8', 1.5, 7);
-        else this.arrow3(ctx, { x: xx, y: bot, z: zz }, { x: xx, y: top, z: zz }, '#6f9bd8', 1.5, 7);
+        if (this.state.fieldDir === 1) this.arrow3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#6f9bd8', 2.2, 9);
+        else this.arrow3(ctx, { x: xx, y: bot, z: zz }, { x: xx, y: top, z: zz }, '#6f9bd8', 2.2, 9);
       }
       ctx.restore();
     }
@@ -366,37 +365,41 @@ class Component extends DCLogic {
   // European DC source symbol: long thin (+) over short thick (-) plate, NO enclosing box
   drawBattery(ctx, on, light) {
     const d = this.state.curDir, sh = this.suspZ;
-    const downZ = -sh * d, upZ = sh * d;
-    const posPiv = this.proj({ x: 0, y: this.pivotY, z: downZ });
-    const negPiv = this.proj({ x: 0, y: this.pivotY, z: upZ });
+    // De draden hangen altijd op dezelfde punten; ompolen wisselt enkel + en − van plaats.
+    const backPiv = this.proj({ x: 0, y: this.pivotY, z: -sh });
+    const frontPiv = this.proj({ x: 0, y: this.pivotY, z: sh });
     const live = on;
     const posCol = live ? '#e0503a' : '#9a9082';
     const negCol = live ? '#e0503a' : '#6a6f78';
 
     const cxc = 32, mY = 92, gap = 9;
-    const plusY = mY - gap, minusY = mY + gap;
+    const plusUp = d === 1;
+    const plusY = plusUp ? mY - gap : mY + gap, minusY = plusUp ? mY + gap : mY - gap;
+    const upperY = mY - gap, lowerY = mY + gap;
 
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    const railHi = Math.max(8, Math.min(posPiv.y, negPiv.y) - 14);
+    const railHi = Math.max(8, Math.min(backPiv.y, frontPiv.y) - 14);
     const railLo = railHi + 13;
-    // + wire from + plate -> up -> across -> back pivot
-    ctx.strokeStyle = posCol; ctx.lineWidth = 3.4;
-    ctx.beginPath(); ctx.moveTo(cxc, plusY); ctx.lineTo(cxc, railHi); ctx.lineTo(posPiv.x, railHi); ctx.lineTo(posPiv.x, posPiv.y); ctx.stroke();
-    // - wire from - plate -> down/out -> lower rail -> front pivot
-    ctx.strokeStyle = negCol; ctx.lineWidth = 3.4;
-    ctx.beginPath(); ctx.moveTo(cxc, minusY); ctx.lineTo(10, minusY); ctx.lineTo(10, railLo); ctx.lineTo(negPiv.x, railLo); ctx.lineTo(negPiv.x, negPiv.y); ctx.stroke();
+    // bovenste draad -> achterste ophangpunt
+    ctx.strokeStyle = plusUp ? posCol : negCol; ctx.lineWidth = 3.4;
+    ctx.beginPath(); ctx.moveTo(cxc, upperY); ctx.lineTo(cxc, railHi); ctx.lineTo(backPiv.x, railHi); ctx.lineTo(backPiv.x, backPiv.y); ctx.stroke();
+    // onderste draad -> voorste ophangpunt
+    ctx.strokeStyle = plusUp ? negCol : posCol; ctx.lineWidth = 3.4;
+    ctx.beginPath(); ctx.moveTo(cxc, lowerY); ctx.lineTo(10, lowerY); ctx.lineTo(10, railLo); ctx.lineTo(frontPiv.x, railLo); ctx.lineTo(frontPiv.x, frontPiv.y); ctx.stroke();
 
     const term = (P, col) => {
       ctx.fillStyle = '#cdc7bb'; ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(P.x - 5, P.y - 4, 10, 8, 2); ctx.fill(); ctx.stroke();
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(P.x, P.y, 2.4, 0, Math.PI * 2); ctx.fill();
     };
-    term(posPiv, posCol); term(negPiv, negCol);
+    term(backPiv, plusUp ? posCol : negCol); term(frontPiv, plusUp ? negCol : posCol);
 
     if (live) {
-      const my = (railHi + posPiv.y) / 2;
+      const my = (railHi + backPiv.y) / 2;
       ctx.fillStyle = '#e0503a'; ctx.beginPath();
-      ctx.moveTo(posPiv.x - 4, my - 4); ctx.lineTo(posPiv.x + 4, my - 4); ctx.lineTo(posPiv.x, my + 4); ctx.closePath(); ctx.fill();
+      if (plusUp) { ctx.moveTo(backPiv.x - 4, my - 4); ctx.lineTo(backPiv.x + 4, my - 4); ctx.lineTo(backPiv.x, my + 4); }
+      else { ctx.moveTo(backPiv.x - 4, my + 4); ctx.lineTo(backPiv.x + 4, my + 4); ctx.lineTo(backPiv.x, my - 4); }
+      ctx.closePath(); ctx.fill();
     }
 
     // cell plates
@@ -407,7 +410,7 @@ class Component extends DCLogic {
     ctx.fillStyle = on ? '#e0503a' : '#9c8f7d'; ctx.fillText('+', cxc + 22, plusY);
     ctx.fillStyle = '#9aa2ab'; ctx.fillText('\u2212', cxc + 22, minusY);
     ctx.fillStyle = '#b9b3a6'; ctx.font = '600 11px "IBM Plex Mono",monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(this.state.amps.toFixed(1) + ' A', cxc, minusY + 12);
+    ctx.fillText(this.state.amps.toFixed(1) + ' A', cxc, mY + gap + 13);
     ctx.textBaseline = 'alphabetic';
   }
 

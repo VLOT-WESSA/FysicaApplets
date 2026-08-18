@@ -44,7 +44,6 @@
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Weerstand van een draad</h1>
-    <span style="font-size:13px;color:#8c8576">R = &rho;L / A</span>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -272,8 +271,12 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.moveTo(x, ly); ctx.lineTo(x + wireW, ly); ctx.stroke();
     for (const px of [x, x + wireW]) { ctx.beginPath(); ctx.moveTo(px, ly - 4); ctx.lineTo(px, ly + 4); ctx.stroke(); }
     ctx.fillText('L = ' + length.toFixed(1) + ' cm', cx, ly + 16);
+    // doorsnede: maatlijn links van de draad, label erboven zodat het nooit op een geleider valt
+    const ax2 = x - 16;
+    ctx.beginPath(); ctx.moveTo(ax2, y); ctx.lineTo(ax2, y + wireH); ctx.stroke();
+    for (const py of [y, y + wireH]) { ctx.beginPath(); ctx.moveTo(ax2 - 4, py); ctx.lineTo(ax2 + 4, py); ctx.stroke(); }
     ctx.textAlign = 'right';
-    ctx.fillText('A = ' + area.toFixed(2) + ' cm\u00B2', x - 14, cy + 4);
+    ctx.fillText('A = ' + area.toFixed(2) + ' cm\u00B2', ax2 + 4, y - 10);
   }
 
   fSize(n) { return Math.round(22 + 50 * Math.max(0, Math.min(1, n))) + 'px'; }
