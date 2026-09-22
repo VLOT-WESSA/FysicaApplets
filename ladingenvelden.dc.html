@@ -299,40 +299,102 @@ class Component extends DCLogic {
     return { fx, fy };
   }
 
-  signature() {
-    return this.state.charges.map(c => c.id + ':' + c.q + ':' + Math.round(c.x) + ',' + Math.round(c.y)).join('|');
+  signature(fast) {
+    const r = fast ? 4 : 1;
+    return this.state.charges.map(c => c.id + ':' + c.q + ':' + Math.round(c.x / r) + ',' + Math.round(c.y / r)).join('|') + (fast ? '|f' : '');
   }
   getFieldLines() {
-    const sig = this.signature();
+    // Tijdens het slepen niet elke pixel opnieuw rekenen, maar per 4 px en grover.
+    const fast = !!(this.drag && !this.drag.sensor);
+    const sig = this.signature(fast);
     if (sig === this._sig && this._lines) return this._lines;
-    this._sig = sig; this._lines = this.computeFieldLines();
+    this._sig = sig; this._lines = this.computeFieldLines(fast);
     return this._lines;
   }
-  computeFieldLines() {
+  // Eenheidsvector van het veld; null in een nulpunt.
+  fieldDir(px, py, dir) {
+    const { ex, ey } = this.fieldAt(px, py);
+    const m = Math.hypot(ex, ey);
+    if (!(m > 1e-12)) return null;
+    return { x: dir * ex / m, y: dir * ey / m };
+  }
+
+  // Eén veldlijn, geïntegreerd met Runge-Kutta 4. Veldlijnen van een statisch veld
+  // kunnen elkaar nooit snijden; met Euler-stappen gebeurde dat wel, puur door
+  // integratiefout. RK4 met een kleine stap houdt de lijnen op hun eigen baan.
+  // fast: tijdens het slepen een grovere stap. RK4 blijft, dus ook dan snijden de
+  // lijnen niet; bij het lossen wordt alles opnieuw op volle resolutie getekend.
+  traceLine(x0, y0, dir, source, fast) {
     const chs = this.state.charges;
-    const pos = chs.filter(c => c.q > 0);
-    const sources = pos.length ? pos : chs;
-    const dir = pos.length ? 1 : -1;
-    const seeds = Math.max(6, Math.min(14, Math.round(80 / sources.length)));
-    const step = 7, maxSteps = 320, W = this.W, H = this.H;
-    const lines = [];
-    for (const s of sources) {
-      for (let k = 0; k < seeds; k++) {
-        const a0 = (k / seeds) * Math.PI * 2 + 0.25;
-        let x = s.x + Math.cos(a0) * 17, y = s.y + Math.sin(a0) * 17;
-        const pts = [{ x, y }];
-        for (let i = 0; i < maxSteps; i++) {
-          const { ex, ey } = this.fieldAt(x, y);
-          const mag = Math.hypot(ex, ey); if (mag < 1e-7) break;
-          x += (ex / mag) * step * dir; y += (ey / mag) * step * dir;
-          pts.push({ x, y });
-          if (x < -20 || x > W + 20 || y < -20 || y > H + 20) break;
-          let hit = false;
-          for (const c of chs) { if (c !== s && Math.hypot(x - c.x, y - c.y) < 15) { hit = true; break; } }
-          if (hit) break;
-        }
-        if (pts.length > 2) lines.push(pts);
+    const h = fast ? 12 : 3.0, maxSteps = fast ? 180 : 1400, R_END = 17;
+    const W = this.W, H = this.H;
+    const pts = [{ x: x0, y: y0 }];
+    let x = x0, y = y0, ended = null;
+    for (let i = 0; i < maxSteps; i++) {
+      const k1 = this.fieldDir(x, y, dir); if (!k1) break;
+      const k2 = this.fieldDir(x + h / 2 * k1.x, y + h / 2 * k1.y, dir); if (!k2) break;
+      const k3 = this.fieldDir(x + h / 2 * k2.x, y + h / 2 * k2.y, dir); if (!k3) break;
+      const k4 = this.fieldDir(x + h * k3.x, y + h * k3.y, dir); if (!k4) break;
+      x += h * (k1.x + 2 * k2.x + 2 * k3.x + k4.x) / 6;
+      y += h * (k1.y + 2 * k2.y + 2 * k3.y + k4.y) / 6;
+      pts.push({ x, y });
+      if (x < -20 || x > W + 20 || y < -20 || y > H + 20) { ended = 'rand'; break; }
+      // Bij een nulpunt heffen de RK4-termen elkaar bijna op: de lijn legt dan nog
+      // wel stappen af maar komt niet meer vooruit. Daar eindigt ze fysisch ook.
+      if (pts.length > 20) {
+        const q = pts[pts.length - 21];
+        if (Math.hypot(x - q.x, y - q.y) < h / 3) { ended = 'nulpunt'; break; }
       }
+      for (const c of chs) {
+        if (c === source) continue;
+        // een lijn eindigt op een lading met tegengesteld teken aan de stroomrichting
+        if (dir * c.q < 0 && Math.hypot(x - c.x, y - c.y) < R_END) {
+          const a = Math.atan2(y - c.y, x - c.x);
+          pts[pts.length - 1] = { x: c.x + Math.cos(a) * R_END, y: c.y + Math.sin(a) * R_END };
+          ended = c; break;
+        }
+      }
+      if (ended) break;
+    }
+    return { pts, ended };
+  }
+
+  // Elke lading wordt gezaaid op dezelfde vaste hoeken, veelvouden van 2pi/n vanaf 0.
+  // Die verzameling is gesloten onder spiegeling om de horizontale en de verticale as,
+  // dus ladingen die elkaars spiegelbeeld zijn krijgen elkaars spiegelbeeld aan lijnen.
+  // Een hoek die per lading uit het veld van de andere volgt, deed dat ook, maar draaide
+  // bij enkele pixels verschil in plaatsing de hele krans: dat viel veel te sterk op.
+  computeFieldLines(fast) {
+    const chs = this.state.charges;
+    if (!chs.length) return [];
+    const R0 = 17;
+    // aantal lijnen per lading volgt de lading zelf (wet van Gauss)
+    // aantal lijnen een viervoud, zodat de krans ook om de diagonalen symmetrisch is
+    const seedCount = (q) => {
+      const n = Math.round(Math.abs(q) * 12 / 4) * 4;
+      return Math.max(12, Math.min(28, n));
+    };
+    const ring = (s, dir) => {
+      const n = seedCount(s.q), out = [];
+      for (let k = 0; k < n; k++) {
+        const a = (k / n) * Math.PI * 2;
+        out.push(this.traceLine(s.x + Math.cos(a) * R0, s.y + Math.sin(a) * R0, dir, s, fast));
+      }
+      return out;
+    };
+
+    const pos = chs.filter(c => c.q > 0), neg = chs.filter(c => c.q < 0);
+    const lines = [];
+    // Positieve ladingen zaaien in alle richtingen. Lijnen die op een negatieve lading
+    // eindigen zijn de verbindingslijnen; de rest loopt naar de rand of een nulpunt.
+    for (const s of pos) for (const r of ring(s, 1)) if (r.pts.length > 2) lines.push(r.pts);
+    // Negatieve ladingen zaaien óók, achterwaarts langs het veld. Een lijn die op een
+    // positieve lading eindigt is dezelfde verbindingslijn en is al getekend; die laten
+    // we weg. De lijnen naar de rand of een nulpunt zijn de eigen kant van de negatieve
+    // lading — zonder deze bleef haar van de bron afgekeerde zijde leeg.
+    for (const s of neg) for (const r of ring(s, -1)) {
+      const opLading = r.ended && typeof r.ended === 'object';
+      if (r.pts.length > 2 && !opLading) lines.push(r.pts);
     }
     return lines;
   }
