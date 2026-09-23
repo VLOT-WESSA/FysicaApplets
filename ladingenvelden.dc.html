@@ -66,22 +66,22 @@
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Wet van Coulomb</div>
         <sc-if value="{{ hasPair }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px">
-            <span style="font-weight:700;color:#b8472f;font-size:34px;line-height:1">F</span>
+            <span style="font-weight:700;color:#2f8a4f;font-size:34px;line-height:1">F</span>
             <span style="font-size:24px;color:#9a927f">=</span>
             <div style="display:flex;flex-direction:column;align-items:center;line-height:1.1">
-              <div style="padding:0 12px 6px;font-size:18px;white-space:nowrap"><span style="color:#9a927f">k</span> <span style="color:#3a352c;font-weight:600">q&#8321;q&#8322;</span></div>
+              <div style="padding:0 12px 6px;font-size:18px;white-space:nowrap"><span style="color:#9a927f">k</span> <span style="color:#3a352c;font-weight:600">Q&#8321;Q&#8322;</span></div>
               <div style="height:3px;width:100%;background:#3a352c;border-radius:2px"></div>
               <div style="padding:6px 12px 0;font-size:18px;color:#2f7d9e;font-weight:600">r&sup2;</div>
             </div>
           </div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:10px">
-            <div style="display:flex;justify-content:space-between"><span>q&#8321;</span><span style="color:#3a352c">{{ q1Str }} nC</span></div>
-            <div style="display:flex;justify-content:space-between"><span>q&#8322;</span><span style="color:#3a352c">{{ q2Str }} nC</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Q&#8321;</span><span style="color:#3a352c">{{ q1Str }} nC</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Q&#8322;</span><span style="color:#3a352c">{{ q2Str }} nC</span></div>
             <div style="display:flex;justify-content:space-between"><span>r</span><span style="color:#3a352c">{{ rStr }} cm</span></div>
           </div>
-          <div style="margin-top:12px;background:#fbf1ee;border:1px solid #f0d8cf;border-radius:10px;padding:11px 13px">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#b8472f">F = {{ fStr }}</div>
-            <div style="font-size:12.5px;color:#a06149;margin-top:3px;font-weight:500">{{ dirStr }}</div>
+          <div style="margin-top:12px;background:#eef6ef;border:1px solid #cfe5d4;border-radius:10px;padding:11px 13px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#2f8a4f">F = {{ fStr }}</div>
+            <div style="font-size:12.5px;color:#3f7a52;margin-top:3px;font-weight:500">{{ dirStr }}</div>
           </div>
         </sc-if>
         <sc-if value="{{ noPair }}" hint-placeholder-val="{{ false }}">
@@ -98,7 +98,7 @@
           <input type="checkbox" checked="{{ gridOn }}" onChange="{{ toggleGrid }}" style="width:17px;height:17px;accent-color:#1f9e8f;cursor:pointer">Raster &amp; afstand tonen
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
-          <input type="checkbox" checked="{{ forceOn }}" onChange="{{ toggleForce }}" style="width:17px;height:17px;accent-color:#b8472f;cursor:pointer">Krachtpijlen tonen
+          <input type="checkbox" checked="{{ forceOn }}" onChange="{{ toggleForce }}" style="width:17px;height:17px;accent-color:#2f8a4f;cursor:pointer">Krachtpijlen tonen
         </label>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c">
           <input type="checkbox" checked="{{ sensorOn }}" onChange="{{ toggleSensor }}" style="width:17px;height:17px;accent-color:#caa90f;cursor:pointer">Veldsensor tonen
@@ -210,11 +210,35 @@ class Component extends DCLogic {
     this.setState({ selected: sel });
   }
 
+  // De ontwerpruimte volgt de vorm van het paneel: de kortste zijde is altijd
+  // minstens 480 eenheden, de andere zijde groeit mee. Zo vullen raster en veldlijnen
+  // het hele kader in plaats van een vaste 3:2-strook met witruimte erboven en eronder.
   setupCanvas() {
     const c = this.stageRef.current; if (!c) return;
-    const dpr = (window.devicePixelRatio || 1);
-    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    const p = c.parentElement;
+    if (p) {
+      const cs = getComputedStyle(p);
+      const pw = p.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const ph = p.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      if (pw > 40 && ph > 40) {
+        const base = 480, k = Math.min(pw, ph) / base;
+        const W = Math.round(pw / k), H = Math.round(ph / k);
+        if (W !== this.W || H !== this.H) {
+          const dx = (W - this.W) / 2, dy = (H - this.H) / 2;
+          for (const ch of this.state.charges) {
+            ch.x = Math.max(16, Math.min(W - 16, ch.x + dx));
+            ch.y = Math.max(16, Math.min(H - 16, ch.y + dy));
+          }
+          const s = this.state.sensor;
+          if (s) { s.x = Math.max(8, Math.min(W - 8, s.x + dx)); s.y = Math.max(8, Math.min(H - 8, s.y + dy)); }
+          this.W = W; this.H = H; this._sig = null;
+        }
+      }
+    }
+    c.style.maxWidth = 'none'; c.style.maxHeight = 'none';
+    c.dataset.acCapped = '1';
     c.style.aspectRatio = this.W + ' / ' + this.H;
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
   }
 
   toPx(e) {
@@ -441,7 +465,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#f2d23a'; ctx.fill();
     ctx.strokeStyle = '#7a6f12'; ctx.lineWidth = 2; ctx.stroke();
     ctx.beginPath(); ctx.arc(s.x, s.y, 2.4, 0, 6.2832); ctx.fillStyle = '#5a520d'; ctx.fill();
-    const txt = this.state.charges.length ? (mag >= 1000 ? (mag / 1000).toFixed(2) + ' kV/m' : mag.toFixed(0) + ' V/m') : '0 V/m';
+    const txt = this.state.charges.length ? (mag >= 1000 ? (mag / 1000).toFixed(2).replace('.', ',') + ' kN/C' : mag.toFixed(0) + ' N/C') : '0 N/C';
     ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
     const tw = ctx.measureText(txt).width;
     const bx = s.x + 13, by = s.y - 27;
@@ -505,7 +529,7 @@ class Component extends DCLogic {
         const f = fs[i]; const mag = Math.hypot(f.fx, f.fy); if (mag < 1e-30) return;
         const ang = Math.atan2(f.fy, f.fx);
         const flen = 22 + Math.sqrt(mag / maxF) * 54;
-        this.arrow(ctx, c.x + Math.cos(ang) * 20, c.y + Math.sin(ang) * 20, ang, flen, '#b8472f', 8);
+        this.arrow(ctx, c.x + Math.cos(ang) * 20, c.y + Math.sin(ang) * 20, ang, flen, '#2f8a4f', 8);
       });
     }
 
@@ -566,7 +590,7 @@ class Component extends DCLogic {
     });
     const sf = this.fieldAt(sensor.x, sensor.y);
     const sMag = Math.hypot(sf.ex, sf.ey);
-    const sMagStr = !charges.length ? '0 V/m' : (sMag >= 1000 ? (sMag / 1000).toFixed(2) + ' kV/m' : sMag.toFixed(0) + ' V/m');
+    const sMagStr = !charges.length ? '0 N/C' : (sMag >= 1000 ? (sMag / 1000).toFixed(2).replace('.', ',') + ' kN/C' : sMag.toFixed(0) + ' N/C');
     let sAngStr = '\u2014';
     if (charges.length && sMag > 1e-6) {
       let d = -Math.atan2(sf.ey, sf.ex) * 180 / Math.PI; if (d < 0) d += 360;

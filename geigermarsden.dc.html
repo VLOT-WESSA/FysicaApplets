@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer}
+  @media(max-width:760px){html,body{height:auto}.applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}.applet-main{flex-direction:column !important;align-items:stretch !important}.applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}.applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}}
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
+<script src="./applet-core.js"></script>
+</helmet>
+
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Proef van Geiger en Marsden</h1>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="position:relative;flex:1;min-height:0;background:#fbfaf6;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ onToggleRun }}" style="display:flex;align-items:center;gap:8px;white-space:nowrap;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ runBorder }};background:{{ runBg }};color:{{ runFg }}">{{ runLabel }}</button>
+        <div style="display:flex;border:1px solid #d9d3c6;border-radius:10px;overflow:hidden;background:#fff">
+          <button onClick="{{ onSlow }}" style="padding:10px 14px;font-size:13.5px;font-weight:600;cursor:pointer;border:none;background:{{ slowBg }};color:{{ slowFg }}">1&times;</button>
+          <button onClick="{{ onFast }}" style="padding:10px 14px;font-size:13.5px;font-weight:600;cursor:pointer;border:none;border-left:1px solid #d9d3c6;background:{{ fastBg }};color:{{ fastFg }}">10&times;</button>
+        </div>
+        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset</button>
+      </div>
+    </div>
+
+    <div style="flex:none;width:352px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:2px">Tellingen</div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Alfadeeltjes op het scherm</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2a2723">{{ totalStr }}</span></div>
+        <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Afbuiging kleiner dan 10&deg;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ smallStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Tussen 10&deg; en 90&deg;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ midStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Teruggekaatst (meer dan 90&deg;)</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#b8472f">{{ backStr }}</span></div>
+        <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Flitsen in de microscoop</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2f8a4f">{{ micStr }}</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:13.5px;font-weight:600;color:#3a352c;margin-bottom:8px">Atoommodel</div>
+        <div style="display:flex;border:1px solid #d9d3c6;border-radius:10px;overflow:hidden">
+          <button onClick="{{ onRutherford }}" style="flex:1;padding:9px 8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:{{ rBg }};color:{{ rFg }}">Kernmodel</button>
+          <button onClick="{{ onThomson }}" style="flex:1;padding:9px 8px;font-size:13px;font-weight:600;cursor:pointer;border:none;border-left:1px solid #d9d3c6;background:{{ tBg }};color:{{ tFg }}">Plumpudding</button>
+        </div>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">{{ modelText }}</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+          <span style="font-size:13.5px;font-weight:600;color:#3a352c">Microscoop</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2f8a4f">&theta; = {{ microStr }}</span>
+        </div>
+        <input type="range" min="0" max="180" step="1" value="{{ microVal }}" onInput="{{ onMicro }}" style="width:100%;accent-color:#b8472f">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>90&deg;</span><span>180&deg;</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:13.5px;font-weight:600;color:#3a352c;margin-bottom:8px">Folie</div>
+          <select value="{{ metal }}" onChange="{{ onMetal }}" style="width:100%;height:36px;font-family:inherit;font-size:13px;color:#2a2723;background:#fff;border:1px solid #d9d3c6;border-radius:9px;padding:0 10px;cursor:pointer">
+            <option value="goud">Goud (Z = 79)</option>
+            <option value="zilver">Zilver (Z = 47)</option>
+            <option value="koper">Koper (Z = 29)</option>
+            <option value="aluminium">Aluminium (Z = 13)</option>
+          </select>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+            <span style="font-size:13.5px;font-weight:600;color:#3a352c">Energie alfadeeltjes</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ energyStr }}</span>
+          </div>
+          <input type="range" min="4" max="8" step="0.1" value="{{ energyVal }}" onInput="{{ onEnergy }}" style="width:100%;accent-color:#b8472f">
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>4,0 MeV</span><span>8,0 MeV</span></div>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Verdeling van de afbuighoek</div>
+        <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px">Staven: gemeten aantal per 10&deg; (logaritmische schaal). Stippen: voorspelling van het kernmodel.</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:2px">Theorie</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723;line-height:1.7">tan(&theta;/2) = d / (2b)<br>d = k &middot; Q<sub>&alpha;</sub> &middot; Q<sub>kern</sub> / E<sub>k</sub></div>
+        <div style="font-size:11.5px;color:#9a927f;line-height:1.45">b is de afstand waarop het alfadeeltje de kern zou missen zonder afstoting, d de kleinste afstand bij een frontale botsing. Q<sub>&alpha;</sub> = 2e, Q<sub>kern</sub> = Ze.</div>
+        <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kleinste afstand d</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ dStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Straal van de kern</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Straal van het atoom</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">&asymp; 1,4 &middot; 10&#8309; fm</span></div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave</span>
+        <button onClick="{{ togglePaths }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ pBorder }};background:{{ pBg }};color:#3a352c">
+          <span style="width:11px;height:3px;border-radius:2px;flex:none;background:#d9542f"></span>Banen tonen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ pState }}</span>
+        </button>
+        <button onClick="{{ toggleZoom }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ zBorder }};background:{{ zBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#b8472f"></span>Uitvergroting rond de kern <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ zState }}</span>
+        </button>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55">De kans op een grote afbuiging is hier sterk vergroot, anders zie je ze bijna nooit. Bij Geiger en Marsden (1909) kaatste ongeveer 1 op 8000 alfadeeltjes terug.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  chartRef = React.createRef();
+  W = 1040; H = 560; CW = 320; CH = 190;
+  CX = 340; CY = 292; RR = 220; SRC_X = 205;
+  // Botsingsparameter b: een klein deel (F_NEAR) komt uit de schijf dicht bij de kern
+  // (B_NEAR), de rest passeert ver weg (tot B_FAR) en gaat bijna rechtdoor.
+  // Zo blijft grote afbuiging zichtbaar zonder dat de bulk scheef gaat.
+  B_NEAR = 60; B_FAR = 6000; F_NEAR = 0.03;
+  V_PX = 520;        // snelheid van de getekende deeltjes (px/s)
+  IN = { x0: 624, y0: 30, x1: 1028, y1: 530, px: 626, py: 66, ps: 400 };
+
+  metals = {
+    goud:      { name: 'goudfolie',      Z: 79, A: 197, col: '#c9a23f' },
+    zilver:    { name: 'zilverfolie',    Z: 47, A: 108, col: '#aeb3ba' },
+    koper:     { name: 'koperfolie',     Z: 29, A: 63,  col: '#c47a45' },
+    aluminium: { name: 'aluminiumfolie', Z: 13, A: 27,  col: '#9aa3ad' },
+  };
+
+  state = { running: false, fast: false, model: 'rutherford', metal: 'goud', energy: 5.3, micro: 45, showPaths: false, showZoom: true };
+
+  parts = []; flashes = []; paths = []; zoom = [];
+  ring = new Float32Array(360); bins = new Array(18).fill(0);
+  total = 0; mic = 0; sa = 0;
+  electrons = [];
+
+  componentDidMount() {
+    let s = 7;
+    const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (let i = 0; i < 16; i++) {
+      const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd()) * 0.36;
+      this.electrons.push({ x: Math.cos(a) * r, y: Math.sin(a) * r });
+    }
+    this.setupCanvas();
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+    this._rz = () => { this.setupCanvas(); this.draw(); this.drawChart(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (c) this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    const ch = this.chartRef.current; if (ch) this.cdpr = AppletCore.fitCanvas(ch, this.CW, this.CH);
+  }
+
+  metal() { return this.metals[this.state.metal] || this.metals.goud; }
+  dfm() { return 1.44 * 2 * this.metal().Z / this.state.energy; }          // kleinste afstand bij frontale botsing (fm)
+  rNuc() { return 1.2 * Math.cbrt(this.metal().A); }                        // kernstraal (fm)
+  viewHalf() { return Math.max(4 * this.dfm(), 40); }
+  gauss() { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+  spawn() {
+    const d = this.dfm(), deg = Math.PI / 180;
+    const sg = Math.random() < 0.5 ? 1 : -1;
+    let th, b = null;
+    if (this.state.model === 'rutherford') {
+      const near = Math.random() < this.F_NEAR;
+      b = near ? this.B_NEAR * Math.sqrt(Math.random())
+               : Math.sqrt(this.B_NEAR * this.B_NEAR + Math.random() * (this.B_FAR * this.B_FAR - this.B_NEAR * this.B_NEAR));
+      th = 2 * Math.atan(d / (2 * Math.max(b, 1e-6))) + this.gauss() * 0.4 * deg;
+    } else {
+      // Thomson: de positieve lading is uitgesmeerd over het hele atoom; de afbuiging blijft klein
+      th = this.gauss() * 1.0 * deg * (this.metal().Z / 79) * (5.3 / this.state.energy);
+      b = this.viewHalf() * 0.9 * (2 * Math.random() - 1);
+    }
+    th = Math.min(Math.PI, Math.abs(th));
+    this.parts.push({ x: this.SRC_X, y: this.CY + (Math.random() - 0.5) * 4, th, sg, ph: 0 });
+
+    if (this.state.showZoom) {
+      const V = this.viewHalf();
+      if (this.state.model === 'rutherford') {
+        if (b < V) this.pushZoom({ pts: this.zoomPath(sg * b, d, V), b: sg * b });
+      } else if (Math.random() < 0.25) {
+        this.pushZoom({ thomson: true, b, th: sg * th });
+      }
+    }
+  }
+  pushZoom(z) { this.zoom.push(z); if (this.zoom.length > 22) this.zoom.shift(); }
+
+  // Baan in het coulombveld van de kern, in fm; y naar boven. Afstotend: a = (d/2)/r^2, v0 = 1.
+  zoomPath(b, d, V) {
+    let x = -1.15 * V, y = b, vx = 1, vy = 0;
+    const k = d / 2, pts = [{ x, y }];
+    for (let i = 0; i < 5000; i++) {
+      const r = Math.hypot(x, y);
+      const dt = Math.max(0.0008 * V, 0.015 * r);
+      const a = k / (r * r * r);
+      vx += a * x * dt; vy += a * y * dt;
+      x += vx * dt; y += vy * dt;
+      pts.push({ x, y });
+      if (i > 10 && (Math.abs(x) > 1.2 * V || Math.abs(y) > 1.2 * V)) break;
+    }
+    return pts;
+  }
+
+  resetStats() {
+    this.parts = []; this.flashes = []; this.paths = []; this.zoom = [];
+    this.ring = new Float32Array(360); this.bins = new Array(18).fill(0);
+    this.total = 0; this.mic = 0; this.sa = 0;
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.state.running) {
+      this.sa += (this.state.fast ? 300 : 30) * dt;
+      while (this.sa >= 1) { this.sa -= 1; this.spawn(); }
+    }
+    const V = this.V_PX * dt, keep = [];
+    for (const p of this.parts) {
+      if (p.ph === 0) {
+        p.x += V;
+        if (p.x >= this.CX) {
+          p.x = this.CX; p.ph = 1;
+          p.vx = Math.cos(p.th); p.vy = -p.sg * Math.sin(p.th);
+          p.y0 = p.y;
+        }
+        keep.push(p); continue;
+      }
+      p.x += p.vx * V; p.y += p.vy * V;
+      if (Math.hypot(p.x - this.CX, p.y - this.CY) >= this.RR) { this.hit(p); continue; }
+      keep.push(p);
+    }
+    this.parts = keep;
+    for (const f of this.flashes) f.t += dt;
+    this.flashes = this.flashes.filter(f => f.t < 0.6);
+    this.draw(); this.drawChart();
+    this._acc = (this._acc || 0) + dt;
+    if (this._acc > 0.15) { this._acc = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  hit(p) {
+    const ang = Math.atan2(p.y - this.CY, p.x - this.CX);
+    const hx = this.CX + Math.cos(ang) * this.RR, hy = this.CY + Math.sin(ang) * this.RR;
+    const idx = ((Math.round(ang * 180 / Math.PI) % 360) + 360) % 360;
+    this.ring[idx] += 1;
+    const thDeg = p.th * 180 / Math.PI;
+    this.bins[Math.min(17, Math.floor(thDeg / 10))] += 1;
+    this.total += 1;
+    if (Math.abs(p.sg * thDeg - this.state.micro) < 4 || (thDeg < 4 && this.state.micro < 4)) this.mic += 1;
+    if (this.flashes.length < 160) this.flashes.push({ x: hx, y: hy, t: 0 });
+    this.paths.push({ y0: p.y0, hx, hy });
+    if (this.paths.length > 60) this.paths.shift();
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbfaf6'; ctx.fillRect(0, 0, this.W, this.H);
+    const { CX, CY, RR } = this, m = this.metal(), st = this.state;
+
+    // fluorescentiescherm
+    ctx.lineWidth = 12; ctx.strokeStyle = '#dde8e0';
+    ctx.beginPath(); ctx.arc(CX, CY, RR, 0, Math.PI * 2); ctx.stroke();
+    let mx = 0; for (let i = 0; i < 360; i++) if (this.ring[i] > mx) mx = this.ring[i];
+    if (mx > 0) {
+      const lm = Math.log(1 + mx);
+      for (let i = 0; i < 360; i++) {
+        const n = this.ring[i]; if (!n) continue;
+        const a = 0.18 + 0.82 * Math.log(1 + n) / lm, r0 = (i - 0.5) * Math.PI / 180;
+        ctx.strokeStyle = 'rgba(47,154,99,' + a.toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(CX, CY, RR, r0, r0 + Math.PI / 180 + 0.002); ctx.stroke();
+      }
+    }
+    ctx.lineWidth = 1; ctx.strokeStyle = '#b9cbbf';
+    ctx.beginPath(); ctx.arc(CX, CY, RR - 6, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX, CY, RR + 6, 0, Math.PI * 2); ctx.stroke();
+
+    // hoek naar de microscoop
+    const am = -st.micro * Math.PI / 180;
+    ctx.save(); ctx.setLineDash([4, 5]); ctx.strokeStyle = '#b3ab9b'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(CX + RR - 8, CY); ctx.stroke();
+    ctx.strokeStyle = '#6fae85';
+    ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(CX + Math.cos(am) * (RR - 8), CY + Math.sin(am) * (RR - 8)); ctx.stroke();
+    ctx.restore();
+    if (st.micro >= 1) {
+      ctx.strokeStyle = '#2f8a4f'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.arc(CX, CY, 46, am, 0); ctx.stroke();
+      const la = am / 2, lr = st.micro < 20 ? 96 : 66;
+      ctx.fillStyle = '#2f8a4f'; ctx.font = "600 12.5px 'IBM Plex Mono', monospace";
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u03B8 = ' + st.micro + '\u00B0', CX + Math.cos(la) * lr, CY + Math.sin(la) * lr - (st.micro < 20 ? 10 : 0));
+    }
+
+    // banen
+    if (st.showPaths) {
+      ctx.strokeStyle = 'rgba(217,84,47,0.22)'; ctx.lineWidth = 1;
+      for (const p of this.paths) {
+        ctx.beginPath(); ctx.moveTo(this.SRC_X, p.y0); ctx.lineTo(CX, p.y0); ctx.lineTo(p.hx, p.hy); ctx.stroke();
+      }
+    }
+
+    // bundel en bron
+    ctx.fillStyle = 'rgba(217,84,47,0.10)';
+    ctx.fillRect(this.SRC_X, CY - 4, CX - this.SRC_X, 8);
+    ctx.fillStyle = '#6f7378'; this.rr(ctx, 150, CY - 30, 55, 60, 5); ctx.fill();
+    ctx.fillStyle = '#4a4e53'; ctx.fillRect(176, CY - 4, 29, 8);
+    ctx.fillStyle = '#d9542f'; ctx.beginPath(); ctx.arc(172, CY, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#5a544a'; ctx.font = "600 11.5px 'IBM Plex Sans', sans-serif";
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('alfabron in lood', 177, CY + 40);
+
+    // folie
+    ctx.fillStyle = m.col; ctx.fillRect(CX - 2, CY - 70, 4, 140);
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8; ctx.strokeRect(CX - 2, CY - 70, 4, 140);
+    ctx.fillStyle = '#5a544a'; ctx.textBaseline = 'bottom';
+    ctx.fillText(m.name, CX, CY - 78);
+
+    // microscoop
+    const r0 = RR + 8, r1 = RR + 40;
+    ctx.save(); ctx.translate(CX, CY); ctx.rotate(am);
+    ctx.fillStyle = '#3a352c'; this.rr(ctx, r0, -6, r1 - r0, 12, 3); ctx.fill();
+    ctx.fillStyle = '#8fb7d6'; ctx.fillRect(r0, -4, 3, 8);
+    ctx.restore();
+    ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(CX, CY, RR, am - 4 * Math.PI / 180, am + 4 * Math.PI / 180); ctx.stroke();
+    ctx.font = "600 11.5px 'IBM Plex Sans', sans-serif"; ctx.textBaseline = 'middle';
+    const lbl = 'microscoop', tw = ctx.measureText(lbl).width, ca = Math.cos(am);
+    let lx = CX + ca * (RR + 54), ly = CY + Math.sin(am) * (RR + 54);
+    let x0 = ca > 0.3 ? lx : (ca < -0.3 ? lx - tw : lx - tw / 2);
+    x0 = Math.max(6, Math.min(this.IN.x0 - 8 - tw, x0));
+    ly = Math.max(12, ly);
+    ctx.textAlign = 'left'; ctx.fillText(lbl, x0, ly);
+
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('fluorescentiescherm (ZnS)', CX, CY + RR + 14);
+
+    // flitsen en deeltjes
+    for (const f of this.flashes) {
+      const a = 1 - f.t / 0.6;
+      ctx.fillStyle = 'rgba(80,220,140,' + (0.55 * a).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 3 + 7 * f.t / 0.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(30,140,80,' + a.toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 2, 0, Math.PI * 2); ctx.fill();
+    }
+    for (const p of this.parts) {
+      const vx = p.ph ? p.vx : 1, vy = p.ph ? p.vy : 0;
+      ctx.strokeStyle = 'rgba(217,84,47,0.45)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - vx * 10, p.y - vy * 10); ctx.stroke();
+      ctx.fillStyle = '#d9542f';
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    if (st.showZoom) this.drawZoom(ctx);
+  }
+
+  drawZoom(ctx) {
+    const I = this.IN, st = this.state, V = this.viewHalf(), d = this.dfm();
+    ctx.fillStyle = '#fffdf9'; this.rr(ctx, I.x0, I.y0, I.x1 - I.x0, I.y1 - I.y0, 10); ctx.fill();
+    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.stroke();
+    const th = st.model === 'thomson';
+    ctx.fillStyle = '#3a352c'; ctx.font = "600 12.5px 'IBM Plex Sans', sans-serif";
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(th ? 'Uitvergroting: \u00E9\u00E9n atoom (plumpudding)' : 'Uitvergroting rond \u00E9\u00E9n kern', I.x0 + 14, I.y0 + 18);
+    ctx.fillStyle = '#9a927f'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+    ctx.fillText(th ? 'beeld \u2248 3 \u00B7 10\u2075 fm' : 'beeld ' + Math.round(2 * V) + ' fm', I.x1 - 14, I.y0 + 18);
+
+    const cx = I.px + I.ps / 2 + 1, cy = I.py + I.ps / 2, sc = I.ps / (2 * V);
+    ctx.save();
+    ctx.beginPath(); ctx.rect(I.px, I.py, I.ps + 2, I.ps); ctx.clip();
+    if (th) {
+      const R = I.ps * 0.42;
+      ctx.fillStyle = 'rgba(184,71,47,0.10)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(184,71,47,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      for (const e of this.electrons) {
+        ctx.fillStyle = '#3f6aa3'; ctx.beginPath(); ctx.arc(cx + e.x * I.ps, cy + e.y * I.ps, 3.2, 0, Math.PI * 2); ctx.fill();
+      }
+      this.zoom.forEach((z, i) => {
+        if (!z.thomson) return;
+        const a = 0.2 + 0.8 * (i + 1) / this.zoom.length, y = cy - z.b * sc;
+        ctx.strokeStyle = 'rgba(217,84,47,' + a.toFixed(3) + ')'; ctx.lineWidth = i === this.zoom.length - 1 ? 2 : 1.2;
+        ctx.beginPath(); ctx.moveTo(I.px, y); ctx.lineTo(cx, y);
+        ctx.lineTo(I.px + I.ps, y - Math.tan(z.th) * I.ps / 2); ctx.stroke();
+      });
+    } else {
+      ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = '#c9b9a8'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(cx, cy, d * sc, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+      const n = this.zoom.length;
+      this.zoom.forEach((z, i) => {
+        if (!z.pts) return;
+        const last = i === n - 1, a = 0.18 + 0.7 * (i + 1) / n;
+        ctx.strokeStyle = last ? '#d9542f' : 'rgba(217,84,47,' + a.toFixed(3) + ')';
+        ctx.lineWidth = last ? 2 : 1.1;
+        ctx.beginPath();
+        z.pts.forEach((p, k) => { const X = cx + p.x * sc, Y = cy - p.y * sc; k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+        ctx.stroke();
+      });
+      const rn = Math.max(2.5, this.rNuc() * sc);
+      const g = ctx.createRadialGradient(cx - rn * 0.3, cy - rn * 0.3, 0.5, cx, cy, rn);
+      g.addColorStop(0, '#e88a6a'); g.addColorStop(1, '#b8472f');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rn, 0, Math.PI * 2); ctx.fill();
+      const lz = this.zoom[n - 1];
+      if (lz && lz.pts && Math.abs(lz.b * sc) > 24) {
+        const xd = I.px + 70, yb = cy - lz.b * sc;
+        ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(xd, cy); ctx.lineTo(xd, yb); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xd - 4, cy); ctx.lineTo(xd + 4, cy); ctx.moveTo(xd - 4, yb); ctx.lineTo(xd + 4, yb); ctx.stroke();
+        ctx.save(); ctx.setLineDash([2, 3]); ctx.strokeStyle = '#c9c1b1';
+        ctx.beginPath(); ctx.moveTo(I.px, cy); ctx.lineTo(cx - rn - 4, cy); ctx.stroke(); ctx.restore();
+        ctx.fillStyle = '#3a352c'; ctx.font = "600 11.5px 'IBM Plex Mono', monospace";
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText('b = ' + Math.round(Math.abs(lz.b)) + ' fm', xd + 7, (cy + yb) / 2);
+      }
+    }
+    ctx.restore();
+
+    ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const fy = I.py + I.ps + 20;
+    if (th) {
+      ctx.fillStyle = 'rgba(184,71,47,0.35)'; ctx.fillRect(I.x0 + 14, fy - 5, 10, 10);
+      ctx.fillStyle = '#6f685c'; ctx.fillText('positieve lading, over het hele atoom verspreid', I.x0 + 30, fy);
+      ctx.fillStyle = '#3f6aa3'; ctx.beginPath(); ctx.arc(I.x0 + 19, fy + 20, 3.2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6f685c'; ctx.fillText('elektronen', I.x0 + 30, fy + 20);
+    } else {
+      ctx.fillStyle = '#b8472f'; ctx.beginPath(); ctx.arc(I.x0 + 19, fy, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#6f685c'; ctx.fillText('kern, straal ' + this.nl(this.rNuc(), 1) + ' fm (op schaal)', I.x0 + 30, fy);
+      ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = '#c9b9a8';
+      ctx.beginPath(); ctx.moveTo(I.x0 + 12, fy + 20); ctx.lineTo(I.x0 + 26, fy + 20); ctx.stroke(); ctx.restore();
+      ctx.fillText('kleinste afstand bij frontale botsing, d = ' + this.nl(d, 1) + ' fm', I.x0 + 30, fy + 20);
+    }
+  }
+
+  drawChart() {
+    const ch = this.chartRef.current; if (!ch) return;
+    const ctx = ch.getContext('2d'), s = this.cdpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    const W = this.CW, H = this.CH;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#faf7f0'; this.rr(ctx, 0, 0, W, H, 8); ctx.fill();
+    const L = 40, R = 10, T = 14, B = 28, px0 = L, px1 = W - R, py0 = T, py1 = H - B;
+    const peak = Math.max(1, ...this.bins, this.total);
+    const dec = Math.max(2, Math.ceil(Math.log10(peak)));
+    const Y = (v) => py1 - (py1 - py0) * Math.log10(Math.max(1, v)) / dec;
+    const bw = (px1 - px0) / 18;
+
+    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1;
+    ctx.fillStyle = '#a39c8d'; ctx.font = "500 9.5px 'IBM Plex Mono', monospace";
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let e = 0; e <= dec; e++) {
+      const y = Y(Math.pow(10, e));
+      ctx.beginPath(); ctx.moveTo(px0, y); ctx.lineTo(px1, y); ctx.stroke();
+      ctx.fillText(e === 0 ? '1' : '10' + '\u2070\u00B9\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079'[e], px0 - 5, y);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let a = 0; a <= 180; a += 30) ctx.fillText(a + '\u00B0', px0 + (px1 - px0) * a / 180, py1 + 6);
+
+    ctx.fillStyle = 'rgba(184,71,47,0.75)';
+    this.bins.forEach((n, i) => {
+      if (!n) return;
+      const y = Y(n);
+      ctx.fillRect(px0 + i * bw + 1.5, y, bw - 3, py1 - y);
+    });
+
+    if (this.total > 0) {
+      // P(θ' > t) voor hetzelfde mengsel als in spawn(): b(t) = d / (2 tan(t/2))
+      const d = this.dfm(), Bn = this.B_NEAR, Bf = this.B_FAR, fn = this.F_NEAR;
+      const P = (t) => {
+        if (t <= 0) return 1;
+        const bt = d / (2 * Math.tan(t / 2));
+        if (bt >= Bf) return 1;
+        if (bt <= Bn) return fn * (bt * bt) / (Bn * Bn);
+        return fn + (1 - fn) * (bt * bt - Bn * Bn) / (Bf * Bf - Bn * Bn);
+      };
+      ctx.fillStyle = '#2a2723';
+      for (let i = 0; i < 18; i++) {
+        const e = this.total * (P(i * 10 * Math.PI / 180) - P((i + 1) * 10 * Math.PI / 180));
+        if (e < 0.3) continue;
+        ctx.beginPath(); ctx.arc(px0 + (i + 0.5) * bw, Y(Math.max(1, e)), 2.6, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.strokeStyle = '#d3ccbd';
+    ctx.beginPath(); ctx.moveTo(px0, py0); ctx.lineTo(px0, py1); ctx.lineTo(px1, py1); ctx.stroke();
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  nl(v, d) { return v.toFixed(d).replace('.', ','); }
+  cnt(n) {
+    if (!this.total) return '0';
+    const p = n / this.total * 100;
+    return n.toLocaleString('nl-NL') + '  (' + this.nl(p, p < 1 ? 2 : 1) + ' %)';
+  }
+  change(patch) { this.resetStats(); this.setState(patch); }
+
+  renderVals() {
+    const st = this.state, b = this.bins;
+    const small = b[0], mid = b.slice(1, 9).reduce((a, v) => a + v, 0), back = b.slice(9).reduce((a, v) => a + v, 0);
+    const on = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
+    const pp = on(st.showPaths), zz = on(st.showZoom), rf = st.model === 'rutherford';
+    return {
+      stageRef: this.stageRef, chartRef: this.chartRef,
+      runLabel: st.running ? '\u25A0 Bron sluiten' : '\u25B6 Bron openen',
+      runBg: st.running ? '#fff' : '#b8472f', runFg: st.running ? '#3a352c' : '#fff', runBorder: st.running ? '#d9d3c6' : '#b8472f',
+      onToggleRun: () => this.setState(s => ({ running: !s.running })),
+      onReset: () => { this.resetStats(); this.forceUpdate(); },
+      onSlow: () => this.setState({ fast: false }), onFast: () => this.setState({ fast: true }),
+      slowBg: st.fast ? '#fff' : '#3a352c', slowFg: st.fast ? '#3a352c' : '#fff',
+      fastBg: st.fast ? '#3a352c' : '#fff', fastFg: st.fast ? '#fff' : '#3a352c',
+      totalStr: this.total.toLocaleString('nl-NL'),
+      smallStr: this.cnt(small), midStr: this.cnt(mid), backStr: this.cnt(back),
+      micStr: this.mic.toLocaleString('nl-NL'),
+      onRutherford: () => this.change({ model: 'rutherford' }), onThomson: () => this.change({ model: 'thomson' }),
+      rBg: rf ? '#b8472f' : '#fff', rFg: rf ? '#fff' : '#3a352c', tBg: rf ? '#fff' : '#b8472f', tFg: rf ? '#3a352c' : '#fff',
+      modelText: rf
+        ? 'Rutherford (1911): alle positieve lading en bijna alle massa zitten in een piepkleine kern. Wie er dicht langs gaat, wordt sterk afgebogen.'
+        : 'Thomson (1904): de positieve lading is over het hele atoom verspreid, met de elektronen erin. Het veld is overal zwak, dus elk alfadeeltje gaat bijna rechtdoor.',
+      microVal: st.micro, microStr: st.micro + '\u00B0',
+      onMicro: (e) => { this.mic = 0; this.setState({ micro: parseInt(e.target.value, 10) }); },
+      metal: st.metal, onMetal: (e) => this.change({ metal: e.target.value }),
+      energyVal: st.energy, energyStr: this.nl(st.energy, 1) + ' MeV',
+      onEnergy: (e) => this.change({ energy: parseFloat(e.target.value) }),
+      dStr: this.nl(this.dfm(), 1) + ' fm', rStr: this.nl(this.rNuc(), 1) + ' fm',
+      togglePaths: () => this.setState(s => ({ showPaths: !s.showPaths })),
+      toggleZoom: () => { this.zoom = []; this.setState(s => ({ showZoom: !s.showZoom })); },
+      pBg: pp.bg, pBorder: pp.border, pState: pp.state,
+      zBg: zz.bg, zBorder: zz.border, zState: zz.state,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
