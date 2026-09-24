@@ -101,11 +101,13 @@ class Component extends DCLogic {
       { id: 'weerstanddraad', name: 'Weerstand van een draad', desc: 'Variëer lengte, doorsnede en materiaal van een draad.', ready: true },
       { id: 'ladingenvelden', name: 'Ladingen en velden', desc: 'Plaats ladingen, bekijk het elektrische veld en de wet van Coulomb.', ready: true },
       { id: 'millikan', name: 'Millikan — oliedruppel', desc: 'Balanceer een druppel en ontdek dat lading gekwantiseerd is.', ready: true },
+      { id: 'condensator', name: 'Vlakke condensator', desc: 'Varieer plaatafstand, oppervlak en diëlektricum en meet de capaciteit.', ready: true },
     ]},
     { id: 'elektromagnetisme', name: 'Elektromagnetisme', color: 'oklch(0.64 0.13 150)', applets: [
       { id: 'electromotor', name: 'Gelijkstroommotor', desc: 'Een spoel draait in een magneetveld; de commutator keert de stroom om.', ready: true },
       { id: 'lorentzkracht', name: 'Lorentzkracht', desc: 'Een stroomdraad zwaait uit het veld van een hoefijzermagneet (F = B·I·L).', ready: true },
       { id: 'magneetvelddraad', name: 'Magneetveld rond een draad', desc: 'Concentrische veldlijnen rond een stroomdraad, gepeild met een kompas.', ready: true },
+      { id: 'cyclotron', name: 'Cyclotron', desc: 'Geladen deeltjes spiraleren naar buiten, versneld door een wisselspanning in de spleet.', ready: true },
     ]},
     { id: 'kernfysica', name: 'Kernfysica', color: 'oklch(0.64 0.13 28)', applets: [
       { id: 'reactor', name: 'Kernsplijtingsreactor', desc: 'Regel de regelstaven van een gasgekoelde reactor en monitor de splijtingen.', ready: true },
@@ -115,6 +117,8 @@ class Component extends DCLogic {
     { id: 'mechanica', name: 'Mechanica', color: 'oklch(0.64 0.13 255)', applets: [
       { id: 'rivieroversteek', name: 'Boot steekt rivier over', desc: 'Relatieve snelheid: tel de vaarsnelheid en de stroming vectorieel op.', ready: true },
       { id: 'wrijvinghelling', name: 'Wrijving op een hellend vlak', desc: 'Een blok op een helling; varieer de hoek en de wrijving en zie wanneer het begint te glijden.', ready: true },
+      { id: 'grafiekmatching', name: 'Bewegingen en hun grafieken', desc: 'ERB, EVRB, vrije val, verticale en horizontale worp met x(t), v(t) en a(t); match de doelgrafiek.', ready: true },
+      { id: 'cirkelbeweging', name: 'Eenparige cirkelbeweging', desc: 'Snelheid, centripetale versnelling en kracht; de projectie is een harmonische trilling.', ready: true },
     ]},
     { id: 'golven', name: 'Trillingen & golven', color: 'oklch(0.64 0.13 195)', applets: [
       { id: 'foto', name: 'Foto-elektrisch effect', desc: 'Schijn licht op een metaal en maak elektronen los.', ready: true },
@@ -126,6 +130,7 @@ class Component extends DCLogic {
       { id: 'doppler', name: 'Dopplereffect', desc: 'Een bewegende bron; golffronten kruipen vooraan op elkaar en vormen bij v ≥ c een schokgolf.', ready: true },
       { id: 'lissajous', name: 'Lissajous-figuren', desc: 'Stel twee loodrechte trillingen samen; varieer amplitudes, frequenties en faseverschil.', ready: true },
       { id: 'luchtkolom', name: 'Staande golf in een kolom', desc: 'Resonantie in een lucht- of snaarkolom: knopen, buiken en de reeks boventonen.', ready: true },
+      { id: 'slinger', name: 'De slinger', desc: 'Meet de slingertijd met een chronometer en bepaal g uit T² tegen L.', ready: true },
     ]},
   ];
 
@@ -153,6 +158,11 @@ class Component extends DCLogic {
     wrijvinghelling: 'wrijvinghelling.dc.html',
     lissajous: 'lissajous.dc.html',
     luchtkolom: 'luchtkolom.dc.html',
+    condensator: 'condensator.dc.html',
+    cyclotron: 'cyclotron.dc.html',
+    grafiekmatching: 'grafiekmatching.dc.html',
+    cirkelbeweging: 'cirkelbeweging.dc.html',
+    slinger: 'slinger.dc.html',
   };
 
   componentDidMount() {

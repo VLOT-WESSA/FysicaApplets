@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;cursor:grab;touch-action:none"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center">
@@ -236,10 +236,10 @@ class Component extends DCLogic {
 
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
-    if (light) { bg.addColorStop(0, '#e9edf2'); bg.addColorStop(1, '#d6dce4'); }
-    else { bg.addColorStop(0, '#141b24'); bg.addColorStop(1, '#0d1219'); }
+    if (light) { bg.addColorStop(0, '#f8f6f1'); bg.addColorStop(1, '#f1ede5'); }
+    else { bg.addColorStop(0, '#ebe9e4'); bg.addColorStop(1, '#f1eee9'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
-    ctx.fillStyle = light ? 'rgba(0,0,0,0.022)' : 'rgba(255,255,255,0.018)';
+    ctx.fillStyle = light ? 'rgba(252,250,245,0.022)' : 'rgba(40,38,34,0.018)';
     for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
 
     const st = this.state;
@@ -257,8 +257,8 @@ class Component extends DCLogic {
       for (const yy of planes) for (const R of radii) this.drawRing(ctx, R, yy, false);
     }
 
-    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#8a8378' : '#cdc7bb', wireW);
-    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#b6b0a4' : '#8c877f', wireW * 0.42);
+    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#756e63' : '#49443a', wireW);
+    this.line3(ctx, { x: 0, y: -this.wireHalf - 8, z: 0 }, { x: 0, y: this.wireHalf + 8, z: 0 }, light ? '#575247' : '#716c64', wireW * 0.42);
 
     if (st.showField) {
       for (const yy of planes) for (const R of radii) this.drawRing(ctx, R, yy, true);
@@ -273,7 +273,7 @@ class Component extends DCLogic {
         const sc = this.scale * (this.persp / (this.persp - this.view({ x: 0, y, z: 0 }).depth));
         ctx.fillStyle = '#3fa86a';
         ctx.beginPath(); ctx.arc(P.x, P.y, Math.max(2.2, 3.0 * sc / 1.1), 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.7; ctx.stroke();
+        ctx.strokeStyle = 'rgba(40,38,34,0.5)'; ctx.lineWidth = 0.7; ctx.stroke();
       }
     }
 
@@ -295,7 +295,7 @@ class Component extends DCLogic {
 
   drawRing(ctx, R, y, frontOnly) {
     const N = 90;
-    ctx.strokeStyle = frontOnly ? 'rgba(135,176,229,0.95)' : 'rgba(111,155,216,0.86)';
+    ctx.strokeStyle = frontOnly ? 'rgba(100,142,196,0.95)' : 'rgba(100,146,210,0.86)';
     ctx.lineWidth = frontOnly ? 2.1 : 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.beginPath();
     let pen = false;
@@ -313,7 +313,7 @@ class Component extends DCLogic {
         const x = R * Math.cos(th), z = R * Math.sin(th);
         const t = this.fieldDir(x, z);
         const s = 7;
-        this.arrow3(ctx, { x: x - t.x * s, y, z: z - t.z * s }, { x: x + t.x * s, y, z: z + t.z * s }, '#8fb6e8', 1.6, 8);
+        this.arrow3(ctx, { x: x - t.x * s, y, z: z - t.z * s }, { x: x + t.x * s, y, z: z + t.z * s }, '#658dbf', 1.6, 8);
       }
     }
   }
@@ -324,8 +324,8 @@ class Component extends DCLogic {
     const topP = this.proj({ x: 0, y: topY, z: 0 });
     const botP = this.proj({ x: 0, y: botY, z: 0 });
     const plus = (P) => { ctx.fillStyle = '#e0503a'; ctx.font = '700 20px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', P.x, P.y); };
-    const minus = (P) => { ctx.fillStyle = '#9aa2ab'; ctx.font = '700 22px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u2212', P.x, P.y); };
-    ctx.fillStyle = '#5b5650';
+    const minus = (P) => { ctx.fillStyle = '#555d65'; ctx.font = '700 22px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u2212', P.x, P.y); };
+    ctx.fillStyle = '#a6a49e';
     [topP, botP].forEach(P => { ctx.beginPath(); ctx.arc(P.x, P.y, 4, 0, Math.PI * 2); ctx.fill(); });
     if (d === 1) { minus(this.proj({ x: 0, y: topY + 18, z: 0 })); plus(this.proj({ x: 0, y: botY - 18, z: 0 })); }
     else { plus(this.proj({ x: 0, y: topY + 18, z: 0 })); minus(this.proj({ x: 0, y: botY - 18, z: 0 })); }
@@ -339,8 +339,8 @@ class Component extends DCLogic {
     const N = 28; ctx.beginPath();
     for (let i = 0; i <= N; i++) { const th = (i / N) * 2 * Math.PI; const P = this.proj({ x: cx + 38 * Math.cos(th), y: hy, z: cz + 38 * Math.sin(th) }); i ? ctx.lineTo(P.x, P.y) : ctx.moveTo(P.x, P.y); }
     ctx.closePath();
-    ctx.fillStyle = light ? 'rgba(255,255,255,0.82)' : 'rgba(20,28,38,0.78)'; ctx.fill();
-    ctx.strokeStyle = light ? '#b9c2cc' : '#46505c'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = light ? 'rgba(40,38,34,0.82)' : 'rgba(235,232,227,0.78)'; ctx.fill();
+    ctx.strokeStyle = light ? '#424952' : '#a4b0be'; ctx.lineWidth = 2; ctx.stroke();
     const pdir = { x: -t.z, z: t.x };
     const C = this.proj({ x: cx, y: hy, z: cz });
     const N1 = this.proj({ x: cx + t.x * L, y: hy, z: cz + t.z * L });
@@ -349,9 +349,9 @@ class Component extends DCLogic {
     const Wm = this.proj({ x: cx - pdir.x * Wd, y: hy, z: cz - pdir.z * Wd });
     ctx.fillStyle = '#cf4636'; ctx.beginPath(); ctx.moveTo(N1.x, N1.y); ctx.lineTo(Wp.x, Wp.y); ctx.lineTo(Wm.x, Wm.y); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#3fa86a'; ctx.beginPath(); ctx.moveTo(S1.x, S1.y); ctx.lineTo(Wp.x, Wp.y); ctx.lineTo(Wm.x, Wm.y); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#1c242e'; ctx.beginPath(); ctx.arc(C.x, C.y, 3.2, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.fillStyle = light ? '#9a3022' : '#f1b3a8'; ctx.font = '700 11px "IBM Plex Sans",sans-serif';
+    ctx.fillStyle = '#e6e3df'; ctx.beginPath(); ctx.arc(C.x, C.y, 3.2, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(40,38,34,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = light ? '#9a3022' : '#b0746a'; ctx.font = '700 11px "IBM Plex Sans",sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('N', N1.x + (N1.x - C.x) * 0.16, N1.y + (N1.y - C.y) * 0.16);
   }
@@ -360,10 +360,10 @@ class Component extends DCLogic {
     const st = this.state;
     const items = [];
     if (st.showCurrent) items.push(['#e0503a', 'stroom']);
-    if (st.showField) items.push(['#6f9bd8', 'veld']);
+    if (st.showField) items.push(['#6492d2', 'veld']);
     if (st.showElec) items.push(['#3fa86a', 'elektronen']);
     if (!items.length) {
-      if (st.showCompass) { ctx.textAlign = 'left'; ctx.fillStyle = light ? '#6b7178' : '#7f8893'; ctx.font = '500 11.5px "IBM Plex Sans",sans-serif'; ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14); }
+      if (st.showCompass) { ctx.textAlign = 'left'; ctx.fillStyle = light ? '#7f858c' : '#656e78'; ctx.font = '500 11.5px "IBM Plex Sans",sans-serif'; ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14); }
       return;
     }
     let x = this.W - 14; const y = 18;
@@ -372,12 +372,12 @@ class Component extends DCLogic {
     for (let i = items.length - 1; i >= 0; i--) {
       const [col, lab] = items[i];
       const w = ctx.measureText(lab).width;
-      ctx.fillStyle = light ? '#4a4f57' : '#b9b3a6'; ctx.fillText(lab, x, y); x -= (w + 8);
+      ctx.fillStyle = light ? '#a9afb8' : '#555045'; ctx.fillText(lab, x, y); x -= (w + 8);
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 1, y, 5, 0, Math.PI * 2); ctx.fill();
       x -= 16;
     }
     if (st.showCompass) {
-      ctx.textAlign = 'left'; ctx.fillStyle = light ? '#6b7178' : '#7f8893';
+      ctx.textAlign = 'left'; ctx.fillStyle = light ? '#7f858c' : '#656e78';
       ctx.font = '500 11.5px "IBM Plex Sans",sans-serif';
       ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14);
     }

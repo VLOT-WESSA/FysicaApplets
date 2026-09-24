@@ -67,7 +67,7 @@
         </div>
       </div>
       <!-- CANVAS -->
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
     </div>
@@ -166,7 +166,7 @@ class Component extends DCLogic {
   norm(v, rng) { return (v - rng.min) / (rng.max - rng.min); }
 
   drawWire(ctx, x1, y1, x2, y2) {
-    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 4; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
   // electrons travel (x1,y1)->(x2,y2) along electron-flow direction
@@ -178,63 +178,63 @@ class Component extends DCLogic {
       let t = ((i / n) + this.phase * 0.09 * (this.dir || 1)) % 1; if (t < 0) t += 1;
       const ex = x1 + (x2 - x1) * t, ey = y1 + (y2 - y1) * t;
       ctx.beginPath(); ctx.arc(ex, ey, 3.3, 0, 6.2832);
-      ctx.fillStyle = '#78c8ff'; ctx.fill();
-      ctx.strokeStyle = 'rgba(10,18,28,.55)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#3890c6'; ctx.fill();
+      ctx.strokeStyle = 'rgba(241,238,233,.55)'; ctx.lineWidth = 1; ctx.stroke();
     }
   }
   currentArrow(ctx, x, y, dx, dy, on) {
     if (!this.state.showArrow || !on) return;
     const a = Math.atan2(dy, dx);
     ctx.save(); ctx.translate(x, y); ctx.rotate(a);
-    ctx.fillStyle = '#ffb454';
+    ctx.fillStyle = '#b5771b';
     ctx.beginPath(); ctx.moveTo(11, 0); ctx.lineTo(-7, -8); ctx.lineTo(-7, 8); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#ffd9a0'; ctx.font = '700 12px IBM Plex Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#9d793f'; ctx.font = '700 12px IBM Plex Mono, monospace'; ctx.textAlign = 'center';
     ctx.save(); ctx.rotate(-a); ctx.fillText('I', 0, -14); ctx.restore();
     ctx.restore();
   }
   battery(ctx, x, ymid, uStr) {
     const gap = 9;
-    ctx.lineCap = 'round'; ctx.strokeStyle = '#e8e3d8';
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#38352c';
     ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - 17, ymid - gap); ctx.lineTo(x + 17, ymid - gap); ctx.stroke();
     ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(x - 9, ymid + gap); ctx.lineTo(x + 9, ymid + gap); ctx.stroke();
-    ctx.fillStyle = '#aeb6bf'; ctx.font = "600 14px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#495058'; ctx.font = "600 14px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText('+', x + 22, ymid - gap); ctx.fillText('\u2212', x + 22, ymid + gap);
-    ctx.fillStyle = '#cdd4dc'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+    ctx.fillStyle = '#393f45'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
     ctx.fillText(uStr + ' V', x - 24, ymid);
     ctx.textBaseline = 'alphabetic';
   }
   switchSym(ctx, x, y, closed) {
-    ctx.fillStyle = '#cdd4dc';
+    ctx.fillStyle = '#393f45';
     ctx.beginPath(); ctx.arc(x - 18, y, 3.5, 0, 6.2832); ctx.fill();
     ctx.beginPath(); ctx.arc(x + 18, y, 3.5, 0, 6.2832); ctx.fill();
-    ctx.strokeStyle = closed ? '#7fd8cb' : '#c0392b'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+    ctx.strokeStyle = closed ? '#35988c' : '#c0392b'; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(x - 18, y);
     if (closed) ctx.lineTo(x + 18, y); else ctx.lineTo(x + 13, y - 15);
     ctx.stroke();
-    ctx.fillStyle = '#7f8a98'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#626d7a'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     ctx.fillText('S', x, y - 21);
   }
   // IEC resistor: rectangle on the wire
   resistor(ctx, xc, y, rStr) {
-    ctx.fillStyle = '#0e131b'; ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5;
+    ctx.fillStyle = '#f0ede8'; ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.rect(xc - 34, y - 11, 68, 22); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#7fd8cb'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#35988c'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     ctx.fillText('R = ' + rStr + ' \u03A9', xc, y + 30);
   }
   lamp(ctx, x, y, glow) {
     ctx.save(); ctx.translate(x, y);
     if (glow > 0.02) {
       const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 42);
-      g.addColorStop(0, `rgba(255,224,130,${0.45 + glow * 0.5})`);
-      g.addColorStop(1, 'rgba(255,224,130,0)');
+      g.addColorStop(0, `rgba(152,124,24,${0.45 + glow * 0.5})`);
+      g.addColorStop(1, 'rgba(152,124,24,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 42, 0, 6.2832); ctx.fill();
     }
     ctx.beginPath(); ctx.arc(0, 0, 14, 0, 6.2832);
-    ctx.fillStyle = glow > 0.02 ? `rgba(255,233,160,${0.35 + glow * 0.6})` : '#141c25';
-    ctx.fill(); ctx.strokeStyle = '#9aa3ad'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.strokeStyle = glow > 0.02 ? '#fff3cf' : '#5b6573'; ctx.lineWidth = 1.7;
+    ctx.fillStyle = glow > 0.02 ? `rgba(146,124,47,${0.35 + glow * 0.6})` : '#ebe8e4';
+    ctx.fill(); ctx.strokeStyle = '#545c65'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.strokeStyle = glow > 0.02 ? '#867b59' : '#8994a3'; ctx.lineWidth = 1.7;
     const r = 9.9; ctx.beginPath(); ctx.moveTo(-r, -r); ctx.lineTo(r, r); ctx.moveTo(-r, r); ctx.lineTo(r, -r); ctx.stroke();
-    ctx.fillStyle = '#9aa3ad'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText('L', 0, -25);
+    ctx.fillStyle = '#545c65'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText('L', 0, -25);
     ctx.restore();
   }
 
@@ -242,7 +242,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
     const W = this.W, H = this.H;
     const x0 = Math.max(150, W * 0.20), x1 = W - Math.max(110, W * 0.14);
     const y0 = H * 0.24, y1 = H * 0.76, ymid = (y0 + y1) / 2, gap = 9;
@@ -282,7 +282,7 @@ class Component extends DCLogic {
       ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
       ctx.fillText('Kring open \u2014 geen stroom', (x0 + x1) / 2, ymid);
     } else {
-      ctx.fillStyle = '#7f8a98'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+      ctx.fillStyle = '#626d7a'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
       ctx.fillText('I = ' + this.fmtI(I), (x0 + x1) / 2, ymid);
     }
   }

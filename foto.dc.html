@@ -51,7 +51,7 @@
 
     <!-- TUBE -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ tubeRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
     </div>
@@ -147,11 +147,11 @@ class Component extends DCLogic {
   tubeRef = React.createRef();
   graphRef = React.createRef();
   materials = [
-    { name: 'Natrium',  W: 2.28, color: '#e6d28a' },
-    { name: 'Calcium',  W: 2.90, color: '#dcd6c6' },
-    { name: 'Zink',     W: 4.30, color: '#c2c7cc' },
-    { name: 'Koper',    W: 4.70, color: '#cf8350' },
-    { name: 'Platina',  W: 6.35, color: '#d3d6da' },
+    { name: 'Natrium',  W: 2.28, color: '#968236' },
+    { name: 'Calcium',  W: 2.90, color: '#413c2f' },
+    { name: 'Zink',     W: 4.30, color: '#474540' },
+    { name: 'Koper',    W: 4.70, color: '#c97a44' },
+    { name: 'Platina',  W: 6.35, color: '#3e3c38' },
   ];
   photons = [];
   electrons = [];
@@ -289,11 +289,11 @@ class Component extends DCLogic {
     const KE = this.keMax();
     const light = this.props.tubeStyle === 'light';
 
-    ctx.fillStyle = light ? '#f2efe9' : '#0e131b';
+    ctx.fillStyle = light ? '#302e2a' : '#f0ede8';
     ctx.fillRect(0, 0, this.W, this.H);
 
     // wires (now meet the battery plates at x = cx-9 and cx+9, cx = 282)
-    ctx.lineWidth = 3; ctx.strokeStyle = light ? '#9a948a' : '#5b6573'; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.lineWidth = 3; ctx.strokeStyle = light ? '#69635a' : '#8994a3'; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(g.targetFace, g.plateTop); ctx.lineTo(g.targetFace, 104); ctx.lineTo(118, 104); ctx.lineTo(118, 362); ctx.lineTo(273, 362);
     ctx.stroke();
@@ -307,9 +307,9 @@ class Component extends DCLogic {
 
     ctx.save();
     this.rr(ctx, 110, 118, 320, 172, 16);
-    ctx.fillStyle = light ? 'rgba(210,222,232,0.6)' : 'rgba(40,56,78,0.45)';
+    ctx.fillStyle = light ? 'rgba(49,58,66,0.6)' : 'rgba(193,205,222,0.45)';
     ctx.fill();
-    ctx.lineWidth = 2.5; ctx.strokeStyle = light ? '#b9c2cc' : '#33485f';
+    ctx.lineWidth = 2.5; ctx.strokeStyle = light ? '#424952' : '#bbcada';
     ctx.stroke();
     ctx.clip();
 
@@ -331,7 +331,7 @@ class Component extends DCLogic {
       ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, 6.2832); ctx.fill();
     }
 
-    const ecol = this.props.electronColor || '#6fb0ff';
+    const ecol = this.props.electronColor || '#4a8ede';
     for (const e of this.electrons) {
       ctx.globalAlpha = 0.25; ctx.fillStyle = ecol;
       ctx.beginPath(); ctx.arc(e.x, e.y, 5, 0, 6.2832); ctx.fill();
@@ -341,19 +341,19 @@ class Component extends DCLogic {
 
     ctx.fillStyle = m.color;
     this.rr(ctx, g.targetFace - 8, g.plateTop, 9, g.plateBot - g.plateTop, 2); ctx.fill();
-    ctx.fillStyle = light ? '#c9cdd2' : '#9aa3ad';
+    ctx.fillStyle = light ? '#44413d' : '#545c65';
     this.rr(ctx, g.collectorFace, g.plateTop, 9, g.plateBot - g.plateTop, 2); ctx.fill();
     ctx.restore();
 
     ctx.font = "500 12px 'IBM Plex Mono', monospace";
     ctx.textAlign = 'center';
-    ctx.fillStyle = light ? '#6f685c' : '#9aa6b4';
+    ctx.fillStyle = light ? '#938c7f' : '#505b67';
     ctx.fillText('doel: ' + m.name, g.targetFace - 3, g.plateBot + 22);
     ctx.fillText('collector', g.collectorFace + 4, g.plateBot + 22);
 
-    ctx.fillStyle = light ? '#cfd3d8' : '#2b3340';
+    ctx.fillStyle = light ? '#403e3a' : '#d8d6d1';
     this.rr(ctx, 18, 178, 50, 54, 8); ctx.fill();
-    ctx.fillStyle = (this.state.intensity > 0) ? col : (light ? '#9a948a' : '#3a4351');
+    ctx.fillStyle = (this.state.intensity > 0) ? col : (light ? '#69635a' : '#b6c0d1');
     this.rr(ctx, 60, 186, 12, 38, 4); ctx.fill();
     if (this.state.intensity > 0) {
       ctx.globalAlpha = 0.4; ctx.beginPath(); ctx.arc(70, 205, 16, 0, 6.2832); ctx.fillStyle = col; ctx.fill(); ctx.globalAlpha = 1;
@@ -364,29 +364,29 @@ class Component extends DCLogic {
     const posRight = U >= 0;
     const longX = posRight ? cx + 9 : cx - 9;
     const shortX = posRight ? cx - 9 : cx + 9;
-    ctx.strokeStyle = '#cfd5dd'; ctx.lineCap = 'butt'; ctx.lineWidth = 3;
+    ctx.strokeStyle = '#393e44'; ctx.lineCap = 'butt'; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(longX, cy - 13); ctx.lineTo(longX, cy + 13); ctx.stroke();
     ctx.lineWidth = 7;
     ctx.beginPath(); ctx.moveTo(shortX, cy - 7); ctx.lineTo(shortX, cy + 7); ctx.stroke();
     ctx.font = "700 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#d77f5a'; ctx.fillText('+', longX + (posRight ? 11 : -11), cy);
-    ctx.fillStyle = '#9aa6b4'; ctx.fillText('\u2212', shortX + (posRight ? -11 : 11), cy);
-    ctx.fillStyle = '#aeb8c4'; ctx.font = "500 12px 'IBM Plex Mono', monospace"; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#d0744d'; ctx.fillText('+', longX + (posRight ? 11 : -11), cy);
+    ctx.fillStyle = '#505b67'; ctx.fillText('\u2212', shortX + (posRight ? -11 : 11), cy);
+    ctx.fillStyle = '#474f5a'; ctx.font = "500 12px 'IBM Plex Mono', monospace"; ctx.textBaseline = 'top';
     ctx.fillText('U = ' + U.toFixed(1) + ' V', cx, cy + 16);
     ctx.textBaseline = 'alphabetic';
   }
 
   drawAmmeter(ctx, cx, cy, I) {
     ctx.beginPath(); ctx.arc(cx, cy, 30, 0, 6.2832);
-    ctx.fillStyle = '#f7f5f0'; ctx.fill();
-    ctx.lineWidth = 2.5; ctx.strokeStyle = '#cfd5dd'; ctx.stroke();
+    ctx.fillStyle = '#2d2b27'; ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#393e44'; ctx.stroke();
     const ang = -Math.PI / 4 + Math.max(0, Math.min(1, I)) * (Math.PI / 2);
     ctx.save(); ctx.translate(cx, cy + 8); ctx.rotate(ang);
     ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -22); ctx.stroke();
     ctx.restore();
-    ctx.beginPath(); ctx.arc(cx, cy + 8, 3, 0, 6.2832); ctx.fillStyle = '#2a2723'; ctx.fill();
-    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center';
+    ctx.beginPath(); ctx.arc(cx, cy + 8, 3, 0, 6.2832); ctx.fillStyle = '#e4e1dc'; ctx.fill();
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#746d5f'; ctx.textAlign = 'center';
     ctx.fillText('A', cx, cy - 14);
   }
 
@@ -400,9 +400,9 @@ class Component extends DCLogic {
     const px = (t) => L + t * (W - L - R);
     const py = (t) => (H - B) - t * (H - B - T);
 
-    ctx.strokeStyle = '#ddd6c8'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#413b30'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.lineTo(W - R, H - B); ctx.stroke();
-    ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#a39c8d';
+    ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#645e50';
 
     const m = this.materials[this.state.materialIndex];
     const KE = this.keMax();
@@ -411,7 +411,7 @@ class Component extends DCLogic {
     if (this.state.graph === 'cv') {
       const xmap = (U) => px((U + 8) / 16);
       const ymap = (I) => py(I);
-      ctx.strokeStyle = '#eee8db'; ctx.beginPath(); ctx.moveTo(xmap(0), T); ctx.lineTo(xmap(0), H - B); ctx.stroke();
+      ctx.strokeStyle = '#363228'; ctx.beginPath(); ctx.moveTo(xmap(0), T); ctx.lineTo(xmap(0), H - B); ctx.stroke();
       ctx.strokeStyle = '#1f9e8f';
       ctx.beginPath();
       for (let i = 0; i <= 80; i++) {
@@ -422,7 +422,7 @@ class Component extends DCLogic {
       }
       ctx.stroke();
       this.dot(ctx, xmap(this.state.voltage), ymap(this.currentVal()));
-      ctx.textAlign = 'center'; ctx.fillStyle = '#8c8576';
+      ctx.textAlign = 'center'; ctx.fillStyle = '#746d5f';
       ctx.fillText('-8', xmap(-8), H - B + 14); ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('8', xmap(8), H - B + 14);
       this.axisTitles(ctx, W, H, B, L, 'Spanning U (V)', 'Stroom I');
     } else if (this.state.graph === 'ci') {
@@ -433,7 +433,7 @@ class Component extends DCLogic {
       ctx.moveTo(xmap(0), ymap(0)); ctx.lineTo(xmap(100), ymap(fr));
       ctx.stroke();
       this.dot(ctx, xmap(this.state.intensity), ymap(this.currentVal()));
-      ctx.textAlign = 'center'; ctx.fillStyle = '#8c8576';
+      ctx.textAlign = 'center'; ctx.fillStyle = '#746d5f';
       ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('100', xmap(100), H - B + 14);
       this.axisTitles(ctx, W, H, B, L, 'Intensiteit (%)', 'Stroom I');
     } else {
@@ -446,22 +446,22 @@ class Component extends DCLogic {
       ctx.moveTo(xmap(fThresh), ymap(0));
       ctx.lineTo(xmap(fmax), ymap(Math.max(0, h * fmax - m.W)));
       ctx.stroke();
-      ctx.fillStyle = '#a39c8d'; ctx.textAlign = 'center';
+      ctx.fillStyle = '#645e50'; ctx.textAlign = 'center';
       const fNow = 299.79 / this.state.wavelength;
       this.dot(ctx, xmap(Math.min(fmax, fNow)), ymap(Math.min(emax, KE)));
-      ctx.fillStyle = '#8c8576';
+      ctx.fillStyle = '#746d5f';
       ctx.fillText('0', xmap(0), H - B + 14); ctx.fillText('3', xmap(3), H - B + 14);
       this.axisTitles(ctx, W, H, B, L, 'Frequentie (10\u00B9\u2075 Hz)', 'Max. E (eV)');
     }
   }
 
   dot(ctx, x, y) {
-    ctx.fillStyle = '#e8643c';
+    ctx.fillStyle = '#eb6035';
     ctx.beginPath(); ctx.arc(x, y, 4.5, 0, 6.2832); ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.strokeStyle = '#282622'; ctx.lineWidth = 1.5; ctx.stroke();
   }
   axisTitles(ctx, W, H, B, L, xt, yt) {
-    ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#6f685c';
+    ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#938c7f';
     ctx.textAlign = 'center'; ctx.fillText(xt, L + (W - L - 12) / 2, H - 6);
     ctx.save(); ctx.translate(12, (H - B) / 2 + 6); ctx.rotate(-Math.PI / 2);
     ctx.fillText(yt, 0, 0); ctx.restore();
@@ -474,7 +474,7 @@ class Component extends DCLogic {
     const I = this.currentVal();
     const wl = this.state.wavelength;
     const region = wl < 380 ? 'UV' : (wl > 700 ? 'IR' : 'zichtbaar');
-    const active = '#1f9e8f', inactive = '#fff';
+    const active = '#1f9e8f', inactive = '#282622';
     const g = this.state.graph;
     const tag = (k) => ({ bg: g === k ? active : inactive, fg: g === k ? '#fff' : '#6f685c' });
     const cv = tag('cv'), ci = tag('ci'), ef = tag('ef');

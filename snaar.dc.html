@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
     </div>
@@ -168,52 +168,52 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c || !this.y) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
     const ay = this.axisY, N = this.N;
 
-    ctx.strokeStyle = '#202a36'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.strokeStyle = '#e3e0db'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
     ctx.beginPath(); ctx.moveTo(this.x0, ay); ctx.lineTo(this.x1, ay); ctx.stroke(); ctx.setLineDash([]);
 
-    ctx.strokeStyle = '#39c2ac'; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#08a38f'; ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.beginPath();
     for (let i = 0; i < N; i++) {
       const x = this.px(i), yy = ay - this.y[i];
       if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
     }
     ctx.stroke();
-    ctx.fillStyle = '#7fe0d0';
+    ctx.fillStyle = '#279889';
     for (let i = 0; i < N; i += 7) {
       ctx.beginPath(); ctx.arc(this.px(i), ay - this.y[i], 2.6, 0, 6.2832); ctx.fill();
     }
 
     const dy0 = ay - this.y[0];
-    ctx.fillStyle = '#2b3340'; this.rr(ctx, this.x0 - 30, ay - 36, 24, 72, 6); ctx.fill();
-    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 2;
+    ctx.fillStyle = '#d8d6d1'; this.rr(ctx, this.x0 - 30, ay - 36, 24, 72, 6); ctx.fill();
+    ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(this.x0 - 18, ay, 11, 0, 6.2832); ctx.stroke();
     const ph = this.phase;
-    ctx.strokeStyle = '#39c2ac'; ctx.lineWidth = 2.4;
+    ctx.strokeStyle = '#08a38f'; ctx.lineWidth = 2.4;
     ctx.beginPath(); ctx.moveTo(this.x0 - 18, ay); ctx.lineTo(this.x0 - 18 + Math.cos(ph) * 9, ay + Math.sin(ph) * 9); ctx.stroke();
-    ctx.fillStyle = '#39c2ac';
+    ctx.fillStyle = '#08a38f';
     ctx.beginPath(); ctx.arc(this.x0, dy0, 5, 0, 6.2832); ctx.fill();
 
     const dyN = ay - this.y[N - 1];
     if (this.state.end === 'vast') {
-      ctx.fillStyle = '#1b2230'; ctx.fillRect(this.x1, ay - 60, 14, 120);
-      ctx.strokeStyle = '#3a4658'; ctx.lineWidth = 1.5;
+      ctx.fillStyle = '#e7e4df'; ctx.fillRect(this.x1, ay - 60, 14, 120);
+      ctx.strokeStyle = '#afbdd2'; ctx.lineWidth = 1.5;
       for (let yy = ay - 58; yy < ay + 58; yy += 10) { ctx.beginPath(); ctx.moveTo(this.x1, yy + 10); ctx.lineTo(this.x1 + 14, yy); ctx.stroke(); }
     } else if (this.state.end === 'los') {
-      ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 3;
+      ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(this.x1, ay - 60); ctx.lineTo(this.x1, ay + 60); ctx.stroke();
-      ctx.strokeStyle = '#7fe0d0'; ctx.lineWidth = 2.4;
+      ctx.strokeStyle = '#279889'; ctx.lineWidth = 2.4;
       ctx.beginPath(); ctx.arc(this.x1, dyN, 8, 0, 6.2832); ctx.stroke();
     } else {
-      ctx.fillStyle = '#1b2230'; this.rr(ctx, this.x1 - 4, ay - 18, 22, 36, 5); ctx.fill();
-      ctx.fillStyle = '#39c2ac';
+      ctx.fillStyle = '#e7e4df'; this.rr(ctx, this.x1 - 4, ay - 18, 22, 36, 5); ctx.fill();
+      ctx.fillStyle = '#08a38f';
     }
     ctx.beginPath(); ctx.arc(this.x1, dyN, 4.5, 0, 6.2832);
-    ctx.fillStyle = this.state.end === 'los' ? '#7fe0d0' : '#39c2ac'; ctx.fill();
+    ctx.fillStyle = this.state.end === 'los' ? '#279889' : '#08a38f'; ctx.fill();
 
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
     const lbl = this.state.end === 'vast' ? 'vast' : (this.state.end === 'los' ? 'los' : 'geen (absorberend)');
     ctx.fillText(lbl, this.x1 - 4, ay + 80);
   }

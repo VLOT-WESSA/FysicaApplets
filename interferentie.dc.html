@@ -44,13 +44,12 @@
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Interferentie van twee golven</h1>
-    <span style="font-size:13px;color:#8c8576">twee coherente bronnen</span>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
@@ -85,14 +84,14 @@
         </div>
       </div>
 
-      <div style="background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6ee">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8a93a3;font-weight:600;margin-bottom:12px">Meetpunt</div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#2a2723;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Meetpunt</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">weglengteverschil &Delta;x</span>
+          <span style="font-size:13px;color:#6f685c">weglengteverschil &Delta;x</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ dsStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-          <span style="font-size:13px;color:#aeb6c2">&Delta;x / &lambda;</span>
+          <span style="font-size:13px;color:#6f685c">&Delta;x / &lambda;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ ratioStr }}</span>
         </div>
         <div style="font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;background:{{ verdBg }};color:{{ verdFg }};text-align:center">{{ verdict }}</div>
@@ -193,7 +192,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
 
     const [s1, s2] = this.sources();
     const cx = this.W / 2, cy = this.H / 2;
@@ -207,9 +206,9 @@ class Component extends DCLogic {
 
     if (this.state.showFronts) {
       for (const s of [s1, s2]) {
-        ctx.setLineDash([]); ctx.strokeStyle = 'rgba(120,205,255,0.42)'; ctx.lineWidth = 1.6;
+        ctx.setLineDash([]); ctx.strokeStyle = 'rgba(50,144,194,0.42)'; ctx.lineWidth = 1.6;
         for (let r = crestBase; r < maxR; r += lambdaPx) { if (r < 3) continue; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, 6.2832); ctx.stroke(); }
-        ctx.setLineDash([3, 6]); ctx.strokeStyle = 'rgba(178,126,220,0.5)'; ctx.lineWidth = 1.3;
+        ctx.setLineDash([3, 6]); ctx.strokeStyle = 'rgba(171,116,214,0.5)'; ctx.lineWidth = 1.3;
         for (let r = crestBase + lambdaPx / 2; r < maxR; r += lambdaPx) { if (r < 3) continue; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, 6.2832); ctx.stroke(); }
       }
       ctx.setLineDash([]);
@@ -233,20 +232,20 @@ class Component extends DCLogic {
           ctx.stroke();
         }
       };
-      for (let n = 1; n * lambdaPx < 2 * a - 0.5; n++) drawHyper(n * lambdaPx, '#e8964c', 2);
-      for (let n = 0; (n + 0.5) * lambdaPx < 2 * a - 0.5; n++) drawHyper((n + 0.5) * lambdaPx, '#5b9bff', 2);
-      drawHyper(0, '#e8964c', 2.6);
+      for (let n = 1; n * lambdaPx < 2 * a - 0.5; n++) drawHyper(n * lambdaPx, '#c8741d', 2);
+      for (let n = 0; (n + 0.5) * lambdaPx < 2 * a - 0.5; n++) drawHyper((n + 0.5) * lambdaPx, '#4a8df5', 2);
+      drawHyper(0, '#c8741d', 2.6);
     }
 
     const r1px = Math.hypot(this.mp.x - s1.x, this.mp.y - s1.y);
     const r2px = Math.hypot(this.mp.x - s2.x, this.mp.y - s2.y);
-    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(190,140,225,0.9)';
+    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(168,116,203,0.9)';
     ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(this.mp.x, this.mp.y);
     ctx.moveTo(s2.x, s2.y); ctx.lineTo(this.mp.x, this.mp.y); ctx.stroke(); ctx.setLineDash([]);
 
     for (const s of [s1, s2]) {
       ctx.beginPath(); ctx.arc(s.x, s.y, 7, 0, 6.2832);
-      ctx.fillStyle = '#fffdf9'; ctx.fill();
+      ctx.fillStyle = '#292723'; ctx.fill();
       ctx.lineWidth = 2.5; ctx.strokeStyle = '#1f9e8f'; ctx.stroke();
       ctx.beginPath(); ctx.arc(s.x, s.y, 2.6, 0, 6.2832); ctx.fillStyle = '#1f9e8f'; ctx.fill();
     }
@@ -255,13 +254,13 @@ class Component extends DCLogic {
     const flip = this.mp.x > this.W - 150;
     ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = flip ? 'right' : 'left';
     const tx = this.mp.x + (flip ? -14 : 14);
-    ctx.fillStyle = '#ecdcff'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
-    ctx.fillStyle = '#c9b6e0'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
+    ctx.fillStyle = '#877798'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
+    ctx.fillStyle = '#917da7'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
     ctx.beginPath(); ctx.arc(this.mp.x, this.mp.y, 9, 0, 6.2832);
-    ctx.fillStyle = '#b57edc'; ctx.fill();
-    ctx.lineWidth = 2.5; ctx.strokeStyle = '#fffdf9'; ctx.stroke();
+    ctx.fillStyle = '#ad73d5'; ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#292723'; ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.4;
+    ctx.strokeStyle = 'rgba(40,38,34,0.8)'; ctx.fillStyle = 'rgba(40,38,34,0.85)'; ctx.lineWidth = 1.4;
     const bx = 20, by = this.H - 20;
     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + lambdaPx, by);
     ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + lambdaPx, by - 4); ctx.lineTo(bx + lambdaPx, by + 4); ctx.stroke();
@@ -273,9 +272,9 @@ class Component extends DCLogic {
     const seg = (on) => ({ bg: on ? '#1f9e8f' : '#fff', fg: on ? '#fff' : '#6f685c' });
     const ln = seg(this.state.showLines), sl = seg(this.state.slow), fr = seg(this.state.showFronts);
     const near = this.state._near;
-    const verdColors = near === 'con' ? { bg: 'rgba(232,150,76,0.18)', fg: '#f0a868' }
-      : near === 'des' ? { bg: 'rgba(91,155,255,0.18)', fg: '#7fb0ff' }
-      : { bg: 'rgba(255,255,255,0.08)', fg: '#aeb6c2' };
+    const verdColors = near === 'con' ? { bg: 'rgba(200,116,29,0.14)', fg: '#a35f17' }
+      : near === 'des' ? { bg: 'rgba(58,111,184,0.14)', fg: '#2f5f9e' }
+      : { bg: 'rgba(42,39,35,0.06)', fg: '#4f4a42' };
     return {
       stageRef: this.stageRef,
       lambdaCm: this.state.lambdaCm, sepCm: this.state.sepCm,

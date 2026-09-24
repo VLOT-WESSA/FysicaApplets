@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Bewegingen en hun grafieken</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:4px;flex:none;flex-wrap:wrap;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
+        <sc-for list="{{ scenItems }}" as="s" hint-placeholder-count="5">
+          <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.name }}</button>
+        </sc-for>
+      </div>
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ sliders }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">{{ p.label }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ p.valStr }}</span></div>
+          <div style="height:32px;display:flex;align-items:center"><input type="range" min="{{ p.min }}" max="{{ p.max }}" step="{{ p.step }}" value="{{ p.val }}" onInput="{{ p.onInput }}"></div>
+        </sc-for>
+        <sc-if value="{{ hasG }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Valversnelling g</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ gStr }}</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <sc-for list="{{ gItems }}" as="g" hint-placeholder-count="3">
+              <button onClick="{{ g.onClick }}" style="{{ g.style }}">{{ g.name }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+          <button onClick="{{ onStrobe }}" style="{{ strobeStyle }}">Stroboscoop</button>
+          <button onClick="{{ onVec }}" style="{{ vecStyle }}">Vectoren</button>
+        </div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+        <div style="display:flex;justify-content:space-between"><span>Tijd t</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ tStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Positie</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ posStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ velStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Versnelling</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ accStr }}</span></div>
+      </div>
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.7">
+        <sc-for list="{{ formulas }}" as="f" hint-placeholder-count="3">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">{{ f.text }}</div>
+        </sc-for>
+        <div style="margin-top:4px">{{ axisNote }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 960; H = 600;
+  gs = [{ n: 'Aarde', g: 9.81 }, { n: 'Mars', g: 3.71 }, { n: 'Maan', g: 1.62 }];
+  S = {
+    erb: { name: 'ERB', kind: 'h', T: 10, rng: { pos: [0, 100], vel: [-10, 10], acc: [-2, 2] },
+      params: [['x0', 'Beginpositie x\u2080', 'x\u2080', 'm', 0, 100, 5, 10], ['v0', 'Snelheid v', 'v', 'm/s', -10, 10, 0.5, 6]] },
+    evrb: { name: 'EVRB', kind: 'h', T: 10, rng: { pos: [0, 100], vel: [-20, 20], acc: [-3, 3] },
+      params: [['x0', 'Beginpositie x\u2080', 'x\u2080', 'm', 0, 100, 5, 10], ['v0', 'Beginsnelheid v\u2080', 'v\u2080', 'm/s', -10, 10, 0.5, 2], ['a', 'Versnelling a', 'a', 'm/s\u00B2', -3, 3, 0.1, 1]] },
+    vv: { name: 'Vrije val', kind: 'v', T: 5, g: true, rng: { pos: [0, 100], vel: [-50, 10], acc: [-12, 2] },
+      params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 10, 100, 5, 80]] },
+    vw: { name: 'Verticale worp', kind: 'v', T: 6, g: true, rng: { pos: [0, 80], vel: [-40, 30], acc: [-12, 2] },
+      params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 0, 50, 5, 10], ['v0', 'Beginsnelheid v\u2080', 'v\u2080', 'm/s', 0, 30, 1, 20]] },
+    hw: { name: 'Horizontale worp', kind: 'p', T: 5, g: true, rng: { pos: [0, 120], vel: [-50, 30], acc: [-12, 2] },
+      params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 10, 100, 5, 60], ['v0', 'Horizontale snelheid v\u2080', 'v\u2080', 'm/s', 0, 30, 1, 12]] },
+  };
+  order = ['erb', 'evrb', 'vv', 'vw', 'hw'];
+
+  t = 0; running = false;
+  state = (() => {
+    const vals = {};
+    for (const k of this.order) { vals[k] = { g: 9.81 }; for (const q of this.S[k].params) vals[k][q[0]] = q[7]; }
+    return { sc: 'erb', vals, strobe: false, vec: false };
+  })();
+
+  componentDidMount() {
+    this.setupCanvas(); this.draw();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.running) {
+      this.t += dt;
+      const te = this.tEnd(this.state.sc, this.cur());
+      if (this.t >= te) { this.t = te; this.running = false; this.forceUpdate(); }
+      this._r = (this._r || 0) + dt; if (this._r > 0.1) { this._r = 0; this.forceUpdate(); }
+    }
+    this.draw();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  cur() { return this.state.vals[this.state.sc]; }
+  kin(sc, p, t) {
+    const g = p.g;
+    switch (sc) {
+      case 'erb': return { x: p.x0 + p.v0 * t, y: 0, vx: p.v0, vy: 0, ax: 0, ay: 0 };
+      case 'evrb': return { x: p.x0 + p.v0 * t + 0.5 * p.a * t * t, y: 0, vx: p.v0 + p.a * t, vy: 0, ax: p.a, ay: 0 };
+      case 'vv': return { x: 0, y: p.h0 - 0.5 * g * t * t, vx: 0, vy: -g * t, ax: 0, ay: -g };
+      case 'vw': return { x: 0, y: p.h0 + p.v0 * t - 0.5 * g * t * t, vx: 0, vy: p.v0 - g * t, ax: 0, ay: -g };
+      default: return { x: p.v0 * t, y: p.h0 - 0.5 * g * t * t, vx: p.v0, vy: -g * t, ax: 0, ay: -g };
+    }
+  }
+  tEnd(sc, p) {
+    const d = this.S[sc]; if (d.kind === 'h') return d.T;
+    const v0y = sc === 'vw' ? p.v0 : 0;
+    return Math.max(0.05, (v0y + Math.sqrt(v0y * v0y + 2 * p.g * p.h0)) / p.g);
+  }
+  chans(kind) {
+    if (kind === 'h') return { pos: ['x'], vel: ['vx'], acc: ['ax'] };
+    if (kind === 'v') return { pos: ['y'], vel: ['vy'], acc: ['ay'] };
+    return { pos: ['x', 'y'], vel: ['vx', 'vy'], acc: ['ax', 'ay'] };
+  }
+  nice(x) { const e = Math.pow(10, Math.floor(Math.log10(x))); const m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
+  axis(lo, hi, n) { const st = this.nice((hi - lo) / (n || 5)); return { lo: Math.floor(lo / st + 1e-9) * st, hi: Math.ceil(hi / st - 1e-9) * st, st }; }
+
+  layout() {
+    const sc = this.state.sc, d = this.S[sc], p = this.cur(), tg = null;
+    const sets = [[p, this.tEnd(sc, p)]]; if (tg) sets.push([tg, this.tEnd(sc, tg)]);
+    let tMax = d.T; for (const s of sets) tMax = Math.max(tMax, s[1]);
+    const tA = this.axis(0, tMax, 5);
+    const ch = this.chans(d.kind); const ax = {};
+    for (const key of ['pos', 'vel', 'acc']) {
+      let lo = d.rng[key][0], hi = d.rng[key][1];
+      for (const s of sets) for (let i = 0; i <= 60; i++) {
+        const k = this.kin(sc, s[0], s[1] * i / 60);
+        for (const c of ch[key]) { lo = Math.min(lo, k[c]); hi = Math.max(hi, k[c]); }
+      }
+      ax[key] = this.axis(lo, hi, 5);
+    }
+    return { sc, d, p, tg, tA, ax, ch, te: this.tEnd(sc, p) };
+  }
+
+  fmt(x, n) { return (Math.abs(x) < 0.5 * Math.pow(10, -n) ? 0 : x).toFixed(n).replace('.', ','); }
+
+  arrow(ctx, x, y, dx, dy, col, w, label, dash) {
+    const L = Math.hypot(dx, dy); if (L < 2) return;
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; if (dash) ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); ctx.setLineDash([]);
+    const a = Math.atan2(dy, dx), hl = 9;
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - hl * Math.cos(a - 0.45), y + dy - hl * Math.sin(a - 0.45)); ctx.lineTo(x + dx - hl * Math.cos(a + 0.45), y + dy - hl * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill();
+    if (label) { ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14); }
+    ctx.restore();
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const L = this.layout();
+    this.drawScene(ctx, L);
+    const names = { h: ['x (m)', 'v (m/s)', 'a (m/s\u00B2)'], v: ['y (m)', 'v (m/s)', 'a (m/s\u00B2)'], p: ['x, y (m)', 'v\u2093, v\u1D67 (m/s)', 'a\u2093, a\u1D67 (m/s\u00B2)'] }[L.d.kind];
+    const keys = ['pos', 'vel', 'acc'];
+    for (let i = 0; i < 3; i++) this.drawGraph(ctx, L, keys[i], names[i], 490, 22 + i * 195, 455, 150);
+    ctx.strokeStyle = '#e7e1d5'; ctx.beginPath(); ctx.moveTo(420, 10); ctx.lineTo(420, this.H - 10); ctx.stroke();
+  }
+
+  drawGraph(ctx, L, key, name, x, y, w, h) {
+    const A = L.ax[key], T = L.tA;
+    const X = (t) => x + t / T.hi * w, Y = (v) => y + h - (v - A.lo) / (A.hi - A.lo) * h;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h);
+    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.lineWidth = 1;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) {
+      ctx.strokeStyle = Math.abs(v) < 1e-9 ? '#9a927f' : '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
+      ctx.fillText(this.fmt(v, A.st < 1 ? 1 : 0), x - 6, Y(v));
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let t = 0; t <= T.hi + 1e-9; t += T.st) {
+      ctx.strokeStyle = '#ece7dc'; ctx.beginPath(); ctx.moveTo(X(t), y); ctx.lineTo(X(t), y + h); ctx.stroke();
+      ctx.fillText(this.fmt(t, T.st < 1 ? 1 : 0), X(t), y + h + 3);
+    }
+    ctx.strokeStyle = '#9a927f'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(name, x + 6, y + 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif";
+    ctx.fillText('t (s)', x + w - 4, y + h - 3);
+
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y - 2, w, h + 4); ctx.clip();
+    const cols = { x: '#3a6fb8', vx: '#3a6fb8', ax: '#3a6fb8', y: '#c8443a', vy: '#c8443a', ay: '#c8443a' };
+    if (L.d.kind === 'v') cols.y = cols.vy = cols.ay = '#3a6fb8';
+    const curve = (p, te, ch, upto, col, width, alpha, dash) => {
+      ctx.strokeStyle = col; ctx.lineWidth = width; ctx.globalAlpha = alpha; ctx.setLineDash(dash || []);
+      ctx.beginPath();
+      const n = 160;
+      for (let i = 0; i <= n; i++) { const t = Math.min(upto, te) * i / n; const v = this.kin(L.sc, p, t)[ch]; i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)); }
+      ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+    };
+    if (L.tg && key === 'pos') for (const ch of L.ch[key]) curve(L.tg, this.tEnd(L.sc, L.tg), ch, 1e9, '#d9822b', 2.4, 1, [7, 5]);
+    for (const ch of L.ch[key]) {
+      curve(L.p, L.te, ch, 1e9, cols[ch], 1.6, 0.28);
+      if (this.t > 0) curve(L.p, L.te, ch, this.t, cols[ch], 2.4, 1);
+    }
+    if (this.t > 0) {
+      ctx.strokeStyle = 'rgba(42,39,35,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(this.t), y); ctx.lineTo(X(this.t), y + h); ctx.stroke();
+      const k = this.kin(L.sc, L.p, this.t);
+      for (const ch of L.ch[key]) { ctx.beginPath(); ctx.arc(X(this.t), Y(k[ch]), 4, 0, 7); ctx.fillStyle = cols[ch]; ctx.fill(); }
+    }
+    ctx.restore();
+    if (L.d.kind === 'p') {
+      ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+      const lab = key === 'pos' ? ['x', 'y'] : key === 'vel' ? ['v\u2093', 'v\u1D67'] : ['a\u2093', 'a\u1D67'];
+      ctx.fillStyle = '#3a6fb8'; ctx.fillText(lab[0], x + 90, y + 4); ctx.fillStyle = '#c8443a'; ctx.fillText(lab[1], x + 115, y + 4);
+    }
+  }
+
+  drawScene(ctx, L) {
+    const { d, p, sc } = L; const k = this.kin(sc, p, this.t);
+    const vc = this.state.vec, strobe = this.state.strobe;
+    const sdt = d.kind === 'h' ? 1 : 0.5;
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 16px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('t = ' + this.fmt(this.t, 2) + ' s', 22, 16);
+    const ghosts = [];
+    if (strobe) for (let t = 0; t <= Math.min(this.t, L.te) + 1e-9; t += sdt) ghosts.push(t);
+
+    if (d.kind === 'h') {
+      const A = L.ax.pos; const X = (v) => 30 + (v - A.lo) / (A.hi - A.lo) * 360; const ry = 330;
+      ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, ry); ctx.lineTo(400, ry); ctx.stroke();
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), ry); ctx.lineTo(X(v), ry + 7); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), ry + 10); }
+      ctx.textAlign = 'right'; ctx.fillText('x (m)', 400, ry + 28);
+      const car = (x, a) => { ctx.globalAlpha = a; ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.roundRect(x - 14, ry - 18, 28, 12, 3); ctx.fill(); ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(x - 8, ry - 4, 4, 0, 7); ctx.arc(x + 8, ry - 4, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1; };
+      for (const t of ghosts) { const g = this.kin(sc, p, t); ctx.fillStyle = 'rgba(58,111,184,0.5)'; ctx.beginPath(); ctx.arc(X(g.x), ry - 40, 3.5, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(58,111,184,0.25)'; ctx.beginPath(); ctx.moveTo(X(g.x), ry - 36); ctx.lineTo(X(g.x), ry); ctx.stroke(); }
+      car(X(k.x), 1);
+      if (vc) { this.arrow(ctx, X(k.x), ry - 70, k.vx * 8, 0, '#d9822b', 3, 'v'); this.arrow(ctx, X(k.x), ry - 100, k.ax * 20, 0, '#c8443a', 3, 'a'); }
+    } else if (d.kind === 'v') {
+      const A = L.ax.pos; const Y = (v) => 560 - (v - A.lo) / (A.hi - A.lo) * 490; const bx = 220;
+      ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(40, Y(0)); ctx.lineTo(400, Y(0)); ctx.stroke();
+      ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(70, Y(A.lo)); ctx.lineTo(70, Y(A.hi)); ctx.stroke();
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(64, Y(v)); ctx.lineTo(70, Y(v)); ctx.stroke(); ctx.fillText(this.fmt(v, 0), 60, Y(v)); }
+      ctx.textAlign = 'left'; ctx.fillText('y (m)', 76, Y(A.hi));
+      if (p.h0 > 0) { ctx.fillStyle = '#cdd4dc'; ctx.fillRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.strokeRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); }
+      for (const t of ghosts) { const g = this.kin(sc, p, t); const off = sc === 'vw' ? (g.vy >= 0 ? -16 : 16) : 0; ctx.fillStyle = 'rgba(58,111,184,0.35)'; ctx.beginPath(); ctx.arc(bx + off, Y(g.y) - 8, 7, 0, 7); ctx.fill(); }
+      ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(bx, Y(k.y) - 8, 8, 0, 7); ctx.fill();
+      if (vc) { this.arrow(ctx, bx + 40, Y(k.y) - 8, 0, -k.vy * 3, '#d9822b', 3, 'v'); this.arrow(ctx, bx + 72, Y(k.y) - 8, 0, -k.ay * 6, '#c8443a', 3, 'a'); }
+    } else {
+      const A = L.ax.pos; const sc2 = Math.min(340 / A.hi, 490 / A.hi);
+      const ox = 50, oy = 560; const X = (v) => ox + v * sc2, Y = (v) => oy - v * sc2;
+      ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, oy); ctx.lineTo(405, oy); ctx.stroke();
+      ctx.fillStyle = '#cdd4dc'; ctx.fillRect(20, Y(p.h0), 30, oy - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 1.5; ctx.strokeRect(20, Y(p.h0), 30, oy - Y(p.h0));
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      for (let v = 0; v <= A.hi + 1e-9 && X(v) < 410; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), oy); ctx.lineTo(X(v), oy + 6); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), oy + 9); }
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let v = A.st; v <= A.hi + 1e-9 && Y(v) > 40; v += A.st) { ctx.fillText(this.fmt(v, 0), 16, Y(v)); }
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(58,111,184,0.35)'; ctx.beginPath();
+      for (let i = 0; i <= 80; i++) { const g = this.kin(sc, p, L.te * i / 80); i ? ctx.lineTo(X(g.x), Y(g.y)) : ctx.moveTo(X(g.x), Y(g.y)); }
+      ctx.stroke(); ctx.setLineDash([]);
+      for (const t of ghosts) {
+        const g = this.kin(sc, p, t);
+        ctx.fillStyle = 'rgba(58,111,184,0.4)'; ctx.beginPath(); ctx.arc(X(g.x), Y(g.y), 5.5, 0, 7); ctx.fill();
+        ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(X(g.x), oy, 3, 0, 7); ctx.fill();
+        ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(ox, Y(g.y), 3, 0, 7); ctx.fill();
+      }
+      ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(X(k.x), Y(k.y), 7, 0, 7); ctx.fill();
+      if (vc) {
+        const q = 2.2;
+        this.arrow(ctx, X(k.x), Y(k.y), k.vx * q, 0, '#3a6fb8', 2, 'v\u2093', true);
+        this.arrow(ctx, X(k.x), Y(k.y), 0, -k.vy * q, '#c8443a', 2, 'v\u1D67', true);
+        this.arrow(ctx, X(k.x), Y(k.y), k.vx * q, -k.vy * q, '#d9822b', 3, 'v');
+        this.arrow(ctx, X(k.x) - 18, Y(k.y), 0, -k.ay * 5, '#8a3b2c', 3, 'a');
+      }
+    }
+  }
+
+  setVal(key, v) {
+    const st = this.state; const vals = Object.assign({}, st.vals); vals[st.sc] = Object.assign({}, vals[st.sc], { [key]: v });
+    this.t = 0; this.running = false;
+    this.setState({ vals });
+  }
+
+  renderVals() {
+    const st = this.state, d = this.S[st.sc], p = this.cur();
+    const accent = 'oklch(0.5 0.13 255)';
+    const tab = (on) => 'flex:1;min-height:34px;font-size:13px;font-weight:' + (on ? '600' : '500') + ';border:none;border-radius:9px;padding:6px 10px;cursor:pointer;background:' + (on ? accent : 'transparent') + ';color:' + (on ? '#fff' : '#4f4a42');
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const k = this.kin(st.sc, p, this.t);
+    const dec = (step) => step < 1 ? (step < 0.5 ? 1 : 1) : 0;
+    const vecStr = (a, b, u) => d.kind === 'p' ? '(' + this.fmt(a, 1) + ' ; ' + this.fmt(b, 1) + ') ' + u : this.fmt(d.kind === 'h' ? a : b, 1) + ' ' + u;
+    const formulas = {
+      erb: ['x(t) = x\u2080 + v\u00B7t', 'v(t) = v (constant)', 'a = 0'],
+      evrb: ['x(t) = x\u2080 + v\u2080\u00B7t + \u00BD\u00B7a\u00B7t\u00B2', 'v(t) = v\u2080 + a\u00B7t', 'a = constant'],
+      vv: ['y(t) = h\u2080 \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v(t) = \u2212g\u00B7t', 'a = \u2212g'],
+      vw: ['y(t) = h\u2080 + v\u2080\u00B7t \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v(t) = v\u2080 \u2212 g\u00B7t', 'a = \u2212g'],
+      hw: ['x(t) = v\u2080\u00B7t    y(t) = h\u2080 \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v\u2093 = v\u2080    v\u1D67 = \u2212g\u00B7t', 'a\u2093 = 0    a\u1D67 = \u2212g'],
+    }[st.sc].map(text => ({ text }));
+    const pickScen = (sc) => { this.t = 0; this.running = false; this.setState({ sc }); };
+    return {
+      stageRef: this.stageRef,
+      scenItems: this.order.map(id => ({ name: this.S[id].name, style: tab(id === st.sc), onClick: () => pickScen(id) })),
+      onPlay: () => { if (this.t >= this.tEnd(st.sc, p) - 1e-9) this.t = 0; this.running = !this.running; this.forceUpdate(); },
+      onReset: () => { this.t = 0; this.running = false; this.forceUpdate(); },
+      playLabel: this.running ? 'Pauze' : (this.t > 0 && this.t < this.tEnd(st.sc, p) ? 'Verder' : 'Start'),
+      sliders: d.params.map(q => ({
+        label: q[1], min: q[4], max: q[5], step: q[6], val: p[q[0]],
+        valStr: this.fmt(p[q[0]], dec(q[6])) + ' ' + q[3],
+        onInput: (e) => this.setVal(q[0], parseFloat(e.target.value)),
+      })),
+      hasG: !!d.g, gStr: this.fmt(p.g, 2) + ' m/s\u00B2',
+      gItems: this.gs.map(g => ({ name: g.n, style: chip(Math.abs(g.g - p.g) < 1e-6), onClick: () => this.setVal('g', g.g) })),
+      strobeStyle: chip(st.strobe), vecStyle: chip(st.vec),
+      onStrobe: () => this.setState({ strobe: !st.strobe }), onVec: () => this.setState({ vec: !st.vec }),
+      tStr: this.fmt(this.t, 2) + ' s',
+      posStr: vecStr(k.x, k.y, 'm'), velStr: vecStr(k.vx, k.vy, 'm/s'), accStr: vecStr(k.ax, k.ay, 'm/s\u00B2'),
+      formulas,
+      axisNote: d.kind === 'h' ? 'Positieve zin: naar rechts. Stroboscoopbeelden om de 1 s.' : 'Positieve zin: omhoog. Stroboscoopbeelden om de 0,5 s.',
+    };
+  }
+}
+</script>
+</body>
+</html>

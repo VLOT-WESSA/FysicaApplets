@@ -69,7 +69,7 @@
           <div style="font-size:22px;font-weight:600;color:#1f9e8f">R = {{ rStr }} &Omega;</div>
         </div>
       </div>
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
     </div>
@@ -196,7 +196,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
 
     const { rho, length, area } = this.state;
     const showAtoms = this.state.showAtoms;
@@ -212,22 +212,22 @@ class Component extends DCLogic {
     const x = cx - wireW / 2, y = cy - wireH / 2;
 
     // connecting leads
-    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 5; ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(16, cy); ctx.lineTo(x, cy);
     ctx.moveTo(x + wireW, cy); ctx.lineTo(this.W - 16, cy);
     ctx.stroke();
-    ctx.fillStyle = '#4a5462';
+    ctx.fillStyle = '#9faaba';
     ctx.beginPath(); ctx.arc(16, cy, 7, 0, 6.2832); ctx.fill();
     ctx.beginPath(); ctx.arc(this.W - 16, cy, 7, 0, 6.2832); ctx.fill();
 
     // wire body
     const grad = ctx.createLinearGradient(0, y, 0, y + wireH);
-    grad.addColorStop(0, '#c98a4a'); grad.addColorStop(0.42, '#e3ad6f');
+    grad.addColorStop(0, '#c1803b'); grad.addColorStop(0.42, '#b27c3a');
     grad.addColorStop(0.6, '#b8773c'); grad.addColorStop(1, '#8a5526');
     this.rr(ctx, x, y, wireW, wireH, 14); ctx.fillStyle = grad; ctx.fill();
     this.rr(ctx, x, y, wireW, wireH, 14);
-    ctx.strokeStyle = 'rgba(60,34,12,0.55)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.strokeStyle = 'rgba(210,208,203,0.55)'; ctx.lineWidth = 2; ctx.stroke();
 
     ctx.save();
     this.rr(ctx, x, y, wireW, wireH, 14); ctx.clip();
@@ -237,9 +237,9 @@ class Component extends DCLogic {
         const ex = x + wireW - ((this.phase * (0.05 + 0.7 / Math.max(0.5, this.state.area)) + e.off) % 1) * wireW;
         const ey = y + 8 + e.v * (wireH - 16);
         ctx.beginPath(); ctx.arc(ex, ey, 3.4, 0, 6.2832);
-        ctx.fillStyle = 'rgba(120,200,255,0.95)'; ctx.fill();
+        ctx.fillStyle = 'rgba(56,144,198,0.95)'; ctx.fill();
         ctx.beginPath(); ctx.arc(ex, ey, 6.5, 0, 6.2832);
-        ctx.fillStyle = 'rgba(120,200,255,0.16)'; ctx.fill();
+        ctx.fillStyle = 'rgba(56,144,198,0.16)'; ctx.fill();
       }
     }
     if (showAtoms) {
@@ -249,7 +249,7 @@ class Component extends DCLogic {
         const ax = x + a.u * wireW, ay = y + a.v * wireH;
         ctx.beginPath(); ctx.arc(ax, ay, a.r, 0, 6.2832);
         ctx.fillStyle = 'rgba(43,92,150,0.92)'; ctx.fill();
-        ctx.strokeStyle = 'rgba(150,195,240,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.strokeStyle = 'rgba(94,140,184,0.55)'; ctx.lineWidth = 1; ctx.stroke();
       }
     }
     ctx.restore();
@@ -257,17 +257,17 @@ class Component extends DCLogic {
     // conventional current arrow on right lead (opposite to electron drift -> points right)
     if (this.state.showArrow) {
       const ax = (x + wireW + this.W - 16) / 2, ay = cy;
-      ctx.fillStyle = '#ffb454';
+      ctx.fillStyle = '#b5771b';
       ctx.beginPath(); ctx.moveTo(ax + 11, ay); ctx.lineTo(ax - 7, ay - 8); ctx.lineTo(ax - 7, ay + 8); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#ffd9a0'; ctx.font = "700 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+      ctx.fillStyle = '#9d793f'; ctx.font = "700 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
       ctx.fillText('I', ax, ay - 14);
     }
 
     // dimension labels
     ctx.font = "500 12px 'IBM Plex Mono', monospace";
-    ctx.fillStyle = '#9aa3ad'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#545c65'; ctx.textAlign = 'center';
     const ly = y + wireH + 22;
-    ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 1.4;
+    ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 1.4;
     ctx.beginPath(); ctx.moveTo(x, ly); ctx.lineTo(x + wireW, ly); ctx.stroke();
     for (const px of [x, x + wireW]) { ctx.beginPath(); ctx.moveTo(px, ly - 4); ctx.lineTo(px, ly + 4); ctx.stroke(); }
     ctx.fillText('L = ' + length.toFixed(1) + ' cm', cx, ly + 16);

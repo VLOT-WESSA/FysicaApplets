@@ -47,7 +47,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0b0e14;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
@@ -121,7 +121,7 @@ class Component extends DCLogic {
   W = 640; H = 640;
 
   ax = 0.85; ay = 0.85; fx = 3; fy = 2; phaseDeg = 90; tau = 0;
-  state = { auto: false, autoMode: 'fase', showBol: true };
+  state = { auto: false, autoMode: 'fase', showBol: false };
 
   componentDidMount() {
     this.setupCanvas();
@@ -157,7 +157,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const W = this.W, H = this.H;
-    ctx.fillStyle = '#0b0e14'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#f3f0ec'; ctx.fillRect(0, 0, W, H);
 
     const pad = 14, Lw = 78, Th = 78, gap = 14;
     const mX0 = pad + Lw + gap, mY0 = pad + Th + gap, mX1 = W - pad, mY1 = H - pad;
@@ -167,33 +167,33 @@ class Component extends DCLogic {
     const yf = (t) => this.ay * Math.sin(this.fy * t);
     const MX = (v) => cx + v * half, MY = (v) => cy - v * half;
     const TWO = Math.PI * 2;
-    const traceCol = (this.props && this.props.traceColor) || '#38d9c4';
+    const traceCol = (this.props && this.props.traceColor) || '#189c8c';
     const grid = !(this.props && this.props.rasterAan === false);
     const showBol = this.state.showBol !== false;
 
     // panels
-    ctx.fillStyle = '#11161f'; ctx.fillRect(mX0, mY0, mX1 - mX0, mY1 - mY0);
-    ctx.fillStyle = '#0e1822'; ctx.fillRect(mX0, pad, mX1 - mX0, Th); // top strip
-    ctx.fillStyle = '#0e1822'; ctx.fillRect(pad, mY0, Lw, mY1 - mY0); // left strip
+    ctx.fillStyle = '#eeebe7'; ctx.fillRect(mX0, mY0, mX1 - mX0, mY1 - mY0);
+    ctx.fillStyle = '#edebe6'; ctx.fillRect(mX0, pad, mX1 - mX0, Th); // top strip
+    ctx.fillStyle = '#edebe6'; ctx.fillRect(pad, mY0, Lw, mY1 - mY0); // left strip
 
     if (grid) {
-      ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(40,38,34,0.06)'; ctx.lineWidth = 1;
       for (let i = 1; i < 8; i++) {
         const x = mX0 + (mX1 - mX0) * i / 8, y = mY0 + (mY1 - mY0) * i / 8;
         ctx.beginPath(); ctx.moveTo(x, mY0); ctx.lineTo(x, mY1); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(mX0, y); ctx.lineTo(mX1, y); ctx.stroke();
       }
     }
-    ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(40,38,34,0.16)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(mX0, cy); ctx.lineTo(mX1, cy); ctx.moveTo(cx, mY0); ctx.lineTo(cx, mY1); ctx.stroke();
 
     // x(t) on top strip (time runs downward)
-    ctx.strokeStyle = '#e8964c'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#c8741d'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
     ctx.beginPath();
     for (let i = 0; i <= 240; i++) { const t = TWO * i / 240; const X = MX(xf(t)), Y = pad + (t / TWO) * Th; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
     ctx.stroke();
     // y(t) on left strip (time runs rightward)
-    ctx.strokeStyle = '#6f9bd8'; ctx.lineWidth = 2;
+    ctx.strokeStyle = '#6492d2'; ctx.lineWidth = 2;
     ctx.beginPath();
     for (let i = 0; i <= 240; i++) { const t = TWO * i / 240; const X = pad + (t / TWO) * Lw, Y = MY(yf(t)); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
     ctx.stroke();
@@ -227,23 +227,23 @@ class Component extends DCLogic {
       const leftMX = pad + (this.tau / TWO) * Lw;
 
       // projection lines
-      ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(232,150,76,0.55)';
+      ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(200,116,29,0.55)';
       ctx.beginPath(); ctx.moveTo(dotX, topMY); ctx.lineTo(dotX, dotY); ctx.stroke();
-      ctx.strokeStyle = 'rgba(111,155,216,0.55)';
+      ctx.strokeStyle = 'rgba(100,146,210,0.55)';
       ctx.beginPath(); ctx.moveTo(leftMX, dotY); ctx.lineTo(dotX, dotY); ctx.stroke();
       ctx.setLineDash([]);
 
       // markers
-      ctx.fillStyle = '#e8964c'; ctx.beginPath(); ctx.arc(dotX, topMY, 3.4, 0, TWO); ctx.fill();
-      ctx.fillStyle = '#6f9bd8'; ctx.beginPath(); ctx.arc(leftMX, dotY, 3.4, 0, TWO); ctx.fill();
+      ctx.fillStyle = '#c8741d'; ctx.beginPath(); ctx.arc(dotX, topMY, 3.4, 0, TWO); ctx.fill();
+      ctx.fillStyle = '#6492d2'; ctx.beginPath(); ctx.arc(leftMX, dotY, 3.4, 0, TWO); ctx.fill();
       // main dot (the ball)
       ctx.save(); ctx.shadowColor = traceCol; ctx.shadowBlur = 12;
-      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(dotX, dotY, 4.4, 0, TWO); ctx.fill();
+      ctx.fillStyle = '#282622'; ctx.beginPath(); ctx.arc(dotX, dotY, 4.4, 0, TWO); ctx.fill();
       ctx.restore();
     }
 
     // labels
-    ctx.fillStyle = '#6b7682'; ctx.font = "500 11px 'IBM Plex Mono',monospace";
+    ctx.fillStyle = '#75808c'; ctx.font = "500 11px 'IBM Plex Mono',monospace";
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('x(t)', mX0 + 4, pad + 3);
     ctx.save(); ctx.translate(pad + 3, mY0 + 4); ctx.fillText('y(t)', 0, 0); ctx.restore();

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a86;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a86;cursor:pointer}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">De slinger</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>spankracht F<sub>s</sub></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:3px dashed #93c4a3;display:inline-block"></span>terugroepende kracht F<sub>z</sub>&middot;sin&theta;</div>
+        <div style="display:flex;align-items:center;gap:8px">Sleep de massa om ze uit te wijken en los te laten.</div>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.1 195);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Lengte L</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ LStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.1" max="2" step="0.01" value="{{ L }}" onInput="{{ onL }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Massa m</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ mStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.05" max="1" step="0.05" value="{{ m }}" onInput="{{ onM }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Beginuitwijking &theta;<sub>0</sub></span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ th0Str }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="2" max="80" step="1" value="{{ th0 }}" onInput="{{ onTh0 }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Demping</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ bStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0" max="0.3" step="0.01" value="{{ b }}" onInput="{{ onB }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Valversnelling g</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ gStr }}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <sc-for list="{{ gItems }}" as="g" hint-placeholder-count="4">
+            <button onClick="{{ g.onClick }}" style="{{ g.style }}">{{ g.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+          <button onClick="{{ onForces }}" style="{{ forcesStyle }}">Krachten</button>
+          <button onClick="{{ onHarm }}" style="{{ harmStyle }}">Kleine-hoekbenadering</button>
+        </div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+        <div style="display:flex;justify-content:space-between"><span>T volgens 2&pi;&radic;(L/g)</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ T0Str }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>T van deze slinger</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ TmStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Afwijking</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ devStr }}</span></div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:600">Chronometer</span><span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ chronoStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#4f4a42"><span>Volledige slingeringen sinds start</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ countStr }}</span></div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onChrono }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:#2a2723;color:#fff">{{ chronoLabel }}</button>
+          <button onClick="{{ onChronoReset }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Nul</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.5 0.1 195);color:#fff">Meting noteren</button>
+          <button onClick="{{ onCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ copyLabel }}</button>
+          <button onClick="{{ onClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
+        </div>
+        <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:24px repeat(5,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
+            <span style="color:#8c8576">nr</span><span style="color:#8c8576">L (m)</span><span style="color:#8c8576">&theta;&#8320;</span><span style="color:#8c8576">t (s)</span><span style="color:#8c8576">n</span><span style="color:#8c8576">T (s)</span>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
+              <span style="color:#8c8576">{{ r.nr }}</span><span>{{ r.L }}</span><span>{{ r.th }}</span><span>{{ r.t }}</span><span>{{ r.n }}</span><span>{{ r.T }}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noRows }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:12.5px;color:#6f685c;line-height:1.5">Start de chronometer bij een doorgang door de evenwichtsstand, stop na 10 slingeringen en noteer. Zet T&sup2; uit tegen L om g te bepalen.</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 960; H = 560;
+  px = 320; py = 46; ppm = 180;
+  gs = [{ n: 'Aarde', g: 9.81 }, { n: 'Mars', g: 3.71 }, { n: 'Maan', g: 1.62 }, { n: 'Jupiter', g: 24.79 }];
+  state = { L: 1, m: 0.2, th0: 10, b: 0, g: 9.81, forces: false, harm: false, rows: [], copied: false };
+  th = 10 * Math.PI / 180; om = 0; t = 0; running = false; hist = []; relT = 0; relTh = 10 * Math.PI / 180;
+  crossings = []; chrono = 0; chronoOn = false; chronoCount = 0; chronoStart = 0;
+
+  componentDidMount() {
+    this.setupCanvas();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  acc(th, om) { return -(this.state.g / this.state.L) * Math.sin(th) - this.state.b * om; }
+  stepRK(h) {
+    const a = this.acc.bind(this); const th = this.th, om = this.om;
+    const k1t = om, k1o = a(th, om);
+    const k2t = om + k1o * h / 2, k2o = a(th + k1t * h / 2, om + k1o * h / 2);
+    const k3t = om + k2o * h / 2, k3o = a(th + k2t * h / 2, om + k2o * h / 2);
+    const k4t = om + k3o * h, k4o = a(th + k3t * h, om + k3o * h);
+    const nth = th + h / 6 * (k1t + 2 * k2t + 2 * k3t + k4t);
+    this.om = om + h / 6 * (k1o + 2 * k2o + 2 * k3o + k4o);
+    this.t += h;
+    if (th < 0 && nth >= 0) {
+      const tc = this.t - h * nth / (nth - th);
+      this.crossings.push(tc); if (this.crossings.length > 6) this.crossings.shift();
+      if (this.chronoOn) this.chronoCount++;
+    }
+    this.th = nth;
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.running && !this.drag) {
+      const N = Math.ceil(dt / 0.002);
+      for (let i = 0; i < N; i++) this.stepRK(dt / N);
+      this.hist.push({ t: this.t, th: this.th });
+      while (this.hist.length && this.hist[0].t < this.t - 10) this.hist.shift();
+    }
+    if (this.chronoOn) this.chrono = performance.now() / 1000 - this.chronoStart;
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.1) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  release(th) {
+    this.th = th; this.om = 0; this.t = 0; this.hist = []; this.crossings = [];
+    this.relTh = th; this.running = true;
+  }
+  resetPend() {
+    this.th = this.state.th0 * Math.PI / 180; this.om = 0; this.t = 0; this.hist = []; this.crossings = [];
+    this.relTh = this.th; this.running = false;
+  }
+
+  measuredT() {
+    const c = this.crossings; if (c.length < 2) return null;
+    return c[c.length - 1] - c[c.length - 2];
+  }
+  // exact period for amplitude a (no damping): T = 4 sqrt(L/g) K(sin(a/2))
+  exactT(a) {
+    const k = Math.sin(Math.abs(a) / 2);
+    let x = 1, y = Math.sqrt(1 - k * k);
+    for (let i = 0; i < 8; i++) { const nx = (x + y) / 2; y = Math.sqrt(x * y); x = nx; }
+    return 2 * Math.PI * Math.sqrt(this.state.L / this.state.g) / x;
+  }
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  arrow(ctx, x, y, dx, dy, col, w, label) {
+    const L = Math.hypot(dx, dy); if (L < 3) return;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
+    const a = Math.atan2(dy, dx), hl = 10;
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - hl * Math.cos(a - 0.42), y + dy - hl * Math.sin(a - 0.42)); ctx.lineTo(x + dx - hl * Math.cos(a + 0.42), y + dy - hl * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
+    if (label) {
+      const [m, s] = label.split('_');
+      ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; const mw = ctx.measureText(m).width;
+      const lx = x + dx + dx / L * 15 - mw / 2 - 2, ly = y + dy + dy / L * 15;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(m, lx, ly);
+      if (s) { ctx.font = "600 9.5px 'IBM Plex Sans',sans-serif"; ctx.fillText(s, lx + mw, ly + 4); }
+    }
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state; const { px, py } = this; const Lp = st.L * this.ppm;
+    const bx = px + Lp * Math.sin(this.th), by = py + Lp * Math.cos(this.th);
+
+    // support
+    ctx.fillStyle = '#cdc5b4'; ctx.fillRect(px - 90, py - 14, 180, 10);
+    ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1;
+    for (let x = px - 86; x < px + 90; x += 10) { ctx.beginPath(); ctx.moveTo(x, py - 14); ctx.lineTo(x + 6, py - 22); ctx.stroke(); }
+    // equilibrium + arc
+    ctx.setLineDash([4, 5]); ctx.strokeStyle = '#c9c1b0'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Lp + 20); ctx.stroke();
+    const A = Math.abs(this.relTh);
+    ctx.beginPath(); ctx.arc(px, py, Lp, Math.PI / 2 - A, Math.PI / 2 + A); ctx.stroke(); ctx.setLineDash([]);
+    // angle
+    if (Math.abs(this.th) > 0.03) {
+      ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.3; ctx.beginPath();
+      ctx.arc(px, py, 44, Math.PI / 2, Math.PI / 2 - this.th, this.th > 0); ctx.stroke();
+      ctx.fillStyle = '#4f4a42'; ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(this.fmt(this.th * 180 / Math.PI, 1) + '\u00B0', px + 64 * Math.sin(this.th / 2), py + 64 * Math.cos(this.th / 2));
+    }
+    // string + bob
+    ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(px, py, 4, 0, 7); ctx.fill();
+    const r = 8 + 10 * Math.cbrt(st.m);
+    const grd = ctx.createRadialGradient(bx - r / 3, by - r / 3, 1, bx, by, r);
+    grd.addColorStop(0, '#6fc7c1'); grd.addColorStop(1, '#1f7f7a');
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#145a56'; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // forces (scaled so that Fz = 80 px)
+    if (st.forces) {
+      const k = 80;
+      const Ts = Math.cos(this.th) + st.L * this.om * this.om / st.g;
+      this.arrow(ctx, bx, by, 0, k, '#2f8a4e', 3, 'F_z');
+      this.arrow(ctx, bx, by, -Math.sin(this.th) * k * Ts, -Math.cos(this.th) * k * Ts, '#2f8a4e', 3, 'F_s');
+      const ft = -Math.sin(this.th) * k;
+      ctx.save(); ctx.setLineDash([5, 4]);
+      this.arrow(ctx, bx, by, ft * Math.cos(this.th), -ft * Math.sin(this.th), '#93c4a3', 2.6, null);
+      ctx.restore();
+    }
+    // length label
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('L = ' + this.fmt(st.L, 2) + ' m', px + 10, py + Math.min(Lp, 120) * 0.5);
+
+    this.drawGraph(ctx, 660, 36, 280, 250);
+    this.drawEnergy(ctx, 660, 330, 280, 190);
+  }
+
+  drawGraph(ctx, x, y, w, h) {
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Uitwijkingshoek \u03B8(t)', x, y - 8);
+    const amp = Math.max(5, Math.abs(this.relTh) * 180 / Math.PI) * 1.1;
+    const tw = 10, t0 = Math.max(0, this.t - tw);
+    const X = (t) => x + (t - t0) / tw * w, Y = (d) => y + h / 2 - d / amp * (h / 2);
+    ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'top';
+    ctx.fillText('+' + this.fmt(amp / 1.1, 0) + '\u00B0', x + 4, y + 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('laatste 10 s', x + w - 4, y + h - 3);
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    if (this.state.harm && this.hist.length > 1) {
+      const w0 = Math.sqrt(this.state.g / this.state.L), b = this.state.b;
+      ctx.setLineDash([5, 4]); ctx.strokeStyle = '#d9822b'; ctx.lineWidth = 1.6; ctx.beginPath();
+      for (let i = 0; i <= 200; i++) { const t = t0 + (this.t - t0) * i / 200; const d = this.relTh * 180 / Math.PI * Math.exp(-b * t / 2) * Math.cos(w0 * t); i ? ctx.lineTo(X(t), Y(d)) : ctx.moveTo(X(t), Y(d)); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (this.hist.length > 1) {
+      ctx.strokeStyle = '#1f8a86'; ctx.lineWidth = 2.2; ctx.beginPath();
+      this.hist.forEach((p, i) => { const d = p.th * 180 / Math.PI; i ? ctx.lineTo(X(p.t), Y(d)) : ctx.moveTo(X(p.t), Y(d)); });
+      ctx.stroke();
+    }
+    ctx.restore();
+    if (this.state.harm) {
+      ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = '#b8651f';
+      ctx.fillText('- - kleine-hoekbenadering', x + 4, y + h + 5);
+    }
+  }
+
+  drawEnergy(ctx, x, y, w, h) {
+    const st = this.state;
+    const E0 = st.m * st.g * st.L * (1 - Math.cos(this.relTh)) || 1e-9;
+    const Ep = st.m * st.g * st.L * (1 - Math.cos(this.th));
+    const Ek = 0.5 * st.m * Math.pow(st.L * this.om, 2);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Energie', x, y - 8);
+    const bars = [['E\u209A', Ep, '#3a6fb8'], ['E\u2096', Ek, '#c8443a'], ['E\u209A + E\u2096', Ep + Ek, '#6f685c']];
+    const bw = 58, gap = (w - 3 * bw) / 4;
+    ctx.strokeStyle = '#e7e1d5'; ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke();
+    bars.forEach(([n, v, col], i) => {
+      const bx = x + gap + i * (bw + gap); const bh = Math.max(0, Math.min(1.05, v / E0)) * (h - 20);
+      ctx.fillStyle = col; ctx.fillRect(bx, y + h - bh, bw, bh);
+      ctx.fillStyle = '#4f4a42'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(n, bx + bw / 2, y + h + 5);
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom';
+      ctx.fillText(v >= 0.1 ? this.fmt(v, 2) + ' J' : this.fmt(v * 1000, 0) + ' mJ', bx + bw / 2, y + h - bh - 3);
+    });
+  }
+
+  canvasPt(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const k = Math.min(r.width / this.W, r.height / this.H);
+    return { x: (e.clientX - r.left - (r.width - this.W * k) / 2) / k, y: (e.clientY - r.top - (r.height - this.H * k) / 2) / k };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.1 195)';
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const T0 = 2 * Math.PI * Math.sqrt(st.L / st.g);
+    const Tm = st.b > 0 ? this.measuredT() : this.exactT(this.relTh);
+    const rows = st.rows.map((r, i) => ({ nr: i + 1, L: this.fmt(r.L, 2), th: r.th + '\u00B0', t: this.fmt(r.t, 2), n: String(r.n), T: r.n ? this.fmt(r.t / r.n, 3) : '\u2013' }));
+    const setP = (patch) => this.setState(patch, () => this.resetPend());
+    return {
+      stageRef: this.stageRef,
+      L: st.L, m: st.m, th0: st.th0, b: st.b,
+      LStr: this.fmt(st.L, 2) + ' m', mStr: this.fmt(st.m, 2) + ' kg', th0Str: st.th0 + '\u00B0', bStr: this.fmt(st.b, 2) + ' s\u207B\u00B9',
+      gStr: this.fmt(st.g, 2) + ' m/s\u00B2',
+      onL: (e) => setP({ L: parseFloat(e.target.value) }),
+      onM: (e) => this.setState({ m: parseFloat(e.target.value) }),
+      onTh0: (e) => setP({ th0: parseFloat(e.target.value) }),
+      onB: (e) => this.setState({ b: parseFloat(e.target.value) }),
+      gItems: this.gs.map(g => ({ name: g.n, style: chip(Math.abs(g.g - st.g) < 1e-6), onClick: () => setP({ g: g.g }) })),
+      forcesStyle: chip(st.forces), harmStyle: chip(st.harm),
+      onForces: () => this.setState({ forces: !st.forces }), onHarm: () => this.setState({ harm: !st.harm }),
+      onPlay: () => { if (!this.running && this.t === 0) this.release(this.th); else this.running = !this.running; this.forceUpdate(); },
+      onReset: () => { this.resetPend(); this.forceUpdate(); },
+      playLabel: this.running ? 'Pauze' : (this.t > 0 ? 'Verder' : 'Loslaten'),
+      T0Str: this.fmt(T0, 3) + ' s',
+      TmStr: Tm ? this.fmt(Tm, 3) + ' s' : '\u2013',
+      devStr: Tm ? (Tm >= T0 ? '+' : '') + this.fmt((Tm / T0 - 1) * 100, 1) + ' %' : '\u2013',
+      chronoStr: this.fmt(this.chrono, 2) + ' s',
+      countStr: String(this.chronoCount),
+      chronoLabel: this.chronoOn ? 'Stop' : 'Start',
+      onChrono: () => {
+        if (this.chronoOn) { this.chronoOn = false; }
+        else { this.chronoStart = performance.now() / 1000 - this.chrono; if (this.chrono === 0) this.chronoCount = 0; this.chronoOn = true; }
+        this.forceUpdate();
+      },
+      onChronoReset: () => { this.chronoOn = false; this.chrono = 0; this.chronoCount = 0; this.forceUpdate(); },
+      onRecord: () => this.setState({ rows: st.rows.concat([{ L: st.L, th: Math.round(Math.abs(this.relTh) * 180 / Math.PI), t: this.chrono, n: this.chronoCount }]), copied: false }),
+      onClear: () => this.setState({ rows: [], copied: false }),
+      onCopy: () => {
+        const txt = 'L (m)\tθ0 (°)\tt (s)\tn\tT (s)\n' + st.rows.map(r => [this.fmt(r.L, 2), r.th, this.fmt(r.t, 2), r.n, r.n ? this.fmt(r.t / r.n, 3) : ''].join('\t')).join('\n');
+        try { navigator.clipboard.writeText(txt); this.setState({ copied: true }); } catch (e) {}
+      },
+      copyLabel: st.copied ? 'Gekopieerd' : 'Kopieer tabel',
+      rows, hasRows: rows.length > 0, noRows: rows.length === 0,
+      onDown: (e) => {
+        const p = this.canvasPt(e); const Lp = st.L * this.ppm;
+        const bx = this.px + Lp * Math.sin(this.th), by = this.py + Lp * Math.cos(this.th);
+        if (Math.hypot(p.x - bx, p.y - by) < 30) { this.drag = true; e.currentTarget.setPointerCapture(e.pointerId); }
+      },
+      onMove: (e) => {
+        const p = this.canvasPt(e);
+        if (!this.drag) {
+          const Lp = st.L * this.ppm; const bx = this.px + Lp * Math.sin(this.th), by = this.py + Lp * Math.cos(this.th);
+          this.stageRef.current.style.cursor = Math.hypot(p.x - bx, p.y - by) < 30 ? 'grab' : 'default'; return;
+        }
+        let a = Math.atan2(p.x - this.px, p.y - this.py);
+        a = Math.max(-80 * Math.PI / 180, Math.min(80 * Math.PI / 180, a));
+        this.th = a; this.om = 0; this.relTh = a; this.running = false; this.hist = []; this.t = 0;
+      },
+      onUp: () => {
+        if (!this.drag) return; this.drag = false;
+        const deg = Math.max(2, Math.round(Math.abs(this.th) * 180 / Math.PI));
+        this.setState({ th0: deg }); this.release(this.th);
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

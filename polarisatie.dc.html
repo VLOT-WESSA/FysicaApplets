@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;display:flex;align-items:center;gap:18px">
@@ -150,10 +150,10 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
     const g = this.geo;
     const st = this.computeStages();
-    const lightCol = '255,236,176';
+    const lightCol = '232,176,40';
 
     const xs = [g.lampX + 12, g.polX[0], g.polX[1], g.polX[2], g.detX];
     for (let s = 0; s < 4; s++) {
@@ -172,11 +172,11 @@ class Component extends DCLogic {
       }
     }
 
-    ctx.fillStyle = '#2b3340';
+    ctx.fillStyle = '#d8d6d1';
     this.rr(ctx, 22, g.beamY - 26, 34, 52, 7); ctx.fill();
     ctx.fillStyle = `rgb(${lightCol})`;
     this.rr(ctx, 50, g.beamY - 17, 9, 34, 3); ctx.fill();
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#505b67'; ctx.textAlign = 'center';
     ctx.fillText('bron', 39, g.beamY + 44);
 
     for (let k = 0; k < 3; k++) {
@@ -185,11 +185,11 @@ class Component extends DCLogic {
     }
 
     const fin = st.final;
-    ctx.fillStyle = '#1b2230';
+    ctx.fillStyle = '#e7e4df';
     this.rr(ctx, g.detX, g.beamY - 42, 16, 84, 4); ctx.fill();
     ctx.fillStyle = `rgba(${lightCol},${0.12 + 0.85 * fin})`;
     this.rr(ctx, g.detX + 2, g.beamY - 38, 12, 76, 3); ctx.fill();
-    ctx.fillStyle = '#9aa6b4'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#505b67'; ctx.textAlign = 'center';
     ctx.fillText('scherm', g.detX + 8, g.beamY + 58);
 
     if (this.state.showInd) {
@@ -198,7 +198,7 @@ class Component extends DCLogic {
         const cx = Math.min(gapMid[s], this.W - 36);
         this.drawIndicator(ctx, cx, g.indY, g.indR, st.polAng[s], st.seg[s]);
       }
-      ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+      ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
       ctx.fillText('trillingsrichting', this.W / 2, g.indY + g.indR + 18);
     }
   }
@@ -206,7 +206,7 @@ class Component extends DCLogic {
   drawPolarizer(ctx, cx, cy, R, p, k) {
     ctx.save();
     ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
-    ctx.fillStyle = p.on ? '#cfe9e4' : '#5b6573';
+    ctx.fillStyle = p.on ? '#253a37' : '#8994a3';
     ctx.fillText('P' + (k + 1) + (p.on ? '  ' + p.ang + '\u00B0' : '  uit'), cx, cy - R - 12);
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
     if (p.on) {
@@ -215,7 +215,7 @@ class Component extends DCLogic {
       const a = p.ang * Math.PI / 180;
       const dx = Math.cos(a), dy = -Math.sin(a);
       const nx = Math.sin(a), ny = Math.cos(a);
-      ctx.strokeStyle = 'rgba(127,212,200,0.85)'; ctx.lineWidth = 1.6;
+      ctx.strokeStyle = 'rgba(59,152,141,0.85)'; ctx.lineWidth = 1.6;
       for (let off = -R; off <= R; off += 7) {
         const L = Math.sqrt(Math.max(0, R * R - off * off));
         const mx = cx + nx * off, my = cy + ny * off;
@@ -228,7 +228,7 @@ class Component extends DCLogic {
       ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
       ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5; ctx.stroke();
       const a2 = p.ang * Math.PI / 180;
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.strokeStyle = '#282622'; ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(cx - Math.cos(a2) * (R + 7), cy + Math.sin(a2) * (R + 7));
       ctx.lineTo(cx + Math.cos(a2) * (R + 7), cy - Math.sin(a2) * (R + 7));
@@ -236,20 +236,20 @@ class Component extends DCLogic {
     } else {
       ctx.restore();
       ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
-      ctx.setLineDash([4, 5]); ctx.strokeStyle = '#3a4351'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.setLineDash([4, 5]); ctx.strokeStyle = '#b6c0d1'; ctx.lineWidth = 2; ctx.stroke();
       ctx.setLineDash([]);
     }
   }
 
   drawIndicator(ctx, cx, cy, R, ang, I) {
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);
-    ctx.fillStyle = '#141b26'; ctx.fill();
-    ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#ebe9e4'; ctx.fill();
+    ctx.strokeStyle = '#d9d7d2'; ctx.lineWidth = 1.5; ctx.stroke();
     if (ang === null) {
       for (let i = 0; i < 8; i++) {
         const a = i * Math.PI / 8;
         const fl = 0.35 + 0.4 * Math.abs(Math.sin(this.phase * 2 + i));
-        ctx.strokeStyle = `rgba(170,180,195,${fl * (0.4 + 0.6 * I)})`;
+        ctx.strokeStyle = `rgba(73,81,94,${fl * (0.4 + 0.6 * I)})`;
         ctx.lineWidth = 1.4;
         ctx.beginPath();
         ctx.moveTo(cx - Math.cos(a) * (R - 5), cy + Math.sin(a) * (R - 5));
@@ -260,7 +260,7 @@ class Component extends DCLogic {
       const a = ang * Math.PI / 180;
       const amp = (R - 5) * (0.55 + 0.45 * Math.abs(Math.sin(this.phase * 3)));
       const dx = Math.cos(a), dy = -Math.sin(a);
-      ctx.strokeStyle = `rgba(255,217,122,${0.45 + 0.55 * I})`;
+      ctx.strokeStyle = `rgba(157,123,19,${0.45 + 0.55 * I})`;
       ctx.lineWidth = 3; ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(cx - dx * amp, cy - dy * amp);

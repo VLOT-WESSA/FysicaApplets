@@ -99,7 +99,7 @@
           <option value="grafiet">Grafiet</option>
           <option value="zwaar">Zwaar water (D&#8322;O)</option>
         </select>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt snelle neutronen tot thermische. Grafiet en zwaar water doen dat met minder verlies dan licht water.</div>
+        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt snelle neutronen tot thermische. Licht water remt het snelst af, maar vangt ook veel neutronen in: met natuurlijk uranium wordt het nooit kritisch. Grafiet en zwaar water verliezen minder neutronen.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -209,15 +209,18 @@ class Component extends DCLogic {
   R_MOD_CAP = 0.12;
   P_REFL = 0.82;
 
-  fuelQ = { natuur: 0.70, laag: 1.00, mox: 1.14 };
-  modQ  = { licht: 0.84, grafiet: 1.00, zwaar: 1.18 };
-  modLoss = { licht: 3.0, grafiet: 1.0, zwaar: 0.5 };
+  // splijtstof: splijtingskans en invang door U-238 (natuurlijk U vangt relatief meer in)
+  fuelQ   = { natuur: 0.90, laag: 1.00, mox: 1.08 };
+  fuelCap = { natuur: 1.35, laag: 1.00, mox: 0.95 };
+  // moderator: afremmen per botsing en invang (licht water remt best af maar vangt het meest in)
+  modQ  = { licht: 1.30, grafiet: 1.00, zwaar: 1.15 };
+  modLoss = { licht: 5.0, grafiet: 1.0, zwaar: 0.3 };
 
   fuelX = []; ctrlX = []; blocks = []; gasCh = [];
 
-  state = { running: false, rod: 0.6, showNeutrons: true, showLabels: false, showExtra: false, fuel: 'laag', moderator: 'grafiet' };
+  state = { running: false, rod: 0.6, showNeutrons: false, showLabels: false, showExtra: false, fuel: 'laag', moderator: 'grafiet' };
 
-  N = 5e16; T = 250; Tf = 250; fisRate = 0; power = 0; elec = 0; steam = 0; kMeas = 1;
+  N = 5e16; T = 250; Tf = 250; fisRate = 0; power = 0; pdec = 0; elec = 0; steam = 0; kMeas = 1;
   rodPos = 0.6; scramming = false;
   neutrons = []; flashes = []; hist = []; marks = []; simT = 0;
   bins = []; binT = 0; fisFrac = 0.33;
@@ -303,6 +306,7 @@ class Component extends DCLogic {
   physics(dt) {
     const c = this.core, tf = this.tempFactor();
     const fq = this.fuelQ[this.state.fuel] || 1;
+    const cq = this.fuelCap[this.state.fuel] || 1;
     const mq = (this.modQ[this.state.moderator] || 1) * tf;
     const loss = this.modLoss[this.state.moderator] || 1;
     const pRefl = this.P_REFL * tf;
@@ -332,7 +336,7 @@ class Component extends DCLogic {
         if (Math.random() < this.prob(r, dt)) { this.tally.rod++; this.deaths++; dead = true; }
       } else if (reg === 'fuel') {
         const rf = n.fast ? this.R_FIS_FAST * fq : this.R_FIS_TH * fq;
-        const rc = n.fast ? this.R_CAP_FAST : this.R_CAP_TH;
+        const rc = (n.fast ? this.R_CAP_FAST : this.R_CAP_TH) * cq;
         if (Math.random() < this.prob(rf, dt)) {
           this.tally.fis++; this.deaths++; this.fissions++; dead = true;
           const nu = Math.random() < 0.55 ? 2 : 3;
@@ -419,7 +423,10 @@ class Component extends DCLogic {
     this.N = Math.max(1e12, Math.min(6e19, this.N));
 
     this.fisRate = this.N * Math.max(0.05, this.fisFrac) / this.LEFF;
-    this.power = this.fisRate * this.E_FIS;
+    // vervalwarmte: ~6,5 % van het vermogen komt van splijtingsproducten en dooft pas traag uit
+    const pf = this.fisRate * this.E_FIS;
+    this.pdec += (0.065 * pf - this.pdec) / 20 * dt;
+    this.power = 0.935 * pf + this.pdec;
 
     // splijtstof reageert prompt, het koelgas volgt langzaam
     const q = this.H_FC * (this.Tf - this.T);
@@ -861,10 +868,13 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.moveTo(px0, py0); ctx.lineTo(px0, py1); ctx.lineTo(px1, py1); ctx.stroke();
   }
 
-  toggleRun = () => this.setState(s => ({ running: !s.running }), () => this.mark('run'));
+  toggleRun = () => {
+    if (!this.state.running) { this.births = 0; this.deaths = 0; this.fissions = 0; this.bins = []; this.binT = 0; }
+    this.setState(s => ({ running: !s.running }), () => this.mark('run'));
+  };
   scram = () => { this.scramming = true; this.setState({ rod: 1, running: true }, () => this.mark('scram')); };
   reset = () => {
-    this.N = 5e16; this.T = 250; this.Tf = 250; this.fisRate = 0; this.power = 0; this.elec = 0; this.steam = 0;
+    this.N = 5e16; this.T = 250; this.Tf = 250; this.fisRate = 0; this.power = 0; this.pdec = 0; this.elec = 0; this.steam = 0;
     this.scramming = false;
     this.kMeas = 1; this.fisFrac = 0.33; this.bins = []; this.births = 0; this.deaths = 0; this.fissions = 0;
     this.tally = { fis: 0, rod: 0, cap: 0, leak: 0 };
@@ -925,8 +935,8 @@ class Component extends DCLogic {
     };
     const rodTerm = 1 - 0.62 * this.rodPos;
     const kTerms = [
-      term('Splijtstof', this.fuelQ[st.fuel] || 1),
-      term('Moderator', this.modQ[st.moderator] || 1),
+      term('Splijtstof', { natuur: 0.80, laag: 1.00, mox: 1.05 }[st.fuel] || 1),
+      term('Moderator', { licht: 0.78, grafiet: 1.00, zwaar: 1.10 }[st.moderator] || 1),
       term('Regelstaven', rodTerm),
       term('Temperatuur', tf),
     ];

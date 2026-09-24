@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3f8a52;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3f8a52;cursor:pointer}
+  input[type=range]:disabled{opacity:.4}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Cyclotron</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
+        <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;color:#3a6fb8;font-weight:600">&times;</span>magneetveld B het blad in</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#b9812a;border-radius:2px;display:inline-block"></span>elektrisch veld in de spleet</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#2f8a4e;display:inline-block"></span>versneld</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#c8443a;display:inline-block"></span>afgeremd</div>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onStart }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ startLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:14px;font-weight:500">Deeltje</span>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px">
+          <sc-for list="{{ partItems }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Magnetische inductie B</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ BStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.3" max="1" step="0.01" value="{{ B }}" onInput="{{ onB }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Versnelspanning U</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ UStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="2" max="20" step="1" value="{{ U }}" onInput="{{ onU }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Frequentie wisselspanning f</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ fStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="1" max="16" step="0.01" value="{{ f }}" onInput="{{ onF }}" disabled="{{ tuned }}"></div>
+        <button onClick="{{ onTune }}" style="{{ tuneStyle }}">{{ tuneLabel }}</button>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span style="font-size:14px;font-weight:500">Tempo</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ tempoStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.25" max="4" step="0.25" value="{{ tempo }}" onInput="{{ onTempo }}"></div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+        <div style="display:flex;justify-content:space-between"><span>Cyclotronfrequentie f<sub>c</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ fcStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Omlooptijd T</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ TStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Kinetische energie E<sub>k</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ EkStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Snelheid v</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ vStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Baanstraal r</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Doorgangen door de spleet</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ nStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Maximale E<sub>k</sub> (R = 25 cm)</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ EmaxStr }}</span></div>
+      </div>
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">q&middot;v&middot;B = m&middot;v&sup2;/r &rArr; r = m&middot;v/(q&middot;B)</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">f<sub>c</sub> = q&middot;B/(2&pi;&middot;m) &nbsp; E<sub>k,max</sub> = (q&middot;B&middot;R)&sup2;/(2m)</div>
+        <div style="margin-top:6px">De omlooptijd hangt niet af van de snelheid. Per doorgang wint het deeltje q&middot;U, maar alleen als de wisselspanning in de pas loopt met f<sub>c</sub>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 900; H = 560;
+  parts = [
+    { name: 'Proton', q: 1.602e-19, m: 1.6726e-27, col: '#c8443a' },
+    { name: 'Deuteron', q: 1.602e-19, m: 3.3436e-27, col: '#b36b1f' },
+    { name: 'Alfadeeltje', q: 3.204e-19, m: 6.6447e-27, col: '#6b4fb3' },
+  ];
+  R = 0.25; cx = 280; cy = 280; ppm = 900;
+  state = { B: 0.5, U: 15, pi: 0, tuned: true, f: 7.62, tempo: 1, tick: 0 };
+
+  componentDidMount() {
+    this.setupCanvas(); this.resetSim();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  P() { return this.parts[this.state.pi]; }
+  fc() { const p = this.P(); return p.q * this.state.B / (2 * Math.PI * p.m); }
+  fosc() { return this.state.tuned ? this.fc() : this.state.f * 1e6; }
+
+  resetSim() {
+    const p = this.P(), qU = p.q * this.state.U * 1e3, B = this.state.B;
+    this.running = false; this.done = false; this.exited = false; this.lost = false;
+    this.t = 0; this.n = 0; this.Ek = 0.02 * qU;
+    const v = Math.sqrt(2 * this.Ek / p.m);
+    // startpunt zo kiezen dat de middelpunten van de halve cirkels rond het centrum liggen
+    const rk = (k) => Math.sqrt(2 * p.m * (0.02 + k) * qU) / (p.q * B);
+    const Nmax = Math.max(4, Math.floor(Math.pow(p.q * B * this.R, 2) / (2 * p.m) / qU));
+    let y = 0, cs = [];
+    for (let k = 1; k <= Nmax; k++) { const s = k % 2 ? 1 : -1; cs.push(y + s * rk(k)); y += 2 * s * rk(k); }
+    const tail = cs.slice(-6); const off = tail.reduce((a, b) => a + b, 0) / tail.length;
+    this.pos = { x: -0.0004, y: -off }; this.vel = { x: v, y: 0 };
+    this.trail = []; this.kicks = []; this.ekHist = [{ t: 0, e: this.Ek }];
+  }
+
+  step(h) {
+    const p = this.P(); const B = this.state.B;
+    if (this.exited) {
+      this.pos.x += this.vel.x * h; this.pos.y += this.vel.y * h;
+      if (Math.hypot(this.pos.x, this.pos.y) > 0.30) { this.done = true; this.running = false; }
+      this.t += h; return;
+    }
+    const w = p.q * B / p.m, a = w * h, ca = Math.cos(a), sa = Math.sin(a);
+    const vx = this.vel.x * ca - this.vel.y * sa, vy = this.vel.x * sa + this.vel.y * ca;
+    const px = this.pos.x;
+    this.pos.x += (this.vel.x + vx) / 2 * h; this.pos.y += (this.vel.y + vy) / 2 * h;
+    this.vel.x = vx; this.vel.y = vy; this.t += h;
+    if ((px < 0 && this.pos.x >= 0) || (px > 0 && this.pos.x <= 0)) {
+      const dir = this.pos.x >= 0 ? 1 : -1;
+      const u = Math.cos(2 * Math.PI * this.fosc() * this.t);
+      const dE = p.q * this.state.U * 1e3 * u * dir;
+      const Emin = 0.02 * p.q * this.state.U * 1e3;
+      this.Ek = Math.max(Emin, this.Ek + dE);
+      const sp = Math.sqrt(2 * this.Ek / p.m), cur = Math.hypot(this.vel.x, this.vel.y);
+      this.vel.x *= sp / cur; this.vel.y *= sp / cur;
+      this.n++;
+      this.kicks.push({ t: this.t, u: u * dir, gain: dE > 0 });
+      this.ekHist.push({ t: this.t, e: this.Ek });
+    }
+    const rr = Math.hypot(this.pos.x, this.pos.y);
+    const ang = Math.atan2(this.pos.y, this.pos.x) * 180 / Math.PI;
+    const rOrb = p.m * Math.hypot(this.vel.x, this.vel.y) / (p.q * B);
+    if (rOrb > this.R * 0.86 && rr > this.R * 0.84 && ang > 38 && ang < 62) {
+      // afbuigplaat: bundel wordt iets naar buiten gebogen en verlaat het veld rechtdoor
+      this.exited = true;
+      const a = -0.22, c = Math.cos(a), s = Math.sin(a);
+      const vx = this.vel.x * c - this.vel.y * s; this.vel.y = this.vel.x * s + this.vel.y * c; this.vel.x = vx;
+    } else if (rr > this.R * 0.99) { this.lost = true; this.done = true; this.running = false; }
+  }
+
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.running) {
+      const Tc = 1 / this.fc();
+      const simDt = dt * Tc * this.state.tempo;
+      const N = Math.max(1, Math.ceil(simDt / (Tc / 500)));
+      const h = simDt / N;
+      for (let i = 0; i < N && this.running; i++) {
+        this.step(h);
+        if (i % 4 === 0) {
+          this.trail.push([this.cx + this.pos.x * this.ppm, this.cy - this.pos.y * this.ppm]);
+          if (this.trail.length > 12000) this.trail.splice(0, 2000);
+        }
+      }
+      this.ekHist.push({ t: this.t, e: this.Ek });
+      if (this.ekHist.length > 6000) this.ekHist.splice(1, 1000);
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.15) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  eStr(E) { const eV = E / 1.602e-19; return eV >= 1e6 ? this.fmt(eV / 1e6, 2) + ' MeV' : this.fmt(eV / 1e3, 0) + ' keV'; }
+  nice(x) { const e = Math.pow(10, Math.floor(Math.log10(x))); const m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    const { cx, cy, ppm } = this; const Rp = this.R * ppm, gap = 7;
+    const p = this.P();
+    const u = Math.cos(2 * Math.PI * this.fosc() * this.t);
+
+    // dees
+    for (const sgn of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(cx + sgn * gap, cy, Rp, sgn < 0 ? Math.PI / 2 : -Math.PI / 2, sgn < 0 ? 3 * Math.PI / 2 : Math.PI / 2);
+      ctx.closePath();
+      const hi = (sgn < 0 ? u : -u);
+      ctx.fillStyle = hi > 0 ? 'rgba(200,68,58,' + (0.06 + 0.12 * hi) + ')' : 'rgba(59,111,196,' + (0.06 - 0.12 * hi) + ')';
+      ctx.fill(); ctx.strokeStyle = '#8a8272'; ctx.lineWidth = 2; ctx.stroke();
+    }
+    // B crosses
+    ctx.strokeStyle = 'rgba(58,111,184,0.5)'; ctx.lineWidth = 1.2;
+    for (let x = -Rp + 20; x < Rp; x += 34) for (let y = -Rp + 20; y < Rp; y += 34) {
+      if (Math.hypot(x, y) > Rp - 12 || Math.abs(x) < 18) continue;
+      ctx.beginPath(); ctx.moveTo(cx + x - 4, cy + y - 4); ctx.lineTo(cx + x + 4, cy + y + 4); ctx.moveTo(cx + x + 4, cy + y - 4); ctx.lineTo(cx + x - 4, cy + y + 4); ctx.stroke();
+    }
+    // E in gap
+    const ea = Math.abs(u);
+    if (ea > 0.05) {
+      ctx.strokeStyle = '#b9812a'; ctx.fillStyle = '#b9812a'; ctx.globalAlpha = 0.35 + 0.65 * ea; ctx.lineWidth = 1.6;
+      const d = u > 0 ? 1 : -1;
+      for (let y = -Rp + 30; y < Rp - 20; y += 44) {
+        ctx.beginPath(); ctx.moveTo(cx - 6 * d, cy + y); ctx.lineTo(cx + 6 * d, cy + y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + 8 * d, cy + y); ctx.lineTo(cx + 3 * d, cy + y - 3.5); ctx.lineTo(cx + 3 * d, cy + y + 3.5); ctx.closePath(); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // afbuigplaat
+    ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(cx, cy, Rp * 0.94, -64 * Math.PI / 180, -40 * Math.PI / 180); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('afbuigplaat', cx + Rp * 0.72 + 30, cy - Rp * 0.72 - 6);
+    // labels
+    ctx.fillStyle = '#6f685c'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('D\u2081', cx - Rp * 0.62, cy - Rp * 0.78); ctx.fillText('D\u2082', cx + Rp * 0.62, cy - Rp * 0.78);
+    ctx.font = "500 12px 'IBM Plex Mono',monospace";
+    ctx.fillText((u >= 0 ? '+' : '\u2212') + this.fmt(Math.abs(u) * this.state.U, 0) + ' kV', cx - Rp * 0.62, cy - Rp * 0.78 + 18);
+    // AC source
+    ctx.strokeStyle = '#5d574d'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(cx - 60, cy + Rp); ctx.lineTo(cx - 60, cy + Rp + 22); ctx.lineTo(cx - 16, cy + Rp + 22);
+    ctx.moveTo(cx + 60, cy + Rp); ctx.lineTo(cx + 60, cy + Rp + 22); ctx.lineTo(cx + 16, cy + Rp + 22); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy + Rp + 22, 16, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); for (let i = 0; i <= 20; i++) { const x = -9 + i * 0.9; const y = -5 * Math.sin(i / 20 * 2 * Math.PI); i ? ctx.lineTo(cx + x, cy + Rp + 22 + y) : ctx.moveTo(cx + x, cy + Rp + 22 + y); } ctx.stroke();
+
+    // trail
+    if (this.trail.length > 1) {
+      ctx.strokeStyle = p.col; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.3; ctx.beginPath();
+      ctx.moveTo(this.trail[0][0], this.trail[0][1]);
+      for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i][0], this.trail[i][1]);
+      ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // particle
+    const X = cx + this.pos.x * ppm, Y = cy - this.pos.y * ppm;
+    ctx.beginPath(); ctx.arc(X, Y, 5.5, 0, 7); ctx.fillStyle = p.col; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (this.done) {
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center';
+      ctx.fillText(this.lost ? 'Het deeltje botst tegen de wand van de dee' : 'Bundel verlaat het cyclotron met ' + this.eStr(this.Ek), cx, 22);
+    }
+
+    // graphs
+    const gx = 590, gw = 290;
+    this.graphU(ctx, gx, 40, gw, 190);
+    this.graphE(ctx, gx, 300, gw, 220);
+  }
+
+  axes(ctx, x, y, w, h, title) {
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(title, x, y - 8);
+  }
+
+  graphU(ctx, x, y, w, h) {
+    this.axes(ctx, x, y, w, h, 'Spanning over de spleet');
+    const Tosc = 1 / this.fosc(); const win = 3 * Tosc;
+    const t1 = Math.max(this.t, win), t0 = t1 - win;
+    const X = (t) => x + (t - t0) / win * w, Y = (v) => y + h / 2 - v * (h / 2 - 16);
+    ctx.strokeStyle = '#d9d3c6'; ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
+    ctx.strokeStyle = '#c8443a'; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const t = t0 + win * i / 200; const v = Math.cos(2 * Math.PI * this.fosc() * t); i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)); }
+    ctx.stroke();
+    for (let i = this.kicks.length - 1; i >= 0; i--) {
+      const k = this.kicks[i]; if (k.t < t0) break;
+      ctx.beginPath(); ctx.arc(X(k.t), Y(Math.cos(2 * Math.PI * this.fosc() * k.t)), 4.5, 0, 7);
+      ctx.fillStyle = k.gain ? '#2f8a4e' : '#c8443a'; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('+U', x + 4, y + 4); ctx.textBaseline = 'bottom'; ctx.fillText('\u2212U', x + 4, y + h - 3);
+    ctx.textAlign = 'right'; ctx.fillText('laatste 3 perioden', x + w - 4, y + h - 3);
+  }
+
+  graphE(ctx, x, y, w, h) {
+    this.axes(ctx, x, y, w, h, 'Kinetische energie E\u2096 (MeV)');
+    const p = this.P(); const B = this.state.B;
+    const Emax = Math.pow(p.q * B * this.R, 2) / (2 * p.m) / 1.602e-13;
+    const ymax = this.nice(Emax * 1.15);
+    const Tc = 1 / this.fc();
+    const tmax = Math.max(this.t, 8 * Tc) * 1.05;
+    const X = (t) => x + t / tmax * w, Y = (e) => y + h - e / ymax * h;
+    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const step = this.nice(ymax / 4);
+    for (let v = 0; v <= ymax + 1e-9; v += step) {
+      ctx.strokeStyle = '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
+      ctx.fillText(this.fmt(v, step < 1 ? (step < 0.1 ? 2 : 1) : 0), x - 5, Y(v));
+    }
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = '#8c8576'; ctx.beginPath(); ctx.moveTo(x, Y(Emax)); ctx.lineTo(x + w, Y(Emax)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('E\u2096,max', x + 4, Y(Emax) - 2);
+    ctx.strokeStyle = p.col; ctx.lineWidth = 1.8; ctx.beginPath();
+    let prev = null;
+    for (const pt of this.ekHist) {
+      const e = pt.e / 1.602e-13;
+      if (!prev) ctx.moveTo(X(pt.t), Y(e)); else { ctx.lineTo(X(pt.t), Y(prev)); ctx.lineTo(X(pt.t), Y(e)); }
+      prev = e;
+    }
+    ctx.stroke();
+    ctx.fillStyle = '#8c8576'; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('t (\u00B5s) \u2192 ' + this.fmt(tmax * 1e6, 2), x + w, y + h + 5);
+  }
+
+  renderVals() {
+    const st = this.state; const p = this.P();
+    const fc = this.fc();
+    const v = Math.sqrt(2 * this.Ek / p.m);
+    const r = p.m * v / (p.q * st.B);
+    const Emax = Math.pow(p.q * st.B * this.R, 2) / (2 * p.m);
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (on ? 'oklch(0.5 0.12 150)' : '#e7e1d5') + ';background:' + (on ? 'oklch(0.5 0.12 150)' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const reset = (patch) => this.setState(patch, () => { this.resetSim(); if (this.state.tuned) this.setState({ f: Math.round(this.fc() / 1e4) / 100 }); });
+    return {
+      stageRef: this.stageRef,
+      B: st.B, U: st.U, f: st.tuned ? Math.round(fc / 1e4) / 100 : st.f, tempo: st.tempo, tuned: st.tuned,
+      BStr: this.fmt(st.B, 2) + ' T', UStr: this.fmt(st.U, 0) + ' kV',
+      fStr: this.fmt(this.fosc() / 1e6, 2) + ' MHz',
+      tempoStr: this.fmt(st.tempo, 2) + ' omw/s',
+      partItems: this.parts.map((q, i) => ({ name: q.name, style: chip(i === st.pi), onClick: () => reset({ pi: i }) })),
+      onB: (e) => reset({ B: parseFloat(e.target.value) }),
+      onU: (e) => this.setState({ U: parseFloat(e.target.value) }),
+      onF: (e) => this.setState({ f: parseFloat(e.target.value) }),
+      onTempo: (e) => this.setState({ tempo: parseFloat(e.target.value) }),
+      onTune: () => this.setState({ tuned: !st.tuned, f: Math.round(fc / 1e4) / 100 }),
+      tuneStyle: chip(st.tuned).replace('min-height:34px', 'min-height:34px;width:100%'),
+      tuneLabel: st.tuned ? 'Afgestemd op f\u1D04 (klik om vrij te regelen)' : 'Vrije frequentie (klik om af te stemmen)',
+      onStart: () => { if (this.done) this.resetSim(); this.running = !this.running; this.forceUpdate(); },
+      onReset: () => { this.resetSim(); this.forceUpdate(); },
+      startLabel: this.running ? 'Pauze' : (this.done ? 'Opnieuw' : (this.t > 0 ? 'Verder' : 'Start')),
+      fcStr: this.fmt(fc / 1e6, 2) + ' MHz',
+      TStr: this.fmt(1e9 / fc, 1) + ' ns',
+      EkStr: this.eStr(this.Ek),
+      vStr: this.fmt(v / 1e6, 2) + ' \u00B7 10\u2076 m/s',
+      rStr: this.fmt(Math.min(r, this.R) * 100, 1) + ' cm',
+      nStr: String(this.n),
+      EmaxStr: this.eStr(Emax),
+    };
+  }
+}
+</script>
+</body>
+</html>

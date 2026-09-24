@@ -72,6 +72,8 @@
         <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:9px">{{ boundHint }}</div>
       </div>
 
+      <button onClick="{{ onPlay }}" style="flex:none;min-height:40px;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:#1f8a8a;color:#fff">{{ playLabel }}</button>
+
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Visualisatie</div>
         <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
@@ -128,7 +130,7 @@ class Component extends DCLogic {
   stageRef = React.createRef();
   W = 820; H = 470;
 
-  n = 2; len = 1.0; v = 343; phase = 0;
+  n = 2; len = 1.0; v = 343; phase = 0; running = false;
   state = { bound: 'bb', mode: 'trans' };
 
   componentDidMount() {
@@ -148,7 +150,7 @@ class Component extends DCLogic {
 
   loop = (ts) => {
     const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
-    this.phase += dt * (Math.PI * 2 / 1.5);
+    if (this.running) this.phase += dt * (Math.PI * 2 / 1.5);
     if (this.phase > Math.PI * 2) this.phase -= Math.PI * 2;
     this.draw();
     this._r = (this._r || 0) + dt; if (this._r > 0.14) { this._r = 0; this.forceUpdate(); }
@@ -301,6 +303,8 @@ class Component extends DCLogic {
       : 'Ongelijke uiteinden: alleen oneven harmonischen, \u03bb = 4L/(2n\u22121).';
     return {
       stageRef: this.stageRef,
+      onPlay: () => { this.running = !this.running; this.forceUpdate(); },
+      playLabel: this.running ? 'Pauze' : 'Start trilling',
       n: this.n, len: this.len, v: this.v,
       harmStr: 'n = ' + n + (half ? '' : '  (' + harmonic + 'e)'),
       lenStr: L.toFixed(2) + ' m', vStr: Math.round(v) + ' m/s',

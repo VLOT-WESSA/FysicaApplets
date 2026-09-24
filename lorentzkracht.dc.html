@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
@@ -89,10 +89,10 @@
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ curState }}</span>
         </button>
         <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3a6fb8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
         </button>
         <button onClick="{{ toggleForce }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ forceBorder }};background:{{ forceBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#1c1c1c;border:1px solid #c9c2b4"></span>Lorentzkracht <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ forceState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#7a4fc0;border:1px solid #c9c2b4"></span>Lorentzkracht <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ forceState }}</span>
         </button>
       </div>
 
@@ -101,7 +101,7 @@
         <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Duim</span>
-            <span style="width:10px;height:10px;border-radius:3px;background:#1c1c1c;flex:none"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#7a4fc0;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">Kracht F</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
@@ -111,7 +111,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Middelvinger</span>
-            <span style="width:10px;height:10px;border-radius:3px;background:#6f9bd8;flex:none"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#3a6fb8;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">Veld B</span>
           </div>
         </div>
@@ -234,6 +234,18 @@ class Component extends DCLogic {
     ctx.closePath(); ctx.fill();
   }
 
+  arrowMid3(ctx, a, b, color, w, head) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    const ang = Math.atan2(B.y - A.y, B.x - A.x);
+    const mx = (A.x + B.x) / 2 + head * 0.5 * Math.cos(ang), my = (A.y + B.y) / 2 + head * 0.5 * Math.sin(ang);
+    ctx.beginPath(); ctx.moveTo(mx, my);
+    ctx.lineTo(mx - head * Math.cos(ang - 0.42), my - head * Math.sin(ang - 0.42));
+    ctx.lineTo(mx - head * Math.cos(ang + 0.42), my - head * Math.sin(ang + 0.42));
+    ctx.closePath(); ctx.fill();
+  }
+
   barPos() {
     return { x: this.Lsw * Math.sin(this.phi), y: this.pivotY - this.Lsw * Math.cos(this.phi) };
   }
@@ -246,10 +258,10 @@ class Component extends DCLogic {
 
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
-    if (light) { bg.addColorStop(0, '#e9edf2'); bg.addColorStop(1, '#d6dce4'); }
-    else { bg.addColorStop(0, '#141b24'); bg.addColorStop(1, '#0d1219'); }
+    if (light) { bg.addColorStop(0, '#f8f6f1'); bg.addColorStop(1, '#f1ede5'); }
+    else { bg.addColorStop(0, '#ebe9e4'); bg.addColorStop(1, '#f1eee9'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
-    ctx.fillStyle = light ? 'rgba(0,0,0,0.022)' : 'rgba(255,255,255,0.018)';
+    ctx.fillStyle = light ? 'rgba(252,250,245,0.022)' : 'rgba(40,38,34,0.018)';
     for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
 
     const on = this.isOn();
@@ -261,7 +273,7 @@ class Component extends DCLogic {
     const susF = { x: bp.x, y: bp.y, z: sh };
     const susB = { x: bp.x, y: bp.y, z: -sh };
 
-    const copper = '#d98b3a';
+    const copper = '#ca7919';
     const red = '#e0503a';
     const d = this.state.curDir;
     const showC = this.state.showCurrent && on;
@@ -271,9 +283,9 @@ class Component extends DCLogic {
       else this.arrow3(ctx, mid, { x: 0, y: this.pivotY, z: Z }, red, 2.4, 8);
     };
 
-    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: 0, y: this.pivotY, z: sh + 14 }, light ? '#8b8478' : '#6a655e', 6);
-    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: -10, y: this.pivotY + 26, z: -sh - 14 }, light ? '#9a9388' : '#544f49', 4);
-    this.line3(ctx, { x: 0, y: this.pivotY, z: sh + 14 }, { x: -10, y: this.pivotY + 26, z: sh + 14 }, light ? '#9a9388' : '#544f49', 4);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: 0, y: this.pivotY, z: sh + 14 }, light ? '#746d62' : '#959089', 6);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: -sh - 14 }, { x: -10, y: this.pivotY + 26, z: -sh - 14 }, light ? '#6a6359' : '#afada8', 4);
+    this.line3(ctx, { x: 0, y: this.pivotY, z: sh + 14 }, { x: -10, y: this.pivotY + 26, z: sh + 14 }, light ? '#6a6359' : '#afada8', 4);
     this.line3(ctx, { x: 0, y: this.pivotY, z: -sh }, susB, copper, 4.5);
     if (showC) leadCurrent(-sh);
 
@@ -285,8 +297,8 @@ class Component extends DCLogic {
       else if (dens === 'veel') { xs = [-96, -64, -32, 0, 32, 64, 92]; zs = [-26, 0, 26]; }
       const top = this.poleY, bot = -this.poleY;
       for (const xx of xs) for (const zz of zs) {
-        if (this.state.fieldDir === 1) this.arrow3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#6f9bd8', 2.2, 9);
-        else this.arrow3(ctx, { x: xx, y: bot, z: zz }, { x: xx, y: top, z: zz }, '#6f9bd8', 2.2, 9);
+        if (this.state.fieldDir === 1) this.arrowMid3(ctx, { x: xx, y: top, z: zz }, { x: xx, y: bot, z: zz }, '#3a6fb8', 2.2, 11);
+        else this.arrowMid3(ctx, { x: xx, y: bot, z: zz }, { x: xx, y: top, z: zz }, '#3a6fb8', 2.2, 11);
       }
       ctx.restore();
     }
@@ -305,7 +317,7 @@ class Component extends DCLogic {
       const s = this.forceSign();
       const L = 24 + 2.4 * this.state.amps;
       const bm = { x: bp.x, y: bp.y, z: 0 };
-      const fcol = light ? '#1c1c1c' : '#f1ede1';
+      const fcol = '#7a4fc0';
       this.arrow3(ctx, bm, { x: bm.x + L * s, y: bm.y, z: 0 }, fcol, 4.5, 12);
     }
 
@@ -341,7 +353,7 @@ class Component extends DCLogic {
     add(X0, XB, -py, 0, -pz, pz, cols(sCol));
 
     faces.sort((a, b) => a.depth - b.depth);
-    for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(16,12,8,0.22)', 1); }
+    for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(244,241,236,0.22)', 1); }
 
     const topLab = this.state.fieldDir === 1 ? 'N' : 'S';
     const botLab = this.state.fieldDir === 1 ? 'S' : 'N';
@@ -349,8 +361,8 @@ class Component extends DCLogic {
     const Sl = this.proj({ x: -84, y: -py - at / 2, z: pz + 0.6 });
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.font = '700 17px "IBM Plex Sans",sans-serif';
-    ctx.fillStyle = '#fff0ea'; ctx.fillText(topLab, Nl.x, Nl.y);
-    ctx.fillStyle = '#eafaf0'; ctx.fillText(botLab, Sl.x, Sl.y);
+    ctx.fillStyle = '#352a25'; ctx.fillText(topLab, Nl.x, Nl.y);
+    ctx.fillStyle = '#232f28'; ctx.fillText(botLab, Sl.x, Sl.y);
   }
 
   shade(hex, amt) {
@@ -369,8 +381,8 @@ class Component extends DCLogic {
     const backPiv = this.proj({ x: 0, y: this.pivotY, z: -sh });
     const frontPiv = this.proj({ x: 0, y: this.pivotY, z: sh });
     const live = on;
-    const posCol = live ? '#e0503a' : '#9a9082';
-    const negCol = live ? '#e0503a' : '#6a6f78';
+    const posCol = live ? '#e0503a' : '#6e6457';
+    const negCol = live ? '#e0503a' : '#818690';
 
     const cxc = 32, mY = 92, gap = 9;
     const plusUp = d === 1;
@@ -388,7 +400,7 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.moveTo(cxc, lowerY); ctx.lineTo(10, lowerY); ctx.lineTo(10, railLo); ctx.lineTo(frontPiv.x, railLo); ctx.lineTo(frontPiv.x, frontPiv.y); ctx.stroke();
 
     const term = (P, col) => {
-      ctx.fillStyle = '#cdc7bb'; ctx.strokeStyle = '#3a352c'; ctx.lineWidth = 1;
+      ctx.fillStyle = '#49443a'; ctx.strokeStyle = '#d4d2cd'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(P.x - 5, P.y - 4, 10, 8, 2); ctx.fill(); ctx.stroke();
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(P.x, P.y, 2.4, 0, Math.PI * 2); ctx.fill();
     };
@@ -403,13 +415,13 @@ class Component extends DCLogic {
     }
 
     // cell plates
-    ctx.strokeStyle = '#cfcabe'; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#474339'; ctx.lineCap = 'round';
     ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cxc - 16, plusY); ctx.lineTo(cxc + 16, plusY); ctx.stroke();  // long (+)
     ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(cxc - 8, minusY); ctx.lineTo(cxc + 8, minusY); ctx.stroke();  // short (-)
     ctx.font = '700 15px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = on ? '#e0503a' : '#9c8f7d'; ctx.fillText('+', cxc + 22, plusY);
-    ctx.fillStyle = '#9aa2ab'; ctx.fillText('\u2212', cxc + 22, minusY);
-    ctx.fillStyle = '#b9b3a6'; ctx.font = '600 11px "IBM Plex Mono",monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = on ? '#e0503a' : '#706453'; ctx.fillText('+', cxc + 22, plusY);
+    ctx.fillStyle = '#555d65'; ctx.fillText('\u2212', cxc + 22, minusY);
+    ctx.fillStyle = '#555045'; ctx.font = '600 11px "IBM Plex Mono",monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(this.state.amps.toFixed(1) + ' A', cxc, mY + gap + 13);
     ctx.textBaseline = 'alphabetic';
   }
@@ -417,8 +429,8 @@ class Component extends DCLogic {
   drawLegend(ctx, on, light) {
     const items = [];
     if (this.state.showCurrent && on) items.push(['#e0503a', 'stroom']);
-    if (this.state.showField) items.push(['#6f9bd8', 'veld']);
-    if (this.state.showForce && on) items.push([light ? '#1c1c1c' : '#f1ede1', 'kracht']);
+    if (this.state.showField) items.push(['#3a6fb8', 'veld']);
+    if (this.state.showForce && on) items.push(['#7a4fc0', 'kracht']);
     if (!items.length) return;
     let x = this.W - 14; const y = 18;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
@@ -426,7 +438,7 @@ class Component extends DCLogic {
     for (let i = items.length - 1; i >= 0; i--) {
       const [col, lab] = items[i];
       const w = ctx.measureText(lab).width;
-      ctx.fillStyle = light ? '#4a4f57' : '#b9b3a6'; ctx.fillText(lab, x, y); x -= (w + 8);
+      ctx.fillStyle = light ? '#a9afb8' : '#555045'; ctx.fillText(lab, x, y); x -= (w + 8);
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 1, y, 5, 0, Math.PI * 2); ctx.fill();
       x -= 16;
     }
@@ -446,7 +458,7 @@ class Component extends DCLogic {
       ? 'Zet de stroom aan en schuif de stroomsterkte omhoog. Zet daarna de lagen aan. Met \u201cOmpolen stroom\u201d of \u201cMagneet draaien\u201d keert de kracht om.'
       : (st.amps === 0
         ? 'De stroom staat aan, maar de sterkte is 0 A \u2014 er werkt geen kracht. Verhoog de stroomsterkte.'
-        : 'De Lorentzkracht (zwart) duwt de draad zijwaarts uit het veld. Let op de rechterhandregel.');
+        : 'De Lorentzkracht (paars) duwt de draad zijwaarts uit het veld. Let op de rechterhandregel.');
     const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
     const f = pill(st.showField), cu = pill(st.showCurrent), fo = pill(st.showForce);
     return {

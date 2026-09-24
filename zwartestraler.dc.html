@@ -154,7 +154,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760},&quot;curveColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ff7a1a&quot;,&quot;options&quot;:[&quot;#ff7a1a&quot;,&quot;#2f9e6b&quot;,&quot;#2f6fb0&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { T: 5800, xMax: 3, yMax: 100, showValues: true, showLabels: true, showIntensity: false, showRainbow: false };
+  state = { T: 5800, xMax: 3, yMax: 100, showValues: false, showLabels: false, showIntensity: false, showRainbow: false };
   graphRef = React.createRef();
   thermoRef = React.createRef();
 
@@ -412,7 +412,7 @@ class Component extends DCLogic {
       onZon: () => this.setPreset(5800),
       onGloei: () => this.setPreset(3000),
       onAarde: () => this.setPreset(300),
-      onReset: () => this.setState({ T: 5800, xMax: 3, yMax: 100, showValues: true, showLabels: true, showIntensity: false, showRainbow: false }),
+      onReset: () => this.setState({ T: 5800, xMax: 3, yMax: 100, showValues: false, showLabels: false, showIntensity: false, showRainbow: false }),
     };
   }
 }

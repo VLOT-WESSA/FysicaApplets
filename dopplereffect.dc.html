@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
@@ -121,33 +121,33 @@
         </div>
       </div>
 
-      <div style="background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6ee">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8a93a3;font-weight:600;margin-bottom:12px">Waarnemer</div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#2a2723;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Waarnemer</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">uitgezonden f</span>
+          <span style="font-size:13px;color:#6f685c">uitgezonden f</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ freqStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">waargenomen f&prime;</span>
+          <span style="font-size:13px;color:#6f685c">waargenomen f&prime;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:{{ fpColor }}">{{ fpStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">f&prime; / f</span>
+          <span style="font-size:13px;color:#6f685c">f&prime; / f</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ ratioStr }}</span>
         </div>
         <sc-if value="{{ isSound }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-            <span style="font-size:13px;color:#aeb6c2">&lambda; v&oacute;&oacute;r de bron</span>
+            <span style="font-size:13px;color:#6f685c">&lambda; v&oacute;&oacute;r de bron</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ lamFrontStr }}</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-            <span style="font-size:13px;color:#aeb6c2">&lambda; achter de bron</span>
+            <span style="font-size:13px;color:#6f685c">&lambda; achter de bron</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ lamBackStr }}</span>
           </div>
         </sc-if>
         <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-            <span style="font-size:13px;color:#aeb6c2">roodverschuiving z</span>
+            <span style="font-size:13px;color:#6f685c">roodverschuiving z</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:{{ fpColor }}">{{ zStr }}</span>
           </div>
         </sc-if>
@@ -290,36 +290,36 @@ class Component extends DCLogic {
     const x = this.src.x, y = this.src.y;
     ctx.save(); ctx.translate(x, y);
     if (!this.isSound()) {
-      ctx.shadowColor = 'rgba(255,224,140,0.95)'; ctx.shadowBlur = 22;
-      ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(0, 0, 9, 0, 6.2832); ctx.fill();
+      ctx.shadowColor = 'rgba(154,123,25,0.95)'; ctx.shadowBlur = 22;
+      ctx.fillStyle = '#9a7b14'; ctx.beginPath(); ctx.arc(0, 0, 9, 0, 6.2832); ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = '#fff6cf'; ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, 6.2832); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,224,140,0.5)'; ctx.lineWidth = 1.4;
+      ctx.fillStyle = '#847b56'; ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, 6.2832); ctx.fill();
+      ctx.strokeStyle = 'rgba(154,123,25,0.5)'; ctx.lineWidth = 1.4;
       for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; ctx.beginPath(); ctx.moveTo(Math.cos(a) * 11, Math.sin(a) * 11); ctx.lineTo(Math.cos(a) * 16, Math.sin(a) * 16); ctx.stroke(); }
       ctx.restore(); return;
     }
     const v = this.state.vehicle;
     ctx.scale(1.55, 1.55);
     if (v === 'amb') {
-      ctx.fillStyle = '#fbfbf7'; this.rr(ctx, -16, -10, 32, 17, 3); ctx.fill();
-      ctx.fillStyle = '#e8edf2'; this.rr(ctx, 6, -7, 10, 9, 2); ctx.fill();
+      ctx.fillStyle = '#2a2824'; this.rr(ctx, -16, -10, 32, 17, 3); ctx.fill();
+      ctx.fillStyle = '#32302c'; this.rr(ctx, 6, -7, 10, 9, 2); ctx.fill();
       ctx.fillStyle = '#e0484c'; ctx.fillRect(-16, 2, 32, 3);
       ctx.fillStyle = '#e0484c'; ctx.fillRect(-7, -7, 6, 2); ctx.fillRect(-5, -9, 2, 6);
-      ctx.fillStyle = '#5b9bff'; this.rr(ctx, -3, -14, 6, 4, 1.5); ctx.fill();
-      ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(-9, 8, 3.4, 0, 6.2832); ctx.arc(9, 8, 3.4, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = '#4a8df5'; this.rr(ctx, -3, -14, 6, 4, 1.5); ctx.fill();
+      ctx.fillStyle = '#ebe9e4'; ctx.beginPath(); ctx.arc(-9, 8, 3.4, 0, 6.2832); ctx.arc(9, 8, 3.4, 0, 6.2832); ctx.fill();
     } else if (v === 'car') {
-      ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(-9, 6, 4.4, 0, 6.2832); ctx.arc(11, 6, 4.4, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = '#ebe9e4'; ctx.beginPath(); ctx.arc(-9, 6, 4.4, 0, 6.2832); ctx.arc(11, 6, 4.4, 0, 6.2832); ctx.fill();
       ctx.fillStyle = '#d23b3b'; this.rr(ctx, -17, 0, 13, 6, 1.5); ctx.fill();
       ctx.fillRect(-19, -3, 5, 4);
       ctx.beginPath(); ctx.moveTo(-12, 4); ctx.lineTo(8, 4); ctx.lineTo(19, 1); ctx.lineTo(19, 4); ctx.lineTo(16, 6); ctx.lineTo(-12, 6); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(-4, 4); ctx.quadraticCurveTo(0, -4, 7, 3); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(2, 0, 2.2, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = '#e4e1dc'; ctx.beginPath(); ctx.arc(2, 0, 2.2, 0, 6.2832); ctx.fill();
     } else {
-      ctx.fillStyle = '#6f7886'; ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, -12); ctx.lineTo(-8, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#737c8b'; ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, -12); ctx.lineTo(-8, 0); ctx.closePath(); ctx.fill();
       ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, 12); ctx.lineTo(-8, 0); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#b9c2cf'; ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(-15, -5); ctx.lineTo(-15, 5); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#8893a3'; ctx.beginPath(); ctx.moveTo(-15, 0); ctx.lineTo(-21, -7); ctx.lineTo(-13, 0); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#3a4150'; ctx.beginPath(); ctx.arc(6, 0, 2.4, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = '#414954'; ctx.beginPath(); ctx.moveTo(20, 0); ctx.lineTo(-15, -5); ctx.lineTo(-15, 5); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#5c6675'; ctx.beginPath(); ctx.moveTo(-15, 0); ctx.lineTo(-21, -7); ctx.lineTo(-13, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#b9c2d4'; ctx.beginPath(); ctx.arc(6, 0, 2.4, 0, 6.2832); ctx.fill();
     }
     ctx.restore();
   }
@@ -328,9 +328,9 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(40,38,34,0.07)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, this.src.y); ctx.lineTo(this.W, this.src.y); ctx.stroke();
 
     if (this.state.showTrail && this.trail.length > 1) {
@@ -348,12 +348,12 @@ class Component extends DCLogic {
       const age = (this.t - f.t0) / maxAge;
       const a = (0.55 * (1 - age) + 0.12).toFixed(3);
       if (this.isSound()) {
-        ctx.strokeStyle = 'rgba(120,205,255,' + a + ')';
+        ctx.strokeStyle = 'rgba(50,144,194,' + a + ')';
         ctx.beginPath(); ctx.arc(f.x, f.y, r, 0, 6.2832); ctx.stroke();
       } else {
-        ctx.strokeStyle = 'rgba(120,170,255,' + a + ')';
+        ctx.strokeStyle = 'rgba(88,139,225,' + a + ')';
         ctx.beginPath(); ctx.arc(f.x, f.y, r, -Math.PI / 2, Math.PI / 2); ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,110,110,' + a + ')';
+        ctx.strokeStyle = 'rgba(234,83,86,' + a + ')';
         ctx.beginPath(); ctx.arc(f.x, f.y, r, Math.PI / 2, 3 * Math.PI / 2); ctx.stroke();
       }
     }
@@ -362,7 +362,7 @@ class Component extends DCLogic {
       const sinMu = 1 / this.mach();
       const mu = Math.asin(Math.max(-1, Math.min(1, sinMu)));
       const L = 1100;
-      ctx.strokeStyle = 'rgba(232,150,76,0.85)'; ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(200,116,29,0.85)'; ctx.lineWidth = 2;
       for (const sgn of [1, -1]) {
         const ang = Math.PI + sgn * mu;
         ctx.beginPath(); ctx.moveTo(this.src.x, this.src.y);
@@ -371,17 +371,17 @@ class Component extends DCLogic {
       }
     }
 
-    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(190,140,225,0.85)';
+    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(168,116,203,0.85)';
     ctx.beginPath(); ctx.moveTo(this.src.x, this.src.y); ctx.lineTo(this.obs.x, this.obs.y); ctx.stroke(); ctx.setLineDash([]);
 
     const vs = this.vsPx();
     if (vs > 1) {
       const al = Math.min(54, 18 + vs * 0.5);
       const ax = this.src.x + al, ay = this.src.y;
-      ctx.strokeStyle = '#7be3d4'; ctx.lineWidth = 2.4;
+      ctx.strokeStyle = '#15988a'; ctx.lineWidth = 2.4;
       ctx.beginPath(); ctx.moveTo(this.src.x + 22, this.src.y); ctx.lineTo(ax, ay); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax - 7, ay - 4); ctx.lineTo(ax - 7, ay + 4); ctx.closePath();
-      ctx.fillStyle = '#7be3d4'; ctx.fill();
+      ctx.fillStyle = '#15988a'; ctx.fill();
     }
 
     this.drawSource(ctx);
@@ -391,12 +391,12 @@ class Component extends DCLogic {
     const tx = this.obs.x + (flip ? -14 : 14);
     const fpv = Number(this.state.fp);
     const fpTxt = isNaN(fpv) ? 'f\u2032 \u2192 schok' : "f\u2032 = " + Math.round(fpv) + ' Hz';
-    ctx.fillStyle = '#ecdcff'; ctx.fillText(fpTxt, tx, this.obs.y - 11);
+    ctx.fillStyle = '#877798'; ctx.fillText(fpTxt, tx, this.obs.y - 11);
     ctx.beginPath(); ctx.arc(this.obs.x, this.obs.y, 9, 0, 6.2832);
-    ctx.fillStyle = '#b57edc'; ctx.fill();
-    ctx.lineWidth = 2.5; ctx.strokeStyle = '#fffdf9'; ctx.stroke();
+    ctx.fillStyle = '#ad73d5'; ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#292723'; ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.4;
+    ctx.strokeStyle = 'rgba(40,38,34,0.8)'; ctx.fillStyle = 'rgba(40,38,34,0.85)'; ctx.lineWidth = 1.4;
     const bx = 22, by = this.H - 22;
     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + this.cPx, by);
     ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + this.cPx, by - 4); ctx.lineTo(bx + this.cPx, by + 4); ctx.stroke();
@@ -409,11 +409,11 @@ class Component extends DCLogic {
     const seg = (on) => ({ bg: on ? '#1f9e8f' : '#fff', fg: on ? '#fff' : '#6f685c' });
     const tr = seg(this.state.showTrail), co = seg(this.state.showCone), sl = seg(this.state.slow);
     const near = this.state.near;
-    const verdColors = near === 'con' ? (sound ? { bg: 'rgba(232,150,76,0.18)', fg: '#f0a868' } : { bg: 'rgba(120,170,255,0.18)', fg: '#9cc0ff' })
-      : near === 'des' ? { bg: 'rgba(255,110,110,0.18)', fg: '#ff9a8a' }
-      : near === 'shock' ? { bg: 'rgba(232,76,76,0.20)', fg: '#ff9a8a' }
-      : { bg: 'rgba(255,255,255,0.08)', fg: '#aeb6c2' };
-    const fpColor = near === 'con' ? (sound ? '#f0a868' : '#9cc0ff') : (near === 'des' ? '#ff9a8a' : near === 'shock' ? '#ff9a8a' : '#dfe6ee');
+    const verdColors = near === 'con' ? (sound ? { bg: 'rgba(200,116,29,0.14)', fg: '#a35f17' } : { bg: 'rgba(58,111,184,0.14)', fg: '#2f5f9e' })
+      : near === 'des' ? { bg: 'rgba(200,68,58,0.12)', fg: '#a8352b' }
+      : near === 'shock' ? { bg: 'rgba(200,68,58,0.16)', fg: '#a8352b' }
+      : { bg: 'rgba(42,39,35,0.06)', fg: '#4f4a42' };
+    const fpColor = near === 'con' ? (sound ? '#bd752e' : '#6487c5') : (near === 'des' ? '#cb6758' : near === 'shock' ? '#cb6758' : '#2f353b');
     const fpVal = Number(this.state.fp);
     const zVal = Number(this.state.z);
     const lamF = (this.vSound - this.state.vms) / this.state.freq;
@@ -427,7 +427,7 @@ class Component extends DCLogic {
       stageRef: this.stageRef,
       isSound: sound, isLight: !sound,
       subtitle: sound ? 'bewegende geluidsbron' : 'bewegende lichtbron \u2014 rood- en blauwverschuiving',
-      legendFront: sound ? '#78cdff' : '#78aaff',
+      legendFront: sound ? '#3290c2' : '#588be1',
       legendFrontLbl: sound ? 'golffront' : 'blauwverschuiving (voor)',
       vms: this.state.vms, beta: this.state.beta, freq: this.state.freq,
       speedReadout: sound

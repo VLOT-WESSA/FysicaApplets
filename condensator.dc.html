@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #a8761f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #a8761f;cursor:pointer}
+  input[type=range]:disabled{opacity:.4}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Vlakke condensator</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerLeave="{{ onUp }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;background:#c8443a;display:inline-block"></span>vrije positieve lading</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;background:#3b6fc4;display:inline-block"></span>vrije negatieve lading</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid #7a7368;display:inline-block"></span>gebonden lading (diëlektricum)</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#b9812a;border-radius:2px;display:inline-block"></span>veldlijnen E</div>
+        <div style="display:flex;align-items:center;gap:8px">Sleep de rechterplaat om d te veranderen.</div>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:4px;flex:none;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
+        <button onClick="{{ onConnect }}" style="{{ conTab }}">Verbonden met bron</button>
+        <button onClick="{{ onDisconnect }}" style="{{ disTab }}">Losgekoppeld</button>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Bronspanning U<sub>bron</sub></span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ UbStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0" max="100" step="1" value="{{ Ub }}" onInput="{{ onU }}" disabled="{{ uDisabled }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Plaatafstand d</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ dStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="1" max="10" step="0.1" value="{{ d }}" onInput="{{ onD }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Plaatoppervlak A</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ AStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="100" max="600" step="10" value="{{ A }}" onInput="{{ onA }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px"><span style="font-size:14px;font-weight:500">Diëlektricum</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ erStr }}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <sc-for list="{{ matItems }}" as="m" hint-placeholder-count="4">
+            <button onClick="{{ m.onClick }}" style="{{ m.style }}">{{ m.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+        <div style="display:flex;justify-content:space-between"><span>Capaciteit C</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ CStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Lading Q</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ QStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Spanning U over de platen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ UStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Veldsterkte E</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ EStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Opgeslagen energie W</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ WStr }}</span></div>
+      </div>
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">C = &epsilon;<sub>0</sub>&middot;&epsilon;<sub>r</sub>&middot;A / d &nbsp;&nbsp; Q = C&middot;U</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">E = U / d &nbsp;&nbsp; W = &frac12;&middot;C&middot;U&sup2;</div>
+        <div style="margin-top:6px">{{ modeHint }}</div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Meting noteren</button>
+          <button onClick="{{ onCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ copyLabel }}</button>
+          <button onClick="{{ onClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
+        </div>
+        <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:28px repeat(4,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
+            <span style="color:#8c8576">nr</span><span style="color:#8c8576">d (mm)</span><span style="color:#8c8576">A (cm²)</span><span style="color:#8c8576">&epsilon;<sub>r</sub></span><span style="color:#8c8576">C (pF)</span>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
+              <span style="color:#8c8576">{{ r.n }}</span><span>{{ r.d }}</span><span>{{ r.A }}</span><span>{{ r.er }}</span><span>{{ r.C }}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noRows }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:12.5px;color:#6f685c;line-height:1.5">Verander telkens één grootheid en noteer C. Kopieer de tabel naar een rekenblad en zet C uit tegen A, d of 1/d.</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 880; H = 560;
+  mats = [{ n: 'Lucht', er: 1.0 }, { n: 'Paraffine', er: 2.2 }, { n: 'Papier', er: 3.5 }, { n: 'Glas', er: 6.0 }];
+  state = { d: 4, A: 300, Ub: 50, mat: 0, connected: true, Qfix: 0, rows: [], copied: false };
+
+  componentDidMount() {
+    this.setupCanvas(); this.draw();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+  }
+  componentWillUnmount() { if (this._acStop) this._acStop(); }
+  componentDidUpdate() { this.draw(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  er() { return this.mats[this.state.mat].er; }
+  C() { return 8.854e-12 * this.er() * this.state.A * 1e-4 / (this.state.d * 1e-3); }
+  Q() { return this.state.connected ? this.C() * this.state.Ub : this.state.Qfix; }
+  U() { return this.state.connected ? this.state.Ub : this.state.Qfix / this.C(); }
+
+  geo() {
+    const s = Math.sqrt(this.state.A);
+    const hp = s * 11, dx = hp * 0.42, dy = -hp * 0.28, g = this.state.d * 26, T = 8;
+    const xL = 440 - g / 2 - dx / 2, xR = xL + g;
+    const yc = 275 - dy / 2;
+    return { hp, dx, dy, g, T, xL, xR, yTop: yc - hp / 2, yBot: yc + hp / 2 };
+  }
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  si(v, unit) {
+    const p = [[1e-12, 'p'], [1e-9, 'n'], [1e-6, 'µ'], [1e-3, 'm'], [1, ''], [1e3, 'k']];
+    let k = p[0]; for (const q of p) if (Math.abs(v) >= q[0]) k = q;
+    const x = v / k[0]; const d = x >= 100 ? 0 : x >= 10 ? 1 : 2;
+    return this.fmt(x, d) + ' ' + k[1] + unit;
+  }
+
+  para(ctx, x, y, w, h, dx, dy, fill, stroke) {
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.lineTo(x + dx, y + dy + h); ctx.lineTo(x, y + h); ctx.closePath();
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke(); }
+  }
+  plate(ctx, x, G, col, edge) {
+    const { hp, dx, dy, T, yTop } = G;
+    this.para(ctx, x, yTop, 0, hp, dx, dy, col, edge);
+    this.para(ctx, x + T, yTop, 0, hp, dx, dy, col, edge);
+    ctx.beginPath(); ctx.moveTo(x, yTop); ctx.lineTo(x + dx, yTop + dy); ctx.lineTo(x + dx + T, yTop + dy); ctx.lineTo(x + T, yTop); ctx.closePath();
+    ctx.fillStyle = edge; ctx.fill();
+    ctx.fillStyle = col; ctx.fillRect(x, yTop, T, hp); ctx.strokeStyle = edge; ctx.lineWidth = 1.5; ctx.strokeRect(x, yTop, T, hp);
+  }
+  sign(ctx, x, y, r, plus, fill, ring) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+    if (ring) { ctx.fillStyle = '#fffdf9'; ctx.fill(); ctx.strokeStyle = '#7a7368'; ctx.lineWidth = 1.4; ctx.stroke(); }
+    else { ctx.fillStyle = fill; ctx.fill(); }
+    ctx.strokeStyle = ring ? '#5d574d' : '#fff'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(x - r * 0.55, y); ctx.lineTo(x + r * 0.55, y);
+    if (plus) { ctx.moveTo(x, y - r * 0.55); ctx.lineTo(x, y + r * 0.55); }
+    ctx.stroke();
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    ctx.clearRect(0, 0, this.W, this.H);
+    const G = this.geo(); const { hp, dx, dy, g, T, xL, xR, yTop, yBot } = G;
+    const er = this.er(); const U = this.U(); const E = U / (this.state.d * 1e-3);
+    const mx = dx / 2, my = dy / 2;
+
+    // wires + voltmeter
+    ctx.strokeStyle = '#5d574d'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    const lx = xL - T / 2 - T, rx = xR + T + T / 2;
+    const vy = 68, vr = 17;
+    ctx.beginPath(); ctx.moveTo(lx + T / 2, yTop); ctx.lineTo(lx + T / 2, vy); ctx.lineTo(440 - vr, vy);
+    ctx.moveTo(rx - T / 2, yTop); ctx.lineTo(rx - T / 2, vy); ctx.lineTo(440 + vr, vy); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(440, vy, vr, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('V', 440, vy + 1);
+    ctx.font = "600 15px 'IBM Plex Mono',monospace";
+    ctx.fillText('U = ' + (U >= 1000 ? this.fmt(U / 1000, 2) + ' kV' : this.fmt(U, 1) + ' V'), 440, vy - vr - 16);
+
+    // source + switch at bottom
+    // series loop: left plate -> battery -> switch -> right plate
+    const yr = 496, by = 520, xo1 = 200, xo2 = 680, bx = 420, sx1 = 540, sx2 = 578;
+    ctx.strokeStyle = '#5d574d'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(lx + T / 2, yBot); ctx.lineTo(lx + T / 2, yr); ctx.lineTo(xo1, yr); ctx.lineTo(xo1, by); ctx.lineTo(bx, by);
+    ctx.moveTo(bx + 14, by); ctx.lineTo(sx1, by);
+    ctx.moveTo(sx2, by); ctx.lineTo(xo2, by); ctx.lineTo(xo2, yr); ctx.lineTo(rx - T / 2, yr); ctx.lineTo(rx - T / 2, yBot);
+    ctx.stroke();
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(bx, by - 16); ctx.lineTo(bx, by + 16); ctx.stroke();
+    ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(bx + 14, by - 9); ctx.lineTo(bx + 14, by + 9); ctx.stroke();
+    ctx.fillStyle = '#5d574d'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('+', bx - 9, by - 20); ctx.fillText('\u2212', bx + 23, by - 20);
+    ctx.font = "500 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center';
+    ctx.fillText('U bron = ' + this.fmt(this.state.Ub, 0) + ' V', bx + 7, by + 28);
+    ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(sx1, by, 3.5, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(sx2, by, 3.5, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(sx1, by);
+    if (this.state.connected) ctx.lineTo(sx2, by);
+    else ctx.lineTo(sx1 + 34 * Math.cos(-0.6), by + 34 * Math.sin(-0.6));
+    ctx.stroke();
+
+    // plates (left +, right -)
+    this.plate(ctx, xL - T, G, 'rgba(214,160,150,0.55)', '#8f4a3f');
+    // dielectric
+    if (er > 1) {
+      const col = ['', 'rgba(232,210,140,0.45)', 'rgba(240,232,210,0.7)', 'rgba(170,205,215,0.45)'][this.state.mat];
+      ctx.fillStyle = col; ctx.strokeStyle = 'rgba(120,112,98,0.6)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(xL, yTop); ctx.lineTo(xL + dx, yTop + dy); ctx.lineTo(xR + dx, yTop + dy); ctx.lineTo(xR + dx, yBot + dy); ctx.lineTo(xR, yBot); ctx.lineTo(xL, yBot); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xL, yTop); ctx.lineTo(xR, yTop); ctx.lineTo(xR + dx, yTop + dy); ctx.moveTo(xR, yTop); ctx.lineTo(xR, yBot); ctx.stroke();
+    }
+
+    // counts: free charges ~ sigma, field lines ~ E
+    const K = 290;
+    const cap = Math.floor(hp / 11);
+    const nQ = Math.min(cap, Math.round(E / 1000 * er * hp / K));
+    const nE = Math.min(cap, Math.round(E / 1000 * hp / K));
+    const ys = (n, i) => yTop + my + hp * (i + 0.5) / n;
+    const fringe = er > 1 ? 0 : 1;
+
+    // field lines
+    const bound = er > 1 && g > 34;
+    const x0 = xL + mx + (bound ? 14 : 3), x1 = xR + mx - (bound ? 14 : 3);
+    ctx.strokeStyle = '#b9812a'; ctx.fillStyle = '#b9812a'; ctx.lineWidth = 1.8;
+    for (let i = 0; i < nE; i++) {
+      const y = ys(nE, i);
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+      const xm = (x0 + x1) / 2 + 4;
+      ctx.beginPath(); ctx.moveTo(xm, y); ctx.lineTo(xm - 8, y - 4); ctx.lineTo(xm - 8, y + 4); ctx.closePath(); ctx.fill();
+    }
+    if (fringe && nE > 1) {
+      ctx.lineWidth = 1.3; ctx.globalAlpha = 0.6;
+      for (const sgn of [-1, 1]) {
+        const ye = sgn < 0 ? yTop + my : yBot + my;
+        ctx.beginPath(); ctx.moveTo(xL + mx, ye + sgn * 3); ctx.bezierCurveTo(xL + mx + g * 0.3, ye + sgn * (10 + g * 0.12), xR + mx - g * 0.3, ye + sgn * (10 + g * 0.12), xR + mx, ye + sgn * 3); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // bound charges
+    if (bound) {
+      const nB = nQ - nE;
+      for (let i = 0; i < nB; i++) {
+        const y = ys(nB, i);
+        this.sign(ctx, xL + mx + 8, y, 4.5, false, null, true);
+        this.sign(ctx, xR + mx - 8, y, 4.5, true, null, true);
+      }
+    }
+    // right plate
+    this.plate(ctx, xR, G, 'rgba(150,175,214,0.55)', '#3f5a8f');
+    // free charges
+    for (let i = 0; i < nQ; i++) {
+      const y = ys(nQ, i);
+      this.sign(ctx, xL + mx - T / 2, y, 5.5, true, '#c8443a');
+      this.sign(ctx, xR + mx + T / 2, y, 5.5, false, '#3b6fc4');
+    }
+
+    // dimension d
+    const yd = yBot + 22;
+    ctx.strokeStyle = '#6f685c'; ctx.fillStyle = '#6f685c'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(xL, yd - 6); ctx.lineTo(xL, yd + 6); ctx.moveTo(xR, yd - 6); ctx.lineTo(xR, yd + 6); ctx.moveTo(xL, yd); ctx.lineTo(xR, yd); ctx.stroke();
+    ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('d = ' + this.fmt(this.state.d, 1) + ' mm', (xL + xR) / 2, yd + 6);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('A = ' + this.state.A + ' cm²', xL - T - 14, (yTop + yBot) / 2);
+    if (er > 1) {
+      ctx.textAlign = 'left'; ctx.fillStyle = '#4f4a42';
+      ctx.fillText(this.mats[this.state.mat].n + ', \u03B5r = ' + this.fmt(er, 1), xR + dx + T + 14, yTop + dy + 14);
+    }
+  }
+
+  canvasPt(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const k = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * k) / 2, oy = (r.height - this.H * k) / 2;
+    return { x: (e.clientX - r.left - ox) / k, y: (e.clientY - r.top - oy) / k };
+  }
+
+  setD(d) {
+    d = Math.max(1, Math.min(10, Math.round(d * 10) / 10));
+    this.setState({ d });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const C = this.C(), Q = this.Q(), U = this.U(), E = U / (st.d * 1e-3);
+    const on = 'flex:1;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff';
+    const off = 'flex:1;font-size:13px;font-weight:500;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:transparent;color:#4f4a42';
+    const rows = st.rows.map((r, i) => ({ n: i + 1, d: this.fmt(r.d, 1), A: String(r.A), er: this.fmt(r.er, 1), C: this.fmt(r.C * 1e12, 1) }));
+    return {
+      stageRef: this.stageRef,
+      d: st.d, A: st.A, Ub: st.Ub,
+      dStr: this.fmt(st.d, 1) + ' mm', AStr: st.A + ' cm²', UbStr: this.fmt(st.Ub, 0) + ' V',
+      erStr: '\u03B5r = ' + this.fmt(this.er(), 1),
+      uDisabled: !st.connected,
+      conTab: st.connected ? on : off, disTab: st.connected ? off : on,
+      onConnect: () => this.setState({ connected: true }),
+      onDisconnect: () => { if (st.connected) this.setState({ connected: false, Qfix: this.C() * st.Ub }); },
+      onU: (e) => this.setState({ Ub: parseFloat(e.target.value) }),
+      onD: (e) => this.setD(parseFloat(e.target.value)),
+      onA: (e) => this.setState({ A: parseFloat(e.target.value) }),
+      matItems: this.mats.map((m, i) => ({
+        name: m.n, onClick: () => this.setState({ mat: i }),
+        style: 'min-height:34px;font-size:12.5px;font-weight:' + (i === st.mat ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (i === st.mat ? 'oklch(0.52 0.12 75)' : '#e7e1d5') + ';background:' + (i === st.mat ? 'oklch(0.52 0.12 75)' : '#fff') + ';color:' + (i === st.mat ? '#fff' : '#2a2723'),
+      })),
+      CStr: this.si(C, 'F'), QStr: this.si(Q, 'C'),
+      UStr: U >= 1000 ? this.fmt(U / 1000, 2) + ' kV' : this.fmt(U, 1) + ' V',
+      EStr: this.fmt(E / 1000, E >= 1e5 ? 0 : 1) + ' kV/m',
+      WStr: this.si(0.5 * C * U * U, 'J'),
+      modeHint: st.connected
+        ? 'De bron houdt U constant. Verander je C, dan stroomt er lading bij of af.'
+        : 'Losgekoppeld blijft Q constant. Verander je C, dan verandert U = Q/C.',
+      onDown: (e) => {
+        const p = this.canvasPt(e); const G = this.geo();
+        if (p.x > G.xR - 16 && p.x < G.xR + G.T + G.dx + 16 && p.y > G.yTop + G.dy - 10 && p.y < G.yBot + 10) {
+          this.drag = true; e.currentTarget.setPointerCapture(e.pointerId);
+        }
+      },
+      onMove: (e) => {
+        const p = this.canvasPt(e); const G = this.geo();
+        const c = this.stageRef.current;
+        if (!this.drag) {
+          const over = p.x > G.xR - 16 && p.x < G.xR + G.T + G.dx + 16 && p.y > G.yTop + G.dy - 10 && p.y < G.yBot + 10;
+          c.style.cursor = over ? 'ew-resize' : 'default'; return;
+        }
+        this.setD(2 * (p.x - 440 + G.dx / 2) / 26);
+      },
+      onUp: () => { this.drag = false; },
+      onRecord: () => this.setState({ rows: st.rows.concat([{ d: st.d, A: st.A, er: this.er(), C }]), copied: false }),
+      onClear: () => this.setState({ rows: [], copied: false }),
+      onCopy: () => {
+        const txt = 'd (mm)\tA (cm²)\tεr\tC (pF)\n' + st.rows.map(r => [this.fmt(r.d, 1), r.A, this.fmt(r.er, 1), this.fmt(r.C * 1e12, 2)].join('\t')).join('\n');
+        try { navigator.clipboard.writeText(txt); this.setState({ copied: true }); } catch (e) {}
+      },
+      copyLabel: st.copied ? 'Gekopieerd' : 'Kopieer tabel',
+      rows, hasRows: rows.length > 0, noRows: rows.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>

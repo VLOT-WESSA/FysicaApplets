@@ -50,7 +50,7 @@
 
     <!-- LEFT -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center">
@@ -87,13 +87,13 @@
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
         <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave (uit bij start)</span>
         <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3a6fb8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ fieldState }}</span>
         </button>
         <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:#3a352c">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ curState }}</span>
         </button>
         <button onClick="{{ toggleForce }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ forceBorder }};background:{{ forceBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#1c1c1c;border:1px solid #c9c2b4"></span>Lorentzkracht <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ forceState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#7a4fc0;border:1px solid #c9c2b4"></span>Lorentzkracht <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ forceState }}</span>
         </button>
       </div>
 
@@ -102,7 +102,7 @@
         <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Duim</span>
-            <span style="width:10px;height:10px;border-radius:3px;background:#1c1c1c;flex:none"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#7a4fc0;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">Kracht F</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
@@ -112,7 +112,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:78px;color:#3a352c">Middelvinger</span>
-            <span style="width:10px;height:10px;border-radius:3px;background:#6f9bd8;flex:none"></span>
+            <span style="width:10px;height:10px;border-radius:3px;background:#3a6fb8;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">Veld B</span>
           </div>
         </div>
@@ -222,6 +222,17 @@ class Component extends DCLogic {
     pts.forEach((p, i) => { const P = this.proj(p); i ? ctx.lineTo(P.x, P.y) : ctx.moveTo(P.x, P.y); });
     ctx.closePath(); ctx.fill();
   }
+  arrowMid3(ctx, a, b, color, w, head) {
+    const A = this.proj(a), B = this.proj(b);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    const ang = Math.atan2(B.y - A.y, B.x - A.x);
+    const mx = (A.x + B.x) / 2 + head * 0.5 * Math.cos(ang), my = (A.y + B.y) / 2 + head * 0.5 * Math.sin(ang);
+    ctx.beginPath(); ctx.moveTo(mx, my);
+    ctx.lineTo(mx - head * Math.cos(ang - 0.42), my - head * Math.sin(ang - 0.42));
+    ctx.lineTo(mx - head * Math.cos(ang + 0.42), my - head * Math.sin(ang + 0.42));
+    ctx.closePath(); ctx.fill();
+  }
   arrow3(ctx, a, b, color, w, head) {
     const A = this.proj(a), B = this.proj(b);
     ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
@@ -242,10 +253,10 @@ class Component extends DCLogic {
 
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
-    if (light) { bg.addColorStop(0, '#e9edf2'); bg.addColorStop(1, '#d6dce4'); }
-    else { bg.addColorStop(0, '#141b24'); bg.addColorStop(1, '#0d1219'); }
+    if (light) { bg.addColorStop(0, '#f8f6f1'); bg.addColorStop(1, '#f1ede5'); }
+    else { bg.addColorStop(0, '#ebe9e4'); bg.addColorStop(1, '#f1eee9'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
-    ctx.fillStyle = light ? 'rgba(0,0,0,0.022)' : 'rgba(255,255,255,0.018)';
+    ctx.fillStyle = light ? 'rgba(252,250,245,0.022)' : 'rgba(40,38,34,0.018)';
     for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
 
     const th = this.theta;
@@ -265,8 +276,6 @@ class Component extends DCLogic {
     const C = { x: c2.x, y: c2.y, z: -hz };
     const D = { x: c2.x, y: c2.y, z: hz };
 
-    this.drawMagnet(ctx);
-
     if (this.state.showField) {
       ctx.save(); ctx.globalAlpha = light ? 0.7 : 0.85;
       const dens = (this.props && this.props.veldlijnen) || 'normaal';
@@ -276,11 +285,13 @@ class Component extends DCLogic {
       // pijlen lopen precies van poolvlak tot poolvlak: van de noord- naar de zuidpool
       const yN = this.state.magDir === 1 ? this.poleY : -this.poleY;
       for (const xx of xs) for (const zz of zs)
-        this.arrow3(ctx, { x: xx, y: yN, z: zz }, { x: xx, y: -yN, z: zz }, '#6f9bd8', 2.2, 9);
+        this.arrowMid3(ctx, { x: xx, y: yN, z: zz }, { x: xx, y: -yN, z: zz }, '#3a6fb8', 2.2, 11);
       ctx.restore();
     }
 
-    const copper = '#d98b3a';
+    this.drawMagnet(ctx);
+
+    const copper = '#ca7919';
     this.line3(ctx, B, C, copper, 7);
     this.line3(ctx, A, B, copper, 7);
     this.line3(ctx, D, C, copper, 7);
@@ -288,8 +299,8 @@ class Component extends DCLogic {
     if (this.state.showForce && on && !this.brushOnInsul) {
       const L = 42, fs = s * this.state.magDir;
       const m1 = { x: c1.x, y: c1.y, z: 0 }, m2 = { x: c2.x, y: c2.y, z: 0 };
-      this.arrow3(ctx, m1, { x: c1.x - L * fs, y: c1.y, z: 0 }, '#f1ede1', 4, 11);
-      this.arrow3(ctx, m2, { x: c2.x + L * fs, y: c2.y, z: 0 }, '#f1ede1', 4, 11);
+      this.arrow3(ctx, m1, { x: c1.x - L * fs, y: c1.y, z: 0 }, '#7a4fc0', 4, 11);
+      this.arrow3(ctx, m2, { x: c2.x + L * fs, y: c2.y, z: 0 }, '#7a4fc0', 4, 11);
     }
 
     if (this.state.showCurrent && on && !this.brushOnInsul) {
@@ -325,11 +336,11 @@ class Component extends DCLogic {
       for (const f of list) { f.depth = f.pts.reduce((a, p) => a + this.view(p).depth, 0) / 4; faces.push(f); }
     };
     const mag = this.state.magDir;
-    const nTop = { def: '#6f7378', front: '#b8432f', bottom: '#9c3826', top: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' };
-    const sTop = { def: '#6f7378', front: '#2f9a63', bottom: '#268a56', top: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' };
-    const nBot = { def: '#6f7378', front: '#b8432f', top: '#9c3826', bottom: '#7e8287', right: '#a23a27', left: '#5f6368', back: '#494c50' };
-    const sBot = { def: '#6f7378', front: '#2f9a63', top: '#268a56', bottom: '#7e8287', right: '#23804e', left: '#5f6368', back: '#494c50' };
-    const arm = (c) => ({ def: '#6f7378', front: c.front, top: '#7e8287', bottom: '#7e8287', right: c.right, left: '#5f6368', back: '#494c50' });
+    const nTop = { def: '#83817c', front: '#b8432f', bottom: '#9c3826', top: '#73706b', right: '#a23a27', left: '#97958f', back: '#b5b2ad' };
+    const sTop = { def: '#83817c', front: '#2f9a63', bottom: '#268a56', top: '#73706b', right: '#23804e', left: '#97958f', back: '#b5b2ad' };
+    const nBot = { def: '#83817c', front: '#b8432f', top: '#9c3826', bottom: '#73706b', right: '#a23a27', left: '#97958f', back: '#b5b2ad' };
+    const sBot = { def: '#83817c', front: '#2f9a63', top: '#268a56', bottom: '#73706b', right: '#23804e', left: '#97958f', back: '#b5b2ad' };
+    const arm = (c) => ({ def: '#83817c', front: c.front, top: '#73706b', bottom: '#73706b', right: c.right, left: '#97958f', back: '#b5b2ad' });
     const upper = mag === 1 ? nTop : sTop, lower = mag === 1 ? sBot : nBot;
     add(-104, 70, 90, 116, -pz, pz, upper);
     add(-104, 70, -116, -90, -pz, pz, lower);
@@ -337,14 +348,14 @@ class Component extends DCLogic {
     add(-130, -104, -116, 0, -pz, pz, arm(lower));
 
     faces.sort((a, b) => a.depth - b.depth);
-    for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(16,12,8,0.22)', 1); }
+    for (const f of faces) { this.fillPoly3(ctx, f.pts, f.c); this.poly3(ctx, f.pts, true, 'rgba(244,241,236,0.22)', 1); }
 
     const Nl = this.proj({ x: -18, y: 103, z: pz + 0.5 });
     const Sl = this.proj({ x: -18, y: -103, z: pz + 0.5 });
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.font = '700 17px "IBM Plex Sans",sans-serif';
-    ctx.fillStyle = mag === 1 ? '#ffe1d7' : '#d6f2e3'; ctx.fillText(mag === 1 ? 'N' : 'S', Nl.x, Nl.y);
-    ctx.fillStyle = mag === 1 ? '#d6f2e3' : '#ffe1d7'; ctx.fillText(mag === 1 ? 'S' : 'N', Sl.x, Sl.y);
+    ctx.fillStyle = mag === 1 ? '#422c25' : '#20372c'; ctx.fillText(mag === 1 ? 'N' : 'S', Nl.x, Nl.y);
+    ctx.fillStyle = mag === 1 ? '#20372c' : '#422c25'; ctx.fillText(mag === 1 ? 'S' : 'N', Sl.x, Sl.y);
   }
 
   // De koolborstels staan op (0, ±R). De scheiding tussen de twee koperhelften is een
@@ -357,8 +368,8 @@ class Component extends DCLogic {
 
   drawCommutator(ctx, th, s, on, endA, endD) {
     const R = this.ringR, zF = this.commZ, zB = this.commZ - 10;
-    const copper = on ? '#e9a24a' : '#b89a6e';
-    const dim = '#7a736a';
+    const copper = on ? '#bc7a1e' : '#a8895b';
+    const dim = '#857e75';
     const brushOnInsul = this.brushOnInsul;
     const segColor = brushOnInsul ? dim : copper;
     const uA = th, uB = th + Math.PI;
@@ -367,15 +378,15 @@ class Component extends DCLogic {
 
     const fwdA = { x: endA.x, y: endA.y, z: zF };
     const fwdD = { x: endD.x, y: endD.y, z: zF };
-    this.line3(ctx, endA, fwdA, '#d98b3a', 7);
-    this.line3(ctx, fwdA, nubA, '#d98b3a', 7);
-    this.line3(ctx, endD, fwdD, '#d98b3a', 7);
-    this.line3(ctx, fwdD, nubB, '#d98b3a', 7);
+    this.line3(ctx, endA, fwdA, '#ca7919', 7);
+    this.line3(ctx, fwdA, nubA, '#ca7919', 7);
+    this.line3(ctx, endD, fwdD, '#ca7919', 7);
+    this.line3(ctx, fwdD, nubB, '#ca7919', 7);
 
     // Twee koperhelften, gescheiden door een rechte spleet van vaste breedte.
     // De helften zijn cirkelsegmenten begrensd door een koorde op afstand INSUL_W/2
     // van het midden, dus de isolatie is aan de rand even breed als binnenin.
-    const insul = '#1b1713';
+    const insul = '#edeae5';
     const half = this.INSUL_W / 2;
     const al = Math.asin(Math.min(0.9, half / R));
     const arcPts = (a0, a1, z) => {
@@ -408,7 +419,7 @@ class Component extends DCLogic {
     this.brushTop = this.proj({ x: 0, y: R, z: zF });
     this.brushBot = this.proj({ x: 0, y: -R, z: zF });
     const block = (P, off) => {
-      ctx.fillStyle = '#3c3833'; ctx.strokeStyle = '#15130f'; ctx.lineWidth = 1;
+      ctx.fillStyle = '#d0cdc8'; ctx.strokeStyle = '#efede8'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(P.x - 8, P.y + off, 16, 7, 1.5); ctx.fill(); ctx.stroke();
     };
     block(this.brushTop, -10);
@@ -429,7 +440,7 @@ class Component extends DCLogic {
     const top = this.brushTop || this.proj({ x: 0, y: this.ringR, z: this.commZ });
     const bot = this.brushBot || this.proj({ x: 0, y: -this.ringR, z: this.commZ });
     const live = on && !this.brushOnInsul;
-    const col = live ? '#e0503a' : '#a99c88';
+    const col = live ? '#e0503a' : '#685c4a';
     const railT = Math.max(16, top.y - 20);
     const railB = Math.min(this.H - 16, bot.y + 20);
     const cxc = Math.max(30, Math.min(top.x, bot.x) - 150);
@@ -450,15 +461,15 @@ class Component extends DCLogic {
     }
 
     // cell plates
-    ctx.strokeStyle = '#cfcabe'; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#474339'; ctx.lineCap = 'round';
     ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cxc - 16, plusY); ctx.lineTo(cxc + 16, plusY); ctx.stroke();   // long (+)
     ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(cxc - 8, minusY); ctx.lineTo(cxc + 8, minusY); ctx.stroke();   // short (-)
 
     ctx.font = '700 14px "IBM Plex Sans",sans-serif'; ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
-    ctx.fillStyle = on ? '#e0503a' : '#9c8f7d'; ctx.fillText('+', cxc + 22, plusY);
-    ctx.fillStyle = '#9aa2ab'; ctx.fillText('\u2212', cxc + 22, minusY);
-    ctx.fillStyle = '#b9b3a6'; ctx.font = '600 12px "IBM Plex Mono",monospace'; ctx.textAlign = 'right';
+    ctx.fillStyle = on ? '#e0503a' : '#706453'; ctx.fillText('+', cxc + 22, plusY);
+    ctx.fillStyle = '#555d65'; ctx.fillText('\u2212', cxc + 22, minusY);
+    ctx.fillStyle = '#555045'; ctx.font = '600 12px "IBM Plex Mono",monospace'; ctx.textAlign = 'right';
     ctx.fillText(this.state.volts.toFixed(1) + ' V', cxc - 22, mY);
     ctx.textBaseline = 'alphabetic';
   }
@@ -466,8 +477,8 @@ class Component extends DCLogic {
   drawLegend(ctx, on, light) {
     const items = [];
     if (this.state.showCurrent && on) items.push(['#e0503a', 'stroom']);
-    if (this.state.showField) items.push(['#6f9bd8', 'veld']);
-    if (this.state.showForce && on) items.push(['#f1ede1', 'kracht']);
+    if (this.state.showField) items.push(['#3a6fb8', 'veld']);
+    if (this.state.showForce && on) items.push(['#7a4fc0', 'kracht']);
     if (!items.length) return;
     let x = this.W - 14; const y = 18;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
@@ -475,7 +486,7 @@ class Component extends DCLogic {
     for (let i = items.length - 1; i >= 0; i--) {
       const [col, lab] = items[i];
       const w = ctx.measureText(lab).width;
-      ctx.fillStyle = light ? '#4a4f57' : '#b9b3a6'; ctx.fillText(lab, x, y); x -= (w + 8);
+      ctx.fillStyle = light ? '#a9afb8' : '#555045'; ctx.fillText(lab, x, y); x -= (w + 8);
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 1, y, 5, 0, Math.PI * 2); ctx.fill();
       x -= 16;
     }

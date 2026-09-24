@@ -11,7 +11,7 @@
   <rect width="100" height="100" fill="#eef1f4"/>
   <path d="M14 78 L86 78 L14 40 Z" fill="#cdd4dc" stroke="#8d99a6" stroke-width="2.5" stroke-linejoin="round"/>
   <rect x="34" y="46" width="16" height="16" rx="2" fill="#caa45f" stroke="#6f5527" stroke-width="2" transform="rotate(28 42 54)"/>
-  <line x1="42" y1="54" x2="42" y2="78" stroke="#3a7ad9" stroke-width="2.5"/>
+  <line x1="42" y1="54" x2="42" y2="78" stroke="#2f8a4e" stroke-width="2.5"/>
 </svg>
 </template>
 <x-dc>
@@ -53,13 +53,13 @@
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#3a7ad9;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f9a63;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#d2622e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
         <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#6b5bd6;border-radius:2px;display:inline-block"></span>motorkracht F<sub>m</sub></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>motorkracht F<sub>m</sub></div>
         </sc-if>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #9bb4d8"></span>componenten van g</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #93c4a3"></span>componenten van g</div>
       </div>
     </div>
 
@@ -93,7 +93,7 @@
           <span style="font-size:14px;font-weight:500">Statische wrijving &mu;&#8347;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ musStr }}</span>
         </div>
-        <input type="range" min="0" max="1.2" step="0.01" value="{{ mus }}" onInput="{{ onMus }}" style="width:100%;accent-color:#d2622e;margin-bottom:16px">
+        <input type="range" min="0" max="1.2" step="0.01" value="{{ mus }}" onInput="{{ onMus }}" style="width:100%;accent-color:#2f8a4e;margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Kinetische wrijving &mu;&#8342;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c9772f">{{ mukStr }}</span>
@@ -106,9 +106,9 @@
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
             <span style="font-size:14px;font-weight:500">Motorkracht F<sub>m</sub></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#5b53c4">{{ fmotorStr }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#2f8a4e">{{ fmotorStr }}</span>
           </div>
-          <input type="range" min="0" max="120" step="1" value="{{ fmotor }}" onInput="{{ onFmotor }}" style="width:100%;accent-color:#6b5bd6">
+          <input type="range" min="0" max="120" step="1" value="{{ fmotor }}" onInput="{{ onFmotor }}" style="width:100%;accent-color:#2f8a4e">
         </div>
       </sc-if>
 
@@ -118,12 +118,12 @@
           <span style="font-size:14px;font-weight:700">{{ statusLabel }}</span>
         </div>
         <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#5b53c4">{{ motorStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ motorStr }}</span></div>
         </sc-if>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Hellingscomponent F<sub>z</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ drivingStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Max. statische wrijving &mu;&#8347;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ maxStaticStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f9a63">{{ normalStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#d2622e">{{ frictionStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ normalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ frictionStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Versnelling a</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ accelStr }}</span></div>
       </div>
 
@@ -350,18 +350,18 @@ class Component extends DCLogic {
     // gravity components (dashed)
     if (showComp) {
       ctx.save(); ctx.setLineDash([6, 5]);
-      this.arrow(ctx, C.x, C.y, -ux * driving * sc, -uy * driving * sc, '#9bb4d8', 2, null); // down-slope (= Fz sinθ)
-      this.arrow(ctx, C.x, C.y, -nx * N * sc, -ny * N * sc, '#9bb4d8', 2, null);             // into surface (= Fz cosθ)
+      this.arrow(ctx, C.x, C.y, -ux * driving * sc, -uy * driving * sc, '#93c4a3', 2, null); // down-slope (= Fz sinθ)
+      this.arrow(ctx, C.x, C.y, -nx * N * sc, -ny * N * sc, '#93c4a3', 2, null);             // into surface (= Fz cosθ)
       ctx.setLineDash([]); ctx.restore();
     }
     // motor force (car, up-slope)
-    if (isCar) this.arrow(ctx, C.x, C.y, ux * Fm * sc, uy * Fm * sc, '#6b5bd6', 3.2, 'F_m');
+    if (isCar) this.arrow(ctx, C.x, C.y, ux * Fm * sc, uy * Fm * sc, '#2f8a4e', 3.2, 'F_m');
     // weight (down)
-    this.arrow(ctx, C.x, C.y, 0, Wt * sc, '#3a7ad9', 3.2, 'F_z');
+    this.arrow(ctx, C.x, C.y, 0, Wt * sc, '#2f8a4e', 3.2, 'F_z');
     // normal (outward)
-    this.arrow(ctx, C.x, C.y, nx * N * sc, ny * N * sc, '#2f9a63', 3.2, 'F_N');
+    this.arrow(ctx, C.x, C.y, nx * N * sc, ny * N * sc, '#2f8a4e', 3.2, 'F_N');
     // friction (opposing the motion tendency)
-    this.arrow(ctx, C.x, C.y, fdir * ux * f * sc, fdir * uy * f * sc, '#d2622e', 3.4, 'F_W');
+    this.arrow(ctx, C.x, C.y, fdir * ux * f * sc, fdir * uy * f * sc, '#2f8a4e', 3.4, 'F_W');
   }
 
   renderVals() {

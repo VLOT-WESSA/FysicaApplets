@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Eenparige cirkelbeweging</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#d9822b;border-radius:2px;display:inline-block"></span>snelheid v</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#c8443a;border-radius:2px;display:inline-block"></span>centripetale versnelling a<sub>c</sub></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>centripetale kracht F<sub>c</sub></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:2px dashed #3a6fb8;display:inline-block"></span>projectie</div>
+      </div>
+    </div>
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+      <button onClick="{{ onCut }}" style="flex:none;min-height:38px;font-size:13.5px;font-weight:600;border:1px solid #e3b9ae;border-radius:10px;cursor:pointer;background:#fbeeea;color:#8a3b2c">{{ cutLabel }}</button>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Straal r</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.3" max="1.5" step="0.05" value="{{ r }}" onInput="{{ onR }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Periode T</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ TStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="1" max="6" step="0.1" value="{{ T }}" onInput="{{ onT }}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Massa m</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ mStr }}</span></div>
+        <div style="height:32px;display:flex;align-items:center"><input type="range" min="0.1" max="2" step="0.05" value="{{ m }}" onInput="{{ onM }}"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="4">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+        <div style="display:flex;justify-content:space-between"><span>Frequentie f</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ fStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Hoeksnelheid &omega;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ wStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Baansnelheid v</span><span style="font-family:'IBM Plex Mono',monospace;color:#d9822b;font-weight:600">{{ vStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Centripetale versnelling a<sub>c</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#c8443a;font-weight:600">{{ aStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Centripetale kracht F<sub>c</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e;font-weight:600">{{ FStr }}</span></div>
+      </div>
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.7">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">v = 2&pi;&middot;r / T &nbsp;&nbsp; &omega; = 2&pi; / T</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">a<sub>c</sub> = v&sup2;/r = &omega;&sup2;&middot;r &nbsp;&nbsp; F<sub>c</sub> = m&middot;v&sup2;/r</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">y(t) = r&middot;sin(&omega;&middot;t)</div>
+        <div style="margin-top:4px">De projectie van een eenparige cirkelbeweging op een as is een harmonische trilling. Knip je het touw door, dan valt F<sub>c</sub> weg en beweegt het voorwerp rechtdoor langs de raaklijn.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  cx = 260; cy = 270; ppm = 150;
+  state = { r: 1, T: 2, m: 0.5, showV: false, showA: false, showF: false, showP: false };
+  phi = 0; t = 0; running = false; cut = false; free = null; hist = [];
+
+  componentDidMount() {
+    this.setupCanvas();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  w() { return 2 * Math.PI / this.state.T; }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.running) {
+      this.t += dt;
+      if (!this.cut) {
+        this.phi += this.w() * dt;
+        this.hist.push({ t: this.t, y: this.state.r * Math.sin(this.phi) });
+        while (this.hist.length && this.hist[0].t < this.t - 7) this.hist.shift();
+      } else if (this.free) {
+        this.free.x += this.free.vx * dt * this.ppm; this.free.y += this.free.vy * dt * this.ppm;
+        if (this.free.x < -20 || this.free.x > 560 || this.free.y < -20 || this.free.y > this.H + 20) this.running = false;
+      }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.2) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  arrow(ctx, x, y, dx, dy, col, w, label, cap) {
+    let L = Math.hypot(dx, dy); if (L < 2) return;
+    let short = false;
+    if (cap && L > cap) { dx *= cap / L; dy *= cap / L; L = cap; short = true; }
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
+    const a = Math.atan2(dy, dx), hl = 11;
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - hl * Math.cos(a - 0.42), y + dy - hl * Math.sin(a - 0.42)); ctx.lineTo(x + dx - hl * Math.cos(a + 0.42), y + dy - hl * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
+    if (label) {
+      ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const lx = x + dx + dx / L * 16, ly = y + dy + dy / L * 16;
+      const us = label.indexOf('_');
+      if (us < 0) ctx.fillText(label, lx, ly);
+      else { const m = label.slice(0, us), s = label.slice(us + 1); const mw = ctx.measureText(m).width; ctx.textAlign = 'left'; ctx.fillText(m, lx - mw / 2 - 3, ly); ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.fillText(s, lx + mw / 2 - 3, ly + 4); }
+    }
+    if (short) { ctx.save(); ctx.setLineDash([2, 3]); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x + dx * 0.55 - dy / L * 6, y + dy * 0.55 + dx / L * 6); ctx.lineTo(x + dx * 0.55 + dy / L * 6, y + dy * 0.55 - dx / L * 6); ctx.stroke(); ctx.restore(); }
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state, { cx, cy } = this; const rp = st.r * this.ppm;
+    const w = this.w(), v = w * st.r, a = w * w * st.r, F = st.m * a;
+
+    // axes
+    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx - 240, cy); ctx.lineTo(cx + 240, cy); ctx.moveTo(cx, cy - 240); ctx.lineTo(cx, cy + 240); ctx.stroke();
+    // path
+    ctx.setLineDash([5, 5]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, rp, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+
+    let ox, oy;
+    if (this.cut && this.free) { ox = this.free.x; oy = this.free.y; }
+    else { ox = cx + rp * Math.cos(this.phi); oy = cy - rp * Math.sin(this.phi); }
+
+    // angle arc
+    if (!this.cut) {
+      const ph = ((this.phi % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.arc(cx, cy, 28, 0, -ph, true); ctx.stroke();
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u03C9t', cx + 42 * Math.cos(ph / 2), cy - 42 * Math.sin(ph / 2));
+    }
+
+    // projections
+    const py = 525;
+    if (st.showP) {
+      ctx.strokeStyle = '#cfc7b6'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx - rp, py); ctx.lineTo(cx + rp, py); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - rp, py - 5); ctx.lineTo(cx - rp, py + 5); ctx.moveTo(cx + rp, py - 5); ctx.lineTo(cx + rp, py + 5); ctx.stroke();
+      if (!this.cut) {
+        ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(58,111,184,0.6)'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, py); ctx.moveTo(ox, oy); ctx.lineTo(600 + Math.min(this.t, 6) / 6 * 300, oy); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(ox, py, 6, 0, 7); ctx.fill();
+      }
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('x-projectie', cx + rp + 10, py);
+    }
+
+    // string + center
+    if (!this.cut) { ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ox, oy); ctx.stroke(); }
+    else if (this.free) {
+      ctx.setLineDash([3, 5]); ctx.strokeStyle = 'rgba(47,122,69,0.5)'; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(this.free.x0, this.free.y0); ctx.lineTo(this.free.x0 + this.free.vx * 1000, this.free.y0 + this.free.vy * 1000); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + (this.free.x0 - cx) * 0.35, cy + (this.free.y0 - cy) * 0.35); ctx.stroke();
+    }
+    ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(cx, cy, 5, 0, 7); ctx.fill();
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('M', cx + 7, cy + 5);
+
+    // object
+    const rad = 9 + 5 * Math.sqrt(st.m);
+    ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(ox, oy, rad, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+    // vectors
+    const tx = this.cut && this.free ? this.free.vx / v : -Math.sin(this.phi), ty = this.cut && this.free ? this.free.vy / v : -Math.cos(this.phi);
+    if (st.showV) this.arrow(ctx, ox, oy, tx * v * 14, ty * v * 14, '#d9822b', 3.2, 'v', 200);
+    if (!this.cut) {
+      const nx = (cx - ox) / rp, ny = (cy - oy) / rp;
+      if (st.showA) this.arrow(ctx, ox, oy, nx * a * 6, ny * a * 6, '#c8443a', 3.2, 'a_c', rp - rad - 6);
+      if (st.showF) this.arrow(ctx, ox - ny * 9, oy + nx * 9, nx * F * 12, ny * F * 12, '#2f8a4e', 3.2, 'F_c', rp - rad - 6);
+    }
+
+    // y(t) graph
+    const gx = 600, gw = 300, tw = 6;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, cy - 240, gw, 480);
+    ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(gx, cy - 240, gw, 480);
+    ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(gx, cy); ctx.lineTo(gx + gw, cy); ctx.stroke();
+    ctx.setLineDash([3, 4]); ctx.strokeStyle = '#ddd5c6';
+    ctx.beginPath(); ctx.moveTo(gx, cy - rp); ctx.lineTo(gx + gw, cy - rp); ctx.moveTo(gx, cy + rp); ctx.lineTo(gx + gw, cy + rp); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('+r', gx + 4, cy - rp - 2); ctx.textBaseline = 'top'; ctx.fillText('\u2212r', gx + 4, cy + rp + 2);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText('y-projectie: y(t)', gx + 8, cy - 234);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('t \u2192', gx + gw - 6, cy - 3);
+    const t0 = Math.max(0, this.t - tw);
+    const X = (t) => gx + (t - t0) / tw * gw;
+    if (this.hist.length > 1) {
+      ctx.save(); ctx.beginPath(); ctx.rect(gx, cy - 240, gw, 480); ctx.clip();
+      ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
+      let first = true;
+      for (const h of this.hist) { if (h.t < t0) continue; const Xp = X(h.t), Yp = cy - h.y * this.ppm; first ? ctx.moveTo(Xp, Yp) : ctx.lineTo(Xp, Yp); first = false; }
+      ctx.stroke();
+      if (!this.cut) { const h = this.hist[this.hist.length - 1]; ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(X(h.t), cy - h.y * this.ppm, 5.5, 0, 7); ctx.fill(); }
+      ctx.restore();
+    }
+  }
+
+  renderVals() {
+    const st = this.state; const w = this.w(), v = w * st.r, a = w * w * st.r;
+    const accent = 'oklch(0.5 0.13 255)';
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tg = [['showV', 'Snelheid v'], ['showA', 'Versnelling a\u1D04'], ['showF', 'Kracht F\u1D04'], ['showP', 'Projectie']];
+    const reset = () => { this.phi = 0; this.t = 0; this.cut = false; this.free = null; this.hist = []; this.running = false; this.forceUpdate(); };
+    return {
+      stageRef: this.stageRef,
+      r: st.r, T: st.T, m: st.m,
+      rStr: this.fmt(st.r, 2) + ' m', TStr: this.fmt(st.T, 1) + ' s', mStr: this.fmt(st.m, 2) + ' kg',
+      onR: (e) => this.setState({ r: parseFloat(e.target.value) }),
+      onT: (e) => this.setState({ T: parseFloat(e.target.value) }),
+      onM: (e) => this.setState({ m: parseFloat(e.target.value) }),
+      toggles: tg.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      onPlay: () => { if (this.cut && !this.running) { reset(); return; } this.running = !this.running; this.forceUpdate(); },
+      onReset: reset,
+      playLabel: this.running ? 'Pauze' : (this.t > 0 ? 'Verder' : 'Start'),
+      onCut: () => {
+        if (this.cut) { reset(); return; }
+        const rp = st.r * this.ppm; const x0 = this.cx + rp * Math.cos(this.phi), y0 = this.cy - rp * Math.sin(this.phi);
+        this.cut = true; this.running = true;
+        this.free = { x: x0, y: y0, x0, y0, vx: -Math.sin(this.phi) * v, vy: -Math.cos(this.phi) * v };
+        this.forceUpdate();
+      },
+      cutLabel: this.cut ? 'Nieuw touw' : 'Touw doorknippen',
+      fStr: this.fmt(1 / st.T, 2) + ' Hz', wStr: this.fmt(w, 2) + ' rad/s',
+      vStr: this.fmt(v, 2) + ' m/s', aStr: this.fmt(a, 1) + ' m/s\u00B2',
+      FStr: this.fmt(st.m * a, 1) + ' N',
+    };
+  }
+}
+</script>
+</body>
+</html>

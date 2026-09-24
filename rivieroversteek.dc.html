@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
@@ -109,18 +109,18 @@
         <button onClick="{{ onStraight }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:10px;cursor:pointer;background:#fff;color:#1f7a6e;margin-top:2px">&#x21E7; Stuurhoek voor loodrecht oversteken</button>
       </div>
 
-      <div style="background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6ee">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8a93a3;font-weight:600;margin-bottom:12px">Resultaat</div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#2a2723;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Resultaat</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">werkelijke snelheid</span>
+          <span style="font-size:13px;color:#6f685c">werkelijke snelheid</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#f0a868">{{ vResStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:13px;color:#aeb6c2">overtijd</span>
+          <span style="font-size:13px;color:#6f685c">overtijd</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ timeStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-          <span style="font-size:13px;color:#aeb6c2">verplaatsing langs oever</span>
+          <span style="font-size:13px;color:#6f685c">verplaatsing langs oever</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ driftStr }}</span>
         </div>
         <div style="font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;background:{{ verdBg }};color:{{ verdFg }};text-align:center">{{ verdict }}</div>
@@ -207,11 +207,11 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
-    ctx.fillStyle = '#1c2a1f'; ctx.fillRect(0, 0, this.W, this.topBank);
-    ctx.fillStyle = '#1c2a1f'; ctx.fillRect(0, this.botBank, this.W, this.H - this.botBank);
-    ctx.fillStyle = '#10283a'; ctx.fillRect(0, this.topBank, this.W, this.botBank - this.topBank);
-    ctx.strokeStyle = 'rgba(95,155,255,0.22)'; ctx.lineWidth = 2; ctx.setLineDash([26, 30]);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#e4e2dd'; ctx.fillRect(0, 0, this.W, this.topBank);
+    ctx.fillStyle = '#e4e2dd'; ctx.fillRect(0, this.botBank, this.W, this.H - this.botBank);
+    ctx.fillStyle = '#d4d2cd'; ctx.fillRect(0, this.topBank, this.W, this.botBank - this.topBank);
+    ctx.strokeStyle = 'rgba(78,141,245,0.22)'; ctx.lineWidth = 2; ctx.setLineDash([26, 30]);
     const off = (this.flow % 56);
     for (let y = this.topBank + 18; y < this.botBank; y += 26) {
       ctx.beginPath(); ctx.lineDashOffset = -off; ctx.moveTo(-20, y); ctx.lineTo(this.W + 20, y); ctx.stroke();
@@ -220,15 +220,15 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#3a5a3f'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(0, this.topBank); ctx.lineTo(this.W, this.topBank);
     ctx.moveTo(0, this.botBank); ctx.lineTo(this.W, this.botBank); ctx.stroke();
-    ctx.fillStyle = '#7f8896'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#656d7b'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     ctx.fillText('overkant', this.W / 2, this.topBank - 8);
     ctx.fillText('vertrekoever', this.W / 2, this.botBank + 18);
 
     const ppm = this.pxPerM();
-    ctx.beginPath(); ctx.arc(this.startX, this.botBank, 4, 0, 6.2832); ctx.fillStyle = '#9aa3b0'; ctx.fill();
-    ctx.fillStyle = '#7f8896'; ctx.fillText('start', this.startX, this.botBank + 32);
+    ctx.beginPath(); ctx.arc(this.startX, this.botBank, 4, 0, 6.2832); ctx.fillStyle = '#545c68'; ctx.fill();
+    ctx.fillStyle = '#656d7b'; ctx.fillText('start', this.startX, this.botBank + 32);
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 5]);
+    ctx.strokeStyle = 'rgba(40,38,34,0.18)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 5]);
     ctx.beginPath(); ctx.moveTo(this.startX, this.botBank); ctx.lineTo(this.startX, this.topBank); ctx.stroke(); ctx.setLineDash([]);
 
     const v = this.vel();
@@ -236,13 +236,13 @@ class Component extends DCLogic {
       const T = this.state.width / v.across;
       const driftPx = v.down * T * ppm;
       const lx = this.startX + driftPx, ly = this.topBank;
-      ctx.strokeStyle = 'rgba(240,168,104,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'rgba(189,117,46,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]);
       ctx.beginPath(); ctx.moveTo(this.startX, this.botBank); ctx.lineTo(lx, ly); ctx.stroke(); ctx.setLineDash([]);
-      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, 6.2832); ctx.fillStyle = '#f0a868'; ctx.fill();
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, 6.2832); ctx.fillStyle = '#bd752e'; ctx.fill();
     }
 
     if (this.trail.length > 1) {
-      ctx.strokeStyle = 'rgba(240,168,104,0.9)'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(189,117,46,0.9)'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
       ctx.beginPath(); ctx.moveTo(this.trail[0].x, this.trail[0].y);
       for (const p of this.trail) ctx.lineTo(p.x, p.y);
       ctx.stroke();
@@ -252,7 +252,7 @@ class Component extends DCLogic {
     const th = this.state.ang * Math.PI / 180;
     const hx = Math.sin(th), hy = -Math.cos(th);
     ctx.save(); ctx.translate(bx, by); ctx.rotate(Math.atan2(hy, hx) + Math.PI / 2);
-    ctx.fillStyle = '#1f9e8f'; ctx.strokeStyle = '#0e131b'; ctx.lineWidth = 1.5;
+    ctx.fillStyle = '#1f9e8f'; ctx.strokeStyle = '#f0ede8'; ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(0, -13); ctx.lineTo(7, 6); ctx.lineTo(4, 11); ctx.lineTo(-4, 11); ctx.lineTo(-7, 6);
     ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -264,20 +264,20 @@ class Component extends DCLogic {
     // nearly-transparent parallelogram making the graphical vector sum explicit
     if (this.state.showPara && (this.state.showBoot || this.state.showStroom || this.state.showRes)) {
       ctx.save();
-      ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.30)';
+      ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(40,38,34,0.30)';
       // boot vector translated to tip of stroming, and vice versa
       ctx.beginPath(); ctx.moveTo(bx + vStrX, by + vStrY); ctx.lineTo(bx + vResX, by + vResY); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(bx + vBoatX, by + vBoatY); ctx.lineTo(bx + vResX, by + vResY); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(232,150,76,0.07)';
+      ctx.fillStyle = 'rgba(200,116,29,0.07)';
       ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + vBoatX, by + vBoatY); ctx.lineTo(bx + vResX, by + vResY); ctx.lineTo(bx + vStrX, by + vStrY); ctx.closePath(); ctx.fill();
       ctx.restore();
     }
     if (this.state.showBoot) this.arrow(ctx, bx, by, vBoatX, vBoatY, '#1f9e8f', 3);
-    if (this.state.showStroom) this.arrow(ctx, bx, by, vStrX, vStrY, '#5b9bff', 3);
-    if (this.state.showRes) this.arrow(ctx, bx, by, vResX, vResY, '#e8964c', 3.5);
+    if (this.state.showStroom) this.arrow(ctx, bx, by, vStrX, vStrY, '#4a8df5', 3);
+    if (this.state.showRes) this.arrow(ctx, bx, by, vResX, vResY, '#c8741d', 3.5);
 
-    ctx.fillStyle = '#7f8896'; ctx.font = "500 11px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = '#656d7b'; ctx.font = "500 11px 'IBM Plex Mono', monospace";
     ctx.save(); ctx.translate(this.W - 14, (this.topBank + this.botBank) / 2); ctx.rotate(Math.PI / 2);
     ctx.textAlign = 'center'; ctx.fillText('breedte ' + this.state.width + ' m', 0, 0); ctx.restore();
   }
@@ -294,12 +294,12 @@ class Component extends DCLogic {
       timeStr = T.toFixed(1) + ' s';
       const ad = Math.abs(drift);
       driftStr = ad.toFixed(1) + ' m ' + (ad < 0.5 ? '' : (drift > 0 ? 'afw.' : 'opw.'));
-      if (ad < 1) { verdict = 'steekt recht over'; verdBg = 'rgba(31,158,143,0.2)'; verdFg = '#5fd3c2'; }
-      else if (drift > 0) { verdict = 'drijft stroomafwaarts'; verdBg = 'rgba(91,155,255,0.16)'; verdFg = '#7fb0ff'; }
-      else { verdict = 'drijft stroomopwaarts'; verdBg = 'rgba(232,150,76,0.16)'; verdFg = '#f0a868'; }
-    } else { verdict = 'boot vaart niet vooruit'; verdBg = 'rgba(255,255,255,0.08)'; verdFg = '#aeb6c2'; }
+      if (ad < 1) { verdict = 'steekt recht over'; verdBg = 'rgba(31,158,143,0.2)'; verdFg = '#219c8d'; }
+      else if (drift > 0) { verdict = 'drijft stroomafwaarts'; verdBg = 'rgba(74,141,245,0.16)'; verdFg = '#598ada'; }
+      else { verdict = 'drijft stroomopwaarts'; verdBg = 'rgba(200,116,29,0.16)'; verdFg = '#bd752e'; }
+    } else { verdict = 'boot vaart niet vooruit'; verdBg = 'rgba(40,38,34,0.08)'; verdFg = '#49505a'; }
     const tg = (on, col) => ({ bg: on ? col : '#f4f1ea', fg: on ? '#fff' : '#8c8576', border: on ? col : '#e7e1d5', dot: on ? '#ffffff' : '#c3bcad', label: on ? 'Aan' : 'Uit' });
-    const tb = tg(this.state.showBoot, '#1f9e8f'), ts = tg(this.state.showStroom, '#2f6fb0'), tr = tg(this.state.showRes, '#d98a2b'), tp = tg(this.state.showPara, '#6f685c');
+    const tb = tg(this.state.showBoot, '#1f9e8f'), ts = tg(this.state.showStroom, '#2f6fb0'), tr = tg(this.state.showRes, '#c67b1c'), tp = tg(this.state.showPara, '#938c7f');
     return {
       stageRef: this.stageRef,
       vb: this.state.vb, ang: this.state.ang, vr: this.state.vr, width: this.state.width,

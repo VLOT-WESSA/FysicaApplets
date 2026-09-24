@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#10151c;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px" onClick="{{ onCanvasClick }}" onMouseMove="{{ onCanvasMove }}"></canvas>
       </div>
       <sc-if value="{{ isMain }}" hint-placeholder-val="{{ true }}">
@@ -318,7 +318,7 @@ class Component extends DCLogic {
     const rightTerm = { x: cxc + 30, y: yRail };
     const rightX = 408;
 
-    ctx.strokeStyle = '#7d8893'; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#7c8892'; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     // bottom-plate lead (short, straight up)
     ctx.beginPath(); ctx.moveTo(leftTerm.x, yRail); ctx.lineTo(leftTerm.x, bot + 1); ctx.stroke();
     // top-plate lead (right, up the gap, into top plate right end)
@@ -348,24 +348,24 @@ class Component extends DCLogic {
   }
 
   drawMain(ctx) {
-    ctx.fillStyle = '#f3f1ea'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f4f2ed'; ctx.fillRect(0, 0, this.W, this.H);
     const x0 = this.chx0, x1 = this.chx1, top = this.chTop, bot = this.chBot;
 
     // microscope (right)
     ctx.save();
     const my = 251;
-    ctx.fillStyle = '#2b2b2e';
+    ctx.fillStyle = '#2d2b26';
     ctx.beginPath();
     ctx.moveTo(420, my - 26); ctx.lineTo(545, my - 12); ctx.lineTo(545, my + 12); ctx.lineTo(420, my + 26);
     ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#3a3a3e'; ctx.fillRect(410, my - 28, 16, 56);
-    ctx.fillStyle = '#7fd3c8'; ctx.beginPath(); ctx.ellipse(412, my, 7, 24, 0, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = '#3c3a35'; ctx.fillRect(410, my - 28, 16, 56);
+    ctx.fillStyle = '#3c988e'; ctx.beginPath(); ctx.ellipse(412, my, 7, 24, 0, 0, 6.2832); ctx.fill();
     if (this.hover === 'scope') { ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 2; ctx.strokeRect(409, my - 29, 138, 58); }
     ctx.restore();
 
     // chamber body
     this.rrect(ctx, x0, top, x1 - x0, bot - top, 6);
-    ctx.fillStyle = '#d6efe9'; ctx.fill();
+    ctx.fillStyle = '#eae8e3'; ctx.fill();
     ctx.strokeStyle = '#b7cfc8'; ctx.lineWidth = 1.5; ctx.stroke();
 
     // field lines (toggle, off by default)
@@ -373,7 +373,7 @@ class Component extends DCLogic {
       const dir = this.state.topPlus ? 1 : -1;
       const a = 0.10 + Math.min(0.22, this.state.voltage / 500);
       const myy = (top + bot) / 2;
-      ctx.strokeStyle = 'rgba(110,140,175,' + a + ')'; ctx.fillStyle = 'rgba(110,140,175,' + (a + 0.06) + ')'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(58,111,184,' + (a + 0.25) + ')'; ctx.fillStyle = 'rgba(58,111,184,' + (a + 0.4) + ')'; ctx.lineWidth = 1;
       for (let i = 1; i < 11; i++) {
         const fx = x0 + i * ((x1 - x0) / 11);
         ctx.beginPath(); ctx.moveTo(fx, top + 4); ctx.lineTo(fx, bot - 4); ctx.stroke();
@@ -383,8 +383,8 @@ class Component extends DCLogic {
 
     // plates
     const topPlus = this.state.topPlus;
-    ctx.fillStyle = '#c8ddc2'; ctx.fillRect(x0, top - 8, x1 - x0, 9);
-    ctx.fillStyle = '#c8ddc2'; ctx.fillRect(x0, bot - 1, x1 - x0, 9);
+    ctx.fillStyle = '#75896f'; ctx.fillRect(x0, top - 8, x1 - x0, 9);
+    ctx.fillStyle = '#75896f'; ctx.fillRect(x0, bot - 1, x1 - x0, 9);
     ctx.fillStyle = '#3a4a3a'; ctx.font = "600 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     const marks = 11;
     for (let i = 0; i < marks; i++) {
@@ -400,33 +400,33 @@ class Component extends DCLogic {
     const sh = this.hover === 'spritzer';
     ctx.save();
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.fillStyle = 'rgba(70,55,30,0.10)';
+    ctx.fillStyle = 'rgba(66,57,43,0.10)';
     ctx.beginPath(); ctx.ellipse(116, 366, 30, 6, 0, 0, 6.2832); ctx.fill();
     ctx.strokeStyle = '#aebcc3'; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(116, 244); ctx.lineTo(116, 344); ctx.stroke();
     const bgr = ctx.createLinearGradient(96, 0, 136, 0);
-    bgr.addColorStop(0, '#d9a544'); bgr.addColorStop(0.45, '#f1cd7c'); bgr.addColorStop(1, '#c8963a');
+    bgr.addColorStop(0, '#b2811c'); bgr.addColorStop(0.45, '#a17d21'); bgr.addColorStop(1, '#b88418');
     this.rrect(ctx, 96, 306, 40, 56, 12); ctx.fillStyle = bgr; ctx.fill();
     ctx.strokeStyle = 'rgba(120,85,25,0.30)'; ctx.lineWidth = 1; this.rrect(ctx, 96, 306, 40, 56, 12); ctx.stroke();
-    this.rrect(ctx, 101, 320, 7, 34, 4); ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.fill();
-    ctx.fillStyle = '#caa24a'; this.rrect(ctx, 108, 292, 16, 18, 3); ctx.fill();
+    this.rrect(ctx, 101, 320, 7, 34, 4); ctx.fillStyle = 'rgba(255,255,254,0.30)'; ctx.fill();
+    ctx.fillStyle = '#af8620'; this.rrect(ctx, 108, 292, 16, 18, 3); ctx.fill();
     ctx.strokeStyle = '#3f4a51'; ctx.lineWidth = 6;
     ctx.beginPath(); ctx.moveTo(70, 218); ctx.quadraticCurveTo(98, 230, 106, 240); ctx.stroke();
     const hg = ctx.createLinearGradient(0, 234, 0, 252);
-    hg.addColorStop(0, '#5c6b73'); hg.addColorStop(1, '#384650');
+    hg.addColorStop(0, '#5c6b72'); hg.addColorStop(1, '#384650');
     this.rrect(ctx, 100, 234, 33, 18, 5); ctx.fillStyle = hg; ctx.fill();
     const ng = ctx.createLinearGradient(133, 0, x0, 0);
-    ng.addColorStop(0, '#aebcc3'); ng.addColorStop(1, '#cdd7db');
+    ng.addColorStop(0, '#aebcc3'); ng.addColorStop(1, '#d7d5d0');
     ctx.fillStyle = ng;
     ctx.beginPath();
     ctx.moveTo(131, 240); ctx.lineTo(x0 + 2, 245); ctx.lineTo(x0 + 2, 251); ctx.lineTo(131, 250);
     ctx.closePath(); ctx.fill();
     const bx = 54, by = 214;
     const bgrad = ctx.createRadialGradient(bx - 8, by - 10, 3, bx, by, 30);
-    bgrad.addColorStop(0, sh ? '#727a83' : '#5a616a'); bgrad.addColorStop(1, sh ? '#2e333a' : '#23272d');
+    bgrad.addColorStop(0, sh ? '#727a83' : '#5a6169'); bgrad.addColorStop(1, sh ? '#2e333a' : '#24272d');
     ctx.beginPath(); ctx.ellipse(bx, by, 23, 27, 0, 0, 6.2832); ctx.fillStyle = bgrad; ctx.fill();
     ctx.beginPath(); ctx.ellipse(bx - 7, by - 10, 6.5, 10, -0.5, 0, 6.2832);
-    ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,254,0.22)'; ctx.fill();
     if (sh) {
       ctx.strokeStyle = '#1f9e8f'; ctx.lineWidth = 2.5;
       ctx.beginPath(); ctx.ellipse(bx, by, 27, 31, 0, 0, 6.2832); ctx.stroke();
@@ -434,7 +434,7 @@ class Component extends DCLogic {
     ctx.restore();
 
     // drops
-    const dropCol = this.props.dropColor ?? '#e07b1a';
+    const dropCol = this.props.dropColor ?? '#d47415';
     for (const dr of this.drops) {
       const rr = 2 + (dr.r / 1e-6) * 3.2;
       const fl = this.isFloating(dr);
@@ -450,15 +450,15 @@ class Component extends DCLogic {
   }
 
   drawScope(ctx) {
-    ctx.fillStyle = '#0c0c0c'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#0d0c08'; ctx.fillRect(0, 0, this.W, this.H);
     const cx = 222, cy = 220, R = 200;
     ctx.save();
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fillStyle = '#ffffff'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fillStyle = '#fffffe'; ctx.fill();
     ctx.clip();
     const nmToPx = R / 700;
     const rpx = (this.selR * 1e9) * nmToPx;
-    ctx.beginPath(); ctx.arc(cx, cy, rpx, 0, 6.2832); ctx.fillStyle = this.props.dropColor ?? '#e0890f'; ctx.fill();
-    ctx.strokeStyle = '#2b2b2b'; ctx.fillStyle = '#2b2b2b';
+    ctx.beginPath(); ctx.arc(cx, cy, rpx, 0, 6.2832); ctx.fillStyle = this.props.dropColor ?? '#c67b19'; ctx.fill();
+    ctx.strokeStyle = '#2d2b27'; ctx.fillStyle = '#2d2b27';
     ctx.lineWidth = 1.4;
     ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
@@ -478,9 +478,9 @@ class Component extends DCLogic {
       }
     }
     ctx.restore();
-    ctx.fillStyle = '#1a1a1a'; ctx.font = "700 16px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+    ctx.fillStyle = '#1c1a15'; ctx.font = "700 16px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
     ctx.fillText('nm', cx + 150, cy + 92);
-    ctx.strokeStyle = '#222'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
+    ctx.strokeStyle = '#24221e'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
   }
 
   expStr(x, dp) {

@@ -424,13 +424,13 @@ class Component extends DCLogic {
   }
   drawFieldLines(ctx) {
     const lines = this.getFieldLines();
-    ctx.strokeStyle = 'rgba(96,124,154,0.5)'; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(185,129,42,0.6)'; ctx.lineWidth = 1.4; ctx.lineCap = 'round';
     for (const pts of lines) {
       ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
       for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
       ctx.stroke();
     }
-    ctx.fillStyle = 'rgba(74,104,138,0.92)';
+    ctx.fillStyle = 'rgba(160,106,28,0.95)';
     for (const pts of lines) {
       let acc = 0;
       for (let i = 5; i < pts.length - 1; i++) {
@@ -459,7 +459,7 @@ class Component extends DCLogic {
     if (mag > 1e-6 && this.state.charges.length) {
       const ang = Math.atan2(ey, ex);
       const len = 20 + (mag / (mag + 1400)) * 52;
-      this.arrow(ctx, s.x, s.y, ang, len, '#a8910c', 7);
+      this.arrow(ctx, s.x, s.y, ang, len, '#b9812a', 7);
     }
     ctx.beginPath(); ctx.arc(s.x, s.y, 9, 0, 6.2832);
     ctx.fillStyle = '#f2d23a'; ctx.fill();

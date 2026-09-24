@@ -49,7 +49,7 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#0e131b;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;align-items:center">
@@ -101,7 +101,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
 class Component extends DCLogic {
-  state = { end: 'vast', showInc: false, showRef: false, showRes: true,
+  state = { end: 'vast', showInc: false, showRef: false, showRes: false,
             lambdaCm: 12, ampCm: 4, speedCm: 10, running: false };
   stageRef = React.createRef();
   W = 640; H = 320;
@@ -139,7 +139,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#0e131b'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
     const x0 = this.x0, xL = this.xL, ay = this.axisY;
     const Lpx = xL - x0;
     const lambdaPx = this.state.lambdaCm * this.pxPerCm;
@@ -154,35 +154,35 @@ class Component extends DCLogic {
     const overflow = Math.max(0, travelled - Lpx);
     const frontRef = Math.min(overflow, Lpx);
 
-    ctx.strokeStyle = '#202a36'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.strokeStyle = '#e3e0db'; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
     ctx.beginPath(); ctx.moveTo(x0, ay); ctx.lineTo(xL, ay); ctx.stroke(); ctx.setLineDash([]);
 
     const yi = (X) => (X <= frontInc) ? A * Math.sin(w * this.t - k * X) : 0;
     const yr = (X) => (frontRef > 0 && (Lpx - X) <= frontRef) ? sign * A * Math.sin(w * this.t - k * (2 * Lpx - X)) : 0;
 
     if (this.state.showInc) {
-      ctx.strokeStyle = 'rgba(127,180,255,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(85,139,215,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
       ctx.beginPath();
       for (let x = x0; x <= xL; x += 2) {
         const yy = ay - yi(x - x0);
         if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
       }
       ctx.stroke();
-      ctx.fillStyle = '#aacdff';
+      ctx.fillStyle = '#6486b7';
       for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
         if (X > frontInc) break;
         ctx.beginPath(); ctx.arc(x0 + X, ay - yi(X), 2.4, 0, 6.2832); ctx.fill();
       }
     }
     if (this.state.showRef) {
-      ctx.strokeStyle = 'rgba(232,150,76,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(200,116,29,0.95)'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
       ctx.beginPath();
       for (let x = x0; x <= xL; x += 2) {
         const yy = ay - yr(x - x0);
         if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
       }
       ctx.stroke();
-      ctx.fillStyle = '#f3b884';
+      ctx.fillStyle = '#b17741';
       for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
         if ((Lpx - X) > frontRef) continue;
         ctx.beginPath(); ctx.arc(x0 + X, ay - yr(X), 2.4, 0, 6.2832); ctx.fill();
@@ -196,33 +196,33 @@ class Component extends DCLogic {
         if (x === x0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
       }
       ctx.stroke();
-      ctx.fillStyle = '#7fe0d0';
+      ctx.fillStyle = '#279889';
       for (let X = 0; X <= Lpx + 0.1; X += Lpx / 28) {
         ctx.beginPath(); ctx.arc(x0 + X, ay - (yi(X) + yr(X)), 2.6, 0, 6.2832); ctx.fill();
       }
     }
 
     if (this.state.showInc && frontInc < Lpx && frontInc > 0) {
-      ctx.fillStyle = '#7fb4ff';
+      ctx.fillStyle = '#558bd7';
       ctx.beginPath(); ctx.arc(x0 + frontInc, ay - yi(frontInc), 4, 0, 6.2832); ctx.fill();
     }
     if (this.state.showRef && frontRef > 0 && frontRef < Lpx) {
       const xr = Lpx - frontRef;
-      ctx.fillStyle = '#e8964c';
+      ctx.fillStyle = '#c8741d';
       ctx.beginPath(); ctx.arc(x0 + xr, ay - yr(xr), 4, 0, 6.2832); ctx.fill();
     }
 
-    ctx.fillStyle = '#1b2230'; ctx.fillRect(xL, ay - 80, 16, 160);
-    ctx.strokeStyle = '#3a4658'; ctx.lineWidth = 1.5;
+    ctx.fillStyle = '#e7e4df'; ctx.fillRect(xL, ay - 80, 16, 160);
+    ctx.strokeStyle = '#afbdd2'; ctx.lineWidth = 1.5;
     for (let yy = ay - 78; yy < ay + 78; yy += 11) { ctx.beginPath(); ctx.moveTo(xL, yy + 11); ctx.lineTo(xL + 16, yy); ctx.stroke(); }
     if (this.state.end === 'los') {
-      ctx.strokeStyle = '#5b6573'; ctx.lineWidth = 2;
+      ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(xL, ay - 80); ctx.lineTo(xL, ay + 80); ctx.stroke();
     }
 
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f7886'; ctx.textAlign = 'center';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
     ctx.fillText(this.state.end === 'vast' ? 'vast uiteinde' : 'los uiteinde', xL - 50, ay + 100);
-    ctx.strokeStyle = '#445'; ctx.fillStyle = '#6f7886'; ctx.lineWidth = 1; ctx.textAlign = 'left';
+    ctx.strokeStyle = '#b8b9cd'; ctx.fillStyle = '#737c8b'; ctx.lineWidth = 1; ctx.textAlign = 'left';
     ctx.beginPath(); ctx.moveTo(x0, ay + 110); ctx.lineTo(x0 + lambdaPx, ay + 110); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x0, ay + 106); ctx.lineTo(x0, ay + 114); ctx.moveTo(x0 + lambdaPx, ay + 106); ctx.lineTo(x0 + lambdaPx, ay + 114); ctx.stroke();
     ctx.fillText('\u03BB = ' + this.state.lambdaCm + ' cm', x0 + 6, ay + 102);
