@@ -537,7 +537,7 @@ class Component extends DCLogic {
       const sel = selected.includes(ch.id);
       if (sel) {
         ctx.beginPath(); ctx.arc(ch.x, ch.y, 22, 0, 6.2832);
-        ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.stroke();
       }
       const g = ctx.createRadialGradient(ch.x - 5, ch.y - 6, 3, ch.x, ch.y, 17);
       if (ch.q > 0) { g.addColorStop(0, '#f08267'); g.addColorStop(1, '#cf3d22'); }

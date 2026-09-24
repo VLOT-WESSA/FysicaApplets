@@ -50,7 +50,7 @@
 
     <!-- LEFT -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center">
@@ -254,10 +254,8 @@ class Component extends DCLogic {
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
     if (light) { bg.addColorStop(0, '#f8f6f1'); bg.addColorStop(1, '#f1ede5'); }
-    else { bg.addColorStop(0, '#ebe9e4'); bg.addColorStop(1, '#f1eee9'); }
+    else { bg.addColorStop(0, '#f0ede8'); bg.addColorStop(1, '#f0ede8'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
-    ctx.fillStyle = light ? 'rgba(252,250,245,0.022)' : 'rgba(40,38,34,0.018)';
-    for (let i = 0; i < this.H; i += 26) ctx.fillRect(0, i, this.W, 1);
 
     const th = this.theta;
     this.brushOnInsul = this.insulAtBrush(th);

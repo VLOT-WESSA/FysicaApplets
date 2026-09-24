@@ -39,11 +39,11 @@
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;gap:4px;flex:none;flex-wrap:wrap;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
-        <sc-for list="{{ scenItems }}" as="s" hint-placeholder-count="5">
+        <sc-for list="{{ scenItems }}" as="s" hint-placeholder-count="6">
           <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.name }}</button>
         </sc-for>
       </div>
-      <div style="flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
     </div>
@@ -68,6 +68,7 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
           <button onClick="{{ onStrobe }}" style="{{ strobeStyle }}">Stroboscoop</button>
           <button onClick="{{ onVec }}" style="{{ vecStyle }}">Vectoren</button>
+          <button onClick="{{ onRa }}" style="{{ raStyle }}">Rico en oppervlakte tonen</button>
         </div>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
@@ -81,6 +82,15 @@
           <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">{{ f.text }}</div>
         </sc-for>
         <div style="margin-top:4px">{{ axisNote }}</div>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px;font-size:13px;color:#4f4a42;line-height:1.45">
+        <div style="font-size:14px;font-weight:600;color:#2a2723">Aflezen op de grafieken</div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:baseline">
+          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">x(t)</span><span>rico van de raaklijn = snelheid v</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">v(t)</span><span>rico van de raaklijn = versnelling a<br>georiënteerde oppervlakte = verplaatsing &Delta;x</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">a(t)</span><span>georiënteerde oppervlakte = snelheidsverandering &Delta;v</span>
+        </div>
+        <div style="font-size:12.5px;color:#6f685c">Oppervlakte boven de t-as telt positief, eronder negatief. Steil stijgend betekent een grote positieve rico, dalend een negatieve.</div>
       </div>
     </div>
   </div>
@@ -102,14 +112,16 @@ class Component extends DCLogic {
       params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 0, 50, 5, 10], ['v0', 'Beginsnelheid v\u2080', 'v\u2080', 'm/s', 0, 30, 1, 20]] },
     hw: { name: 'Horizontale worp', kind: 'p', T: 5, g: true, rng: { pos: [0, 120], vel: [-50, 30], acc: [-12, 2] },
       params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 10, 100, 5, 60], ['v0', 'Horizontale snelheid v\u2080', 'v\u2080', 'm/s', 0, 30, 1, 12]] },
+    sw: { name: 'Schuine worp', kind: 'p', T: 4, g: true, rng: { pos: [0, 40], vel: [-30, 30], acc: [-12, 2] },
+      params: [['h0', 'Beginhoogte h\u2080', 'h\u2080', 'm', 0, 50, 5, 0], ['v0', 'Beginsnelheid v\u2080', 'v\u2080', 'm/s', 1, 30, 1, 20], ['al', 'Werphoek \u03B1', '\u03B1', '\u00B0', 0, 90, 5, 45]] },
   };
-  order = ['erb', 'evrb', 'vv', 'vw', 'hw'];
+  order = ['erb', 'evrb', 'vv', 'vw', 'hw', 'sw'];
 
   t = 0; running = false;
   state = (() => {
     const vals = {};
     for (const k of this.order) { vals[k] = { g: 9.81 }; for (const q of this.S[k].params) vals[k][q[0]] = q[7]; }
-    return { sc: 'erb', vals, strobe: false, vec: false };
+    return { sc: 'erb', vals, strobe: false, vec: false, ra: false };
   })();
 
   componentDidMount() {
@@ -141,12 +153,14 @@ class Component extends DCLogic {
       case 'evrb': return { x: p.x0 + p.v0 * t + 0.5 * p.a * t * t, y: 0, vx: p.v0 + p.a * t, vy: 0, ax: p.a, ay: 0 };
       case 'vv': return { x: 0, y: p.h0 - 0.5 * g * t * t, vx: 0, vy: -g * t, ax: 0, ay: -g };
       case 'vw': return { x: 0, y: p.h0 + p.v0 * t - 0.5 * g * t * t, vx: 0, vy: p.v0 - g * t, ax: 0, ay: -g };
+      case 'sw': { const c = Math.cos(p.al * Math.PI / 180), s = Math.sin(p.al * Math.PI / 180);
+        return { x: p.v0 * c * t, y: p.h0 + p.v0 * s * t - 0.5 * g * t * t, vx: p.v0 * c, vy: p.v0 * s - g * t, ax: 0, ay: -g }; }
       default: return { x: p.v0 * t, y: p.h0 - 0.5 * g * t * t, vx: p.v0, vy: -g * t, ax: 0, ay: -g };
     }
   }
   tEnd(sc, p) {
     const d = this.S[sc]; if (d.kind === 'h') return d.T;
-    const v0y = sc === 'vw' ? p.v0 : 0;
+    const v0y = sc === 'vw' ? p.v0 : sc === 'sw' ? p.v0 * Math.sin(p.al * Math.PI / 180) : 0;
     return Math.max(0.05, (v0y + Math.sqrt(v0y * v0y + 2 * p.g * p.h0)) / p.g);
   }
   chans(kind) {
@@ -234,12 +248,44 @@ class Component extends DCLogic {
       curve(L.p, L.te, ch, 1e9, cols[ch], 1.6, 0.28);
       if (this.t > 0) curve(L.p, L.te, ch, this.t, cols[ch], 2.4, 1);
     }
+    const raLines = [];
+    if (this.state.ra) {
+      const tm = this.t > 0 ? Math.min(this.t, L.te) : L.te / 2;
+      const der = { x: 'vx', y: 'vy', vx: 'ax', vy: 'ay' }, prim = { vx: 'x', vy: 'y', ax: 'vx', ay: 'vy' };
+      const lab = { x: 'x', y: 'y', vx: 'v\u2093', vy: 'v\u1D67', ax: 'a\u2093', ay: 'a\u1D67' };
+      const u = { pos: 'm/s', vel: 'm/s\u00B2' }[key], ua = { vel: 'm', acc: 'm/s' }[key];
+      const k0 = this.kin(L.sc, L.p, 0), km = this.kin(L.sc, L.p, tm);
+      const pre = (ch) => L.d.kind === 'p' ? lab[ch] + ': ' : '';
+      if (this.t === 0) { ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(42,39,35,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(tm), y); ctx.lineTo(X(tm), y + h); ctx.stroke(); ctx.setLineDash([]); }
+      for (const ch of L.ch[key]) {
+        const col = cols[ch];
+        if (key !== 'pos') {
+          ctx.beginPath(); ctx.moveTo(X(0), Y(0));
+          for (let i = 0; i <= 120; i++) { const tt = tm * i / 120; ctx.lineTo(X(tt), Y(this.kin(L.sc, L.p, tt)[ch])); }
+          ctx.lineTo(X(tm), Y(0)); ctx.closePath(); ctx.fillStyle = col; ctx.globalAlpha = 0.2; ctx.fill(); ctx.globalAlpha = 1;
+          raLines.push([col, pre(ch) + 'opp. = ' + this.fmt(km[prim[ch]] - k0[prim[ch]], 1) + ' ' + ua]);
+        }
+        if (key !== 'acc') {
+          const m = km[der[ch]], v = km[ch], dT = T.hi * 0.16;
+          ctx.strokeStyle = col; ctx.lineWidth = 1.8; ctx.setLineDash([7, 4]);
+          ctx.beginPath(); ctx.moveTo(X(tm - dT), Y(v - m * dT)); ctx.lineTo(X(tm + dT), Y(v + m * dT)); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(X(tm), Y(v), 3.5, 0, 7); ctx.fill();
+          raLines.push([col, pre(ch) + 'rico = ' + this.fmt(m, 1) + ' ' + u]);
+        }
+      }
+    }
     if (this.t > 0) {
       ctx.strokeStyle = 'rgba(42,39,35,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(this.t), y); ctx.lineTo(X(this.t), y + h); ctx.stroke();
       const k = this.kin(L.sc, L.p, this.t);
       for (const ch of L.ch[key]) { ctx.beginPath(); ctx.arc(X(this.t), Y(k[ch]), 4, 0, 7); ctx.fillStyle = cols[ch]; ctx.fill(); }
     }
     ctx.restore();
+    if (raLines.length) {
+      ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      const bw = Math.max(...raLines.map(l => ctx.measureText(l[1]).width)) + 12, bh = raLines.length * 15 + 6;
+      ctx.fillStyle = 'rgba(255,253,249,0.92)'; ctx.fillRect(x + w - bw - 4, y + 4, bw, bh);
+      raLines.forEach((l, i) => { ctx.fillStyle = l[0]; ctx.fillText(l[1], x + w - 10, y + 8 + i * 15); });
+    }
     if (L.d.kind === 'p') {
       ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
       const lab = key === 'pos' ? ['x', 'y'] : key === 'vel' ? ['v\u2093', 'v\u1D67'] : ['a\u2093', 'a\u1D67'];
@@ -326,6 +372,7 @@ class Component extends DCLogic {
       vv: ['y(t) = h\u2080 \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v(t) = \u2212g\u00B7t', 'a = \u2212g'],
       vw: ['y(t) = h\u2080 + v\u2080\u00B7t \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v(t) = v\u2080 \u2212 g\u00B7t', 'a = \u2212g'],
       hw: ['x(t) = v\u2080\u00B7t    y(t) = h\u2080 \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v\u2093 = v\u2080    v\u1D67 = \u2212g\u00B7t', 'a\u2093 = 0    a\u1D67 = \u2212g'],
+      sw: ['x(t) = v\u2080\u00B7cos\u03B1\u00B7t', 'y(t) = h\u2080 + v\u2080\u00B7sin\u03B1\u00B7t \u2212 \u00BD\u00B7g\u00B7t\u00B2', 'v\u2093 = v\u2080\u00B7cos\u03B1    v\u1D67 = v\u2080\u00B7sin\u03B1 \u2212 g\u00B7t', 'a\u2093 = 0    a\u1D67 = \u2212g'],
     }[st.sc].map(text => ({ text }));
     const pickScen = (sc) => { this.t = 0; this.running = false; this.setState({ sc }); };
     return {
@@ -336,12 +383,13 @@ class Component extends DCLogic {
       playLabel: this.running ? 'Pauze' : (this.t > 0 && this.t < this.tEnd(st.sc, p) ? 'Verder' : 'Start'),
       sliders: d.params.map(q => ({
         label: q[1], min: q[4], max: q[5], step: q[6], val: p[q[0]],
-        valStr: this.fmt(p[q[0]], dec(q[6])) + ' ' + q[3],
+        valStr: this.fmt(p[q[0]], dec(q[6])) + (q[3] === '\u00B0' ? '' : ' ') + q[3],
         onInput: (e) => this.setVal(q[0], parseFloat(e.target.value)),
       })),
       hasG: !!d.g, gStr: this.fmt(p.g, 2) + ' m/s\u00B2',
       gItems: this.gs.map(g => ({ name: g.n, style: chip(Math.abs(g.g - p.g) < 1e-6), onClick: () => this.setVal('g', g.g) })),
-      strobeStyle: chip(st.strobe), vecStyle: chip(st.vec),
+      strobeStyle: chip(st.strobe), vecStyle: chip(st.vec), raStyle: chip(st.ra) + ';grid-column:1 / -1',
+      onRa: () => this.setState({ ra: !st.ra }),
       onStrobe: () => this.setState({ strobe: !st.strobe }), onVec: () => this.setState({ vec: !st.vec }),
       tStr: this.fmt(this.t, 2) + ' s',
       posStr: vecStr(k.x, k.y, 'm'), velStr: vecStr(k.vx, k.vy, 'm/s'), accStr: vecStr(k.ax, k.ay, 'm/s\u00B2'),
