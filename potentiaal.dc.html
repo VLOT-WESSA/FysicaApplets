@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
+<script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Potentiële energie en potentiaal</h1>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f7f4ec;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ onRelease }}" style="min-height:38px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap;border:1px solid oklch(0.55 0.13 75);background:oklch(0.64 0.13 75);color:#fff">{{ releaseLabel }}</button>
+        <div style="flex:1 1 200px;min-width:0;font-size:13px;color:#6f685c">Sleep de lading tussen de platen. Bij loslaten werkt enkel de elektrische kracht; de beweging is sterk vertraagd.</div>
+      </div>
+      <sc-if value="{{ graphOn }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;gap:12px;flex:none">
+        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;color:#8c8576;font-weight:600">E<sub style="font-size:10px">pot</sub> (d)</div>
+          <canvas ref="{{ gRefE }}" style="width:100%;display:block"></canvas>
+        </div>
+        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;color:#8c8576;font-weight:600">V (d)</div>
+          <canvas ref="{{ gRefV }}" style="width:100%;display:block"></canvas>
+        </div>
+      </div>
+      </sc-if>
+    </div>
+
+    <div style="flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Opstelling</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;font-size:14px"><span>Spanning tussen de platen</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ uStr }}</span></div>
+          <input type="range" min="0" max="1000" step="50" value="{{ U }}" onChange="{{ onU }}" style="width:100%;height:32px;accent-color:oklch(0.64 0.13 75);cursor:pointer">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;font-size:14px"><span>Afstand tussen de platen</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ plateStr }}</span></div>
+          <input type="range" min="4" max="12" step="0.5" value="{{ D }}" onChange="{{ onD }}" style="width:100%;height:32px;accent-color:oklch(0.64 0.13 75);cursor:pointer">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:14px">Lading</div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ qOpts }}" as="o" hint-placeholder-count="2">
+              <button onClick="{{ o.onClick }}" style="flex:1;min-height:36px;padding:6px 4px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid {{ o.border }};background:{{ o.bg }};color:#3a352c">{{ o.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:8px">
+          <div style="display:flex;justify-content:space-between"><span>Q</span><span style="color:#3a352c">{{ qStr }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="display:inline-flex;align-items:center;gap:6px">E =<span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25"><span style="padding:0 3px">U</span><span style="align-self:stretch;height:1.5px;background:currentColor"></span><span style="padding:0 3px">afstand</span></span></span><span style="color:#3a352c">{{ eStr }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span>F = Q · E</span><span style="color:#3a352c">{{ fStr }}</span></div>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Potentiële elektrische energie</div>
+        <div style="font-size:22px;text-align:center;margin-bottom:10px"><i>E</i><sub style="font-size:13px">pot,el</sub> = <i>Q</i> · <i>E</i> · <i>d</i></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
+          <div style="display:flex;justify-content:space-between"><span>d (tot negatieve plaat)</span><span style="color:#3a352c">{{ dStr }}</span></div>
+        </div>
+        <div style="margin-top:8px;background:oklch(0.96 0.03 75);border:1px solid oklch(0.88 0.06 75);border-radius:10px;padding:10px 12px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:oklch(0.42 0.1 75)">E<sub style="font-size:11px">pot</sub> = {{ epJ }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:oklch(0.42 0.1 75);margin-top:2px">&nbsp; &nbsp; &nbsp; = {{ epEV }}</div>
+        </div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Potentiaal</div>
+        <div style="font-size:20px;text-align:center;margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:8px"><i>V</i> =<span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.2"><span style="padding:0 4px 2px"><i>E</i><sub style="font-size:12px">pot,el</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span>= <i>E</i> · <i>d</i></span></div>
+        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600">V = {{ vStr }}</div>
+      </div>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Spanning en kinetische energie</div>
+        <div style="font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px"><span><i>U</i> = <i>V</i><sub style="font-size:12px">2</sub> − <i>V</i><sub style="font-size:12px">1</sub> = −</span><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;vertical-align:middle"><span style="padding:0 4px 2px">Δ<i>E</i><sub style="font-size:12px">kin</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span></div>
+        <sc-if value="{{ released }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:6px">
+            <div style="display:flex;justify-content:space-between"><span>V<sub>1</sub> (vertrekpunt)</span><span style="color:#3a352c">{{ v1Str }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>V<sub>2</sub> (nu)</span><span style="color:#3a352c">{{ v2Str }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>ΔE<sub>kin</sub></span><span style="color:#3a352c">{{ dEkJ }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span></span><span style="color:#3a352c">{{ dEkEV }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>snelheid v</span><span style="color:#3a352c">{{ speedStr }}</span></div>
+          </div>
+          <div style="margin-top:8px;background:#eef6ef;border:1px solid #cfe5d4;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;color:#2f6e44;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px">
+            <span>U = −</span><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;vertical-align:middle"><span style="padding:0 4px 2px">{{ numStr }}</span><span style="align-self:stretch;height:1.5px;background:currentColor"></span><span style="padding:2px 4px 0">{{ denStr }}</span></span><span style="font-size:16px;font-weight:600">= {{ checkStr }}</span>
+          </div>
+          <div style="font-size:12.5px;color:#6f685c;line-height:1.5;margin-top:8px">{{ evNote }}</div>
+        </sc-if>
+        <sc-if value="{{ notReleased }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:13px;color:#6f685c;line-height:1.5">Laat de lading los. Enkel de elektrische kracht verricht arbeid: de potentiële energie die ze verliest, wint ze als kinetische energie.</div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ probesOn }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="width:13px;height:13px;border-radius:50%;flex:none;background:#f2d23a;border:1.5px solid #7a6f12"></span>
+            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Potentiaalverschil</span>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
+            <div style="display:flex;justify-content:space-between"><span>V<sub>A</sub></span><span style="color:#3a352c">{{ vaStr }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>V<sub>B</sub></span><span style="color:#3a352c">{{ vbStr }}</span></div>
+          </div>
+          <div style="margin-top:8px;background:#fbf7e6;border:1px solid #ece2af;border-radius:10px;padding:9px 12px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#6e6410">U = V<sub>B</sub> − V<sub>A</sub> = {{ uabStr }}</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.6;margin-top:8px">
+            <div>arbeid elektrische kracht A → B</div>
+            <div style="color:#3a352c">W = Q · (V<sub>A</sub> − V<sub>B</sub>) = {{ wStr }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Weergave</div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
+          <input type="checkbox" checked="{{ graphOn }}" onChange="{{ toggleGraph }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 75);cursor:pointer">Grafieken
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
+          <input type="checkbox" checked="{{ fieldOn }}" onChange="{{ toggleField }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 75);cursor:pointer">Veldlijnen
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
+          <input type="checkbox" checked="{{ equiOn }}" onChange="{{ toggleEqui }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 75);cursor:pointer">Equipotentiaalvlakken (per 100 V)
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
+          <input type="checkbox" checked="{{ forceOn }}" onChange="{{ toggleForce }}" style="width:17px;height:17px;accent-color:#2f8a4f;cursor:pointer">Kracht op de lading
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
+          <input type="checkbox" checked="{{ probesOn }}" onChange="{{ toggleProbes }}" style="width:17px;height:17px;accent-color:#caa90f;cursor:pointer">Meetpunten A en B
+        </label>
+      </div>
+
+      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px">
+        <div style="font-size:12px;color:#6f685c;line-height:1.55"><b style="color:#3a352c">e</b> = 1,60 · 10⁻¹⁹ C. 1 eV = 1,6 · 10⁻¹⁹ J. De negatieve plaat is het referentiepunt: daar is V = 0 V.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  W = 880; H = 560;
+  PPC = 36;          // px per cm
+  PX0 = 50; PX1 = 590;
+  EC = 1.602e-19;
+  T = 1.6;           // weergegeven oversteektijd over de volle plaatafstand (s)
+  stageRef = React.createRef();
+  gRefE = React.createRef();
+  gRefV = React.createRef();
+  GW = 420; GH = 190;
+  gs = {};
+  types = [
+    { id: 'p', name: 'Proton', n: 1, m: 1.673e-27, glyph: '+' },
+    { id: 'e', name: 'Elektron', n: -1, m: 9.109e-31, glyph: '\u2212' },
+  ];
+  ch = { x: 320, d: 6 };
+  pA = { x: 170, d: 2 };
+  pB = { x: 470, d: 7.5 };
+  drag = null;
+  state = { U: 500, D: 10, type: 'p', fieldOn: true, equiOn: true, forceOn: false, probesOn: false, graphOn: true, running: false, released: false };
+  run = null;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown);
+    window.addEventListener('pointermove', this.onMove);
+    window.addEventListener('pointerup', this.onUp);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('pointermove', this.onMove);
+    window.removeEventListener('pointerup', this.onUp);
+    if (this._acStop) this._acStop();
+    for (const k in this.gs) if (this.gs[k].stop) this.gs[k].stop();
+  }
+  syncGraph(key, ref) {
+    const g = this.gs[key] || (this.gs[key] = {}), el = ref.current;
+    if (el === g.el) return;
+    g.el = el;
+    if (g.stop) { g.stop(); g.stop = null; }
+    if (el) {
+      g.dpr = AppletCore.fitCanvas(el, this.GW, this.GH);
+      g.stop = AppletCore.observe(el.parentElement, () => { if (ref.current) g.dpr = AppletCore.fitCanvas(ref.current, this.GW, this.GH); });
+    }
+  }
+  drawGraph(key, ref, mode) {
+    this.syncGraph(key, ref);
+    const c = ref.current; if (!c) return;
+    const ctx = c.getContext('2d'), s = this.gs[key].dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    const W = this.GW, H = this.GH, L = 56, R = 14, T = 12, B = 34;
+    const { U, D } = this.state, n = this.type.n;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(0, 0, W, H);
+    let lo, hi, yl;
+    if (mode === 'v') { lo = 0; hi = U || 100; yl = 'V (V)'; }
+    else { hi = Math.abs(n * U) || 100; lo = -hi; yl = 'E (eV)'; }
+    const X = d => L + d / D * (W - L - R);
+    const Y = v => H - B - (v - lo) / (hi - lo) * (H - B - T);
+    ctx.strokeStyle = '#efe9dd'; ctx.lineWidth = 1;
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c';
+    for (let k = 0; k <= 4; k++) {
+      const v = lo + (hi - lo) * k / 4, y = Y(v);
+      ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(W - R, y); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(this.fmt(v, 0), L - 6, y + 4);
+    }
+    const xs = D <= 6 ? 1 : 2;
+    for (let d = 0; d <= D + 1e-9; d += xs) {
+      const x = X(d);
+      ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, H - B); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.fillText(String(d), x, H - B + 15);
+    }
+    const y0 = Y(0), d = this.ch.d, acc = mode === 'v' ? '#6f685c' : 'oklch(0.58 0.13 75)';
+    const f = mode === 'v' ? (x => U * x / D) : (x => n * U * x / D);
+    ctx.fillStyle = mode === 'v' ? 'rgba(111,104,92,0.10)' : (n > 0 ? 'rgba(214,73,47,0.12)' : 'rgba(52,97,176,0.14)');
+    ctx.beginPath(); ctx.moveTo(X(0), y0); ctx.lineTo(X(D), Y(f(D))); ctx.lineTo(X(D), y0); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.stroke();
+    ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(L, y0); ctx.lineTo(W - R, y0); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; this.head(ctx, W - R + 2, y0, 0, 6);
+    ctx.fillStyle = '#3a352c'; ctx.font = "500 12px 'IBM Plex Sans', sans-serif";
+    ctx.textAlign = 'center'; ctx.fillText('d (cm)', (L + W - R) / 2, H - 5);
+    ctx.save(); ctx.translate(13, (T + H - B) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(yl, 0, 0); ctx.restore();
+    ctx.strokeStyle = acc; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(X(0), Y(f(0))); ctx.lineTo(X(D), Y(f(D))); ctx.stroke();
+    const px = X(d), py = Y(f(d));
+    ctx.save(); ctx.setLineDash([3, 3]); ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px, H - B); ctx.lineTo(px, py); ctx.lineTo(L, py); ctx.stroke(); ctx.restore();
+    if (mode !== 'v') {
+      const ev = f(d);
+      ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.fillStyle = acc; ctx.textAlign = px > W - 110 ? 'right' : 'left';
+      ctx.fillText(this.fEV(ev), px + (px > W - 110 ? -9 : 9), py + (ev < 0 ? 16 : -8));
+    }
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, 6.2832); ctx.fillStyle = acc; ctx.fill();
+    ctx.strokeStyle = '#fffdf9'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+  }
+
+  get type() { return this.types.find(t => t.id === this.state.type); }
+  get Q() { return this.type.n * this.EC; }
+  get E() { return this.state.U / (this.state.D / 100); }
+  gapPx() { return this.state.D * this.PPC; }
+  yB() { return this.H / 2 + this.gapPx() / 2; }
+  yT() { return this.H / 2 - this.gapPx() / 2; }
+  yOf(d) { return this.yB() - d * this.PPC; }
+  V(d) { return this.state.U * d / this.state.D; }
+
+  loop = (t) => {
+    const dt = Math.min(0.05, (t - this.last) / 1000); this.last = t;
+    if (this.state.running && this.run) {
+      const D = this.state.D, a = -Math.sign(this.type.n) * 2 * D / (this.T * this.T);
+      if (this.state.U === 0) { this.setState({ running: false }); }
+      else {
+        this.run.vd += a * dt; this.ch.d += this.run.vd * dt;
+        if (this.ch.d <= 0 || this.ch.d >= D) { this.ch.d = Math.max(0, Math.min(D, this.ch.d)); this.setState({ running: false }); }
+        else this.forceUpdate();
+      }
+    }
+    this.draw();
+    this.drawGraph('e', this.gRefE, 'ep');
+    this.drawGraph('v', this.gRefV, 'v');
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  resetRun() { if (this.run && this.state.released) this.ch.d = this.run.d0; this.run = null; }
+  onRelease = () => {
+    if (this.state.released) { this.resetRun(); this.setState({ running: false, released: false }); return; }
+    this.run = { d0: this.ch.d, vd: 0 };
+    this.setState({ running: true, released: true });
+  };
+  stopAll(extra) { this.resetRun(); this.setState(Object.assign({ running: false, released: false }, extra)); }
+
+  toPx(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
+  }
+  onDown = (e) => {
+    const p = this.toPx(e);
+    const near = (o, r) => Math.hypot(p.x - o.x, p.y - this.yOf(o.d)) <= r;
+    let t = null;
+    if (this.state.probesOn && near(this.pA, 14)) t = this.pA;
+    else if (this.state.probesOn && near(this.pB, 14)) t = this.pB;
+    else if (near(this.ch, 22)) { t = this.ch; if (this.state.released) { this.run = null; this.setState({ running: false, released: false }); } }
+    if (!t) return;
+    this.drag = t; this.stageRef.current.style.cursor = 'grabbing'; e.preventDefault();
+  };
+  onMove = (e) => {
+    if (!this.drag) return;
+    const p = this.toPx(e), D = this.state.D;
+    this.drag.x = Math.max(this.PX0 + 18, Math.min(this.PX1 - 18, p.x));
+    this.drag.d = Math.max(0, Math.min(D, Math.round((this.yB() - p.y) / this.PPC * 10) / 10));
+    this.forceUpdate();
+  };
+  onUp = () => { if (this.drag) { this.drag = null; this.stageRef.current.style.cursor = 'grab'; } };
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ',').replace('-', '\u2212'); }
+  sci(x, unit) {
+    if (!x || Math.abs(x) < 1e-40) return '0 ' + unit;
+    let e = Math.floor(Math.log10(Math.abs(x))), m = x / Math.pow(10, e);
+    if (Math.abs(Number(m.toFixed(2))) >= 10) { m /= 10; e += 1; }
+    const sup = { '-': '\u207B', 0: '\u2070', 1: '\u00B9', 2: '\u00B2', 3: '\u00B3', 4: '\u2074', 5: '\u2075', 6: '\u2076', 7: '\u2077', 8: '\u2078', 9: '\u2079' };
+    const es = String(e).split('').map(ch => sup[ch]).join('');
+    if (e === 0) return this.fmt(m, 2) + ' ' + unit;
+    return this.fmt(m, 2) + ' \u00B7 10' + es + ' ' + unit;
+  }
+  fV(v) { return this.fmt(v, Math.abs(v) >= 100 || v === 0 ? 0 : 1) + ' V'; }
+  fEV(v) { return this.fmt(v, Math.abs(v) >= 100 || Math.abs(v) < 1e-9 ? 0 : 1) + ' eV'; }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  head(ctx, x, y, ang, h) {
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * h, y + Math.sin(ang) * h);
+    ctx.lineTo(x - Math.cos(ang - 0.5) * h, y - Math.sin(ang - 0.5) * h);
+    ctx.lineTo(x - Math.cos(ang + 0.5) * h, y - Math.sin(ang + 0.5) * h);
+    ctx.closePath(); ctx.fill();
+  }
+  arrow(ctx, x, y, ang, len, color) {
+    const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex - Math.cos(ang) * 6, ey - Math.sin(ang) * 6); ctx.stroke();
+    this.head(ctx, ex, ey, ang, 9);
+  }
+  label(ctx, txt, x, y, align, fg, bd) {
+    const parts = Array.isArray(txt) ? txt : [[txt]];
+    const fnt = p => p[1] ? "600 9px 'IBM Plex Mono', monospace" : "600 12px 'IBM Plex Mono', monospace";
+    let tw = 0; for (const p of parts) { ctx.font = fnt(p); tw += ctx.measureText(p[0]).width; }
+    const w = tw + 12;
+    const bx = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    ctx.fillStyle = 'rgba(255,253,249,0.95)'; ctx.strokeStyle = bd || '#e2dccf'; ctx.lineWidth = 1;
+    this.rr(ctx, bx, y - 11, w, 22, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = fg || '#3a352c'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    let xx = bx + 6;
+    for (const p of parts) { ctx.font = fnt(p); ctx.fillText(p[0], xx, y + 0.5 + (p[1] ? 4 : 0)); xx += ctx.measureText(p[0]).width; }
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    const { U, D, fieldOn, equiOn, forceOn, probesOn } = this.state;
+    const W = this.W, H = this.H, X0 = this.PX0, X1 = this.PX1, yT = this.yT(), yB = this.yB();
+    ctx.fillStyle = '#f7f4ec'; ctx.fillRect(0, 0, W, H);
+
+    if (equiOn && U > 0) {
+      const g = ctx.createLinearGradient(0, yT, 0, yB);
+      g.addColorStop(0, 'rgba(214,73,47,0.13)'); g.addColorStop(1, 'rgba(52,97,176,0.10)');
+      ctx.fillStyle = g; ctx.fillRect(X0, yT, X1 - X0, yB - yT);
+    }
+    const step = 100, nEq = Math.floor(U / step + 1e-9);
+    const eqSp = U > 0 ? step / U * (yB - yT) : 0;
+    if (equiOn && U > 0) {
+      ctx.save(); ctx.setLineDash([7, 6]); ctx.strokeStyle = 'rgba(200,62,40,0.7)'; ctx.lineWidth = 1.4;
+      for (let k = 1; k <= nEq; k++) {
+        const y = yB - k * eqSp; if (y <= yT + 1) break;
+        ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X1, y); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    if (fieldOn && U > 0) {
+      const n = Math.max(3, Math.min(18, Math.round(this.E / 1400)));
+      const sp = (X1 - X0) / n;
+      ctx.strokeStyle = 'rgba(185,129,42,0.65)'; ctx.fillStyle = 'rgba(160,106,28,0.95)'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < n; i++) {
+        const x = X0 + sp * (i + 0.5);
+        ctx.beginPath(); ctx.moveTo(x, yT + 6); ctx.lineTo(x, yB - 6); ctx.stroke();
+        for (let y = yT + 50; y < yB - 20; y += 90) this.head(ctx, x, y, Math.PI / 2, 7);
+      }
+    }
+
+    // platen
+    ctx.fillStyle = '#c9523a'; this.rr(ctx, X0 - 8, yT - 12, X1 - X0 + 16, 12, 3); ctx.fill();
+    ctx.fillStyle = '#3e62a8'; this.rr(ctx, X0 - 8, yB, X1 - X0 + 16, 12, 3); ctx.fill();
+    ctx.font = "700 18px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+    ctx.fillStyle = '#b8472f'; ctx.fillText('+', X0 - 4, yT - 20);
+    ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.fillText('V = ' + this.fV(U), X0 + 14, yT - 20);
+    ctx.font = "700 20px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#365087'; ctx.fillText('\u2212', X0 - 4, yB + 34);
+    ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.fillText('V = 0 V  (referentie)', X0 + 14, yB + 32);
+
+    // meetpunten
+    if (probesOn) {
+      for (const [p, nm] of [[this.pA, 'A'], [this.pB, 'B']]) {
+        const y = this.yOf(p.d);
+        ctx.beginPath(); ctx.arc(p.x, y, 9, 0, 6.2832); ctx.fillStyle = '#f2d23a'; ctx.fill();
+        ctx.strokeStyle = '#7a6f12'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#5a520d'; ctx.font = "700 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(nm, p.x, y + 0.5); ctx.textBaseline = 'alphabetic';
+        this.label(ctx, [['V'], [nm, 1], [' = ' + this.fV(this.V(p.d))]], p.x + 15, y - 16, 'left', '#5a520d', '#e2d9a0');
+      }
+    }
+
+    // lading + afstand d
+    const cx = this.ch.x, cy = this.yOf(this.ch.d), t = this.type;
+    const lx = cx > X0 + 90 ? cx - 38 : cx + 38;
+    ctx.strokeStyle = '#6f685c'; ctx.fillStyle = '#6f685c'; ctx.lineWidth = 1.3;
+    if (this.ch.d > 0.3) {
+      ctx.beginPath(); ctx.moveTo(lx, yB - 2); ctx.lineTo(lx, cy + 3); ctx.stroke();
+      this.head(ctx, lx, cy + 1, -Math.PI / 2, 6); this.head(ctx, lx, yB - 1, Math.PI / 2, 6);
+      ctx.save(); ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(lx - 6, cy); ctx.lineTo(cx - 17, cy); ctx.stroke(); ctx.restore();
+    }
+    this.label(ctx, 'd = ' + this.fmt(this.ch.d, 1) + ' cm', lx, (cy + yB) / 2, lx < cx ? 'right' : 'left', '#3a352c');
+
+    if (forceOn && U > 0) {
+      const ang = t.n > 0 ? Math.PI / 2 : -Math.PI / 2;
+      const len = 26 + 50 * Math.min(1, Math.abs(t.n) * this.E / 50000);
+      this.arrow(ctx, cx, cy + Math.sin(ang) * 18, ang, len, '#2f8a4f');
+      ctx.fillStyle = '#2f8a4f'; ctx.font = "italic 700 15px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+      ctx.fillText('F', cx + 9, cy + Math.sin(ang) * (18 + len * 0.6) + 5);
+    }
+    const g = ctx.createRadialGradient(cx - 5, cy - 6, 3, cx, cy, 17);
+    if (t.n > 0) { g.addColorStop(0, '#f08267'); g.addColorStop(1, '#cf3d22'); } else { g.addColorStop(0, '#6f97d8'); g.addColorStop(1, '#2f55a4'); }
+    ctx.beginPath(); ctx.arc(cx, cy, 16, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = (t.n === 2 ? "700 14px" : "700 20px") + " 'IBM Plex Sans', sans-serif";
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t.glyph, cx, cy - 1); ctx.textBaseline = 'alphabetic';
+
+    // potentiaalschaal
+    const rx = 628;
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(rx, yB); ctx.lineTo(rx, yT); ctx.stroke();
+    ctx.fillStyle = '#3a352c'; ctx.font = "italic 600 14px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillText('V', rx, yT - 18);
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.fillStyle = '#6f685c';
+    const every = eqSp >= 18 ? 1 : eqSp >= 9 ? 2 : 5;
+    const ticks = [0]; for (let k = 1; k <= nEq; k++) ticks.push(k * step); if (U > 0 && ticks[ticks.length - 1] !== U) ticks.push(U);
+    ticks.forEach((v, i) => {
+      const y = U > 0 ? yB - v / U * (yB - yT) : yB;
+      ctx.beginPath(); ctx.moveTo(rx - 4, y); ctx.lineTo(rx + 4, y); ctx.stroke();
+      const lab = v === 0 || v === U || (v / step) % every === 0;
+      if (lab && (v === U || U - v >= step * every * 0.6 || v === 0)) ctx.fillText(String(v), rx + 8, y + 4);
+      if (U === 0 && i > 0) return;
+    });
+    ctx.fillStyle = 'oklch(0.5 0.12 75)';
+    ctx.beginPath(); ctx.moveTo(rx - 3, cy); ctx.lineTo(rx - 13, cy - 6); ctx.lineTo(rx - 13, cy + 6); ctx.closePath(); ctx.fill();
+    ctx.save(); ctx.setLineDash([2, 4]); ctx.strokeStyle = 'oklch(0.6 0.1 75)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(X1 + 10, cy); ctx.lineTo(rx - 14, cy); ctx.stroke(); ctx.restore();
+
+    // energiestaven
+    const Q = this.Q, Ep = Q * this.E * this.ch.d / 100;
+    const Etot = this.state.released && this.run ? Q * this.E * this.run.d0 / 100 : Ep;
+    const Ek = Math.max(0, Etot - Ep);
+    const full = Math.abs(Q) * U || 1, sc = 150 / full, y0 = H / 2;
+    const bars = [['E_pot', Ep, 'oklch(0.64 0.13 75)'], ['E_kin', Ek, '#2f8a4f'], ['E_tot', Etot, '#8c8576']];
+    const bx0 = 718, bw = 38, bg = 12;
+    ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(bx0 - 6, y0); ctx.lineTo(bx0 + 3 * bw + 2 * bg + 6, y0); ctx.stroke();
+    ctx.fillStyle = '#8c8576'; ctx.font = "600 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillText('ENERGIE (eV)', bx0 + (3 * bw + 2 * bg) / 2, y0 - 186);
+    bars.forEach(([nm, v, col], i) => {
+      const x = bx0 + i * (bw + bg), h = v * sc;
+      ctx.fillStyle = col; ctx.fillRect(x, h >= 0 ? y0 - h : y0, bw, Math.abs(h));
+      ctx.fillStyle = '#3a352c'; ctx.font = "600 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+      const ev = v / this.EC;
+      ctx.fillText(this.fmt(ev, Math.abs(ev) >= 100 || Math.abs(ev) < 1e-9 ? 0 : 1), x + bw / 2, h >= 0 ? y0 - h - 6 : y0 - h + 15);
+      ctx.fillStyle = '#6f685c'; ctx.font = "italic 600 13px 'IBM Plex Sans', sans-serif";
+      ctx.fillText('E', x + bw / 2 - 6, y0 + 192);
+      ctx.font = "500 10px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+      ctx.fillText(nm.slice(2), x + bw / 2 - 1, y0 + 196);
+    });
+  }
+
+  renderVals() {
+    const { U, D, type, fieldOn, equiOn, forceOn, probesOn, released, running } = this.state;
+    const t = this.type, Q = this.Q, E = this.E, d = this.ch.d;
+    const Ep = Q * E * d / 100, V = this.V(d);
+    let speedStr = '', v1Str = '', v2Str = '', dEkJ = '', dEkEV = '', numStr = '', denStr = '', checkStr = '', evNote = '';
+    if (released && this.run) {
+      const V1 = this.V(this.run.d0), dV = V - V1;
+      const dEk = Math.max(0, -Q * dV);
+      speedStr = this.sci(Math.sqrt(2 * dEk / t.m), 'm/s');
+      v1Str = this.fV(V1); v2Str = this.fV(V);
+      dEkJ = this.sci(dEk, 'J'); dEkEV = '= ' + this.fEV(dEk / this.EC);
+      numStr = this.sci(dEk, 'J');
+      denStr = (Q > 0 ? '+' : '') + this.sci(Q, 'C');
+      checkStr = this.fV(dEk === 0 ? 0 : -dEk / Q);
+      evNote = 'Het ' + t.name.toLowerCase() + ' doorloopt een spanning van ' + this.fV(Math.abs(dV)) + ' en wint daardoor ' + this.fEV(dEk / this.EC) + ' kinetische energie.';
+    }
+    const vA = this.V(this.pA.d), vB = this.V(this.pB.d);
+    const Wab = Q * (vA - vB);
+    return {
+      stageRef: this.stageRef,
+      U, D,
+      uStr: U + ' V', plateStr: this.fmt(D, 1) + ' cm',
+      onU: (e) => this.stopAll({ U: Number(e.target.value) }),
+      onD: (e) => { const nD = Number(e.target.value); this.resetRun(); for (const p of [this.ch, this.pA, this.pB]) p.d = Math.min(p.d, nD); this.setState({ D: nD, running: false, released: false }); },
+      qOpts: this.types.map(o => ({ name: o.name, bg: o.id === type ? '#f4efe6' : '#fffdf9', border: o.id === type ? '#2a2723' : '#e7e1d5', onClick: () => this.stopAll({ type: o.id }) })),
+      qStr: (t.n > 0 ? '+' : '') + this.sci(Q, 'C'),
+      eStr: this.fmt(E, 0) + ' N/C',
+      fStr: this.sci(Math.abs(Q * E), 'N'),
+      dStr: this.fmt(d / 100, 3) + ' m',
+      epJ: this.sci(Ep, 'J'), epEV: this.fEV(Ep / this.EC),
+      vStr: this.fV(V),
+      released, notReleased: !released,
+      releaseLabel: released ? 'Terugzetten' : 'Loslaten',
+      onRelease: this.onRelease,
+      speedStr, v1Str, v2Str, dEkJ, dEkEV, numStr, denStr, checkStr, evNote,
+      vaStr: this.fV(vA), vbStr: this.fV(vB), uabStr: this.fV(vB - vA),
+      wStr: this.fEV(Wab / this.EC) + ' = ' + this.sci(Wab, 'J'),
+      fieldOn, equiOn, forceOn, probesOn,
+      toggleField: () => this.setState({ fieldOn: !fieldOn }),
+      toggleEqui: () => this.setState({ equiOn: !equiOn }),
+      toggleForce: () => this.setState({ forceOn: !forceOn }),
+      toggleProbes: () => this.setState({ probesOn: !probesOn }),
+      graphOn: this.state.graphOn, gRefE: this.gRefE, gRefV: this.gRefV,
+      toggleGraph: () => this.setState({ graphOn: !this.state.graphOn }),
+    };
+  }
+}
+</script>
+</body>
+</html>
