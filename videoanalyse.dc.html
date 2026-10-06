@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.55 0.13 255);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.55 0.13 255);cursor:pointer}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
+<script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Videoanalyse</h1>
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <video ref="{{ videoRef }}" muted playsinline preload="auto" onLoadedMetadata="{{ onMeta }}" onSeeked="{{ onSeeked }}" onError="{{ onVideoError }}" style="position:absolute;width:2px;height:2px;opacity:0;pointer-events:none"></video>
+  <input ref="{{ fileRef }}" type="file" accept="video/*,.mp4,.mov,.m4v,.webm" onChange="{{ onFile }}" style="display:none">
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div onDragOver="{{ onDragOver }}" onDrop="{{ onDrop }}" style="{{ videoWrapStyle }}">
+        <canvas ref="{{ stageRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerLeave="{{ onLeave }}" style="width:100%;height:100%;display:block;touch-action:none;cursor:crosshair"></canvas>
+        <sc-if value="{{ showZoom }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:14px;right:14px;display:flex;gap:6px;align-items:center;background:rgba(255,253,249,.94);border:1px solid #e7e1d5;border-radius:10px;padding:4px 6px">
+            <button onClick="{{ onZoomOut }}" style="width:36px;min-height:34px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:17px">&minus;</button>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;min-width:44px;text-align:center">{{ zoomStr }}</span>
+            <button onClick="{{ onZoomIn }}" style="width:36px;min-height:34px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:17px">+</button>
+            <button onClick="{{ onZoomReset }}" style="min-height:34px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Pas</button>
+            <button onClick="{{ onHand }}" style="{{ handStyle }}">Verschuif</button>
+          </div>
+        </sc-if>
+      </div>
+      <div style="{{ graphWrapStyle }}">
+        <canvas ref="{{ graphRef }}" onPointerDown="{{ onGDown }}" onPointerMove="{{ onGMove }}" onPointerUp="{{ onGUp }}" style="width:100%;height:100%;display:block;touch-action:none;cursor:crosshair"></canvas>
+      </div>
+      <sc-if value="{{ showFrameBar }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
+          <button onClick="{{ onPrev }}" style="min-width:40px;min-height:36px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;color:#2a2723">&#9664;</button>
+          <div style="flex:1;min-width:80px;height:32px;display:flex;align-items:center"><input type="range" min="0" max="{{ maxFrame }}" step="1" value="{{ frame }}" onInput="{{ onFrameSlider }}"></div>
+          <button onClick="{{ onNext }}" style="min-width:40px;min-height:36px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;color:#2a2723">&#9654;</button>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;min-width:190px;text-align:right">frame {{ frameStr }} &middot; t = {{ tStr }}</div>
+        </div>
+      </sc-if>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42;line-height:1.45">{{ message }}</div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px;flex:none">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6f685c;text-align:right;line-height:1.3">
+            <span>t<br>s</span><span>x<br>m</span><span>y<br>m</span><span>vx<br>m/s</span><span>vy<br>m/s</span>
+          </div>
+          <div style="max-height:150px;overflow-y:auto;display:flex;flex-direction:column;gap:1px">
+            <sc-for list="{{ rowItems }}" as="r" hint-placeholder-count="3">
+              <div onClick="{{ r.onClick }}" style="{{ r.style }}"><span>{{ r.t }}</span><span>{{ r.x }}</span><span>{{ r.y }}</span><span>{{ r.vx }}</span><span>{{ r.vy }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button onClick="{{ onCopy }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">{{ copyLabel }}</button>
+            <button onClick="{{ onCsv }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Download CSV</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+          <button onClick="{{ onPick }}" style="min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 255);color:#fff">{{ pickLabel }}</button>
+          <button onClick="{{ onDemo }}" style="min-height:38px;font-size:14px;font-weight:500;border:1px solid #d9d3c6;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Voorbeeldvideo laden (BallDrop)</button>
+          <sc-if value="{{ showHevc }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ hevcStyle }}"><b>{{ hevcLead }}</b><br>iPhone: kies in Instellingen &rsaquo; Camera &rsaquo; Formaten de optie &ldquo;Meest compatibel&rdquo;.<br>Android: zet in de camera-instellingen onder Geavanceerde opname-opties &ldquo;Video met hoge efficiëntie&rdquo; uit.</div>
+          </sc-if>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button onClick="{{ onLoadProj }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Project laden</button>
+            <button onClick="{{ onSave }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Project opslaan</button>
+          </div>
+          <input ref="{{ projRef }}" type="file" accept=".json,application/json" onChange="{{ onProjFile }}" style="display:none">
+          <sc-if value="{{ loaded }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:12px;line-height:1.45;color:#6f685c;font-family:'IBM Plex Mono',monospace">{{ fileInfo }}</div>
+              <sc-if value="{{ bigWarn }}" hint-placeholder-val="{{ false }}"><div style="background:#fff3e6;border:1px solid #f0cfa5;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.45;color:#6b3d0c">Groot bestand: laden en bladeren kan traag zijn. Knip de video bij tot de beweging (enkele seconden) of film in 1080p.</div></sc-if>
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Draaien</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rotStr }}</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                <button onClick="{{ onRotL }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">&#8634; 90&deg; links</button>
+                <button onClick="{{ onRotR }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">90&deg; rechts &#8635;</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Opnamesnelheid</span>
+                <span style="display:flex;align-items:center;gap:6px"><input type="text" inputmode="decimal" value="{{ fpsStr }}" onInput="{{ onFps }}" style="width:70px;min-height:32px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-family:'IBM Plex Mono',monospace;font-size:14px;text-align:right;background:#fff"><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">fps</span></span></div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+                <sc-for list="{{ fpsPresets }}" as="p" hint-placeholder-count="5">
+                  <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+                </sc-for>
+              </div>
+              <div style="font-size:12px;line-height:1.45;color:#6f685c">Vul de opnamesnelheid in, niet de afspeelsnelheid. Bij slow motion is dat 120 of 240 fps.</div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Te analyseren stuk</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rangeStr }}</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                <button onClick="{{ onSetStart }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Begin = dit frame</button>
+                <button onClick="{{ onSetEnd }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Einde = dit frame</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:14px;font-weight:600">1. IJkstok</div>
+          <button onClick="{{ onToolIjk }}" style="{{ ijkBtnStyle }}">{{ ijkBtnLabel }}</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Werkelijke lengte</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="text" inputmode="decimal" value="{{ calL }}" onInput="{{ onCalL }}" style="width:70px;min-height:32px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-family:'IBM Plex Mono',monospace;font-size:14px;text-align:right;background:#fff"><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">m</span></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#4f4a42"><span>Schaal</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ scaleStr }}</span></div>
+          <div style="height:1px;background:#e7e1d5"></div>
+          <div style="font-size:14px;font-weight:600">2. Assenstelsel</div>
+          <button onClick="{{ onToolOrig }}" style="{{ origBtnStyle }}">{{ origBtnLabel }}</button>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">Hoek van de x-as</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span></div>
+          <div style="height:32px;display:flex;align-items:center"><input type="range" min="-180" max="180" step="0.5" value="{{ theta }}" onInput="{{ onTheta }}"></div>
+          <button onClick="{{ onAxisAlong }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">x-as langs de ijkstok</button>
+          <div style="font-size:12px;line-height:1.45;color:#6f685c">Sleep de punten in het beeld om ze bij te stellen. De ijkstok moet in hetzelfde vlak liggen als de beweging.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:14px;font-weight:600">Meetpunten</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <sc-for list="{{ trackItems }}" as="t" hint-placeholder-count="1">
+              <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button onClick="{{ onAddTrack }}" style="min-height:34px;border:1px dashed #b9b2a2;border-radius:10px;background:transparent;cursor:pointer;font-size:13px;color:#2a2723">+ Punt toevoegen</button>
+            <button onClick="{{ onDelTrack }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Dit punt verwijderen</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Naam</span>
+            <input type="text" value="{{ trName }}" onInput="{{ onTrName }}" style="width:150px;min-height:32px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Massa (optioneel)</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="text" inputmode="decimal" value="{{ trMass }}" onInput="{{ onTrMass }}" style="width:70px;min-height:32px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-family:'IBM Plex Mono',monospace;font-size:14px;text-align:right;background:#fff"><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">kg</span></span></div>
+          <div style="height:1px;background:#e7e1d5"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Frames overslaan</span>
+            <span style="display:flex;align-items:center;gap:6px"><button onClick="{{ onStrideMin }}" style="width:34px;min-height:34px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px">&minus;</button><span style="font-family:'IBM Plex Mono',monospace;font-size:14px;min-width:20px;text-align:center">{{ stride }}</span><button onClick="{{ onStridePlus }}" style="width:34px;min-height:34px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px">+</button></span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">t = 0 bij</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ t0Str }}</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button onClick="{{ onT0 }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">t = 0 op dit frame</button>
+            <button onClick="{{ onT0Reset }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Begin van het stuk</button>
+          </div>
+          <div style="font-size:14px;font-weight:500">Tonen in het beeld</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <button onClick="{{ onToggleV }}" style="{{ vStyle }}">Snelheid</button>
+            <button onClick="{{ onToggleA }}" style="{{ aStyle }}">Versnelling</button>
+            <button onClick="{{ onTogglePath }}" style="{{ pathStyle }}">Baan</button>
+          </div>
+          <div style="height:1px;background:#e7e1d5"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#4f4a42"><span>Aangeklikt</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ countStr }}</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button onClick="{{ onDelPoint }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Wis dit frame</button>
+            <button onClick="{{ onDelAll }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">Wis alle frames</button>
+          </div>
+          <div style="font-size:12px;line-height:1.45;color:#6f685c">Pijltjes links en rechts bladeren door de frames. Backspace wist het punt van het huidige frame. Zonder massa zijn energie en impuls niet beschikbaar.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Horizontaal</span>
+            <select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+              <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
+            </select></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Verticaal</span>
+            <select value="{{ gy }}" onChange="{{ onGy }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+              <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
+            </select></div>
+          <div style="font-size:14px;font-weight:500">Trendlijn</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <sc-for list="{{ fitItems }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.name }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ onToggleOrigin }}" style="{{ originStyle }}">Door de oorsprong</button>
+          <button onClick="{{ onReport }}" style="min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 255);color:#fff">Verslag afdrukken of als pdf</button>
+          <button onClick="{{ onClearSel }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">{{ selLabel }}</button>
+          <sc-if value="{{ hasFit }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#f3f0e9;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.5;word-break:break-word">{{ fitText }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#4f4a42">R&sup2; = {{ r2Str }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasStats }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:5px;font-size:13px;color:#4f4a42">
+              <div style="font-size:14px;font-weight:600;color:#2a2723">{{ statTitle }}</div>
+              <sc-for list="{{ statItems }}" as="r" hint-placeholder-count="5">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><span>{{ r.name }}</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;text-align:right;font-size:12px">{{ r.val }}</span></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="font-size:12px;line-height:1.45;color:#6f685c">Sleep in de grafiek om een deel van de meetpunten voor de trendlijn te kiezen.</div>
+        </div>
+      </sc-if>
+          </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  W = 880; H = 560;
+  state = {
+    step: 1, loaded: false, err: false, vw: 0, vh: 0, dur: 0, rot: 0,
+    fpsStr: '30', frame: 0, startF: 0, endF: 0, N: 1,
+    A: null, B: null, O: null, theta: 0, tool: 'none', calL: '1,00',
+    pts: {}, tracks: [{ name: 'Punt 1', mass: '', pts: {} }], ti: 0, t0: null, showV: false, showA: false, showPath: true, stride: 1, zoom: 1, panX: 0, panY: 0, hand: false, fileInfo: '', big: false,
+    gx: 't', gy: 'y', fit: 'none', fitOrigin: false, sel: null, copied: false, note: ''
+  };
+  stageRef = React.createRef(); graphRef = React.createRef();
+  videoRef = React.createRef(); fileRef = React.createRef();
+  Q = { t: ['t', 's'], x: ['x', 'm'], y: ['y', 'm'], vx: ['vx', 'm/s'], vy: ['vy', 'm/s'], v: ['v', 'm/s'], ax: ['ax', 'm/s²'], ay: ['ay', 'm/s²'], Ek: ['Ek', 'J'], Ep: ['Ep', 'J'], Em: ['Em', 'J'], px: ['px', 'kg·m/s'], py: ['py', 'kg·m/s'], p: ['p', 'kg·m/s'] };
+  COLORS = ['#4da3ff', '#ff7a9c', '#ffd23f', '#6fe3a1'];
+  projRef = React.createRef();
+  ACC = '#3f73c8';
+
+  componentDidMount() {
+    this.setupCanvas();
+    this._rz = () => { this.setupCanvas(); this.draw(); this.drawGraph(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this._acStop2 = AppletCore.observe(this.graphRef.current && this.graphRef.current.parentElement, this._rz);
+    this._key = (e) => {
+      const t = e.target && e.target.tagName;
+      if (t === 'INPUT' && e.target.type !== 'range' || t === 'TEXTAREA' || t === 'SELECT') return;
+      const s = this.state;
+      if (!s.loaded || s.step > 3) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.goFrame(s.frame - 1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); this.goFrame(s.frame + 1); }
+      else if ((e.key === 'Backspace' || e.key === 'Delete') && s.step === 3) { e.preventDefault(); this.onDelPoint(); }
+    };
+    document.addEventListener('keydown', this._key);
+    this._wheel = (e) => {
+      const s = this.state; if (!s.loaded || s.step > 3) return;
+      e.preventDefault();
+      const p = this.evPos(e, this.stageRef.current, this.W, this.H);
+      this.zoomAt(p.x, p.y, s.zoom * Math.exp(-e.deltaY * 0.0015));
+    };
+    this._ctx = (e) => e.preventDefault();
+    const sc = this.stageRef.current;
+    if (sc) { sc.addEventListener('wheel', this._wheel, { passive: false }); sc.addEventListener('contextmenu', this._ctx); }
+    this.draw();
+  }
+  componentWillUnmount() {
+    if (this._acStop) this._acStop();
+    if (this._acStop2) this._acStop2();
+    document.removeEventListener('keydown', this._key);
+    const sc = this.stageRef.current;
+    if (sc) { sc.removeEventListener('wheel', this._wheel); sc.removeEventListener('contextmenu', this._ctx); }
+    if (this._url) URL.revokeObjectURL(this._url);
+  }
+  componentDidUpdate() {
+    this.setupCanvas(); this.draw(); this.drawGraph();
+    if (this.state.loaded && this._fname) { clearTimeout(this._sv); this._sv = setTimeout(() => { try { localStorage.setItem(this.skey(), JSON.stringify(this.snapshot())); } catch (e) {} }, 500); }
+  }
+  skey() { return 'videoanalyse:' + this._fname + ':' + this._fsize; }
+  readSaved() { try { const o = JSON.parse(localStorage.getItem(this.skey())); return o && o.v === 1 ? o : null; } catch (e) { return null; } }
+  snapshot() {
+    const s = this.state;
+    return { v: 1, file: { name: this._fname, size: this._fsize, dur: s.dur, vw: s.vw, vh: s.vh }, fps: s.fpsStr, rot: s.rot, startF: s.startF, endF: s.endF, t0: s.t0, calL: s.calL, A: s.A, B: s.B, O: s.O, theta: s.theta, tracks: this.allTracks(), ti: s.ti, gx: s.gx, gy: s.gy, fit: s.fit, stride: s.stride };
+  }
+  applyProject(o) {
+    const tracks = o.tracks && o.tracks.length ? o.tracks : [{ name: 'Punt 1', mass: '', pts: {} }], ti = Math.min(o.ti || 0, tracks.length - 1);
+    const fps = parseFloat(String(o.fps).replace(',', '.')) || 30, N = Math.max(1, Math.floor(this.state.dur * fps + 1e-6));
+    this.setState({ fpsStr: String(o.fps), N, rot: o.rot || 0, startF: Math.min(o.startF || 0, N - 1), endF: Math.min(o.endF == null ? N - 1 : o.endF, N - 1), t0: o.t0 == null ? null : o.t0, calL: o.calL || '1,00', A: o.A || null, B: o.B || null, O: o.O || null, theta: o.theta || 0, tracks, ti, pts: tracks[ti].pts || {}, gx: o.gx || 't', gy: o.gy || 'y', fit: o.fit || 'none', stride: o.stride || 1, frame: 0, zoom: 1, panX: 0, panY: 0, sel: null }, () => this.seek(0));
+  }
+  onSave = () => {
+    const b = new Blob([JSON.stringify(this.snapshot())], { type: 'application/json' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = 'videoanalyse-' + String(this._fname || 'project').replace(/\.[^.]+$/, '') + '.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    this.setState({ note: 'Project opgeslagen. De video zelf zit er niet in: kies bij het hervatten dezelfde video opnieuw.' });
+  };
+  onLoadProj = () => { this.projRef.current && this.projRef.current.click(); };
+  onProjFile = (e) => {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const o = JSON.parse(rd.result); if (!o || o.v !== 1) throw 0;
+        if (this.state.loaded) { this.applyProject(o); this.setState({ note: o.file && o.file.size !== this._fsize ? 'Project geladen, maar dit lijkt een andere video dan bij het opslaan.' : 'Project geladen.' }); }
+        else { this._pending = o; this.setState({ note: 'Project geladen. Kies nu de bijbehorende video' + (o.file && o.file.name ? ' (' + o.file.name + ')' : '') + '.' }); }
+      } catch (x) { this.setState({ note: 'Dit bestand is geen geldig project.' }); }
+    };
+    rd.readAsText(f);
+  };
+
+  /* ---------- meetpunten (meerdere) ---------- */
+  allTracks() { const s = this.state; return s.tracks.map((t, i) => i === s.ti ? Object.assign({}, t, { pts: s.pts }) : t); }
+  massOf(t) { const m = parseFloat(String(t && t.mass).replace(',', '.')); return m > 0 ? m : null; }
+  switchTrack(i) { this.setState(s => { const tracks = s.tracks.map((t, k) => k === s.ti ? Object.assign({}, t, { pts: s.pts }) : t); return { tracks, ti: i, pts: tracks[i].pts, sel: null }; }); }
+  onAddTrack = () => this.setState(s => {
+    if (s.tracks.length >= 4) return null;
+    const tracks = s.tracks.map((t, k) => k === s.ti ? Object.assign({}, t, { pts: s.pts }) : t);
+    tracks.push({ name: 'Punt ' + (tracks.length + 1), mass: '', pts: {} });
+    return { tracks, ti: tracks.length - 1, pts: {}, sel: null };
+  });
+  onDelTrack = () => this.setState(s => {
+    if (s.tracks.length <= 1) return { pts: {} , note: 'Er moet minstens één meetpunt blijven; de punten zijn gewist.' };
+    const tracks = s.tracks.filter((t, k) => k !== s.ti);
+    return { tracks, ti: 0, pts: tracks[0].pts, sel: null };
+  });
+  setTr(k, v) { this.setState(s => ({ tracks: s.tracks.map((t, i) => i === s.ti ? Object.assign({}, t, { [k]: v }) : t) })); }
+  onTrName = (e) => this.setTr('name', e.target.value);
+  onTrMass = (e) => this.setTr('mass', e.target.value);
+  onT0 = () => this.setState(s => ({ t0: s.frame }));
+  onT0Reset = () => this.setState({ t0: null });
+  onToggleV = () => this.setState(s => ({ showV: !s.showV }));
+  onToggleA = () => this.setState(s => ({ showA: !s.showA }));
+  onTogglePath = () => this.setState(s => ({ showPath: !s.showPath }));
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (c) this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+    const g = this.graphRef.current; if (g) this.cdpr = AppletCore.fitCanvas(g, this.W, this.H);
+  }
+
+  /* ---------- hulpfuncties ---------- */
+  fpsNum() { const f = parseFloat(String(this.state.fpsStr).replace(',', '.')); return f >= 1 && f <= 2000 ? f : 30; }
+  num(str) { return parseFloat(String(str).replace(',', '.')); }
+  geo() {
+    const s = this.state, r = s.rot % 2;
+    const rw = r ? s.vh : s.vw, rh = r ? s.vw : s.vh;
+    const base = Math.min(this.W / rw, this.H / rh), sc = base * (s.zoom || 1);
+    return { rw, rh, base, sc, ox: (this.W - rw * sc) / 2 + s.panX, oy: (this.H - rh * sc) / 2 + s.panY };
+  }
+  clampPan(px, py, g) {
+    const mx = Math.max(0, (g.rw * g.sc - this.W) / 2) + this.W * 0.25, my = Math.max(0, (g.rh * g.sc - this.H) / 2) + this.H * 0.25;
+    return [Math.max(-mx, Math.min(mx, px)), Math.max(-my, Math.min(my, py))];
+  }
+  zoomAt(px, py, nz) {
+    nz = Math.max(1, Math.min(12, nz));
+    const g = this.geo(), q = this.fromC(px, py, g), sc = g.base * nz;
+    let ax = px - q.u * sc - (this.W - g.rw * sc) / 2, ay = py - q.v * sc - (this.H - g.rh * sc) / 2;
+    if (nz === 1) { ax = 0; ay = 0; }
+    this.setState({ zoom: nz, panX: ax, panY: ay });
+  }
+  onZoomIn = () => this.zoomAt(this.W / 2, this.H / 2, this.state.zoom * 1.5);
+  onZoomOut = () => this.zoomAt(this.W / 2, this.H / 2, this.state.zoom / 1.5);
+  onZoomReset = () => this.setState({ zoom: 1, panX: 0, panY: 0 });
+  onHand = () => this.setState(s => ({ hand: !s.hand }));
+  toC(p, g) { return { x: g.ox + p.u * g.sc, y: g.oy + p.v * g.sc }; }
+  fromC(x, y, g) { return { u: (x - g.ox) / g.sc, v: (y - g.oy) / g.sc }; }
+  evPos(e, c, W, H) {
+    const r = c.getBoundingClientRect(), k = Math.min(r.width / W, r.height / H);
+    return { x: (e.clientX - r.left - (r.width - W * k) / 2) / k, y: (e.clientY - r.top - (r.height - H * k) / 2) / k, k };
+  }
+  sig(v, n) {
+    n = n || 3;
+    if (v == null || !isFinite(v)) return '–';
+    if (v === 0) return '0';
+    const a = Math.abs(v), sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+    let s;
+    if (a >= 1e4 || a < 1e-3) { const e = Math.floor(Math.log10(a)); s = (v / Math.pow(10, e)).toFixed(n - 1).replace('.', ',') + ' · 10' + sup(e); }
+    else s = v.toFixed(Math.min(6, Math.max(0, n - 1 - Math.floor(Math.log10(a))))).replace('.', ',');
+    return s.replace('-', '−');
+  }
+  csvNum(v) { return v == null ? '' : String(Number(v.toPrecision(5))).replace('.', ','); }
+  scaleK() {
+    const s = this.state; if (!s.A || !s.B) return null;
+    const d = Math.hypot(s.A.u - s.B.u, s.A.v - s.B.v), L = this.num(s.calL);
+    return d > 1e-6 && L > 0 ? L / d : null;
+  }
+  calibrated() { return !!(this.state.O && this.scaleK()); }
+  toWorld(p) {
+    const s = this.state, k = this.scaleK(), th = s.theta * Math.PI / 180, c = Math.cos(th), sn = Math.sin(th);
+    const dx = p.u - s.O.u, dy = p.v - s.O.v;
+    return { x: (dx * c - dy * sn) * k, y: (-dx * sn - dy * c) * k };
+  }
+
+  /* ---------- reeksen ---------- */
+  series() { const s = this.state; return this.seriesOf(s.pts, this.massOf(s.tracks[s.ti])); }
+  seriesOf(pts, m) {
+    const s = this.state, fr = Object.keys(pts).map(Number).sort((a, b) => a - b);
+    if (!this.calibrated()) return { f: [], t: [], x: [], y: [], vx: [], vy: [], v: [], ax: [], ay: [], Ek: [], Ep: [], Em: [], px: [], py: [], p: [] };
+    const D = { f: fr, t: [], x: [], y: [] }, fps = this.fpsNum(), t0 = s.t0 == null ? s.startF : s.t0;
+    fr.forEach(f => { const w = this.toWorld(pts[f]); D.t.push((f - t0) / fps); D.x.push(w.x); D.y.push(w.y); });
+    const der = (q) => q.map((_, i) => (i === 0 || i === q.length - 1 || q[i - 1] == null || q[i + 1] == null) ? null : (q[i + 1] - q[i - 1]) / (D.t[i + 1] - D.t[i - 1]));
+    D.vx = der(D.x); D.vy = der(D.y);
+    D.v = D.vx.map((a, i) => a == null ? null : Math.hypot(a, D.vy[i]));
+    D.ax = der(D.vx); D.ay = der(D.vy);
+    D.Ek = D.v.map(v => m && v != null ? 0.5 * m * v * v : null);
+    D.Ep = D.y.map(y => m ? m * 9.81 * y : null);
+    D.Em = D.Ek.map((k, i) => k != null && D.Ep[i] != null ? k + D.Ep[i] : null);
+    D.px = D.vx.map(v => m && v != null ? m * v : null); D.py = D.vy.map(v => m && v != null ? m * v : null);
+    D.p = D.v.map(v => m && v != null ? m * v : null);
+    return D;
+  }
+  pairs() {
+    const D = this.series(), s = this.state, X = D[s.gx], Y = D[s.gy], P = [];
+    X.forEach((x, i) => { if (x != null && Y[i] != null) P.push({ x, y: Y[i] }); });
+    return P;
+  }
+  selPairs() {
+    const s = this.state, P = this.pairs();
+    if (!s.sel) return P;
+    const lo = Math.min(s.sel[0], s.sel[1]), hi = Math.max(s.sel[0], s.sel[1]);
+    return P.filter(p => p.x >= lo && p.x <= hi);
+  }
+  polyfit(P, deg, noConst) {
+    const ex = []; for (let e = noConst ? 1 : 0; e <= deg; e++) ex.push(e);
+    const n = ex.length, A = [];
+    for (let i = 0; i < n; i++) A.push(new Array(n + 1).fill(0));
+    P.forEach(p => { for (let i = 0; i < n; i++) { for (let j = 0; j < n; j++) A[i][j] += Math.pow(p.x, ex[i] + ex[j]); A[i][n] += p.y * Math.pow(p.x, ex[i]); } });
+    for (let i = 0; i < n; i++) {
+      let m = i; for (let r = i + 1; r < n; r++) if (Math.abs(A[r][i]) > Math.abs(A[m][i])) m = r;
+      [A[i], A[m]] = [A[m], A[i]];
+      if (Math.abs(A[i][i]) < 1e-14) return null;
+      for (let r = i + 1; r < n; r++) { const f = A[r][i] / A[i][i]; for (let c = i; c <= n; c++) A[r][c] -= f * A[i][c]; }
+    }
+    const sol = new Array(n).fill(0);
+    for (let i = n - 1; i >= 0; i--) { let v = A[i][n]; for (let j = i + 1; j < n; j++) v -= A[i][j] * sol[j]; sol[i] = v / A[i][i]; }
+    const co = new Array(deg + 1).fill(0); ex.forEach((e, i) => { co[e] = sol[i]; });
+    return co;
+  }
+  fitInfo() {
+    const s = this.state; if (s.fit === 'none') return null;
+    const P = this.selPairs(), nc = s.fitOrigin && s.fit !== 'exp', need = (s.fit === 'quad' ? 3 : 2) - (nc ? 1 : 0);
+    if (P.length < need) return { err: 'Te weinig punten voor deze trendlijn.' };
+    const xn = this.Q[s.gx][0], yn = this.Q[s.gy][0];
+    let fn, text, co;
+    const term = (c, sym, first) => { const a = this.sig(Math.abs(c)); const body = sym ? a + ' · ' + sym : a; return first ? (c < 0 ? '−' : '') + body : (c < 0 ? ' − ' : ' + ') + body; };
+    if (s.fit === 'lin' || s.fit === 'quad') {
+      co = this.polyfit(P, s.fit === 'lin' ? 1 : 2, nc); if (!co) return { err: 'Geen oplossing: de x-waarden verschillen te weinig.' };
+      if (s.fit === 'lin') { fn = x => co[0] + co[1] * x; text = yn + ' = ' + term(co[1], xn, true) + (nc ? '' : term(co[0], '', false)); }
+      else { fn = x => co[0] + co[1] * x + co[2] * x * x; text = yn + ' = ' + term(co[2], xn + '²', true) + term(co[1], xn, false) + (nc ? '' : term(co[0], '', false)); }
+    } else {
+      const sg = P[0].y < 0 ? -1 : 1;
+      if (P.some(p => p.y * sg <= 0)) return { err: 'Exponentieel kan alleen als alle y-waarden hetzelfde teken hebben en niet 0 zijn.' };
+      const l = this.polyfit(P.map(p => ({ x: p.x, y: Math.log(p.y * sg) })), 1); if (!l) return { err: 'Geen oplossing: de x-waarden verschillen te weinig.' };
+      const A = sg * Math.exp(l[0]), B = l[1];
+      fn = x => A * Math.exp(B * x);
+      text = yn + ' = ' + this.sig(A) + ' · e^(' + this.sig(B) + ' · ' + xn + ')';
+    }
+    const my = P.reduce((a, p) => a + p.y, 0) / P.length;
+    const sst = P.reduce((a, p) => a + (p.y - my) * (p.y - my), 0), ssr = P.reduce((a, p) => a + (p.y - fn(p.x)) * (p.y - fn(p.x)), 0);
+    return { fn, text, r2: sst > 0 ? 1 - ssr / sst : 1, lo: Math.min(...P.map(p => p.x)), hi: Math.max(...P.map(p => p.x)) };
+  }
+
+  /* ---------- video ---------- */
+  loadFile(file) {
+    if (!file) return;
+    const v = this.videoRef.current; if (!v) return;
+    if (this._url) URL.revokeObjectURL(this._url);
+    this._url = URL.createObjectURL(file); this._fsize = file.size; this._fname = file.name;
+    this.setState({ loaded: false, err: false, A: null, B: null, O: null, pts: {}, tracks: [{ name: 'Punt 1', mass: '', pts: {} }], ti: 0, t0: null, rot: 0, zoom: 1, panX: 0, panY: 0, hand: false, frame: 0, theta: 0, tool: 'none', sel: null, step: 1 });
+    v.src = this._url; v.load();
+  }
+  onFile = (e) => { const f = e.target.files && e.target.files[0]; this.loadFile(f); e.target.value = ''; };
+  onDragOver = (e) => { e.preventDefault(); };
+  onDrop = (e) => { e.preventDefault(); const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; this.loadFile(f); };
+  onDemo = () => {
+    fetch('BallDrop.mp4').then(r => { if (!r.ok) throw 0; return r.blob(); })
+      .then(b => this.loadFile(new File([b], 'BallDrop.mp4', { type: b.type || 'video/mp4' })))
+      .catch(() => this.setState({ note: 'BallDrop.mp4 werd niet gevonden. Zet het bestand in dezelfde map als deze pagina.' }));
+  };
+  onPick = () => { this.fileRef.current && this.fileRef.current.click(); };
+  onMeta = () => {
+    const v = this.videoRef.current;
+    if (!v.videoWidth || !isFinite(v.duration)) { this.setState({ err: true }); return; }
+    const fps = this.fpsNum(), N = Math.max(1, Math.floor(v.duration * fps + 1e-6));
+    const mb = this._fsize / 1048576, big = mb > 250 || v.duration > 60 || Math.max(v.videoWidth, v.videoHeight) > 2600;
+    const fileInfo = v.videoWidth + ' × ' + v.videoHeight + ' px · ' + this.sig(v.duration) + ' s · ' + (mb >= 10 ? Math.round(mb) : mb.toFixed(1).replace('.', ',')) + ' MB';
+    this.setState({ fileInfo, big, loaded: true, err: false, vw: v.videoWidth, vh: v.videoHeight, dur: v.duration, N, frame: 0, startF: 0, endF: N - 1 }, () => {
+      this.seek(0);
+      const o = this._pending || this.readSaved(), fromFile = !!this._pending; this._pending = null;
+      if (o) { this.applyProject(o); this.setState({ note: fromFile ? (o.file && o.file.size !== this._fsize ? 'Project geladen, maar dit lijkt een andere video dan bij het opslaan.' : 'Project geladen.') : 'Vorige meetgegevens van deze video zijn hersteld.' }); }
+    });
+  };
+  onVideoError = () => { if (this._url) this.setState({ err: true, loaded: false }); };
+  onSeeked = () => { this.draw(); };
+  seek(f) {
+    const v = this.videoRef.current; if (!v || !this.state.loaded) return;
+    v.currentTime = Math.min(Math.max(0, v.duration - 0.001), (f + 0.5) / this.fpsNum());
+  }
+  goFrame(f) {
+    const s = this.state; f = Math.max(0, Math.min(s.N - 1, Math.round(f)));
+    this.setState({ frame: f }); this.seek(f);
+  }
+  onPrev = () => this.goFrame(this.state.frame - 1);
+  onNext = () => this.goFrame(this.state.frame + 1);
+  onFrameSlider = (e) => this.goFrame(+e.target.value);
+  onFps = (e) => {
+    const old = this.state; const str = e.target.value;
+    this.setState({ fpsStr: str }, () => {
+      const N = Math.max(1, Math.floor(this.state.dur * this.fpsNum() + 1e-6));
+      const wasLast = old.endF >= old.N - 1;
+      this.setState({ N, endF: wasLast ? N - 1 : Math.min(old.endF, N - 1), startF: Math.min(old.startF, N - 1), frame: Math.min(old.frame, N - 1) }, () => this.seek(this.state.frame));
+    });
+  };
+  rotate(cw) {
+    const g = this.geo(), s = this.state;
+    const m = cw ? (p) => p && { u: g.rh - p.v, v: p.u } : (p) => p && { u: p.v, v: g.rw - p.u };
+    const mp = (q) => { const o = {}; Object.keys(q).forEach(k => { o[k] = m(q[k]); }); return o; }; const pts = mp(s.pts);
+    this.setState({ zoom: 1, panX: 0, panY: 0, rot: (s.rot + (cw ? 1 : 3)) % 4, A: m(s.A), B: m(s.B), O: m(s.O), pts, tracks: s.tracks.map(t => Object.assign({}, t, { pts: mp(t.pts) })), theta: ((s.theta + (cw ? -90 : 90) + 540) % 360) - 180 });
+  }
+  onRotL = () => this.rotate(false);
+  onRotR = () => this.rotate(true);
+  onSetStart = () => { const s = this.state; this.setState({ startF: s.frame, endF: Math.max(s.endF, s.frame) }); };
+  onSetEnd = () => { const s = this.state; this.setState({ endF: s.frame, startF: Math.min(s.startF, s.frame) }); };
+
+  /* ---------- tekenen: video ---------- */
+  draw() { this.draw0(); this.overlay(); }
+  overlay() {
+    const c = this.stageRef.current, s = this.state; if (!c || !s.loaded) return;
+    const ctx = c.getContext('2d'), k = this.dpr || 1, W = this.W, H = this.H;
+    ctx.setTransform(k, 0, 0, k, 0, 0);
+    const edit = ['new', 'P', 'A', 'B', 'O', 'X'].indexOf(this.drag) >= 0;
+    if (edit && this.cur) {
+      const p = this.cur, R = 64, sd = R / 3.5;
+      const cx = Math.max(R + 6, Math.min(W - R - 6, p.x)), cy = p.y > R * 2 + 40 ? p.y - R - 48 : p.y + R + 48;
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
+      ctx.fillStyle = '#16140f'; ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+      ctx.drawImage(c, (p.x - sd) * k, (p.y - sd) * k, 2 * sd * k, 2 * sd * k, cx - R, cy - R, 2 * R, 2 * R);
+      ctx.restore();
+      ctx.lineWidth = 3; ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke();
+      ctx.lineWidth = 1.2; ctx.strokeStyle = '#ff4d4d'; ctx.beginPath(); ctx.moveTo(cx - 14, cy); ctx.lineTo(cx + 14, cy); ctx.moveTo(cx, cy - 14); ctx.lineTo(cx, cy + 14); ctx.stroke();
+    } else if (this.hover && (s.step === 2 || s.step === 3) && !this.drag) {
+      const p = this.hover;
+      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.moveTo(p.x, 0); ctx.lineTo(p.x, H); ctx.moveTo(0, p.y); ctx.lineTo(W, p.y); ctx.stroke();
+      ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.stroke();
+    }
+  }
+  draw0() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'), s = this.state, W = this.W, H = this.H, sc0 = this.dpr || 1;
+    ctx.setTransform(sc0, 0, 0, sc0, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    if (!s.loaded) {
+      ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, W, H);
+      ctx.setLineDash([8, 6]); ctx.strokeStyle = '#b9b2a2'; ctx.lineWidth = 2; ctx.strokeRect(120, 100, W - 240, H - 200); ctx.setLineDash([]);
+      ctx.textAlign = 'center'; ctx.fillStyle = '#2a2723'; ctx.font = "600 22px 'IBM Plex Sans',sans-serif";
+      ctx.fillText(s.err ? 'Deze video kan niet worden afgespeeld' : 'Kies een video of sleep hem hierheen', W / 2, H / 2 - 6);
+      ctx.fillStyle = '#6f685c'; ctx.font = "400 15px 'IBM Plex Sans',sans-serif";
+      ctx.fillText(s.err ? 'Zie de uitleg rechts voor iPhone-video\u2019s (HEVC).' : 'mp4 of mov, liefst een korte opname met een stilstaande camera', W / 2, H / 2 + 24);
+      return;
+    }
+    const g = this.geo(), v = this.videoRef.current;
+    ctx.fillStyle = '#16140f'; ctx.fillRect(0, 0, W, H);
+    if (v && v.readyState >= 2) {
+      ctx.save(); ctx.translate(g.ox + g.rw * g.sc / 2, g.oy + g.rh * g.sc / 2); ctx.rotate(s.rot * Math.PI / 2);
+      ctx.drawImage(v, -s.vw * g.sc / 2, -s.vh * g.sc / 2, s.vw * g.sc, s.vh * g.sc); ctx.restore();
+    }
+    const halo = (fn) => { ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = 5; fn(true); ctx.restore(); };
+    const mono = "500 13px 'IBM Plex Mono',monospace";
+    const label = (t, x, y, col) => { ctx.font = mono; ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.strokeText(t, x, y); ctx.fillStyle = col; ctx.fillText(t, x, y); };
+    // ijkstok
+    if (s.A) {
+      const a = this.toC(s.A, g), b = s.B ? this.toC(s.B, g) : null;
+      if (b) { halo(() => { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }); ctx.strokeStyle = '#ff9a3c'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      [a, b].forEach(p => { if (!p) return; ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 7); ctx.fillStyle = '#ff9a3c'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); });
+      if (b) { ctx.textAlign = 'center'; label(String(s.calL).replace('.', ',') + ' m', (a.x + b.x) / 2, (a.y + b.y) / 2 - 12, '#ffc58a'); }
+    }
+    // assen
+    if (s.O) {
+      const o = this.toC(s.O, g), th = s.theta * Math.PI / 180, ex = [Math.cos(th), -Math.sin(th)], ey = [-Math.sin(th), -Math.cos(th)], L = 70;
+      const ln = (dx, dy, len) => { ctx.beginPath(); ctx.moveTo(o.x - dx * len * 0.35, o.y - dy * len * 0.35); ctx.lineTo(o.x + dx * len, o.y + dy * len); ctx.stroke(); };
+      halo(() => { ln(ex[0], ex[1], 900); ln(ey[0], ey[1], 900); });
+      ctx.strokeStyle = '#8fe0a8'; ctx.lineWidth = 1.6; ln(ex[0], ex[1], 900); ln(ey[0], ey[1], 900);
+      ctx.textAlign = 'left';
+      label('x', o.x + ex[0] * (L + 14) - 4, o.y + ex[1] * (L + 14) + 4, '#8fe0a8');
+      label('y', o.x + ey[0] * (L + 14) - 4, o.y + ey[1] * (L + 14) + 4, '#8fe0a8');
+      ctx.beginPath(); ctx.arc(o.x, o.y, 6, 0, 7); ctx.fillStyle = '#8fe0a8'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke();
+      if (s.step === 2) { ctx.beginPath(); ctx.arc(o.x + ex[0] * L, o.y + ex[1] * L, 6, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#2f8a4e'; ctx.lineWidth = 2.5; ctx.stroke(); }
+    }
+    if (s.step >= 3) {
+      const th = s.theta * Math.PI / 180, ex = [Math.cos(th), -Math.sin(th)], ey = [-Math.sin(th), -Math.cos(th)];
+      const arrow = (x0, y0, dx, dy, col) => {
+        const Ln = Math.hypot(dx, dy); if (Ln < 4) return;
+        const ux = dx / Ln, uy = dy / Ln, x1 = x0 + dx, y1 = y0 + dy, hd = Math.min(11, Ln * 0.5);
+        const path = () => { ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.moveTo(x1 - ux * hd + uy * hd * 0.5, y1 - uy * hd - ux * hd * 0.5); ctx.lineTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hd * 0.5, y1 - uy * hd + ux * hd * 0.5); ctx.stroke(); };
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = 6; path(); ctx.strokeStyle = col; ctx.lineWidth = 3; path();
+      };
+      this.allTracks().forEach((t, ti) => {
+        const col = this.COLORS[ti % 4], keys = Object.keys(t.pts).map(Number).sort((a, b) => a - b), act = ti === s.ti;
+        if (s.showPath && keys.length > 1) {
+          ctx.beginPath(); keys.forEach((k, i) => { const p = this.toC(t.pts[k], g); i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); });
+          ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = col; ctx.lineWidth = 1.8; ctx.stroke();
+        }
+        keys.forEach(k => {
+          const p = this.toC(t.pts[k], g), cur = k === s.frame;
+          ctx.beginPath(); ctx.arc(p.x, p.y, cur ? 6 : 4, 0, 7); ctx.fillStyle = cur && act ? '#ff4d4d' : col; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+          if (cur && act) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(p.x - 14, p.y); ctx.lineTo(p.x + 14, p.y); ctx.moveTo(p.x, p.y - 14); ctx.lineTo(p.x, p.y + 14); ctx.stroke(); }
+          if (cur && s.tracks.length > 1) { ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.strokeText(t.name, p.x + 10, p.y - 10); ctx.fillStyle = col; ctx.fillText(t.name, p.x + 10, p.y - 10); }
+        });
+        if ((s.showV || s.showA) && t.pts[s.frame] && this.calibrated()) {
+          const D = this.seriesOf(t.pts, null), i = D.f.indexOf(s.frame), p = this.toC(t.pts[s.frame], g);
+          if (i >= 0) {
+            const scr = (a, b) => [a * ex[0] + b * ey[0], a * ex[1] + b * ey[1]];
+            if (s.showV && D.vx[i] != null) { const vm = Math.max(1e-9, ...D.v.filter(v => v != null)), d = scr(D.vx[i], D.vy[i]); arrow(p.x, p.y, d[0] / vm * 100, d[1] / vm * 100, '#3dd6a0'); }
+            if (s.showA && D.ax[i] != null) { const am = Math.max(1e-9, ...D.ax.map((a, j) => a == null ? 0 : Math.hypot(a, D.ay[j]))), d = scr(D.ax[i], D.ay[i]); arrow(p.x, p.y, d[0] / am * 100, d[1] / am * 100, '#ffb020'); }
+          }
+        }
+      });
+    }
+  }
+
+  /* ---------- aanwijzen: video ---------- */
+  hit(p, list) {
+    for (const h of list) { if (h.c && Math.hypot(h.c.x - p.x, h.c.y - p.y) <= 14) return h.k; }
+    return null;
+  }
+  onDown = (e) => {
+    const s = this.state; if (!s.loaded) { this.onPick(); return; }
+    const c = this.stageRef.current, p = this.evPos(e, c, this.W, this.H), g = this.geo();
+    this.ptrs = this.ptrs || {}; this.ptrs[e.pointerId] = p;
+    const ids = Object.keys(this.ptrs);
+    if (ids.length === 2) {
+      const a = this.ptrs[ids[0]], b = this.ptrs[ids[1]];
+      this.drag = 'pinch'; this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, z: s.zoom }; return;
+    }
+    if (s.step === 4) return;
+    if (s.hand || e.button === 1 || e.button === 2 || e.shiftKey) {
+      this.drag = 'pan'; this.panStart = { x: p.x, y: p.y, px: s.panX, py: s.panY };
+      try { c.setPointerCapture(e.pointerId); } catch (x) {} return;
+    }
+    if (s.step === 1) return;
+    let d = null;
+    if (s.step === 2) {
+      const th = s.theta * Math.PI / 180, o = s.O && this.toC(s.O, g);
+      d = this.hit(p, [{ k: 'X', c: o && { x: o.x + Math.cos(th) * 70, y: o.y - Math.sin(th) * 70 } }, { k: 'O', c: o }, { k: 'A', c: s.A && this.toC(s.A, g) }, { k: 'B', c: s.B && this.toC(s.B, g) }]);
+      if (!d) {
+        const q = this.fromC(p.x, p.y, g);
+        if (s.tool === 'ijk') {
+          if (!s.A) this.setState({ A: q }); else { this.setState({ B: q, tool: s.O ? 'none' : 'orig' }); }
+        } else if (s.tool === 'orig') this.setState({ O: q, tool: 'none' });
+        return;
+      }
+    } else if (s.step === 3) {
+      const cur = s.pts[s.frame];
+      d = this.hit(p, [{ k: 'P', c: cur && this.toC(cur, g) }]);
+      if (!d) {
+        if (!this.calibrated()) { this.setState({ note: 'Leg eerst de ijkstok en het assenstelsel vast bij stap 2.' }); return; }
+        if (s.frame < s.startF || s.frame > s.endF) { this.setState({ note: 'Dit frame ligt buiten het gekozen stuk (frame ' + s.startF + ' tot ' + s.endF + ').' }); return; }
+        const q = this.fromC(p.x, p.y, g), pts = Object.assign({}, s.pts); pts[s.frame] = q;
+        this.cur = p; this.drag = 'new'; this.setState({ pts, note: '' });
+        try { c.setPointerCapture(e.pointerId); } catch (x) {}
+        return;
+      }
+    }
+    if (d) { this.cur = p; this.drag = d; this.setState({ note: '' }); try { c.setPointerCapture(e.pointerId); } catch (x) {} }
+  };
+  onMove = (e) => {
+    const s = this.state, g = this.geo(), p = this.evPos(e, this.stageRef.current, this.W, this.H);
+    if (this.ptrs && this.ptrs[e.pointerId]) this.ptrs[e.pointerId] = p;
+    if (this.drag === 'pinch') {
+      const ids = Object.keys(this.ptrs); if (ids.length < 2) return;
+      const a = this.ptrs[ids[0]], b = this.ptrs[ids[1]];
+      this.zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, this.pinch.z * Math.hypot(a.x - b.x, a.y - b.y) / this.pinch.d); return;
+    }
+    this.cur = p;
+    if (!this.drag) { if (e.pointerType === 'mouse' && (s.step === 2 || s.step === 3) && s.loaded) { this.hover = p; this.draw(); } return; }
+    if (this.drag === 'pan') {
+      const [ax, ay] = this.clampPan(this.panStart.px + p.x - this.panStart.x, this.panStart.py + p.y - this.panStart.y, g);
+      this.setState({ panX: ax, panY: ay }); return;
+    }
+    const q = this.fromC(Math.max(0, Math.min(this.W, p.x)), Math.max(0, Math.min(this.H, p.y)), g);
+    if (this.drag === 'A') this.setState({ A: q });
+    else if (this.drag === 'B') this.setState({ B: q });
+    else if (this.drag === 'O') this.setState({ O: q });
+    else if (this.drag === 'X') {
+      const o = this.toC(s.O, g); let th = Math.atan2(-(p.y - o.y), p.x - o.x) * 180 / Math.PI;
+      this.setState({ theta: Math.round(th * 2) / 2 });
+    } else if (this.drag === 'P' || this.drag === 'new') { const pts = Object.assign({}, s.pts); pts[s.frame] = q; this.setState({ pts }); }
+  };
+  onUp = (e) => {
+    if (this.ptrs && e) delete this.ptrs[e.pointerId];
+    const was = this.drag;
+    if (!this.ptrs || Object.keys(this.ptrs).length < 2) this.drag = null;
+    if (was === 'new') {
+      const s = this.state, nf = Math.min(s.N - 1, s.frame + s.stride);
+      if (nf <= s.endF && nf !== s.frame) { this.setState({ frame: nf }); this.seek(nf); } else this.draw();
+    } else this.draw();
+  };
+
+  onToolIjk = () => this.setState({ tool: 'ijk', A: null, B: null });
+  onToolOrig = () => this.setState({ tool: 'orig' });
+  onCalL = (e) => this.setState({ calL: e.target.value });
+  onTheta = (e) => this.setState({ theta: +e.target.value });
+  onAxisAlong = () => {
+    const s = this.state; if (!s.A || !s.B) return;
+    let th = Math.atan2(-(s.B.v - s.A.v), s.B.u - s.A.u) * 180 / Math.PI;
+    this.setState({ theta: Math.round(th * 2) / 2 });
+  };
+  onStrideMin = () => this.setState(s => ({ stride: Math.max(1, s.stride - 1) }));
+  onStridePlus = () => this.setState(s => ({ stride: Math.min(10, s.stride + 1) }));
+  onDelPoint = () => { const s = this.state; if (!s.pts[s.frame]) return; const pts = Object.assign({}, s.pts); delete pts[s.frame]; this.setState({ pts }); };
+  onDelAll = () => this.setState({ pts: {} });
+
+  /* ---------- grafiek ---------- */
+  niceTicks(lo, hi) {
+    const span = hi - lo, raw = span / 6, mag = Math.pow(10, Math.floor(Math.log10(raw))), r = raw / mag;
+    const step = (r < 1.5 ? 1 : r < 3.5 ? 2 : r < 7.5 ? 5 : 10) * mag, out = [];
+    for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + step * 1e-9; v += step) out.push(Math.abs(v) < step * 1e-9 ? 0 : v);
+    return { ticks: out, step };
+  }
+  drawGraph() {
+    const c = this.graphRef.current, s = this.state; if (!c || s.step !== 4) return;
+    const ctx = c.getContext('2d'), W = this.W, H = this.H, k = this.cdpr || 1;
+    ctx.setTransform(k, 0, 0, k, 0, 0); ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(0, 0, W, H);
+    const P = this.pairs(), mono = "400 12px 'IBM Plex Mono',monospace";
+    if (!P.length) {
+      ctx.textAlign = 'center'; ctx.fillStyle = '#6f685c'; ctx.font = "400 16px 'IBM Plex Sans',sans-serif";
+      const needM = ['Ek', 'Ep', 'Em', 'px', 'py', 'p'].some(q => q === s.gx || q === s.gy) && !this.massOf(s.tracks[s.ti]);
+      ctx.fillText(needM ? 'Voer bij stap 3 de massa van dit meetpunt in.' : Object.keys(s.pts).length ? 'Voor deze grootheid zijn meer punten nodig.' : 'Nog geen meetpunten. Klik het voorwerp aan bij stap 3.', W / 2, H / 2);
+      this.gmap = null; return;
+    }
+    const ext = (a) => { let lo = Math.min(...a), hi = Math.max(...a); if (hi - lo < 1e-12) { lo -= 1; hi += 1; } const pd = (hi - lo) * 0.06; return [lo - pd, hi + pd]; };
+    const [x0, x1] = ext(P.map(p => p.x)), [y0, y1] = ext(P.map(p => p.y));
+    const L = 84, R = 24, T = 22, B = 62, pw = W - L - R, ph = H - T - B;
+    const X = (v) => L + (v - x0) / (x1 - x0) * pw, Y = (v) => T + ph - (v - y0) / (y1 - y0) * ph;
+    this.gmap = { x0, x1, L, R, T, B, pw };
+    const tx = this.niceTicks(x0, x1), ty = this.niceTicks(y0, y1);
+    const dec = (st) => Math.max(0, -Math.floor(Math.log10(st) + 1e-9));
+    ctx.font = mono; ctx.lineWidth = 1;
+    ty.ticks.forEach(v => { const y = Y(v); ctx.strokeStyle = v === 0 ? '#b9b2a2' : '#ece7dc'; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L + pw, y); ctx.stroke(); ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right'; ctx.fillText(v.toFixed(dec(ty.step)).replace('.', ',').replace('-', '−'), L - 8, y + 4); });
+    tx.ticks.forEach(v => { const x = X(v); ctx.strokeStyle = v === 0 ? '#b9b2a2' : '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, T + ph); ctx.stroke(); ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.fillText(v.toFixed(dec(tx.step)).replace('.', ',').replace('-', '−'), x, T + ph + 18); });
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.strokeRect(L, T, pw, ph);
+    ctx.fillStyle = '#2a2723'; ctx.font = "500 14px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center';
+    const qx = this.Q[s.gx], qy = this.Q[s.gy];
+    ctx.fillText(qx[0] + ' (' + qx[1] + ')', L + pw / 2, H - 14);
+    ctx.save(); ctx.translate(18, T + ph / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(qy[0] + ' (' + qy[1] + ')', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, T, pw, ph); ctx.clip();
+    if (s.sel) { const a = X(Math.min(s.sel[0], s.sel[1])), b = X(Math.max(s.sel[0], s.sel[1])); ctx.fillStyle = 'rgba(63,115,200,.12)'; ctx.fillRect(a, T, b - a, ph); }
+    const fi = this.fitInfo();
+    if (fi && fi.fn) { ctx.strokeStyle = '#d4492e'; ctx.lineWidth = 2.2; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const x = fi.lo + (fi.hi - fi.lo) * i / 200, y = fi.fn(x); i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); } ctx.stroke(); }
+    const lo = s.sel ? Math.min(s.sel[0], s.sel[1]) : -Infinity, hi = s.sel ? Math.max(s.sel[0], s.sel[1]) : Infinity;
+    P.forEach(p => { const on = p.x >= lo && p.x <= hi; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 5, 0, 7); ctx.fillStyle = on ? this.ACC : '#aab6cc'; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#fff'; ctx.stroke(); });
+    if (P.length > 1) {
+      const SP = this.selPairs();
+      if (SP.length) {
+        const mn = SP.reduce((a, p) => p.y < a.y ? p : a), mx = SP.reduce((a, p) => p.y > a.y ? p : a);
+        ctx.lineWidth = 2; ctx.strokeStyle = '#2a2723';
+        [mn, mx].forEach((p, i) => { ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 9, 0, 7); ctx.stroke(); ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.fillText(i ? 'max' : 'min', X(p.x), Y(p.y) + (i ? -14 : 22)); });
+      }
+    }
+    ctx.restore();
+  }
+  gx(e) {
+    const m = this.gmap; if (!m) return null;
+    const p = this.evPos(e, this.graphRef.current, this.W, this.H);
+    return { px: p.x, x: m.x0 + (Math.max(m.L, Math.min(m.L + m.pw, p.x)) - m.L) / m.pw * (m.x1 - m.x0) };
+  }
+  onGDown = (e) => { const q = this.gx(e); if (!q) return; this.gdrag = q; this.setState({ sel: [q.x, q.x] }); try { this.graphRef.current.setPointerCapture(e.pointerId); } catch (x) {} };
+  onGMove = (e) => { if (!this.gdrag) return; const q = this.gx(e); if (q) this.setState({ sel: [this.gdrag.x, q.x] }); };
+  onGUp = (e) => { if (!this.gdrag) return; const q = this.gx(e); if (q && Math.abs(q.px - this.gdrag.px) < 6) this.setState({ sel: null }); this.gdrag = null; };
+  onGx = (e) => this.setState({ gx: e.target.value, sel: null });
+  onGy = (e) => this.setState({ gy: e.target.value });
+  onToggleOrigin = () => this.setState(s => ({ fitOrigin: !s.fitOrigin }));
+  onLeave = () => { this.hover = null; this.draw(); };
+  onClearSel = () => this.setState({ sel: null });
+
+  stats() {
+    const s = this.state, P = this.selPairs(); if (!P.length) return [];
+    const qx = this.Q[s.gx], qy = this.Q[s.gy], xu = qx[1], yu = qy[1], f = (v, u) => this.sig(v) + (u ? ' ' + u : '');
+    const n = P.length, mn = P.reduce((a, p) => p.y < a.y ? p : a), mx = P.reduce((a, p) => p.y > a.y ? p : a);
+    const mean = P.reduce((a, p) => a + p.y, 0) / n, sd = n > 1 ? Math.sqrt(P.reduce((a, p) => a + (p.y - mean) * (p.y - mean), 0) / (n - 1)) : null;
+    const out = [['Aantal punten', String(n)], ['Minimum', f(mn.y, yu) + ' bij ' + qx[0] + ' = ' + f(mn.x, xu)], ['Maximum', f(mx.y, yu) + ' bij ' + qx[0] + ' = ' + f(mx.x, xu)], ['Gemiddelde', f(mean, yu)]];
+    if (sd != null) out.push(['Standaardafwijking', f(sd, yu)]);
+    const S = P.slice().sort((a, b) => a.x - b.x), a = S[0], b = S[n - 1];
+    if (n > 1 && b.x - a.x > 1e-12) {
+      const quo = (yu === 'm' && xu === 's') ? 'm/s' : (yu === 'm/s' && xu === 's') ? 'm/s²' : (yu === 'm/s²' && xu === 's') ? 'm/s³' : (yu === xu ? '' : yu + '/' + xu);
+      const prod = (yu === 'm/s' && xu === 's') ? 'm' : (yu === 'm/s²' && xu === 's') ? 'm/s' : (yu === 'm' && xu === 'm') ? 'm²' : yu + '·' + xu;
+      let I = 0; for (let i = 1; i < n; i++) I += (S[i].y + S[i - 1].y) / 2 * (S[i].x - S[i - 1].x);
+      out.push(['Gemiddelde helling Δ' + qy[0] + '/Δ' + qx[0], f((b.y - a.y) / (b.x - a.x), quo)]);
+      out.push(['Oppervlakte onder de grafiek', f(I, prod)]);
+    }
+    return out.map(r => ({ name: r[0], val: r[1] }));
+  }
+
+  onReport = () => {
+    const s = this.state, D = this.series(), m = this.massOf(s.tracks[s.ti]), fi = this.fitInfo(), st = this.stats();
+    const keys = ['t', 'x', 'y', 'vx', 'vy', 'v', 'ax', 'ay'].concat(m ? ['Ek', 'Ep', 'Em', 'p'] : []);
+    const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const th = keys.map(k => '<th>' + this.Q[k][0] + '<br><small>' + this.Q[k][1] + '</small></th>').join('');
+    const rows = D.f.map((_, i) => '<tr>' + keys.map(k => '<td>' + (D[k][i] == null ? '–' : this.sig(D[k][i])) + '</td>').join('') + '</tr>').join('');
+    const gimg = this.graphRef.current.toDataURL('image/png'), vimg = this.stageRef.current.toDataURL('image/jpeg', 0.85);
+    const k = this.scaleK(), q = this.Q[s.gx][0] + ' – ' + this.Q[s.gy][0];
+    const html = '<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><title>Verslag videoanalyse</title>'
+      + '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
+      + '<style>body{font:13px/1.5 "IBM Plex Sans",sans-serif;color:#2a2723;margin:24px auto;max-width:780px;padding:0 16px}h1{font-size:22px;margin:0 0 4px}h2{font-size:15px;margin:22px 0 8px}img{max-width:100%;border:1px solid #d9d3c6}table{border-collapse:collapse;width:100%;font:11px "IBM Plex Mono",monospace}th,td{border-bottom:1px solid #e7e1d5;padding:3px 6px;text-align:right}th{border-bottom:2px solid #2a2723;font-weight:500}small{color:#6f685c}.meta{color:#4f4a42}.f{font:13px "IBM Plex Mono",monospace;background:#f3f0e9;padding:8px 10px;margin:6px 0}.nm{display:flex;gap:40px;margin:14px 0;border-bottom:1px solid #2a2723;padding-bottom:6px}tr{break-inside:avoid}</style></head><body>'
+      + '<h1>Verslag videoanalyse</h1><div class="meta">' + new Date().toLocaleDateString('nl-BE') + ' · ' + esc(this._fname || '') + ' · ' + esc(s.fileInfo) + ' · ' + this.sig(this.fpsNum()) + ' fps · schaal ' + (k ? this.sig(k * 1000) + ' mm/px' : '–') + ' · meetpunt ' + esc(s.tracks[s.ti].name) + (m ? ' (m = ' + this.sig(m) + ' kg)' : '') + '</div>'
+      + '<div class="nm"><span>Naam:</span><span>Klas:</span></div>'
+      + '<h2>Beeld met meetpunten</h2><img src="' + vimg + '">'
+      + '<h2>Grafiek ' + esc(q) + '</h2><img src="' + gimg + '">'
+      + (fi && fi.fn ? '<div class="f">' + esc(fi.text) + '<br>R² = ' + this.sig(fi.r2, 4) + '</div>' : '')
+      + (st.length ? '<table style="margin-top:8px">' + st.map(r => '<tr><td style="text-align:left;font-family:inherit">' + esc(r.name) + '</td><td>' + esc(r.val) + '</td></tr>').join('') + '</table>' : '')
+      + '<h2>Meetgegevens</h2><table><tr>' + th + '</tr>' + rows + '</table></body></html>';
+    const w = window.open('', '_blank');
+    if (!w) { this.setState({ note: 'Het verslag kon niet openen: sta pop-ups toe voor deze pagina.' }); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+    setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 900);
+  };
+
+  /* ---------- export ---------- */
+  tableText(sep) {
+    const D = this.series(), keys = ['t', 'x', 'y', 'vx', 'vy', 'v', 'ax', 'ay'].concat(this.massOf(this.state.tracks[this.state.ti]) ? ['Ek', 'Ep', 'Em', 'px', 'py', 'p'] : []);
+    const head = keys.map(k => this.Q[k][0] + ' (' + this.Q[k][1] + ')').join(sep);
+    const rows = D.f.map((_, i) => keys.map(k => this.csvNum(D[k][i])).join(sep));
+    return [head].concat(rows).join('\n');
+  }
+  onCopy = () => {
+    const t = this.tableText('\t');
+    const done = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => {});
+  };
+  onCsv = () => {
+    const b = new Blob(['\ufeff' + this.tableText(';')], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = 'videoanalyse.csv'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+
+  renderVals() {
+    const s = this.state, fps = this.fpsNum(), D = this.series();
+    const pill = (on, w) => 'min-height:34px;border-radius:10px;cursor:pointer;font-size:13px;' + (on ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff;font-weight:600' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723');
+    const tabNames = ['1  Video', '2  IJking', '3  Meten', '4  Analyse'];
+    const tabs = tabNames.map((label, i) => ({
+      label, onClick: () => this.setState({ step: i + 1, tool: 'none', note: '' }),
+      style: 'min-height:34px;padding:0 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff' : 'border:1px solid #e7e1d5;background:#fffdf9;color:#4f4a42')
+    }));
+    const fpsPresets = [24, 30, 60, 120, 240].map(n => ({ name: String(n), onClick: () => this.onFps({ target: { value: String(n) } }), style: pill(fps === n) }));
+    const fitItems = [['none', 'Geen'], ['lin', 'Lineair'], ['quad', 'Kwadratisch'], ['exp', 'Exponentieel']].map(([id, name]) => ({ name, onClick: () => this.setState({ fit: id }), style: pill(s.fit === id) }));
+    const qOptions = Object.keys(this.Q).map(id => ({ id, name: this.Q[id][0] + ' (' + this.Q[id][1] + ')' }));
+    const fi = this.fitInfo();
+    const rowItems = D.f.map((f, i) => ({
+      t: this.sig(D.t[i]), x: this.sig(D.x[i]), y: this.sig(D.y[i]), vx: D.vx[i] == null ? '–' : this.sig(D.vx[i]), vy: D.vy[i] == null ? '–' : this.sig(D.vy[i]),
+      onClick: () => { this.goFrame(f); },
+      style: "display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;padding:3px 0;border-radius:6px;cursor:pointer;" + (f === s.frame ? 'background:#e6edf9' : '')
+    }));
+    const msgs = {
+      1: s.loaded ? 'Draai het beeld rechtop, vul de opnamesnelheid in en kies met de schuifbalk het stuk dat je wilt analyseren.' : 'Kies een video van de beweging. De video blijft op je eigen toestel en wordt nergens opgeladen.',
+      2: !s.A ? 'Druk op "Plaats ijkstok" en klik het begin van een voorwerp met bekende lengte aan.' : !s.B ? 'Klik nu het einde van de ijkstok aan.' : !s.O ? 'Kies "Plaats oorsprong" en klik het punt aan waar x = 0 en y = 0 moet zijn.' : 'Stel de hoek van de x-as in en versleep de punten voor een nauwkeurige plaatsing.',
+      3: s.note || (!this.calibrated() ? 'Ijk eerst bij stap 2.' : 'Houd de muis ingedrukt op het voorwerp, verfijn met de vergroting en laat los: het beeld springt dan naar het volgende frame. Zoom in met het muiswiel en verschuif met Shift + slepen of de knop Verschuif.'),
+      4: 'Kies de grootheden en een trendlijn. Snelheid en versnelling worden berekend uit de naburige meetpunten, dus aan de randen ontbreken ze.'
+    };
+    const rot = s.rot * 90, st = s.step === 4 ? this.stats() : [];
+    return {
+      trackItems: s.tracks.map((t, i) => ({ name: t.name || ('Punt ' + (i + 1)), onClick: () => this.switchTrack(i), style: pill(i === s.ti) + ';padding:0 8px;border-left:6px solid ' + this.COLORS[i % 4] })),
+      trName: s.tracks[s.ti].name, trMass: s.tracks[s.ti].mass,
+      t0Str: s.t0 == null ? 'begin van het stuk' : 'frame ' + (s.t0 + 1),
+      vStyle: pill(s.showV), aStyle: pill(s.showA), pathStyle: pill(s.showPath),
+      projRef: this.projRef, onAddTrack: this.onAddTrack, onDelTrack: this.onDelTrack, onTrName: this.onTrName, onTrMass: this.onTrMass,
+      onT0: this.onT0, onT0Reset: this.onT0Reset, onToggleV: this.onToggleV, onToggleA: this.onToggleA, onTogglePath: this.onTogglePath,
+      onSave: this.onSave, onLoadProj: this.onLoadProj, onProjFile: this.onProjFile, onReport: this.onReport,
+      originStyle: pill(s.fitOrigin && s.fit !== 'exp') + (s.fit === 'exp' ? ';opacity:.4' : ''), onToggleOrigin: this.onToggleOrigin, onLeave: this.onLeave,
+      onDemo: this.onDemo,
+      showHevc: !s.loaded || s.err, hevcLead: s.err ? 'Deze video kan niet worden afgespeeld (waarschijnlijk HEVC).' : 'Let op bij video\'s van een telefoon:',
+      hevcStyle: 'border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;' + (s.err ? 'background:#fbeceb;border:1px solid #efc7c3;color:#7a2a24' : 'background:#f3f0e9;border:1px solid #e7e1d5;color:#4f4a42'),
+      fileInfo: s.fileInfo, bigWarn: s.big,
+      showZoom: s.loaded && s.step < 4, zoomStr: Math.round(s.zoom * 100) + '%',
+      handStyle: 'min-height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:13px;' + (s.hand ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723'),
+      onZoomIn: this.onZoomIn, onZoomOut: this.onZoomOut, onZoomReset: this.onZoomReset, onHand: this.onHand,
+      hasStats: st.length > 0, statItems: st, statTitle: 'Statistiek van ' + this.Q[s.gy][0] + (s.sel ? ' in de selectie' : ''),
+      tabs, fpsPresets, fitItems, qOptions, rowItems,
+      stageRef: this.stageRef, graphRef: this.graphRef, videoRef: this.videoRef, fileRef: this.fileRef,
+      onDown: this.onDown, onMove: this.onMove, onUp: this.onUp, onGDown: this.onGDown, onGMove: this.onGMove, onGUp: this.onGUp,
+      onMeta: this.onMeta, onSeeked: this.onSeeked, onVideoError: this.onVideoError, onFile: this.onFile, onDragOver: this.onDragOver, onDrop: this.onDrop,
+      onPick: this.onPick, onPrev: this.onPrev, onNext: this.onNext, onFrameSlider: this.onFrameSlider, onFps: this.onFps,
+      onRotL: this.onRotL, onRotR: this.onRotR, onSetStart: this.onSetStart, onSetEnd: this.onSetEnd,
+      onToolIjk: this.onToolIjk, onToolOrig: this.onToolOrig, onCalL: this.onCalL, onTheta: this.onTheta, onAxisAlong: this.onAxisAlong,
+      onStrideMin: this.onStrideMin, onStridePlus: this.onStridePlus, onDelPoint: this.onDelPoint, onDelAll: this.onDelAll,
+      onGx: this.onGx, onGy: this.onGy, onClearSel: this.onClearSel, onCopy: this.onCopy, onCsv: this.onCsv,
+      s1: s.step === 1, s2: s.step === 2, s3: s.step === 3, s4: s.step === 4,
+      loaded: s.loaded, videoError: s.err, hasRows: s.step >= 3 && D.f.length > 0, hasFit: !!fi,
+      videoWrapStyle: 'position:relative;flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'none' : 'flex'),
+      graphWrapStyle: 'flex:1;min-height:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'flex' : 'none'),
+      showFrameBar: s.loaded && s.step < 4,
+      maxFrame: s.N - 1, frame: s.frame,
+      frameStr: (s.frame + 1) + ' / ' + s.N, tStr: this.sig((s.frame - (s.t0 == null ? s.startF : s.t0)) / fps, 3) + ' s',
+      message: s.note || msgs[s.step],
+      pickLabel: s.loaded ? 'Andere video kiezen' : 'Video kiezen',
+      rotStr: rot + '°', fpsStr: s.fpsStr,
+      zoomHint: '', rangeStr: 'frame ' + (s.startF + 1) + ' tot ' + (s.endF + 1),
+      calL: s.calL, theta: s.theta, thetaStr: String(s.theta).replace('.', ',').replace('-', '−') + '°',
+      scaleStr: this.scaleK() ? this.sig(this.scaleK() * 1000) + ' mm/px' : '–',
+      ijkBtnLabel: s.tool === 'ijk' ? (s.A ? 'Klik het einde aan…' : 'Klik het begin aan…') : (s.A ? 'Ijkstok opnieuw plaatsen' : 'Plaats ijkstok'),
+      ijkBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'ijk' ? 'border:1px solid #ff9a3c;background:#fff3e6;color:#8a4a10' : 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff'),
+      origBtnLabel: s.tool === 'orig' ? 'Klik de oorsprong aan…' : (s.O ? 'Oorsprong opnieuw plaatsen' : 'Plaats oorsprong'),
+      origBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'orig' ? 'border:1px solid #2f8a4e;background:#e8f5ec;color:#1f5e35' : 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff'),
+      stride: s.stride, countStr: Object.keys(s.pts).length + ' punten',
+      gx: s.gx, gy: s.gy,
+      selLabel: s.sel ? 'Selectie opheffen (alle punten gebruiken)' : 'Geen selectie: alle punten tellen mee',
+      fitText: fi ? (fi.err || fi.text) : '', r2Str: fi && fi.fn ? this.sig(fi.r2, 4) : '–',
+      copyLabel: s.copied ? 'Gekopieerd' : 'Kopieer tabel'
+    };
+  }
+}
+
+</script>
+</body>
+</html>
