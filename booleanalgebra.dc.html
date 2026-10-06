@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%}
+  body{background:#eceae4}
+  button,input{font-family:inherit}
+  a{color:#6f685c;text-decoration:none}
+  a:hover{color:#2a2723}
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script><script src="./boolean-core.js"></script>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:16px 22px 28px">
+<div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="font-size:13px;font-weight:500">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Booleaanse algebra</h1>
+  </div>
+
+  <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Uitdrukking</div>
+    <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. a + !a·b" style="height:42px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:#2a2723">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <sc-for list="{{ keys }}" as="k" hint-placeholder-count="5">
+        <button onClick="{{ k.onClick }}" style="min-width:40px;height:34px;padding:0 10px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;border:1px solid #e0d9ca;background:#fff;color:#3a352c">{{ k.label }}</button>
+      </sc-for>
+      <span style="width:1px;height:22px;background:#e0d9ca;margin:0 4px"></span>
+      <sc-for list="{{ examples }}" as="x" hint-placeholder-count="4">
+        <button onClick="{{ x.onClick }}" style="height:34px;padding:0 12px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;border:1px solid #e0d9ca;background:#f4f1ea;color:#3a352c">{{ x.label }}</button>
+      </sc-for>
+    </div>
+    <div style="font-size:12.5px;color:#8c8576;line-height:1.5">Variabelen a tot z (maximaal 5 verschillende). NOT: <b style="font-family:'IBM Plex Mono',monospace">!</b> v&oacute;&oacute;r of <b style="font-family:'IBM Plex Mono',monospace">'</b> na een term. OR: <b style="font-family:'IBM Plex Mono',monospace">+</b>. AND: <b style="font-family:'IBM Plex Mono',monospace">&middot;</b>, <b style="font-family:'IBM Plex Mono',monospace">*</b> of weglaten (ab).</div>
+    <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:13.5px;color:#b8472f">{{ err }}</div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ ok }}" hint-placeholder-val="{{ false }}">
+    <div style="background:oklch(0.97 0.025 300);border:1px solid oklch(0.86 0.06 300);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f6585;font-weight:600">Vereenvoudigd</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:oklch(0.4 0.13 300)">{{ finEl }}</span>
+      <span style="margin-left:auto;font-size:13px;color:{{ eqColor }};font-weight:500">{{ eqNote }}</span>
+    </div>
+
+    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Stappen</div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:28px minmax(0,1.2fr) minmax(0,1fr);gap:6px 14px;align-items:center;padding:10px 0;border-top:1px solid #efe9dd">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9a927f">{{ s.n }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:19px;color:#2a2723;overflow-x:auto;padding-top:4px">{{ s.el }}</span>
+            <div style="min-width:0">
+              <div style="font-size:13px;font-weight:600;color:oklch(0.45 0.13 300)">{{ s.name }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c;margin-top:3px;padding-top:3px">{{ s.fel }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Waarheidstabel</div>
+      <div style="overflow-x:auto">
+        <div style="display:grid;grid-template-columns:repeat({{ cols }},minmax(44px,max-content));gap:2px;font-family:'IBM Plex Mono',monospace;font-size:14px;width:max-content">
+          <sc-for list="{{ heads }}" as="h" hint-placeholder-count="4">
+            <span style="padding:5px 10px;text-align:center;font-weight:600;color:#6f685c;background:#f4f1ea;border-radius:6px">{{ h.t }}</span>
+          </sc-for>
+          <sc-for list="{{ cells }}" as="c" hint-placeholder-count="8">
+            <span style="padding:5px 10px;text-align:center;color:{{ c.fg }};background:{{ c.bg }};border-radius:6px;font-weight:{{ c.w }}">{{ c.t }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-top:6px">Rekenregels</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start">
+    <sc-for list="{{ cards }}" as="card" hint-placeholder-count="4">
+      <div style="border:1px solid #bdb8ad;border-radius:12px;overflow:hidden;background:#f3f1ec">
+        <div style="background:#505050;color:#fff;font-weight:700;font-size:14px;padding:8px 14px">{{ card.title }}</div>
+        <div style="padding:4px 14px 6px">
+          <sc-for list="{{ card.rows }}" as="row" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.4fr);gap:10px;padding:8px 0;border-top:1px solid #dcd8ce">
+              <span style="font-weight:700;font-size:13.5px;color:#2a2723">{{ row.label }}</span>
+              <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-start">
+                <sc-for list="{{ row.fs }}" as="f" hint-placeholder-count="2">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;padding:2px 6px;border-radius:5px;background:{{ f.bg }};color:#2a2723">{{ f.el }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="font-size:12.5px;color:#8c8576">Gebruikte regels zijn in de kaarten gemarkeerd. Absorptie in de vorm a + a&middot;b = a is afgeleid uit distributiviteit en identiteit.</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { text: 'a·b + a·!b + !a·b' };
+  ACC = 'oklch(0.64 0.13 300)';
+  CARDS = [
+    ['Basisbewerkingen', [
+      ['NOT', [['!1 = 0', ['not1']], ['!0 = 1', ['not0']]]],
+      ['OR', [['0+0 = 0'], ['0+1 = 1'], ['1+0 = 1'], ['1+1 = 1']]],
+      ['AND', [['0\u00b70 = 0'], ['0\u00b71 = 0'], ['1\u00b70 = 0'], ['1\u00b71 = 1']]],
+    ]],
+    ['Fundamentele wetten', [
+      ['Commutativiteit', [['a\u00b7b = b\u00b7a'], ['a+b = b+a']]],
+      ['Associativiteit', [['a\u00b7(b\u00b7c) = (a\u00b7b)\u00b7c', null, true], ['a+(b+c) = (a+b)+c', null, true]]],
+      ['Distributiviteit', [['a\u00b7b+a\u00b7c = a\u00b7(b+c)', ['combo1']], ['(a+b)\u00b7(a+c) = a+b\u00b7c', ['combo2']]]],
+    ]],
+    ['Bijzondere elementen', [
+      ['Nulelement', [['!a\u00b7a = 0', ['nul2']], ['a\u00b70 = 0', ['nul1']]]],
+      ['Eenheidselement', [['!a+a = 1', ['een2']], ['a+1 = 1', ['een1']]]],
+      ['Identiteit', [['a\u00b71 = a', ['id1']], ['a+0 = a', ['id2']]]],
+      ['Herhaling', [['a+a = a', ['her2']], ['a\u00b7a = a', ['her1']]]],
+    ]],
+    ['Afgeleide wetten', [
+      ['De Morgan', [['!(a+b) = !a\u00b7!b', ['dm1']], ['!(a\u00b7b) = !a+!b', ['dm2']]]],
+      ['Dubbele negatie', [['!!a = a', ['dubbel']]]],
+      ['Absorptie', [['a+!a\u00b7b = a+b', ['abs1']], ['!a+a\u00b7b = !a+b', ['abs2']], ['a\u00b7(!a+b) = a\u00b7b', ['abs3']], ['!a\u00b7(a+b) = !a\u00b7b', ['abs4']], ['a+a\u00b7b = a', ['abs5']], ['a\u00b7(a+b) = a', ['abs6']]]],
+      ['AND/OR en NOT', [['NOT keert + en \u00b7 om (De Morgan)', null, true]]],
+    ]],
+  ];
+  ins(s) { return () => this.setState({ text: this.state.text + s }); }
+  renderVals() {
+    const h = React.createElement, B = window.BoolCore, st = this.state;
+    const keys = ['!', '+', '\u00b7', '(', ')'].map(s => ({ label: s, onClick: this.ins(s) }));
+    keys.push({ label: '\u2190', onClick: () => this.setState({ text: this.state.text.slice(0, -1) }) });
+    const examples = ['a + !a·b', 'a·b + a·!b', '!(a+b) + a·b', '(a+b)·(a+c)', 'a·b + !a·c + b·c'].map(s => ({ label: s, onClick: () => this.setState({ text: s }) }));
+    let res = null, err = '';
+    try { res = B.simplify(st.text); } catch (e) { err = e.message; }
+    const used = new Set();
+    let steps = [], heads = [], cells = [], finEl = null, cols = 1, eqNote = '', eqColor = '#2f7d4f';
+    if (res) {
+      res.steps.forEach((s, i) => {
+        if (s.id) used.add(s.id);
+        steps.push({ n: String(i), el: B.view(s.node, h),
+          name: s.id ? B.RULES[s.id][0] : 'Gegeven', fel: s.id ? B.formula(B.RULES[s.id][1], h) : '' });
+      });
+      finEl = B.view(res.fin, h);
+      heads = res.vars.map(v => ({ t: v })).concat([{ t: 'invoer' }, { t: 'resultaat' }]);
+      cols = heads.length;
+      res.rows.forEach(r => {
+        r.bits.forEach(b => cells.push({ t: String(b), fg: '#6f685c', bg: '#fbf9f4', w: '400' }));
+        cells.push({ t: String(r.o), fg: r.o ? '#fff' : '#9a927f', bg: r.o ? this.ACC : '#fbf9f4', w: '600' });
+        cells.push({ t: String(r.f), fg: r.f ? '#fff' : '#9a927f', bg: r.f ? this.ACC : '#fbf9f4', w: '600' });
+      });
+      eqNote = res.ok ? 'Gelijkwaardig aan de invoer (waarheidstabel gecontroleerd)' : 'Waarschuwing: niet gelijkwaardig aan de invoer';
+      eqColor = res.ok ? '#2f7d4f' : '#b8472f';
+    }
+    const cards = this.CARDS.map(([title, rows]) => ({ title, rows: rows.map(([label, fs]) => ({ label,
+      fs: fs.map(([f, ids, raw]) => ({ el: raw ? f : B.formula(f, h), bg: ids && ids.some(i => used.has(i)) ? 'oklch(0.9 0.07 300)' : 'transparent' })) })) }));
+    return { text: st.text, onText: e => this.setState({ text: e.target.value }), border: err ? '#d6492f' : '#d9d1bf',
+      keys, examples, err, ok: !!res, steps, heads, cells, cols, finEl, eqNote, eqColor, cards };
+  }
+}
+</script>
+</body>
+</html>

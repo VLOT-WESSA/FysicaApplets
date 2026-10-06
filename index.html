@@ -133,6 +133,11 @@ class Component extends DCLogic {
       { id: 'luchtkolom', name: 'Staande golf in een kolom', desc: 'Resonantie in een lucht- of snaarkolom: knopen, buiken en de reeks boventonen.', ready: true },
       { id: 'slinger', name: 'De slinger', desc: 'Meet de slingertijd met een chronometer en bepaal g uit T² tegen L.', ready: true },
     ]},
+    { id: 'informatica', name: 'Informatica', color: 'oklch(0.64 0.13 300)', applets: [
+      { id: 'talstelsel', name: 'Talstelsel', desc: 'Reken om tussen decimaal, binair en hexadecimaal; werk met 2-complement en eenvoudige bewerkingen.', ready: true },
+      { id: 'booleanalgebra', name: 'Booleaanse algebra', desc: 'Vereenvoudig logische uitdrukkingen stap voor stap met vermelding van de rekenregels.', ready: true },
+      { id: 'karnaugh', name: 'Karnaughkaarten', desc: 'Vul een K-map in en vind de minimale som- of productvorm met gekleurde groepen.', ready: true },
+    ]},
   ];
 
   state = { topic: 'golven' };
@@ -143,6 +148,9 @@ class Component extends DCLogic {
     staandegolf: 'staandegolf.dc.html',
     weerstanddraad: 'weerstanddraad.dc.html',
     ladingenvelden: 'ladingenvelden.dc.html',
+    talstelsel: 'talstelsel.dc.html',
+    booleanalgebra: 'booleanalgebra.dc.html',
+    karnaugh: 'karnaugh.dc.html',
     potentiaal: 'potentiaal.dc.html',
     stroomkring: 'basisschakeling.dc.html',
     ohm: 'ohm.dc.html',

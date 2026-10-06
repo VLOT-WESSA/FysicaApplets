@@ -85,7 +85,7 @@
           </div>
         </sc-if>
         <sc-if value="{{ noPair }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:13px;color:#9a927f;line-height:1.5;padding:6px 0">Klik op twee ladingen om ze te selecteren. De kracht ertussen verschijnt hier.</div>
+          <div style="font-size:13px;color:#9a927f;line-height:1.5;padding:6px 0">Klik op twee ladingen om ze te selecteren. De kracht ertussen verschijnt hier. Dubbelklik op een lading om ze te verwijderen.</div>
         </sc-if>
       </div>
 
@@ -130,11 +130,14 @@
         <sc-if value="{{ hasCharges }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;flex-direction:column;gap:6px">
             <sc-for list="{{ chargeRows }}" as="row" hint-placeholder-count="2">
-              <button onClick="{{ row.onClick }}" style="display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:9px;cursor:pointer;text-align:left;border:1.5px solid {{ row.border }};background:{{ row.bg }}">
+              <div style="display:flex;align-items:stretch;gap:6px">
+              <button onClick="{{ row.onClick }}" style="flex:1;min-height:34px;display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:9px;cursor:pointer;text-align:left;border:1.5px solid {{ row.border }};background:{{ row.bg }}">
                 <span style="width:22px;height:22px;border-radius:50%;flex:none;background:{{ row.dot }};color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;line-height:1">{{ row.sign }}</span>
                 <span style="font-size:13.5px;color:#3a352c;font-weight:500">{{ row.label }}</span>
                 <span style="margin-left:auto;font-size:11px;font-weight:600;color:{{ row.tagColor }}">{{ row.tag }}</span>
               </button>
+              <button onClick="{{ row.onDelete }}" title="Lading verwijderen" style="flex:none;width:34px;min-height:34px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;font-size:18px;line-height:1" style-hover="background:#f6dcd5;color:#b8472f">&times;</button>
+              </div>
             </sc-for>
           </div>
         </sc-if>
@@ -175,6 +178,7 @@ class Component extends DCLogic {
     this.setupCanvas();
     const c = this.stageRef.current;
     c.addEventListener('pointerdown', this.onDown);
+    c.addEventListener('dblclick', this.onDbl);
     window.addEventListener('pointermove', this.onMove);
     window.addEventListener('pointerup', this.onUp);
     this._rz = () => { this.setupCanvas(); this.draw(); };
@@ -200,6 +204,10 @@ class Component extends DCLogic {
     if (!sel.includes(id)) { sel.push(id); if (sel.length > 2) sel = sel.slice(sel.length - 2); }
     this.setState({ charges: this.state.charges, selected: sel });
   }
+  removeCharge(id) {
+    this.setState({ charges: this.state.charges.filter(c => c.id !== id), selected: this.state.selected.filter(s => s !== id) });
+  }
+  onDbl = (e) => { const c = this.hit(this.toPx(e)); if (c) { this.drag = null; this.removeCharge(c.id); } };
   clearAll = () => { this.nextId = 1; this.setState({ charges: [], selected: [] }); };
 
   toggleSelect(id) {
@@ -586,6 +594,7 @@ class Component extends DCLogic {
         tag: sel ? 'geselecteerd' : '',
         tagColor: '#8c8576',
         onClick: () => this.toggleSelect(c.id),
+        onDelete: () => this.removeCharge(c.id),
       };
     });
     const sf = this.fieldAt(sensor.x, sensor.y);

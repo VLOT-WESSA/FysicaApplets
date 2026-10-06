@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%}
+  body{background:#eceae4}
+  button,input{font-family:inherit}
+  a{color:#6f685c;text-decoration:none}
+  a:hover{color:#2a2723}
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script><script src="./boolean-core.js"></script>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:16px 22px 28px">
+<div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="font-size:13px;font-weight:500">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Karnaughkaarten</h1>
+  </div>
+
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Variabelen</span>
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ nBtns }}" as="b" hint-placeholder-count="3">
+          <button onClick="{{ b.onClick }}" style="min-width:44px;height:34px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Vorm</span>
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ modeBtns }}" as="b" hint-placeholder-count="2">
+          <button onClick="{{ b.onClick }}" style="height:34px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <button onClick="{{ clearAll }}" style="margin-left:auto;height:34px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c">Wissen</button>
+  </div>
+
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
+
+    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px;flex:0 0 auto;max-width:100%;overflow-x:auto">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Klik op een cel: 0, 1 of X (don't care)</div>
+      <div style="display:grid;grid-template-columns:60px repeat({{ C }},78px);width:max-content">
+        <sc-for list="{{ items }}" as="it" hint-placeholder-count="12">
+          <sc-if value="{{ it.isLabel }}" hint-placeholder-val="{{ true }}">
+            <div style="height:{{ it.h }}px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#6f685c;white-space:nowrap">{{ it.label }}</div>
+          </sc-if>
+          <sc-if value="{{ it.isCell }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative;width:78px;height:78px">
+              <button onClick="{{ it.onClick }}" style="position:absolute;inset:0;width:100%;height:100%;border:1px solid #d9d1bf;background:{{ it.bg }};cursor:pointer;padding:0;font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:{{ it.fg }}">{{ it.val }}<span style="position:absolute;top:4px;left:6px;font-size:10.5px;font-weight:400;color:{{ it.mfg }}">{{ it.idx }}</span></button>
+              <sc-for list="{{ it.ov }}" as="o" hint-placeholder-count="1">
+                <div style="position:absolute;pointer-events:none;top:{{ o.t }}px;right:{{ o.r }}px;bottom:{{ o.b }}px;left:{{ o.l }}px;border-style:solid;border-color:{{ o.col }};border-width:{{ o.bt }}px {{ o.br }}px {{ o.bb }}px {{ o.bl }}px;border-radius:{{ o.rad }}"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+      <div style="font-size:12px;color:#8c8576;line-height:1.5">De buitenste rijen en kolommen sluiten op elkaar aan: groepen mogen over de rand heen lopen.</div>
+    </div>
+
+    <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <div style="background:oklch(0.97 0.025 300);border:1px solid oklch(0.86 0.06 300);border-radius:14px;padding:14px 18px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f6585;font-weight:600">{{ resTitle }}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:oklch(0.4 0.13 300);margin-top:8px;overflow-x:auto;padding-top:4px">f = {{ resEl }}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;margin-top:8px;line-height:1.6">{{ mintermStr }}</div>
+      </div>
+
+      <sc-if value="{{ hasGroups }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Groepen</div>
+          <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #efe9dd">
+              <span style="width:16px;height:16px;border-radius:5px;flex:none;border:2.5px solid {{ g.col }}"></span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:17px;color:#2a2723;padding-top:3px">{{ g.el }}</span>
+              <span style="margin-left:auto;font-size:12.5px;color:#8c8576;white-space:nowrap">{{ g.size }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Kaart invullen vanuit een uitdrukking</div>
+        <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. a·b + !a·c" style="height:38px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#2a2723">
+        <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;color:#b8472f">{{ err }}</div>
+        </sc-if>
+        <div style="font-size:12px;color:#8c8576;line-height:1.5">NOT: ! of '. OR: +. AND: &middot;, * of weglaten.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { n: 4, vals: [0,1,0,0, 0,1,1,1, 1,1,0,0, 1,1,0,0], mode: 'sop', text: '', err: '' };
+  ACC = 'oklch(0.64 0.13 300)';
+  HUES = [20, 150, 255, 75, 330, 195];
+  gray(k) { return k === 1 ? [0, 1] : [0, 1, 3, 2]; }
+  setN = (n) => () => this.setState({ n, vals: new Array(1 << n).fill(0), text: '', err: '' });
+  cycle = (i) => () => { const v = this.state.vals.slice(); v[i] = (v[i] + 1) % 3; this.setState({ vals: v, text: '', err: '' }); };
+  clearAll = () => this.setState({ vals: new Array(1 << this.state.n).fill(0), text: '', err: '' });
+  onText = (e) => {
+    const text = e.target.value, B = window.BoolCore, n = this.state.n;
+    const names = ['a', 'b', 'c', 'd'].slice(0, n);
+    if (!text.trim()) { this.setState({ text, err: '' }); return; }
+    try {
+      const node = B.parse(text), vs = B.vars(node);
+      const bad = vs.filter(v => !names.includes(v));
+      if (bad.length) { this.setState({ text, err: 'Variabele ' + bad.join(', ') + ' hoort niet bij deze kaart (' + names.join(', ') + ').' }); return; }
+      const vals = [];
+      for (let i = 0; i < (1 << n); i++) vals.push(B.evalNode(node, B.envOf(names, i)));
+      this.setState({ text, err: '', vals });
+    } catch (er) { this.setState({ text, err: er.message }); }
+  };
+  btn(label, on, onClick) { return { label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? this.ACC : '#e0d9ca' }; }
+
+  renderVals() {
+    const B = window.BoolCore, h = React.createElement, { n, vals, mode } = this.state;
+    const names = ['a', 'b', 'c', 'd'].slice(0, n);
+    const pos = mode === 'pos';
+    const rb = n >> 1, cb = n - rb, Rg = this.gray(rb), Cg = this.gray(cb), R = Rg.length, C = Cg.length;
+    const idxAt = (r, c) => (Rg[r] << cb) | Cg[c];
+    const target = pos ? 0 : 1;
+    const tgt = [], dcs = [];
+    vals.forEach((v, i) => { if (v === 2) dcs.push(i); else if (v === target) tgt.push(i); });
+    let cover = [], node;
+    if (tgt.length === 0) node = B.C(pos ? 1 : 0);
+    else {
+      cover = B.qm(n, tgt, dcs).cover;
+      node = B.coverNode(cover, n, names, pos);
+    }
+    const colOf = (gi) => 'oklch(0.58 0.15 ' + this.HUES[gi % 6] + ')';
+    // per groep: dekking en wrap-gedrag
+    const gdata = cover.map((imp, gi) => {
+      const inG = []; const rs = new Set(), cs = new Set();
+      for (let r = 0; r < R; r++) { inG.push([]); for (let c = 0; c < C; c++) { const x = B.covers(imp, idxAt(r, c)); inG[r].push(x); if (x) { rs.add(r); cs.add(c); } } }
+      return { imp, inG, wrapY: R > 2 && rs.size < R, wrapX: C > 2 && cs.size < C, col: colOf(gi), gi };
+    });
+    const at = (g, r, c) => {
+      if (r < 0 || r >= R) { if (!g.wrapY) return false; r = (r + R) % R; }
+      if (c < 0 || c >= C) { if (!g.wrapX) return false; c = (c + C) % C; }
+      return g.inG[r][c];
+    };
+    const items = [];
+    items.push({ isLabel: true, isCell: false, h: 34, label: names.slice(0, rb).join('') + ' \\ ' + names.slice(rb).join('') });
+    Cg.forEach(code => items.push({ isLabel: true, isCell: false, h: 34, label: code.toString(2).padStart(cb, '0') }));
+    for (let r = 0; r < R; r++) {
+      items.push({ isLabel: true, isCell: false, h: 78, label: Rg[r].toString(2).padStart(rb, '0') });
+      for (let c = 0; c < C; c++) {
+        const i = idxAt(r, c), v = vals[i];
+        const ov = [];
+        gdata.forEach(g => {
+          if (!g.inG[r][c]) return;
+          const t = !at(g, r - 1, c), b = !at(g, r + 1, c), l = !at(g, r, c - 1), rt = !at(g, r, c + 1);
+          const off = 4 + (g.gi % 3) * 4;
+          ov.push({ t: t ? off : 0, b: b ? off : 0, l: l ? off : 0, r: rt ? off : 0, col: g.col,
+            bt: t ? 2.5 : 0, bb: b ? 2.5 : 0, bl: l ? 2.5 : 0, br: rt ? 2.5 : 0,
+            rad: [t && l, t && rt, b && rt, b && l].map(x => x ? '12px' : '0').join(' ') });
+        });
+        items.push({ isLabel: false, isCell: true, idx: String(i), val: v === 2 ? 'X' : String(v), onClick: this.cycle(i), ov,
+          bg: v === 1 ? 'oklch(0.94 0.04 300)' : v === 2 ? '#f1ede2' : '#fffdf9', fg: v === 1 ? 'oklch(0.4 0.13 300)' : v === 2 ? '#8c8576' : '#b8b2a3', mfg: '#a39b88' });
+      }
+    }
+    const groups = gdata.map(g => ({ col: g.col, el: B.view(B.impNode(g.imp, n, names, pos), h),
+      size: (g.inG.flat().filter(Boolean).length) + (g.inG.flat().filter(Boolean).length === 1 ? ' cel' : ' cellen') }));
+    const m1 = vals.map((v, i) => v === 1 ? i : -1).filter(i => i >= 0), md = dcs;
+    const m0 = vals.map((v, i) => v === 0 ? i : -1).filter(i => i >= 0);
+    const mintermStr = (pos ? '\u03a0M(' + m0.join(', ') + ')' : '\u03a3m(' + m1.join(', ') + ')') + (md.length ? '  +  d(' + md.join(', ') + ')' : '');
+    return {
+      nBtns: [2, 3, 4].map(k => this.btn(String(k), n === k, this.setN(k))),
+      modeBtns: [['sop', 'Somvorm (1\u2019en)'], ['pos', 'Productvorm (0\u2019en)']].map(([k, l]) => this.btn(l, mode === k, () => this.setState({ mode: k }))),
+      clearAll: this.clearAll, C, items, groups, hasGroups: groups.length > 0,
+      resTitle: pos ? 'Minimale productvorm' : 'Minimale somvorm', resEl: B.view(node, h), mintermStr,
+      text: this.state.text, onText: this.onText, err: this.state.err, border: this.state.err ? '#d6492f' : '#d9d1bf',
+    };
+  }
+}
+</script>
+</body>
+</html>

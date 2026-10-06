@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%}
+  body{background:#eceae4}
+  button,input{font-family:inherit}
+  a{color:#6f685c;text-decoration:none}
+  a:hover{color:#2a2723}
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:16px 22px 28px">
+<div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="font-size:13px;font-weight:500">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Talstelsel</h1>
+  </div>
+
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Aantal bits</span>
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ bitBtns }}" as="b" hint-placeholder-count="3">
+          <button onClick="{{ b.onClick }}" style="min-width:48px;height:34px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:34px">
+      <input type="checkbox" checked="{{ signed }}" onChange="{{ toggleSigned }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 300);cursor:pointer">Negatieve getallen (2-complement)
+    </label>
+    <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c">{{ rangeStr }}</div>
+  </div>
+
+  <div style="display:flex;gap:6px">
+    <sc-for list="{{ tabBtns }}" as="t" hint-placeholder-count="2">
+      <button onClick="{{ t.onClick }}" style="height:38px;padding:0 18px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ isConv }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Invoer</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;gap:4px">
+          <sc-for list="{{ cBaseBtns }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <input type="text" value="{{ cText }}" onInput="{{ onConvInput }}" spellcheck="false" autocomplete="off" style="flex:1;min-width:200px;height:38px;border-radius:9px;border:1.5px solid {{ cBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+      </div>
+      <sc-if value="{{ cErr }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:13px;color:#b8472f">{{ cErr }}</div>
+      </sc-if>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-top:4px">Bits (klik om te wisselen)</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <sc-for list="{{ nibbles }}" as="nb" hint-placeholder-count="2">
+          <div style="display:flex;gap:4px">
+            <sc-for list="{{ nb.cells }}" as="c" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:{{ cellW }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ c.lc }};white-space:nowrap">{{ c.place }}</span>
+                <button onClick="{{ c.onClick }}" style="width:100%;height:40px;border-radius:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.bit }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c;line-height:1.7;border-top:1px solid #efe9dd;padding-top:10px;overflow-x:auto">
+        <div style="white-space:nowrap">{{ sumStr }}</div>
+        <sc-if value="{{ negSteps }}" hint-placeholder-val="{{ false }}">
+          <div style="white-space:nowrap">Tegengestelde: {{ negLine1 }}</div>
+          <div style="white-space:nowrap">inverteren: {{ negLine2 }}</div>
+          <div style="white-space:nowrap">plus 1: {{ negLine3 }}</div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+      <sc-for list="{{ convOut }}" as="o" hint-placeholder-count="3">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:0">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">{{ o.title }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:oklch(0.45 0.13 300);margin-top:8px;word-break:break-all">{{ o.value }}</div>
+          <div style="font-size:12.5px;color:#8c8576;margin-top:5px;min-height:18px">{{ o.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isCalc }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;gap:4px">
+          <sc-for list="{{ calcBaseBtns }}" as="b" hint-placeholder-count="2">
+            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:4px">
+          <sc-for list="{{ opBtns }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.onClick }}" style="width:44px;height:36px;border-radius:9px;cursor:pointer;font-size:19px;font-weight:600;line-height:1;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Getal A</div>
+          <input type="text" value="{{ aText }}" onInput="{{ onA }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:9px;border:1.5px solid {{ aBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:{{ aNoteColor }};min-height:18px">{{ aNote }}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Getal B</div>
+          <input type="text" value="{{ bText }}" onInput="{{ onB }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:9px;border:1.5px solid {{ bBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:{{ bNoteColor }};min-height:18px">{{ bNote }}</div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ hasRes }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ overflow }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fbeae5;border:1px solid #efc2b5;border-radius:12px;padding:11px 14px;font-size:14px;color:#8f3320;line-height:1.5">{{ ovfMsg }}</div>
+      </sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+        <sc-for list="{{ calcOut }}" as="o" hint-placeholder-count="3">
+          <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:0">
+            <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">{{ o.title }}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:{{ o.color }};margin-top:8px;word-break:break-all">{{ o.value }}</div>
+            <div style="font-size:12.5px;color:#8c8576;margin-top:5px;min-height:18px">{{ o.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Uitwerking</div>
+        <div style="overflow-x:auto">
+          <div style="display:grid;grid-template-columns:max-content max-content;gap:2px 16px;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.7;width:max-content">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+              <span style="color:#8c8576;font-size:12.5px;white-space:nowrap;align-self:center">{{ s.label }}</span>
+              <span style="white-space:pre;color:{{ s.color }};font-weight:{{ s.weight }};border-top:{{ s.rule }}">{{ s.text }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 'conv', n: 8, signed: true, cBase: 'dec', cText: '5', u: 5, cErr: '',
+    calcBase: 'bin', op: '+', aText: '1011', bText: '110', aErr: '', bErr: '' };
+
+  ACC = 'oklch(0.64 0.13 300)';
+  M(n) { return Math.pow(2, n); }
+  lim(n, s) { const M = this.M(n); return s ? [-M / 2, M / 2 - 1] : [0, M - 1]; }
+  sv(u, n, s) { return s && u >= this.M(n) / 2 ? u - this.M(n) : u; }
+  wrap(v, n) { const M = this.M(n); return ((v % M) + M) % M; }
+  fi(v) { return v < 0 ? '\u2212' + (-v) : String(v); }
+  bin(u, n, grp) { const s = u.toString(2).padStart(n, '0'); return grp ? s.replace(/(.{4})(?=.)/g, '$1 ') : s; }
+  hex(u) { return u.toString(16).toUpperCase(); }
+  hexOf(u, n, s) { return '0x' + this.hex(u).padStart(Math.ceil(n / 4), '0'); }
+
+  parse(text, base, n, s) {
+    const t = String(text).replace(/[\s_]/g, '').replace(/\u2212/g, '-');
+    if (!t) return { err: 'Voer een getal in.' };
+    const [lo, hi] = this.lim(n, s), M = this.M(n);
+    const range = 'Past niet in ' + n + ' bits (' + this.fi(lo) + ' tot ' + this.fi(hi) + ').';
+    if (base === 'dec') {
+      if (!/^-?\d+$/.test(t)) return { err: 'Alleen de cijfers 0 tot 9, eventueel met een min.' };
+      const v = parseInt(t, 10);
+      if (v < lo || v > hi) return { err: range };
+      return { u: v < 0 ? v + M : v };
+    }
+    if (base === 'bin') {
+      const neg = t[0] === '-', b = neg ? t.slice(1) : t;
+      if (!/^[01]+$/.test(b)) return { err: 'Alleen de cijfers 0 en 1.' };
+      if (!neg) { if (b.length > n) return { err: 'Meer dan ' + n + ' bits.' }; return { u: parseInt(b, 2) }; }
+      const v = -parseInt(b, 2);
+      if (v < lo || v > hi) return { err: range };
+      return { u: v < 0 ? v + M : v };
+    }
+    const neg = t[0] === '-', h = (neg ? t.slice(1) : t).replace(/^0x/i, '');
+    if (!/^[0-9a-f]+$/i.test(h)) return { err: 'Alleen 0 tot 9 en A tot F.' };
+    const hv = parseInt(h, 16);
+    if (neg) {
+      const v = -hv;
+      if (v < lo || v > hi) return { err: range };
+      return { u: v < 0 ? v + M : v };
+    }
+    if (hv >= M) return { err: 'Meer dan ' + n + ' bits (maximum ' + this.hex(M - 1) + ').' };
+    return { u: hv };
+  }
+  fmtText(u, base, n, s) {
+    if (base === 'dec') return String(this.sv(u, n, s));
+    if (base === 'bin') return this.bin(u, n, false);
+    return (s && u >= this.M(n) / 2) ? this.hex(u).padStart(Math.ceil(n / 4), '0') : this.hex(u);
+  }
+
+  setN = (n) => () => {
+    const u = this.state.u % this.M(n);
+    this.setState({ n, u, cErr: '', cText: this.fmtText(u, this.state.cBase, n, this.state.signed), aErr: '', bErr: '', aText: this.fixOp(this.state.aText, n), bText: this.fixOp(this.state.bText, n) });
+  };
+  fixOp(t, n) { return t; }
+  toggleSigned = () => {
+    const s = !this.state.signed, n = this.state.n;
+    this.setState({ signed: s, cErr: '', cText: this.fmtText(this.state.u, this.state.cBase, n, s) });
+  };
+  setCBase = (b) => () => this.setState({ cBase: b, cErr: '', cText: this.fmtText(this.state.u, b, this.state.n, this.state.signed) });
+  onConvInput = (e) => {
+    const text = e.target.value, { cBase, n, signed } = this.state;
+    const r = this.parse(text, cBase, n, signed);
+    if (r.err) this.setState({ cText: text, cErr: r.err });
+    else this.setState({ cText: text, cErr: '', u: r.u });
+  };
+  toggleBit = (i) => () => {
+    const { u, n, cBase, signed } = this.state;
+    const nu = (Math.floor(u / Math.pow(2, i)) % 2 === 1) ? u - Math.pow(2, i) : u + Math.pow(2, i);
+    this.setState({ u: nu, cErr: '', cText: this.fmtText(nu, cBase, n, signed) });
+  };
+  setCalcBase = (b) => () => this.setState({ calcBase: b, op: (b === 'hex' && this.state.op === '\u00d7') ? '+' : this.state.op, aText: '', bText: '' });
+  setOp = (o) => () => this.setState({ op: o });
+  onA = (e) => this.setState({ aText: e.target.value });
+  onB = (e) => this.setState({ bText: e.target.value });
+
+  btn(label, on, onClick, extra) {
+    return Object.assign({ label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? this.ACC : '#e0d9ca' }, extra || {});
+  }
+
+  addRows(ua, ub, n) {
+    let c = 0, carry = '', sum = '', cin = [];
+    for (let i = 0; i < n; i++) {
+      const a = Math.floor(ua / Math.pow(2, i)) % 2, b = Math.floor(ub / Math.pow(2, i)) % 2;
+      cin[i] = c; const t = a + b + c; sum = (t % 2) + sum; c = t > 1 ? 1 : 0;
+    }
+    for (let i = n - 1; i >= 0; i--) carry += cin[i] ? '1' : '\u00b7';
+    return { carry, sum, cout: c };
+  }
+
+  renderVals() {
+    const st = this.state, { n, signed, tab, u } = st;
+    const [lo, hi] = this.lim(n, signed), M = this.M(n);
+    const rangeStr = signed ? this.fi(lo) + ' \u2264 getal \u2264 ' + hi : '0 \u2264 getal \u2264 ' + hi;
+    const bitBtns = [4, 8, 16].map(k => this.btn(String(k), n === k, this.setN(k)));
+    const tabBtns = [['conv', 'Omzetter'], ['calc', 'Rekenen']].map(([k, l]) => ({ label: l, onClick: () => this.setState({ tab: k }),
+      bg: tab === k ? '#2a2723' : '#fffdf9', fg: tab === k ? '#fff' : '#6f685c', border: tab === k ? '#2a2723' : '#e7e1d5' }));
+
+    // ---- Omzetter
+    const v = this.sv(u, n, signed), neg = signed && v < 0;
+    const cBaseBtns = [['dec', 'Decimaal'], ['bin', 'Binair'], ['hex', 'Hexadecimaal']].map(([k, l]) => this.btn(l, st.cBase === k, this.setCBase(k)));
+    const cells = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const bit = Math.floor(u / Math.pow(2, i)) % 2;
+      const w = (signed && i === n - 1) ? '\u2212' + Math.pow(2, i) : String(Math.pow(2, i));
+      cells.push({ place: w, bit: String(bit), onClick: this.toggleBit(i),
+        lc: (signed && i === n - 1) ? '#b8472f' : '#8c8576',
+        bg: bit ? this.ACC : '#fff', fg: bit ? '#fff' : '#9a927f', border: bit ? this.ACC : '#e0d9ca' });
+    }
+    const nibbles = [];
+    for (let k = 0; k < cells.length; k += 4) nibbles.push({ cells: cells.slice(k, k + 4) });
+    const cellW = n === 16 ? '46px' : '54px';
+    const parts = [];
+    for (let i = n - 1; i >= 0; i--) if (Math.floor(u / Math.pow(2, i)) % 2) parts.push((signed && i === n - 1 ? '\u2212' : '') + Math.pow(2, i));
+    const sumStr = (parts.length ? parts.join(' + ').replace(/\+ \u2212/g, '\u2212 ') : '0') + ' = ' + this.fi(v);
+    let negLine1 = '', negLine2 = '', negLine3 = '';
+    if (neg) {
+      const ab = -v;
+      negLine1 = this.fi(v) + ' \u2192 +' + ab + ' = ' + this.bin(ab, n, true);
+      negLine2 = this.bin(M - 1 - ab, n, true);
+      negLine3 = this.bin(u, n, true) + '  (= ' + this.fi(v) + ')';
+    }
+    const hx = this.hexOf(u, n, signed);
+    const convOut = [
+      { title: 'Decimaal', value: this.fi(v), note: neg ? 'zonder teken gelezen: ' + u : (signed ? 'met teken' : 'zonder teken') },
+      { title: 'Binair', value: this.bin(u, n, true), note: n + ' bits' + (signed ? ', 2-complement' : '') },
+      { title: 'Hexadecimaal', value: hx, note: neg ? '2-complement van ' + this.fi(v) + ' (ook in te voeren als \u2212' + this.hex(-v) + ')' : '' },
+    ];
+
+    // ---- Rekenen
+    const cb = st.calcBase;
+    const calcBaseBtns = [['bin', 'Binair'], ['hex', 'Hexadecimaal']].map(([k, l]) => this.btn(l, cb === k, this.setCalcBase(k)));
+    const ops = cb === 'bin' ? ['+', '\u2212', '\u00d7'] : ['+', '\u2212'];
+    const opBtns = ops.map(o => this.btn(o, st.op === o, this.setOp(o)));
+    const pa = this.parse(st.aText, cb, n, signed), pb = this.parse(st.bText, cb, n, signed);
+    const note = (p, t) => p.err ? (t.trim() ? p.err : '') : '= ' + this.fi(this.sv(p.u, n, signed)) + (cb === 'bin' ? '   (' + this.bin(p.u, n, true) + ')' : '   (' + this.bin(p.u, n, true) + ')');
+    let hasRes = false, overflow = false, ovfMsg = '', calcOut = [], steps = [];
+    if (!pa.err && !pb.err) {
+      hasRes = true;
+      const a = this.sv(pa.u, n, signed), b = this.sv(pb.u, n, signed), op = st.op;
+      const r = op === '+' ? a + b : op === '\u2212' ? a - b : a * b;
+      overflow = r < lo || r > hi;
+      const ru = this.wrap(r, n), rv = this.sv(ru, n, signed), sg = signed ? ' met teken' : '';
+      if (overflow) {
+        ovfMsg = (!signed && r < 0 ? 'Het resultaat ' + this.fi(r) + ' is negatief en kan zonder teken niet voorgesteld worden. ' : 'Overflow: ' + this.fi(r) + ' past niet in ' + n + ' bits' + sg + ' (' + this.fi(lo) + ' tot ' + hi + '). ')
+          + 'De ' + n + ' bits bevatten ' + this.fi(rv) + '.';
+      }
+      const col = overflow ? '#b8472f' : 'oklch(0.45 0.13 300)';
+      const rh = this.hexOf(ru, n, signed);
+      calcOut = [
+        { title: 'Decimaal', value: this.fi(rv), note: overflow ? 'afgekapt; werkelijk ' + this.fi(r) : '', color: col },
+        { title: 'Binair', value: this.bin(ru, n, true), note: n + ' bits', color: col },
+        { title: 'Hexadecimaal', value: rh, note: (signed && rv < 0) ? '2-complement van ' + this.fi(rv) : '', color: col },
+      ];
+      const S = (label, text, o) => steps.push(Object.assign({ label, text, color: '#3a352c', weight: '400', rule: 'none' }, o || {}));
+      const pad = (s, w) => s.padStart(w, ' ');
+      if (cb === 'bin') {
+        const sA = this.bin(pa.u, n, false), sB = this.bin(pb.u, n, false);
+        if (op === '+' || op === '\u2212') {
+          let ub = pb.u;
+          S('A', sA + '   = ' + this.fi(a)); S('B', sB + '   = ' + this.fi(b));
+          if (op === '\u2212') {
+            const inv = this.bin(M - 1 - pb.u, n, false); ub = this.wrap(-pb.u, n);
+            S('B inverteren', inv, { color: '#6f685c' });
+            S('+ 1 = \u2212B', this.bin(ub, n, false) + '   (2-complement van B)');
+            S('A \u2212 B', 'A + (\u2212B)', { color: '#8c8576' });
+          }
+          const ar = this.addRows(pa.u, ub, n);
+          S('overdracht', ar.carry, { color: 'oklch(0.55 0.13 300)' });
+          S('A', sA); S(op === '+' ? '+ B' : '+ (\u2212B)', this.bin(ub, n, false));
+          S('som', ar.sum + (overflow ? '' : '') , { weight: '600', rule: '1.5px solid #cfc7b6' });
+          S('uit MSB', ar.cout ? 'overgedragen 1 valt weg' + (signed ? '' : (op === '+' ? ' (overflow)' : ' (geen leenbit)')) : 'geen overdracht', { color: '#8c8576' });
+        } else {
+          const ma = Math.abs(a), mb = Math.abs(b), prod = ma * mb;
+          const L = Math.max(prod.toString(2).length, ma.toString(2).length + 1, 1);
+          const sa = ma.toString(2), sb = mb.toString(2);
+          S('A', sA + '   = ' + this.fi(a)); S('B', sB + '   = ' + this.fi(b));
+          if (signed && (a < 0 || b < 0)) S('absolute waarden', sa + ' \u00d7 ' + sb + '   (teken van het product wordt achteraf bepaald)', { color: '#6f685c' });
+          let any = false;
+          for (let i = 0; i < sb.length; i++) {
+            if (sb[sb.length - 1 - i] === '1') { any = true; S(i === 0 ? 'deelproducten' : '', pad(sa + '0'.repeat(i), L) + '   (\u00d7 2^' + i + ')'); }
+          }
+          if (!any) S('deelproducten', '0');
+          S('som', pad(prod.toString(2), L) + '   = ' + prod, { weight: '600', rule: '1.5px solid #cfc7b6' });
+          if (signed && r < 0) S('teken negatief', 'tweecomplement van ' + this.bin(this.wrap(prod, n), n, false) + ' = ' + this.bin(ru, n, false));
+        }
+      } else {
+        const hA = this.hexOf(pa.u, n, signed), hB = this.hexOf(pb.u, n, signed);
+        S('A', hA + ' = ' + this.fi(a)); S('B', hB + ' = ' + this.fi(b));
+        S(op === '+' ? 'A + B' : 'A \u2212 B', this.fi(a) + ' ' + op + ' ' + this.fi(b) + ' = ' + this.fi(r), { weight: '600' });
+        S('hexadecimaal', r < 0 ? '\u2212' + '0x' + this.hex(-r) : '0x' + this.hex(r));
+        S('in ' + n + ' bits', rh + (overflow ? '  (afgekapt)' : ''), overflow ? { color: '#b8472f' } : {});
+      }
+    }
+    return {
+      bitBtns, tabBtns, signed, toggleSigned: this.toggleSigned, rangeStr,
+      isConv: tab === 'conv', isCalc: tab === 'calc',
+      cBaseBtns, cText: st.cText, onConvInput: this.onConvInput, cErr: st.cErr, cBorder: st.cErr ? '#d6492f' : '#d9d1bf',
+      nibbles, cellW, sumStr, negSteps: neg, negLine1, negLine2, negLine3, convOut,
+      calcBaseBtns, opBtns, aText: st.aText, bText: st.bText, onA: this.onA, onB: this.onB,
+      aBorder: pa.err && st.aText.trim() ? '#d6492f' : '#d9d1bf', bBorder: pb.err && st.bText.trim() ? '#d6492f' : '#d9d1bf',
+      aNote: note(pa, st.aText), bNote: note(pb, st.bText),
+      aNoteColor: pa.err ? '#b8472f' : '#6f685c', bNoteColor: pb.err ? '#b8472f' : '#6f685c',
+      hasRes, overflow, ovfMsg, calcOut, steps,
+    };
+  }
+}
+</script>
+</body>
+</html>
