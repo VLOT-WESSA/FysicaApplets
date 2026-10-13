@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit;white-space:nowrap}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  textarea:focus,input:focus{outline:none}
+  .md{font-size:15px;line-height:1.6;color:#2a2723}
+  .md>*:first-child{margin-top:0}.md>*:last-child{margin-bottom:0}
+  .md h1{font-size:24px;margin:.6em 0 .4em}.md h2{font-size:20px;margin:.8em 0 .4em}.md h3{font-size:17px;margin:.8em 0 .3em}.md h4{font-size:15px;margin:.8em 0 .3em}
+  .md p{margin:.6em 0}.md ul,.md ol{margin:.5em 0;padding-left:1.5em}
+  .md code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#f1ede3;padding:1px 5px;border-radius:4px}
+  .md pre{background:#f6f2e9;border:1px solid #e7e1d5;border-radius:8px;padding:10px 12px;overflow:auto;margin:.6em 0}
+  .md pre code{background:none;padding:0}
+  .md blockquote{margin:.6em 0;padding:2px 14px;background:#f6f2e9;border-radius:8px;color:#4a453d}
+  .md hr{border:0;border-top:1px solid #e7e1d5;margin:1em 0}
+  .md a{color:oklch(0.5 0.13 300)}
+  .md .alert{padding:12px 16px;margin:.6em 0;border:1px solid transparent;border-radius:10px}
+  .md .alert>*:first-child{margin-top:0}.md .alert>*:last-child{margin-bottom:0}
+  .md .alert-info,.md .alert-success{background:#e6f0f7;border-color:#c9dde9;color:#1f4b63}
+  .md .alert-success{background:#e8f3e8;border-color:#cde3cd;color:#2c5a2c}
+  .md .alert-warning{background:#f9f1de;border-color:#ecdcb2;color:#6b531d}
+  .md .alert-danger{background:#f8e6e4;border-color:#ebc6c2;color:#7d2c27}
+  .md font{font-size:inherit}
+  .out table{border-collapse:collapse;font-size:13px;font-family:'IBM Plex Mono',monospace}
+  .out th,.out td{border:1px solid #e7e1d5;padding:3px 8px;text-align:right}
+  .out th{background:#f6f2e9}
+  .out img{max-width:100%;height:auto;display:block;background:#fff}
+  @media print{
+    @page{margin:14mm}
+    html,body{height:auto !important;background:#fff !important}
+    .applet-root{height:auto !important;overflow:visible !important;padding:0 !important;background:#fff !important;display:block !important}
+    .nb-scroll{overflow:visible !important}
+    .np{display:none !important}
+    .nb-scroll *{box-shadow:none !important}
+    .nb-scroll>div>div,.out img{break-inside:avoid}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .nb-scroll{overflow:visible !important}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a class="np" href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Python-notebook</h1>
+    <div class="np" style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#4a453d">
+      <span style="{{ dotStyle }}"></span>
+      <span style="font-family:'IBM Plex Mono',monospace">{{ statusText }}</span>
+    </div>
+  </div>
+  <input ref="{{ dataRef }}" type="file" multiple onChange="{{ onData }}" style="display:none">
+  <input ref="{{ fileRef }}" type="file" accept=".ipynb,application/json" onChange="{{ onFile }}" style="display:none">
+  <sc-if value="{{ hasNb }}" hint-placeholder-val="{{ false }}">
+    <div class="np" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:none;margin-bottom:12px;padding:8px 10px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:12px">
+      <button onClick="{{ goStart }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Start</button>
+      <input value="{{ nbName }}" onInput="{{ onName }}" spellcheck="false" style="width:210px;min-height:34px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c">.ipynb</span>
+      <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid oklch(0.5 0.13 300);border-radius:8px;background:oklch(0.5 0.13 300);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
+      <div style="width:1px;height:24px;background:#e7e1d5;margin:0 4px"></div>
+      <button onClick="{{ pickData }}" title="Voeg een .csv-, .txt- of .json-bestand toe voor je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestand toevoegen</button>
+      <button onClick="{{ runAll }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitvoeren</button>
+      <button onClick="{{ restart }}" title="Wist alle variabelen en de uitvoernummers" style="min-height:34px;padding:0 12px;border:1px solid oklch(0.5 0.13 28);border-radius:8px;background:#fff;color:oklch(0.45 0.13 28);cursor:pointer;font-size:13px;font-weight:600">Kernel herstarten</button>
+      <button onClick="{{ restartRun }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Herstarten en alles uitvoeren</button>
+      <button onClick="{{ clearOut }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Uitvoer wissen</button>
+      <button onClick="{{ exportPdf }}" title="Opent het afdrukvenster: kies daar ‘Opslaan als pdf’" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Exporteer als pdf</button>
+      <div style="margin-left:auto;display:flex;gap:6px 14px;flex-wrap:wrap;justify-content:flex-end;font-size:13px;color:#4a453d">
+        <span style="white-space:nowrap">Ctrl+Enter: uitvoeren · Shift+Enter: uitvoeren en volgende cel</span>
+        <span style="white-space:nowrap;color:#6f685c">{{ saveInfo }}</span>
+      </div>
+    </div>
+  </sc-if>
+  <div class="nb-scroll" onDragOver="{{ onDragOver }}" onDrop="{{ onDrop }}" style="flex:1;min-height:0;overflow:auto">
+    <sc-if value="{{ showStart }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-bottom:20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+          <button onClick="{{ newNb }}" style="text-align:left;padding:18px 20px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;cursor:pointer;font-family:inherit;color:#2a2723">
+            <div style="font-size:16px;font-weight:600;margin-bottom:6px">Lege notebook</div>
+            <div style="font-size:14px;color:#4a453d;line-height:1.5">Begin met één lege codecel.</div>
+          </button>
+          <button onClick="{{ openFile }}" style="{{ dropStyle }}">
+            <div style="font-size:16px;font-weight:600;margin-bottom:6px">Bestand openen</div>
+            <div style="font-size:14px;color:#4a453d;line-height:1.5">Kies een .ipynb-bestand of sleep het hierheen.</div>
+          </button>
+        </div>
+        <div>
+          <h2 style="font-size:16px;font-weight:600;margin:0 0 10px">Opgaven</h2>
+          <sc-if value="{{ opgLoading }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:14px;color:#4a453d">Opgaven worden opgehaald…</div>
+          </sc-if>
+          <sc-if value="{{ opgMsg }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:14px;color:#4a453d;line-height:1.5;max-width:640px">{{ opgMsgText }}</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <sc-for list="{{ groepen }}" as="g" hint-placeholder-count="0">
+              <div>
+                <h3 style="font-size:14px;font-weight:600;margin:0 0 8px;color:oklch(0.5 0.13 300)">{{ g.titel }}</h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+                  <sc-for list="{{ g.items }}" as="o" hint-placeholder-count="0">
+                    <button onClick="{{ o.onClick }}" style="text-align:left;padding:14px 16px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:12px;cursor:pointer;font-family:inherit;color:#2a2723;font-size:14px;font-weight:500">{{ o.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ hasNb }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:0;padding-bottom:40px">
+        <sc-for list="{{ cells }}" as="c" hint-placeholder-count="0">
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:46px;flex:none;display:flex;justify-content:flex-end;padding-top:{{ c.gutterPad }}px">
+                <div style="{{ c.counterStyle }}">{{ c.counter }}</div>
+              </div>
+              <div onMouseEnter="{{ c.onEnter }}" onMouseLeave="{{ c.onLeave }}" style="{{ c.cardStyle }}">
+                <sc-if value="{{ c.showTools }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;background:rgba(255,253,249,.96);padding:3px;border:1px solid #e7e1d5;border-radius:10px;z-index:2">
+                    <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Bewerk</button>
+                    <button onClick="{{ c.onType }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Naar code</button>
+                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
+                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
+                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.showHeader }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:11px 11px 0 0">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#4a453d">{{ c.kind }}</span>
+                  <div style="margin-left:auto;display:flex;gap:4px">
+                    <sc-if value="{{ c.isMd }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.editLabel }}</button>
+                    </sc-if>
+                    <button onClick="{{ c.onType }}" title="Celtype wisselen" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.typeLabel }}</button>
+                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
+                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
+                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
+                  </div>
+                </div>
+                </sc-if>
+                <sc-if value="{{ c.showEditor }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative">
+                    <pre ref="{{ c.preRef }}" style="{{ c.preStyle }}"></pre>
+                    <textarea data-cid="{{ c.id }}" value="{{ c.source }}" onInput="{{ c.onInput }}" onKeyDown="{{ c.onKey }}" onFocus="{{ c.onFocus }}" spellcheck="false" autocomplete="off" autocapitalize="off" style="{{ c.taStyle }}"></textarea>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.showMd }}" hint-placeholder-val="{{ false }}">
+                  <div class="md" ref="{{ c.mdRef }}" onDoubleClick="{{ c.onToggleEdit }}" style="padding:6px 16px"></div>
+                </sc-if>
+                <sc-if value="{{ c.hasOut }}" hint-placeholder-val="{{ false }}">
+                  <div class="out" ref="{{ c.outRef }}" style="padding:10px 14px;border-top:1px solid #efe9dd;overflow:auto;max-height:560px"></div>
+                </sc-if>
+              </div>
+            </div>
+            <div onMouseEnter="{{ c.onGapIn }}" onMouseLeave="{{ c.onGapOut }}" style="position:relative;height:14px">
+              <sc-if value="{{ c.showAdd }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:0;right:0;top:-6px;display:flex;gap:8px;justify-content:center;z-index:3">
+                  <button onClick="{{ c.onAddCode }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:8px;background:#fffdf9;cursor:pointer;font-size:12px;color:#2a2723">+ Code</button>
+                  <button onClick="{{ c.onAddText }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:8px;background:#fffdf9;cursor:pointer;font-size:12px;color:#2a2723">+ Tekst</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const PY_BASE = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+const OPG_DIR = 'notebooks/';
+const LS_KEY = 'nb_session_v1';
+
+const PY_HELPER = `
+import ast, sys, json, base64, io, traceback, warnings
+warnings.filterwarnings('ignore', message='.*currently using agg.*')
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+_ns = {'__name__': '__main__'}
+def _reset():
+    _ns.clear()
+    _ns['__name__'] = '__main__'
+def _figs():
+    out = []
+    if 'matplotlib.pyplot' not in sys.modules:
+        return out
+    import matplotlib.pyplot as plt
+    for n in plt.get_fignums():
+        f = plt.figure(n)
+        b = io.BytesIO()
+        f.savefig(b, format='png', dpi=200, bbox_inches='tight', facecolor='white')
+        raw = b.getvalue()
+        out.append([base64.b64encode(raw).decode(), int.from_bytes(raw[16:20], 'big'), int.from_bytes(raw[20:24], 'big')])
+    plt.close('all')
+    return out
+def _run_safe(code):
+    res = {'repr': None, 'figs': [], 'err': None}
+    try:
+        tree = ast.parse(code, '<cel>', 'exec')
+        last = None
+        if tree.body and isinstance(tree.body[-1], ast.Expr):
+            last = ast.Expression(tree.body.pop().value)
+        exec(compile(tree, '<cel>', 'exec'), _ns)
+        if last is not None:
+            v = eval(compile(last, '<cel>', 'eval'), _ns)
+            if v is not None:
+                _ns['_'] = v
+                r = repr(v)
+                if not r.startswith('<Figure'):
+                    res['repr'] = r
+    except BaseException as e:
+        tb = sys.exc_info()[2]
+        frames = [f for f in traceback.extract_tb(tb) if f.filename == '<cel>']
+        lines = []
+        if frames:
+            lines.append('Traceback (most recent call last):\\n')
+            lines += traceback.format_list(frames)
+        lines += traceback.format_exception_only(type(e), e)
+        res['err'] = {'ename': type(e).__name__, 'evalue': str(e), 'tb': ''.join(lines)}
+    try:
+        res['figs'] = _figs()
+    except BaseException:
+        pass
+    return json.dumps(res)
+`;
+
+class Component extends DCLogic {
+  state = { nb: null, py: 'idle', busy: false, focus: null, dirty: false, saved: '', opgaven: [], opgLoading: false, opgMsg: '', dragOver: false, session: null, hov: null, gap: null };
+  fileRef = React.createRef(); dataRef = React.createRef();
+  _id = 1; _ec = 0; _q = Promise.resolve(); _buf = [];
+
+  componentDidMount() {
+    try {
+      const s = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+      if (s && s.cells && s.cells.length) this.setState({ session: s });
+    } catch (e) {}
+    this.loadOpgaven();
+    setTimeout(() => this.ensurePy().catch(() => {}), 400);
+  }
+  componentDidUpdate(_, prev) {
+    if (this.state.nb !== prev.nb && this.state.nb) {
+      clearTimeout(this._sv);
+      this._sv = setTimeout(() => this.autosave(), 700);
+    }
+  }
+  componentWillUnmount() { clearTimeout(this._sv); }
+
+  uid() { return 'c' + (this._id++) + Math.random().toString(36).slice(2, 6); }
+
+  autosave() {
+    const nb = this.state.nb; if (!nb) return;
+    const data = this.toJson(nb);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(data)); this.setState({ saved: 'Automatisch bewaard' }); }
+    catch (e) {
+      try {
+        data.cells.forEach(c => { if (c.outputs) c.outputs = c.outputs.filter(o => !(o.data && o.data['image/png'])); });
+        localStorage.setItem(LS_KEY, JSON.stringify(data)); this.setState({ saved: 'Automatisch bewaard (zonder grafieken)' });
+      } catch (e2) { this.setState({ saved: 'Automatisch bewaren mislukt: download het bestand' }); }
+    }
+  }
+
+  async loadOpgaven() {
+    this.setState({ opgLoading: true });
+    const base = new URL(OPG_DIR, location.href);
+    let list = null;
+    const tryIndex = async () => {
+      const r = await fetch(new URL('index.json', base), { cache: 'no-cache' });
+      if (!r.ok) return null;
+      return (await r.json()).map(f => typeof f === 'string' ? { file: f } : f);
+    };
+    const tryGithub = async () => {
+      const m = location.hostname.match(/^([^.]+)\.github\.io$/);
+      if (!m) return null;
+      const repo = location.pathname.split('/').filter(Boolean)[0];
+      const dir = base.pathname.split('/').filter(Boolean).slice(repo ? 1 : 0).join('/');
+      const key = 'nb_opg_' + m[1] + '/' + repo + '/' + dir;
+      try {
+        const r = await fetch('https://api.github.com/repos/' + m[1] + '/' + (repo || m[1] + '.github.io') + '/contents/' + dir);
+        if (!r.ok) throw new Error(r.status);
+        const l = (await r.json()).filter(f => /\.ipynb$/i.test(f.name)).map(f => ({ file: f.name }));
+        try { localStorage.setItem(key, JSON.stringify(l)); } catch (e) {}
+        return l;
+      } catch (e) {
+        try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e2) { return null; }
+      }
+    };
+    const tryDir = async () => {
+      const r = await fetch(base, { cache: 'no-cache' });
+      const t = await r.text();
+      return Array.from(t.matchAll(/href="([^"?#]+\.ipynb)"/gi)).map(m => ({ file: decodeURIComponent(m[1]).split('/').pop() }));
+    };
+    for (const f of [tryIndex, tryGithub, tryDir]) {
+      try { const l = await f(); if (l && l.length) { list = l; break; } } catch (e) {}
+    }
+    list = (list || []).filter(o => o.file).sort((x, y) => x.file.localeCompare(y.file, 'nl', { numeric: true }))
+      .map(o => ({ file: o.file.replace(/\.ipynb$/i, ''), groep: o.groep || (/^6de[_ -]/i.test(o.file) ? '6de jaar' : '5de jaar'), name: o.titel || o.file.replace(/\.ipynb$/i, '').replace(/^6de[_ -]+/i, '').replace(/_+/g, ' ').trim(), url: new URL(encodeURIComponent(o.file), base).href }));
+    this.setState({ opgaven: list, opgLoading: false, opgMsg: list.length ? '' : 'Geen opgaven gevonden in de map notebooks.' });
+  }
+
+  async loadFiles(py, src) {
+    const seen = this._files || (this._files = new Set());
+    const names = new Set(Array.from(src.matchAll(/["']([\w\-. ]+\.(?:csv|txt|json|tsv|dat))["']/gi)).map(m => m[1]));
+    for (const n of names) {
+      if (seen.has(n)) continue;
+      let ok = false;
+      try { ok = py.FS.analyzePath(n).exists; } catch (e) {}
+      if (ok) { seen.add(n); continue; }
+      for (const dir of [OPG_DIR + 'data/', OPG_DIR]) {
+        try {
+          const r = await fetch(new URL(dir + encodeURIComponent(n), location.href), { cache: 'no-cache' });
+          const ct = r.headers.get('content-type') || '';
+          if (!r.ok || /text\/html/.test(ct)) continue;
+          py.FS.writeFile(n, new Uint8Array(await r.arrayBuffer()));
+          seen.add(n); break;
+        } catch (e) {}
+      }
+    }
+  }
+  async addFiles(files) {
+    const py = await this.ensurePy();
+    const done = [];
+    for (const f of files) { py.FS.writeFile(f.name, new Uint8Array(await f.arrayBuffer())); (this._files || (this._files = new Set())).add(f.name); done.push(f.name); }
+    this.setState({ saved: done.length ? 'Toegevoegd: ' + done.join(', ') : '' });
+  }
+
+  /* ---------- Python ---------- */
+  ensurePy() {
+    if (this._py) return this._py;
+    this.setState({ py: 'laden' });
+    this._py = new Promise((res, rej) => {
+      const go = async () => {
+        try {
+          const py = await window.loadPyodide({ indexURL: PY_BASE });
+          py.setStdout({ batched: s => this._buf.push(['stdout', s]) });
+          py.setStderr({ batched: s => this._buf.push(['stderr', s]) });
+          py.setStdin({ stdin: () => window.prompt('Invoer voor input():') || '' });
+          py.runPython("import os\nos.environ['MPLBACKEND']='Agg'");
+          py.runPython(PY_HELPER);
+          this.setState({ py: 'gereed' });
+          res(py);
+        } catch (e) { rej(e); }
+      };
+      if (window.loadPyodide) go();
+      else {
+        const s = document.createElement('script');
+        s.src = PY_BASE + 'pyodide.js'; s.onload = go;
+        s.onerror = () => rej(new Error('Pyodide kon niet worden geladen'));
+        document.head.appendChild(s);
+      }
+    });
+    this._py.catch(() => { this._py = null; this.setState({ py: 'fout' }); });
+    return this._py;
+  }
+
+  getCell(id) { const nb = this.state.nb; return nb && nb.cells.find(c => c.id === id); }
+  setNb(fn) { this.setState(s => ({ nb: fn(s.nb), dirty: true })); }
+  patch(id, p) { this.setNb(nb => ({ ...nb, cells: nb.cells.map(c => c.id === id ? { ...c, ...p } : c) })); }
+
+  async exec(id) {
+    const cell = this.getCell(id); if (!cell) return;
+    this.patch(id, { running: true, queued: false });
+    let py;
+    try { py = await this.ensurePy(); }
+    catch (e) {
+      this.patch(id, { running: false, outputs: [{ output_type: 'error', ename: 'Fout', evalue: 'Python kon niet worden geladen. Controleer de internetverbinding.', traceback: [] }] });
+      return;
+    }
+    this.setState({ busy: true });
+    await new Promise(r => setTimeout(r, 30));
+    try { await py.loadPackagesFromImports(cell.source); } catch (e) {}
+    try { await this.loadFiles(py, cell.source); } catch (e) {}
+    this._buf = [];
+    let r;
+    try { r = JSON.parse(py.globals.get('_run_safe')(cell.source)); }
+    catch (e) { r = { repr: null, figs: [], err: { ename: 'Fout', evalue: String(e), tb: String(e) } }; }
+    const outs = [];
+    this._buf.forEach(([n, t]) => {
+      const last = outs[outs.length - 1];
+      if (last && last.name === n) last.text += t + '\n'; else outs.push({ output_type: 'stream', name: n, text: t + '\n' });
+    });
+    const n = ++this._ec;
+    if (r.repr != null) outs.push({ output_type: 'execute_result', execution_count: n, data: { 'text/plain': r.repr }, metadata: {} });
+    r.figs.forEach(f => outs.push({ output_type: 'display_data', data: { 'image/png': f[0], 'text/plain': '<Figure>' }, metadata: { 'image/png': { width: Math.round(f[1] / 2), height: Math.round(f[2] / 2) } } }));
+    if (r.err && r.err.ename === 'FileNotFoundError') r.err.tb += "\nTip: voeg het bestand toe met de knop 'Bestand toevoegen', of zet het in de map notebooks/data/ naast de notebooks.";
+    if (r.err) outs.push({ output_type: 'error', ename: r.err.ename, evalue: r.err.evalue, traceback: [r.err.tb] });
+    this.patch(id, { running: false, outputs: outs, count: n });
+    this.setState({ busy: false });
+  }
+
+  runCell(id, advance) {
+    const cell = this.getCell(id); if (!cell) return;
+    if (cell.type === 'markdown') { this.patch(id, { editing: false }); }
+    else { this.patch(id, { queued: true }); this._q = this._q.then(() => this.exec(id)); }
+    if (advance) this.focusNext(id);
+  }
+  focusNext(id) {
+    const nb = this.state.nb; const i = nb.cells.findIndex(c => c.id === id);
+    const nxt = nb.cells.slice(i + 1).find(c => c.type === 'code' || c.editing);
+    if (nxt) this.focusCell(nxt.id);
+    else this.addCell(nb.cells.length - 1, 'code');
+  }
+  focusCell(id) { setTimeout(() => { const t = document.querySelector('[data-cid="' + id + '"]'); if (t) t.focus(); }, 40); }
+  addCell(i, type) {
+    const c = this.newCell(type, '');
+    if (type === 'markdown') c.editing = true;
+    this.setNb(nb => { const cells = nb.cells.slice(); cells.splice(i + 1, 0, c); return { ...nb, cells }; });
+    this.focusCell(c.id);
+  }
+  newCell(type, source, outputs, count) {
+    return { id: this.uid(), type, source: source || '', outputs: outputs || [], count: count || null, editing: false, running: false, queued: false };
+  }
+  move(i, d) {
+    this.setNb(nb => { const cells = nb.cells.slice(); const j = i + d; if (j < 0 || j >= cells.length) return nb; [cells[i], cells[j]] = [cells[j], cells[i]]; return { ...nb, cells }; });
+  }
+  del(i) {
+    const nb = this.state.nb; const c = nb.cells[i];
+    if (c.source.trim() && !window.confirm('Deze cel verwijderen?')) return;
+    this.setNb(nb => { const cells = nb.cells.filter((_, k) => k !== i); if (!cells.length) cells.push(this.newCell('code', '')); return { ...nb, cells }; });
+  }
+
+  /* ---------- notebooks laden/bewaren ---------- */
+  confirmLeave() { return !this.state.dirty || window.confirm('Niet-bewaarde wijzigingen gaan verloren. Doorgaan?'); }
+  fromJson(j, name) {
+    const join = s => Array.isArray(s) ? s.join('') : (s || '');
+    const cells = (j.cells || []).map(c => {
+      const code = c.cell_type === 'code';
+      return this.newCell(code ? 'code' : 'markdown', join(c.source), code ? (c.outputs || []) : [], code ? c.execution_count : null);
+    });
+    if (!cells.length) cells.push(this.newCell('code', ''));
+    this._ec = 0;
+    return { name: name || 'naamloos', cells, meta: j.metadata || {} };
+  }
+  toJson(nb) {
+    const lines = s => { const a = s.split('\n'); return a.map((l, i) => i < a.length - 1 ? l + '\n' : l).filter((l, i, arr) => !(i === arr.length - 1 && l === '' && arr.length > 1)); };
+    return {
+      nbformat: 4, nbformat_minor: 5, name: nb.name,
+      metadata: { ...(nb.meta || {}), kernelspec: { display_name: 'Python 3', language: 'python', name: 'python3' }, language_info: { name: 'python' } },
+      cells: nb.cells.map(c => c.type === 'code'
+        ? { cell_type: 'code', id: c.id.slice(0, 12), metadata: {}, execution_count: c.count || null, source: lines(c.source), outputs: (c.outputs || []).map(o => o.output_type === 'stream' ? { ...o, text: lines(o.text) } : o) }
+        : { cell_type: 'markdown', id: c.id.slice(0, 12), metadata: {}, source: lines(c.source) })
+    };
+  }
+  openNb(j, name) {
+    this.setState({ nb: this.fromJson(j, name), dirty: false, saved: '', focus: null });
+    this._py && this._py.then(py => py.globals.get('_reset')()).catch(() => {});
+  }
+  readFile(f) {
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try { this.openNb(JSON.parse(rd.result), f.name.replace(/\.ipynb$/i, '')); }
+      catch (e) { window.alert('Dit bestand is geen geldig .ipynb-bestand.'); }
+    };
+    rd.readAsText(f);
+  }
+  async openUrl(o) {
+    if (!this.confirmLeave()) return;
+    try { const r = await fetch(o.url); this.openNb(await r.json(), o.file); }
+    catch (e) { window.alert('De opgave kon niet worden geladen.'); }
+  }
+  save() {
+    const nb = this.state.nb; if (!nb) return;
+    const name = (nb.name || 'naamloos').replace(/[^\w\-. ]+/g, '_') + '.ipynb';
+    const blob = new Blob([JSON.stringify(this.toJson(nb), null, 1)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    this.setState({ dirty: false, saved: 'Opgeslagen als ' + name });
+  }
+
+  /* ---------- weergave ---------- */
+  esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  math(t, block) {
+    try { if (window.katex) return window.katex.renderToString(t, { displayMode: block, throwOnError: false }); } catch (e) {}
+    return this.esc(t);
+  }
+  md(src) {
+    const maths = [];
+    let s = src.replace(/\$\$([\s\S]+?)\$\$/g, (m, t) => { maths.push([t, true]); return '\u0000' + (maths.length - 1) + '\u0000'; });
+    s = s.replace(/(^|[^\\$])\$([^\n$]+?)\$/g, (m, p, t) => { maths.push([t, false]); return p + '\u0000' + (maths.length - 1) + '\u0000'; });
+    const inl = t => {
+      t = t.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?!\/?[a-zA-Z][^>]*>)/g, '&lt;');
+      t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+      t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      t = t.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+      t = t.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<img alt="$1" src="$2" style="max-width:100%">');
+      t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      return t;
+    };
+    const L = s.split('\n'); let h = '', i = 0;
+    while (i < L.length) {
+      const l = L[i];
+      if (/^```/.test(l)) { const b = []; i++; while (i < L.length && !/^```/.test(L[i])) b.push(L[i++]); i++; h += '<pre><code>' + this.esc(b.join('\n')) + '</code></pre>'; continue; }
+      let m;
+      if ((m = l.match(/^(#{1,6})\s+(.*)$/))) { h += '<h' + m[1].length + '>' + inl(m[2]) + '</h' + m[1].length + '>'; i++; continue; }
+      if (/^\s*([-*_])\1{2,}\s*$/.test(l)) { h += '<hr>'; i++; continue; }
+      if (/^\s*[-*+]\s+/.test(l) || /^\s*\d+[.)]\s+/.test(l)) {
+        const ol = /^\s*\d+[.)]\s+/.test(l); h += ol ? '<ol>' : '<ul>';
+        while (i < L.length && (ol ? /^\s*\d+[.)]\s+/.test(L[i]) : /^\s*[-*+]\s+/.test(L[i]))) { h += '<li>' + inl(L[i].replace(/^\s*(?:[-*+]|\d+[.)])\s+/, '')) + '</li>'; i++; }
+        h += ol ? '</ol>' : '</ul>'; continue;
+      }
+      if (/^>\s?/.test(l)) { const b = []; while (i < L.length && /^>\s?/.test(L[i])) b.push(L[i++].replace(/^>\s?/, '')); h += '<blockquote>' + inl(b.join(' ')) + '</blockquote>'; continue; }
+      if (/^\s*<\/?(div|ul|ol|table|p|h[1-6]|pre|details|blockquote|section|font|span|b|i|br|center|img|a)\b/i.test(l)) { const b = []; while (i < L.length && L[i].trim()) b.push(L[i++]); h += b.join('\n'); continue; }
+      if (!l.trim()) { i++; continue; }
+      const p = []; while (i < L.length && L[i].trim() && !/^(#{1,6}\s|```|>|\s*[-*+]\s|\s*\d+[.)]\s)/.test(L[i]) && !/^\s*<\/?(div|ul|ol|table|h[1-6]|pre|details|blockquote|section)\b/i.test(L[i])) p.push(L[i++]);
+      h += '<p>' + inl(p.join(' ')) + '</p>';
+    }
+    return this.clean(h.replace(/\u0000(\d+)\u0000/g, (m, k) => { const x = maths[+k]; return this.math(x[0], x[1]); }));
+  }
+  clean(h) {
+    const t = document.createElement('template'); t.innerHTML = h;
+    t.content.querySelectorAll('script,iframe,object,embed,link,style').forEach(n => n.remove());
+    t.content.querySelectorAll('*').forEach(n => Array.from(n.attributes).forEach(a => { if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) n.removeAttribute(a.name); }));
+    return t.innerHTML;
+  }
+  outHtml(outs) {
+    const j = x => Array.isArray(x) ? x.join('') : (x || '');
+    const ansi = t => String(t).replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+    const pre = (t, col, bg) => '<pre style="margin:0 0 6px;white-space:pre-wrap;word-break:break-word;font-family:\'JetBrains Mono\',\'IBM Plex Mono\',monospace;font-size:13.5px;line-height:1.5;color:' + col + (bg ? ';background:' + bg + ';padding:8px 10px;border-radius:8px' : '') + '">' + this.esc(ansi(t)) + '</pre>';
+    return (outs || []).map(o => {
+      if (o.output_type === 'stream') return pre(j(o.text), o.name === 'stderr' ? 'oklch(0.45 0.13 28)' : '#2a2723');
+      if (o.output_type === 'error') return pre(j(o.traceback).trim() ? j(o.traceback) : (o.ename + ': ' + o.evalue), 'oklch(0.4 0.13 28)', 'oklch(0.96 0.02 28)');
+      const d = o.data || {};
+      if (d['image/png']) { const mw = ((o.metadata || {})['image/png'] || {}).width; return '<img src="data:image/png;base64,' + j(d['image/png']).replace(/\s/g, '') + '" alt="Grafiek"' + (mw ? ' style="width:' + mw + 'px;max-width:100%"' : '') + '>'; }
+      if (d['image/svg+xml']) return this.clean(j(d['image/svg+xml']));
+      if (d['text/html']) return '<div>' + this.clean(j(d['text/html'])) + '</div>';
+      if (d['text/latex']) return '<div>' + this.math(j(d['text/latex']).replace(/^\$\$?|\$\$?$/g, ''), true) + '</div>';
+      if (d['text/plain']) return pre(j(d['text/plain']), '#2a2723');
+      return '';
+    }).join('');
+  }
+  hl(src) {
+    const KW = new Set('and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield True False None'.split(' '));
+    const BI = new Set('print len range type int float str bool list dict set tuple input abs round min max sum sorted enumerate zip map filter isinstance open format reversed any all pow divmod chr ord hex bin id repr'.split(' '));
+    const re = /(#[^\n]*)|([rRbBfFuU]{0,2}(?:"""[\s\S]*?(?:"""|$)|'''[\s\S]*?(?:'''|$)|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?))|(\b\d[\d_]*\.?\d*(?:[eE][+-]?\d+)?\b|\.\d+)|([A-Za-z_]\w*)|(@\w+)/g;
+    let out = '', last = 0, prev = '', m;
+    const sp = (c, t, extra) => '<span style="color:' + c + (extra || '') + '">' + this.esc(t) + '</span>';
+    while ((m = re.exec(src))) {
+      out += this.esc(src.slice(last, m.index)); last = re.lastIndex;
+      if (m[1]) out += sp('oklch(0.5 0.04 150)', m[1], ';font-style:italic');
+      else if (m[2]) out += sp('oklch(0.46 0.13 150)', m[2]);
+      else if (m[3]) out += sp('oklch(0.5 0.14 60)', m[3]);
+      else if (m[5]) out += sp('oklch(0.5 0.13 28)', m[5]);
+      else if (m[4]) {
+        const w = m[4];
+        if (KW.has(w)) out += sp('oklch(0.45 0.17 300)', w, ';font-weight:600');
+        else if (prev === 'def' || prev === 'class') out += sp('oklch(0.46 0.13 255)', w, ';font-weight:600');
+        else if (BI.has(w)) out += sp('oklch(0.47 0.13 255)', w);
+        else out += this.esc(w);
+        prev = w; continue;
+      }
+      prev = '';
+    }
+    return out + this.esc(src.slice(last));
+  }
+  setHtml(el, h) { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } }
+
+  renderVals() {
+    const st = this.state, nb = st.nb, acc = 'oklch(0.5 0.13 300)';
+    const sess = st.session;
+    const statusMap = { idle: 'Python: nog niet geladen', laden: 'Python wordt geladen…', gereed: 'Python gereed', fout: 'Python niet beschikbaar' };
+    const statusText = st.busy ? 'Bezig met uitvoeren…' : statusMap[st.py];
+    const dotCol = st.busy ? 'oklch(0.64 0.13 75)' : st.py === 'gereed' ? 'oklch(0.64 0.13 150)' : st.py === 'fout' ? 'oklch(0.58 0.15 28)' : '#bdb6a6';
+    const cells = nb ? nb.cells.map((c, i) => {
+      const code = c.type === 'code', focus = st.focus === c.id;
+      const showMd = !code && !c.editing, showEditor = code || c.editing;
+      const hasOut = code && c.outputs && c.outputs.length > 0;
+      const FONT = k => k ? "font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:14px;line-height:1.6;font-weight:400" : "font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;line-height:1.55";
+      return {
+        id: c.id, source: c.source, isMd: !code, showEditor, showMd, hasOut,
+        kind: code ? 'Code' : 'Tekst', typeLabel: code ? 'Naar tekst' : 'Naar code',
+        editLabel: c.editing ? 'Toon' : 'Bewerk',
+        counter: code ? (c.running ? '[*]' : c.queued ? '[ ]' : '[' + (c.count || ' ') + ']') : '',
+        gutterPad: showMd ? 6 : 48,
+        counterStyle: 'font-family:\'IBM Plex Mono\',monospace;font-size:12px;font-weight:' + (c.running || c.queued ? 600 : 400) + ';color:' + (c.running || c.queued ? acc : '#6f685c'),
+        showHeader: !showMd, showTools: showMd && st.hov === c.id, showAdd: st.gap === c.id,
+        onEnter: () => { if (st.hov !== c.id) this.setState({ hov: c.id }); }, onLeave: () => this.setState({ hov: null }),
+        onGapIn: () => this.setState({ gap: c.id }), onGapOut: () => this.setState({ gap: null }),
+        cardStyle: showMd ? 'flex:1;min-width:0;position:relative;border-radius:12px;border:1px solid ' + (st.hov === c.id ? '#e7e1d5' : 'transparent') : 'flex:1;min-width:0;position:relative;background:#fffdf9;border-radius:12px;border:1px solid ' + (focus ? 'oklch(0.64 0.13 300)' : '#e7e1d5') + ';box-shadow:' + (focus ? '0 0 0 3px oklch(0.64 0.13 300 / .18)' : 'none'),
+        preStyle: FONT(code) + ';position:relative;margin:0;padding:10px 14px;min-height:42px;white-space:pre-wrap;overflow-wrap:break-word;color:#2a2723;pointer-events:none',
+        taStyle: FONT(code) + ';position:absolute;left:0;top:0;width:100%;height:100%;margin:0;padding:10px 14px;border:0;background:transparent;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:break-word;color:transparent;caret-color:#2a2723;tab-size:4',
+        upOpacity: i === 0 ? 0.35 : 1, downOpacity: i === nb.cells.length - 1 ? 0.35 : 1,
+        preRef: el => this.setHtml(el, (code ? this.hl(c.source) : this.esc(c.source)) + (c.source.endsWith('\n') ? ' ' : '')),
+        mdRef: el => this.setHtml(el, this.md(c.source) || '<p style="color:#9b9384">Lege tekstcel. Dubbelklik om te bewerken.</p>'),
+        outRef: el => this.setHtml(el, this.outHtml(c.outputs)),
+        onRun: () => this.runCell(c.id, false),
+        onFocus: () => this.setState({ focus: c.id }),
+        onInput: e => { this.patch(c.id, { source: e.target.value }); },
+        onKey: e => {
+          const t = e.target;
+          if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey)) { e.preventDefault(); this.runCell(c.id, e.shiftKey); return; }
+          if (!code) return;
+          if (e.key === 'Tab' && !e.shiftKey) {
+            e.preventDefault(); const a = t.selectionStart;
+            this.patch(c.id, { source: t.value.slice(0, a) + '    ' + t.value.slice(t.selectionEnd) });
+            setTimeout(() => { t.selectionStart = t.selectionEnd = a + 4; }, 0);
+          } else if (e.key === 'Enter') {
+            e.preventDefault(); const a = t.selectionStart;
+            const line = t.value.slice(0, a).split('\n').pop();
+            const ind = line.match(/^\s*/)[0] + (/:\s*$/.test(line) ? '    ' : '');
+            this.patch(c.id, { source: t.value.slice(0, a) + '\n' + ind + t.value.slice(t.selectionEnd) });
+            setTimeout(() => { t.selectionStart = t.selectionEnd = a + 1 + ind.length; }, 0);
+          }
+        },
+        onToggleEdit: () => { this.patch(c.id, { editing: !c.editing }); if (!c.editing) this.focusCell(c.id); },
+        onType: () => this.patch(c.id, code ? { type: 'markdown', editing: false } : { type: 'code', editing: false }),
+        onUp: () => this.move(i, -1), onDown: () => this.move(i, 1), onDelete: () => this.del(i),
+        onAddCode: () => this.addCell(i, 'code'), onAddText: () => this.addCell(i, 'markdown')
+      };
+    }) : [];
+    return {
+      statusText, dotStyle: 'width:10px;height:10px;border-radius:50%;background:' + dotCol,
+      hasNb: !!nb, showStart: !nb, cells, fileRef: this.fileRef,
+      nbName: nb ? nb.name : '', saveInfo: st.dirty ? 'Niet bewaard' : st.saved,
+      onName: e => { const v = e.target.value; this.setState(s => ({ nb: { ...s.nb, name: v }, dirty: true })); },
+      dataRef: this.dataRef, pickData: () => this.dataRef.current && this.dataRef.current.click(),
+      onData: e => { const fs = Array.from(e.target.files); e.target.value = ''; if (fs.length) this.addFiles(fs); },
+      onSave: () => this.save(),
+      onFile: e => { const f = e.target.files[0]; e.target.value = ''; if (f && this.confirmLeave()) this.readFile(f); },
+      openFile: () => this.fileRef.current && this.fileRef.current.click(),
+      onDragOver: e => { e.preventDefault(); if (!st.dragOver) this.setState({ dragOver: true }); },
+      onDrop: e => { e.preventDefault(); this.setState({ dragOver: false }); const f = e.dataTransfer.files[0]; if (f && this.confirmLeave()) this.readFile(f); },
+      dropStyle: 'text-align:left;padding:18px 20px;background:' + (st.dragOver ? '#f3eefa' : '#fffdf9') + ';border:1px ' + (st.dragOver ? 'solid oklch(0.64 0.13 300)' : 'dashed #cfc8b8') + ';border-radius:14px;cursor:pointer;font-family:inherit;color:#2a2723',
+      newNb: () => { this.openNb({ cells: [] }, 'naamloos'); this.focusCell(this.state.nb && this.state.nb.cells[0].id); setTimeout(() => { const c = this.state.nb.cells[0]; this.focusCell(c.id); }, 60); },
+      goStart: () => { if (this.confirmLeave()) { this.autosave(); this.setState({ nb: null, dirty: false, session: (() => { try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) { return null; } })() }); } },
+      hasSession: !!sess, sessionName: sess ? (sess.name || 'naamloos') : '', sessionInfo: sess ? sess.cells.length + ' cellen' : '',
+      resume: () => { this.openNb(sess, sess.name); },
+      groepen: ['5de jaar', '6de jaar'].concat(Array.from(new Set(st.opgaven.map(o => o.groep))).filter(g => g !== '5de jaar' && g !== '6de jaar')).map(g => ({ titel: g, items: st.opgaven.filter(o => o.groep === g).map(o => ({ label: o.name, onClick: () => this.openUrl(o) })) })).filter(g => g.items.length),
+      opgLoading: st.opgLoading, opgMsg: !!st.opgMsg, opgMsgText: st.opgMsg,
+      runAll: () => { if (this.state.nb) this.state.nb.cells.forEach(c => this.runCell(c.id, false)); },
+      restart: () => {
+        this._ec = 0;
+        this._py && this._py.then(py => py.globals.get('_reset')()).catch(() => {});
+        this.setNb(nb => ({ ...nb, cells: nb.cells.map(c => ({ ...c, count: null })) }));
+        this.setState({ saved: 'Kernel herstart: variabelen gewist' });
+      },
+      restartRun: () => {
+        this._ec = 0;
+        this._q = this._q.then(() => this._py ? this._py.then(py => py.globals.get('_reset')()).catch(() => {}) : null);
+        this.setNb(nb => ({ ...nb, cells: nb.cells.map(c => ({ ...c, count: null, outputs: [] })) }));
+        this.state.nb.cells.forEach(c => this.runCell(c.id, false));
+      },
+      exportPdf: () => { const t = document.title; document.title = (nb ? nb.name : 'notebook') || 'notebook'; window.print(); setTimeout(() => { document.title = t; }, 500); },
+      clearOut: () => this.setNb(nb => ({ ...nb, cells: nb.cells.map(c => ({ ...c, outputs: [], count: null })) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

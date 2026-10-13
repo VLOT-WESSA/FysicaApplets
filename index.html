@@ -137,6 +137,7 @@ class Component extends DCLogic {
     { id: 'informatica', name: 'Informatica', color: 'oklch(0.64 0.13 300)', applets: [
       { id: 'talstelsel', name: 'Talstelsel', desc: 'Reken om tussen decimaal, binair en hexadecimaal; werk met 2-complement en eenvoudige bewerkingen.', ready: true },
       { id: 'booleanalgebra', name: 'Booleaanse algebra', desc: 'Vereenvoudig logische uitdrukkingen stap voor stap met vermelding van de rekenregels.', ready: true },
+      { id: 'notebook', name: 'Python-notebook', desc: 'Open of maak een .ipynb, voer Python-cellen uit in de browser (numpy, matplotlib) en sla je werk op.', ready: true },
       { id: 'karnaugh', name: 'Karnaughkaarten', desc: 'Vul een K-map in en vind de minimale som- of productvorm met gekleurde groepen.', ready: true },
     ]},
   ];
@@ -175,6 +176,7 @@ class Component extends DCLogic {
     cirkelbeweging: 'cirkelbeweging.dc.html',
     slinger: 'slinger.dc.html',
     videoanalyse: 'videoanalyse.dc.html',
+    notebook: 'notebook.dc.html',
   };
 
   componentDidMount() {
