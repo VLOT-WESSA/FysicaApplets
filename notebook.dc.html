@@ -21,6 +21,9 @@
   a{color:#6f685c}
   a:hover{color:#2a2723}
   textarea:focus,input:focus{outline:none}
+  .lnpre{counter-reset:l}
+  .ln{display:block;position:relative}
+  .ln:before{content:counter(l);counter-increment:l;position:absolute;left:-40px;width:28px;text-align:right;color:#a79f8f;user-select:none}
   .md{font-size:15px;line-height:1.6;color:#2a2723}
   .md>*:first-child{margin-top:0}.md>*:last-child{margin-bottom:0}
   .md h1{font-size:24px;margin:.6em 0 .4em}.md h2{font-size:20px;margin:.8em 0 .4em}.md h3{font-size:17px;margin:.8em 0 .3em}.md h4{font-size:15px;margin:.8em 0 .3em}
@@ -79,18 +82,23 @@
       <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid oklch(0.5 0.13 300);border-radius:8px;background:oklch(0.5 0.13 300);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
       <div style="width:1px;height:24px;background:#e7e1d5;margin:0 4px"></div>
       <button onClick="{{ pickData }}" title="Voeg een .csv-, .txt- of .json-bestand toe voor je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestand toevoegen</button>
+      <button onClick="{{ toggleToc }}" title="Toon de inhoud van de notebook" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Inhoud</button>
+      <button onClick="{{ collapseAll }}" title="Klap alle codecellen in" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles inklappen</button>
+      <button onClick="{{ expandAll }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitklappen</button>
+      <button onClick="{{ toggleFiles }}" title="Toon de inhoud van de databestanden naast je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestanden</button>
       <button onClick="{{ runAll }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitvoeren</button>
       <button onClick="{{ restart }}" title="Wist alle variabelen en de uitvoernummers" style="min-height:34px;padding:0 12px;border:1px solid oklch(0.5 0.13 28);border-radius:8px;background:#fff;color:oklch(0.45 0.13 28);cursor:pointer;font-size:13px;font-weight:600">Kernel herstarten</button>
       <button onClick="{{ restartRun }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Herstarten en alles uitvoeren</button>
       <button onClick="{{ clearOut }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Uitvoer wissen</button>
       <button onClick="{{ exportPdf }}" title="Opent het afdrukvenster: kies daar ‘Opslaan als pdf’" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Exporteer als pdf</button>
       <div style="margin-left:auto;display:flex;gap:6px 14px;flex-wrap:wrap;justify-content:flex-end;font-size:13px;color:#4a453d">
-        <span style="white-space:nowrap">Ctrl+Enter: uitvoeren · Shift+Enter: uitvoeren en volgende cel</span>
+        <span style="white-space:nowrap">Shift+Enter: uitvoeren · Ctrl+Enter: uitvoeren en volgende cel</span>
         <span style="white-space:nowrap;color:#6f685c">{{ saveInfo }}</span>
       </div>
     </div>
   </sc-if>
-  <div class="nb-scroll" onDragOver="{{ onDragOver }}" onDrop="{{ onDrop }}" style="flex:1;min-height:0;overflow:auto">
+  <div style="flex:1;min-height:0;display:flex;gap:14px">
+  <div class="nb-scroll" onDragOver="{{ onDragOver }}" onDrop="{{ onDrop }}" style="flex:1;min-width:0;min-height:0;overflow:auto">
     <sc-if value="{{ showStart }}" hint-placeholder-val="{{ true }}">
       <div style="max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-bottom:20px">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
@@ -129,14 +137,15 @@
     <sc-if value="{{ hasNb }}" hint-placeholder-val="{{ false }}">
       <div style="max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:0;padding-bottom:40px">
         <sc-for list="{{ cells }}" as="c" hint-placeholder-count="0">
-          <div style="display:flex;flex-direction:column;gap:0">
+          <div data-cell="{{ c.id }}" onDragOver="{{ c.onDragOver }}" onDrop="{{ c.onDrop }}" style="{{ c.wrapStyle }}">
             <div style="display:flex;gap:10px;align-items:flex-start">
               <div style="width:46px;flex:none;display:flex;justify-content:flex-end;padding-top:{{ c.gutterPad }}px">
                 <div style="{{ c.counterStyle }}">{{ c.counter }}</div>
               </div>
               <div onMouseEnter="{{ c.onEnter }}" onMouseLeave="{{ c.onLeave }}" style="{{ c.cardStyle }}">
                 <sc-if value="{{ c.showTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;background:rgba(255,253,249,.96);padding:3px;border:1px solid #e7e1d5;border-radius:10px;z-index:2">
+                  <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;align-items:center;background:rgba(255,253,249,.96);padding:3px;border:1px solid #e7e1d5;border-radius:10px;z-index:2">
+                    <span draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" title="Sleep om te verplaatsen" style="cursor:grab;font-size:15px;color:#9b9384;padding:0 6px;user-select:none">&#8942;&#8942;</span>
                     <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Bewerk</button>
                     <button onClick="{{ c.onType }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Naar code</button>
                     <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
@@ -146,8 +155,13 @@
                 </sc-if>
                 <sc-if value="{{ c.showHeader }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:11px 11px 0 0">
+                  <span draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" title="Sleep om te verplaatsen" style="cursor:grab;font-size:15px;color:#9b9384;padding:0 4px;user-select:none">&#8942;&#8942;</span>
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#4a453d">{{ c.kind }}</span>
-                  <div style="margin-left:auto;display:flex;gap:4px">
+                  <sc-if value="{{ c.collapsed }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ c.summary }}</span>
+                  </sc-if>
+                  <div style="margin-left:auto;display:flex;gap:4px;flex:none">
+                    <button onClick="{{ c.onCollapse }}" title="Cel in- of uitklappen" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.collapseLabel }}</button>
                     <sc-if value="{{ c.isMd }}" hint-placeholder-val="{{ false }}">
                       <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.editLabel }}</button>
                     </sc-if>
@@ -160,7 +174,7 @@
                 </sc-if>
                 <sc-if value="{{ c.showEditor }}" hint-placeholder-val="{{ false }}">
                   <div style="position:relative">
-                    <pre ref="{{ c.preRef }}" style="{{ c.preStyle }}"></pre>
+                    <pre class="{{ c.preClass }}" ref="{{ c.preRef }}" style="{{ c.preStyle }}"></pre>
                     <textarea data-cid="{{ c.id }}" value="{{ c.source }}" onInput="{{ c.onInput }}" onKeyDown="{{ c.onKey }}" onFocus="{{ c.onFocus }}" spellcheck="false" autocomplete="off" autocapitalize="off" style="{{ c.taStyle }}"></textarea>
                   </div>
                 </sc-if>
@@ -184,6 +198,53 @@
         </sc-for>
       </div>
     </sc-if>
+  </div>
+  <sc-if value="{{ showPanel }}" hint-placeholder-val="{{ false }}">
+    <aside class="np" style="flex:0 0 clamp(300px,34%,520px);min-height:0;display:flex;flex-direction:column;background:#fffdf9;border:1px solid #e7e1d5;border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e7e1d5;font-size:13px;font-weight:600">
+        <button onClick="{{ showTocTab }}" style="{{ tabTocStyle }}">Inhoud</button>
+        <button onClick="{{ showFilesTab }}" style="{{ tabFilesStyle }}">Bestanden</button>
+        <button onClick="{{ closeFiles }}" title="Sluiten" style="margin-left:auto;min-height:32px;min-width:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px">&times;</button>
+      </div>
+      <sc-if value="{{ tabToc }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;min-height:0;overflow:auto;padding:6px 4px">
+          <sc-for list="{{ tocItems }}" as="t" hint-placeholder-count="0">
+            <button onClick="{{ t.go }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ tabFiles }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ noFiles }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px;font-size:13px;line-height:1.5;color:#6f685c">Geen bestanden gevonden. Bestanden die in je code staan (bv. <span style="font-family:'IBM Plex Mono',monospace">open("data.txt")</span>) verschijnen hier, of voeg er een toe.</div>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid #e7e1d5">
+        <sc-for list="{{ fileTabs }}" as="f" hint-placeholder-count="2">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.name }}</button>
+        </sc-for>
+      </div>
+      <div style="flex:1;min-height:0;overflow:auto;padding:10px 12px">
+        <sc-if value="{{ fileMissing }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;color:oklch(0.5 0.13 28)">Bestand niet gevonden in notebooks/data/. Voeg het toe met &lsquo;Bestand toevoegen&rsquo;.</div>
+        </sc-if>
+        <sc-if value="{{ fileIsTable }}" hint-placeholder-val="{{ false }}">
+          <table style="border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12.5px">
+            <sc-for list="{{ fileRows }}" as="r" hint-placeholder-count="3">
+              <tr>
+                <sc-for list="{{ r.cells }}" as="x" hint-placeholder-count="3">
+                  <td style="{{ r.cellStyle }}">{{ x }}</td>
+                </sc-for>
+              </tr>
+            </sc-for>
+          </table>
+        </sc-if>
+        <sc-if value="{{ fileIsText }}" hint-placeholder-val="{{ false }}">
+          <pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#2a2723">{{ fileText }}</pre>
+        </sc-if>
+        <div style="margin-top:8px;font-size:12px;color:#6f685c;font-family:'IBM Plex Mono',monospace">{{ fileInfo }}</div>
+      </div>
+      </sc-if>
+    </aside>
+  </sc-if>
   </div>
 </div>
 </x-dc>
@@ -245,14 +306,14 @@ def _run_safe(code):
 `;
 
 class Component extends DCLogic {
-  state = { nb: null, py: 'idle', busy: false, focus: null, dirty: false, saved: '', opgaven: [], opgLoading: false, opgMsg: '', dragOver: false, session: null, hov: null, gap: null };
+  state = { nb: null, py: 'idle', busy: false, focus: null, dirty: false, saved: '', opgaven: [], opgLoading: false, opgMsg: '', dragOver: false, session: null, hov: null, gap: null, panel: null, dropAt: null, ftabs: [], fsel: null, fver: 0 };
   fileRef = React.createRef(); dataRef = React.createRef();
   _id = 1; _ec = 0; _q = Promise.resolve(); _buf = [];
 
   componentDidMount() {
     try {
       const s = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-      if (s && s.cells && s.cells.length) this.setState({ session: s });
+      if (s && s.cells && s.cells.length) { this.setState({ session: s }); this.openNb(s, s.name); }
     } catch (e) {}
     this.loadOpgaven();
     setTimeout(() => this.ensurePy().catch(() => {}), 400);
@@ -336,11 +397,30 @@ class Component extends DCLogic {
       }
     }
   }
+  async refreshFiles() {
+    const nb = this.state.nb, cache = this._ft || (this._ft = {});
+    const names = new Set(Object.keys(cache).filter(n => cache[n].up));
+    if (nb) nb.cells.forEach(c => { if (c.type === 'code' || c.cell_type === 'code' || c.source) Array.from(String(c.source || '').matchAll(/["']([\w\-. ]+\.(?:csv|txt|json|tsv|dat))["']/gi)).forEach(m => names.add(m[1])); });
+    for (const n of names) {
+      if (cache[n] && (cache[n].up || cache[n].ok)) continue;
+      let hit = null;
+      for (const dir of [OPG_DIR + 'data/', OPG_DIR]) {
+        try {
+          const r = await fetch(new URL(dir + encodeURIComponent(n), location.href), { cache: 'no-cache' });
+          if (!r.ok || /text\/html/.test(r.headers.get('content-type') || '')) continue;
+          hit = await r.text(); break;
+        } catch (e) {}
+      }
+      cache[n] = hit == null ? { ok: false } : { ok: true, text: hit };
+    }
+    const tabs = Array.from(names);
+    this.setState(s => ({ ftabs: tabs, fsel: tabs.includes(s.fsel) ? s.fsel : (tabs[0] || null), fver: s.fver + 1 }));
+  }
   async addFiles(files) {
     const py = await this.ensurePy();
     const done = [];
-    for (const f of files) { py.FS.writeFile(f.name, new Uint8Array(await f.arrayBuffer())); (this._files || (this._files = new Set())).add(f.name); done.push(f.name); }
-    this.setState({ saved: done.length ? 'Toegevoegd: ' + done.join(', ') : '' });
+    for (const f of files) { const buf = await f.arrayBuffer(); py.FS.writeFile(f.name, new Uint8Array(buf)); (this._ft || (this._ft = {}))[f.name] = { ok: true, up: true, text: new TextDecoder().decode(buf) }; (this._files || (this._files = new Set())).add(f.name); done.push(f.name); }
+    this.setState({ saved: done.length ? 'Toegevoegd: ' + done.join(', ') : '', fsel: done[0] || this.state.fsel, panel: 'files' }); this.refreshFiles();
   }
 
   /* ---------- Python ---------- */
@@ -429,6 +509,30 @@ class Component extends DCLogic {
   newCell(type, source, outputs, count) {
     return { id: this.uid(), type, source: source || '', outputs: outputs || [], count: count || null, editing: false, running: false, queued: false };
   }
+  tabStyle(on) { return "min-height:32px;padding:0 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;border:1px solid " + (on ? "oklch(0.5 0.13 300);background:oklch(0.5 0.13 300);color:#fff" : "#e7e1d5;background:#fff;color:#2a2723"); }
+  toc(nb) {
+    const out = [];
+    nb.cells.forEach(c => {
+      const go = () => this.scrollToCell(c.id);
+      if (c.type === 'markdown') {
+        let any = false;
+        String(c.source).split('\n').forEach(l => { const m = l.match(/^(#{1,3})\s+(.+)/); if (m) { any = true; out.push({ label: m[2].replace(/[*_`]/g, ''), go, style: 'display:block;width:100%;text-align:left;min-height:32px;border:0;background:transparent;cursor:pointer;font-size:13.5px;font-family:inherit;color:#2a2723;padding:4px 8px 4px ' + (8 + (m[1].length - 1) * 14) + 'px;font-weight:' + (m[1].length === 1 ? 600 : 500) }); } });
+      } else {
+        const l = (String(c.source).split('\n').find(x => x.trim()) || '(leeg)').trim();
+        out.push({ label: (c.count ? '[' + c.count + '] ' : '') + l, go, style: "display:block;width:100%;text-align:left;min-height:28px;border:0;background:transparent;cursor:pointer;font-size:12px;font-family:'IBM Plex Mono',monospace;color:#6f685c;padding:3px 8px 3px 22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" });
+      }
+    });
+    return out;
+  }
+  scrollToCell(id) {
+    const sc = document.querySelector('.nb-scroll'), el = document.querySelector('[data-cell="' + id + '"]');
+    if (sc && el) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8, behavior: 'smooth' });
+  }
+  dropCell(to) {
+    const from = this._drag; this._drag = null; this.setState({ dropAt: null });
+    if (from == null || from === to) return;
+    this.setNb(nb => { const cells = nb.cells.slice(); const [c] = cells.splice(from, 1); cells.splice(to, 0, c); return { ...nb, cells }; });
+  }
   move(i, d) {
     this.setNb(nb => { const cells = nb.cells.slice(); const j = i + d; if (j < 0 || j >= cells.length) return nb; [cells[i], cells[j]] = [cells[j], cells[i]]; return { ...nb, cells }; });
   }
@@ -461,7 +565,7 @@ class Component extends DCLogic {
     };
   }
   openNb(j, name) {
-    this.setState({ nb: this.fromJson(j, name), dirty: false, saved: '', focus: null });
+    this.setState({ nb: this.fromJson(j, name), dirty: false, saved: '', focus: null }); setTimeout(() => this.refreshFiles(), 0);
     this._py && this._py.then(py => py.globals.get('_reset')()).catch(() => {});
   }
   readFile(f) {
@@ -573,6 +677,15 @@ class Component extends DCLogic {
     }
     return out + this.esc(src.slice(last));
   }
+  numbered(h) {
+    let carry = '';
+    return h.split('\n').map(l => {
+      let s = carry + l; const o = s.match(/<span[^>]*>/g) || [], cl = (s.match(/<\/span>/g) || []).length;
+      carry = o.length > cl ? o[o.length - 1] : '';
+      if (carry) s += '</span>';
+      return '<span class="ln">' + (s || '\u200b') + '</span>';
+    }).join('');
+  }
   setHtml(el, h) { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } }
 
   renderVals() {
@@ -583,11 +696,19 @@ class Component extends DCLogic {
     const dotCol = st.busy ? 'oklch(0.64 0.13 75)' : st.py === 'gereed' ? 'oklch(0.64 0.13 150)' : st.py === 'fout' ? 'oklch(0.58 0.15 28)' : '#bdb6a6';
     const cells = nb ? nb.cells.map((c, i) => {
       const code = c.type === 'code', focus = st.focus === c.id;
-      const showMd = !code && !c.editing, showEditor = code || c.editing;
-      const hasOut = code && c.outputs && c.outputs.length > 0;
+      const coll = !!c.collapsed && code;
+      const showMd = !code && !c.editing, showEditor = (code || c.editing) && !coll;
+      const hasOut = code && !coll && c.outputs && c.outputs.length > 0;
       const FONT = k => k ? "font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:14px;line-height:1.6;font-weight:400" : "font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;line-height:1.55";
       return {
-        id: c.id, source: c.source, isMd: !code, showEditor, showMd, hasOut,
+        id: c.id, source: c.source, isMd: !code, collapsed: coll, collapseLabel: coll ? 'Uitklappen' : 'Inklappen',
+        summary: (String(c.source).split('\n').find(x => x.trim()) || '(leeg)').trim() + (String(c.source).trim().split('\n').length > 1 ? ' …' : ''),
+        onCollapse: () => this.patch(c.id, { collapsed: !c.collapsed }),
+        wrapStyle: 'display:flex;flex-direction:column;gap:0;border-radius:6px;box-shadow:' + (st.dropAt === i ? '0 -3px 0 oklch(0.5 0.13 300)' : 'none'),
+        onDragStart: e => { this._drag = i; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'cel'); } catch (x) {} },
+        onDragEnd: () => { this._drag = null; this.setState({ dropAt: null }); },
+        onDragOver: e => { if (this._drag != null) { e.preventDefault(); e.stopPropagation(); if (st.dropAt !== i) this.setState({ dropAt: i }); } },
+        onDrop: e => { if (this._drag != null) { e.preventDefault(); e.stopPropagation(); this.dropCell(i); } }, showEditor, showMd, hasOut,
         kind: code ? 'Code' : 'Tekst', typeLabel: code ? 'Naar tekst' : 'Naar code',
         editLabel: c.editing ? 'Toon' : 'Bewerk',
         counter: code ? (c.running ? '[*]' : c.queued ? '[ ]' : '[' + (c.count || ' ') + ']') : '',
@@ -597,10 +718,11 @@ class Component extends DCLogic {
         onEnter: () => { if (st.hov !== c.id) this.setState({ hov: c.id }); }, onLeave: () => this.setState({ hov: null }),
         onGapIn: () => this.setState({ gap: c.id }), onGapOut: () => this.setState({ gap: null }),
         cardStyle: showMd ? 'flex:1;min-width:0;position:relative;border-radius:12px;border:1px solid ' + (st.hov === c.id ? '#e7e1d5' : 'transparent') : 'flex:1;min-width:0;position:relative;background:#fffdf9;border-radius:12px;border:1px solid ' + (focus ? 'oklch(0.64 0.13 300)' : '#e7e1d5') + ';box-shadow:' + (focus ? '0 0 0 3px oklch(0.64 0.13 300 / .18)' : 'none'),
-        preStyle: FONT(code) + ';position:relative;margin:0;padding:10px 14px;min-height:42px;white-space:pre-wrap;overflow-wrap:break-word;color:#2a2723;pointer-events:none',
-        taStyle: FONT(code) + ';position:absolute;left:0;top:0;width:100%;height:100%;margin:0;padding:10px 14px;border:0;background:transparent;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:break-word;color:transparent;caret-color:#2a2723;tab-size:4',
+        preClass: code ? 'lnpre' : '',
+        preStyle: FONT(code) + ';position:relative;margin:0;padding:10px 14px 10px ' + (code ? 52 : 14) + 'px;min-height:42px;white-space:pre-wrap;overflow-wrap:break-word;color:#2a2723;pointer-events:none',
+        taStyle: FONT(code) + ';position:absolute;left:0;top:0;width:100%;height:100%;margin:0;padding:10px 14px 10px ' + (code ? 52 : 14) + 'px;border:0;background:transparent;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:break-word;color:transparent;caret-color:#2a2723;tab-size:4',
         upOpacity: i === 0 ? 0.35 : 1, downOpacity: i === nb.cells.length - 1 ? 0.35 : 1,
-        preRef: el => this.setHtml(el, (code ? this.hl(c.source) : this.esc(c.source)) + (c.source.endsWith('\n') ? ' ' : '')),
+        preRef: el => this.setHtml(el, code ? this.numbered(this.hl(c.source)) : this.esc(c.source) + (c.source.endsWith('\n') ? ' ' : '')),
         mdRef: el => this.setHtml(el, this.md(c.source) || '<p style="color:#9b9384">Lege tekstcel. Dubbelklik om te bewerken.</p>'),
         outRef: el => this.setHtml(el, this.outHtml(c.outputs)),
         onRun: () => this.runCell(c.id, false),
@@ -608,7 +730,7 @@ class Component extends DCLogic {
         onInput: e => { this.patch(c.id, { source: e.target.value }); },
         onKey: e => {
           const t = e.target;
-          if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey)) { e.preventDefault(); this.runCell(c.id, e.shiftKey); return; }
+          if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey)) { e.preventDefault(); this.runCell(c.id, !e.shiftKey); return; }
           if (!code) return;
           if (e.key === 'Tab' && !e.shiftKey) {
             e.preventDefault(); const a = t.selectionStart;
@@ -633,6 +755,27 @@ class Component extends DCLogic {
       hasNb: !!nb, showStart: !nb, cells, fileRef: this.fileRef,
       nbName: nb ? nb.name : '', saveInfo: st.dirty ? 'Niet bewaard' : st.saved,
       onName: e => { const v = e.target.value; this.setState(s => ({ nb: { ...s.nb, name: v }, dirty: true })); },
+      showPanel: !!nb && !!st.panel, tabFiles: st.panel === 'files', tabToc: st.panel === 'toc', noFiles: !st.ftabs.length, closeFiles: () => this.setState({ panel: null }),
+      toggleFiles: () => { const o = st.panel === 'files' ? null : 'files'; this.setState({ panel: o }); if (o) this.refreshFiles(); },
+      toggleToc: () => this.setState({ panel: st.panel === 'toc' ? null : 'toc' }),
+      showFilesTab: () => { this.setState({ panel: 'files' }); this.refreshFiles(); }, showTocTab: () => this.setState({ panel: 'toc' }),
+      tabFilesStyle: this.tabStyle(st.panel === 'files'), tabTocStyle: this.tabStyle(st.panel === 'toc'),
+      tocItems: nb ? this.toc(nb) : [], hasToc: !!nb && nb.cells.length > 0,
+      collapseAll: () => this.setNb(n => ({ ...n, cells: n.cells.map(c => c.type === 'code' ? { ...c, collapsed: true } : c) })),
+      expandAll: () => this.setNb(n => ({ ...n, cells: n.cells.map(c => ({ ...c, collapsed: false })) })),
+      ...(() => {
+        const cache = this._ft || {}, sel = st.fsel, e = sel && cache[sel], txt = e && e.ok ? e.text : '';
+        const isTab = e && e.ok && /\.(csv|tsv)$/i.test(sel);
+        const sep = /\.tsv$/i.test(sel) ? '\t' : (txt.split('\n')[0].includes(';') && !txt.split('\n')[0].includes(',') ? ';' : ',');
+        const lines = isTab ? txt.split(/\r?\n/).filter(l => l.length) : [];
+        const rows = lines.slice(0, 200).map((l, i) => ({ cells: l.split(sep), cellStyle: 'padding:3px 10px;border:1px solid #e7e1d5;text-align:right;white-space:nowrap;' + (i === 0 ? 'background:#f3f0e8;font-weight:600;' : '') }));
+        const nl = txt ? txt.split(/\r?\n/).length : 0;
+        return {
+          fileTabs: st.ftabs.map(n => ({ name: n, pick: () => this.setState({ fsel: n }), style: "min-height:32px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;border:1px solid " + (n === sel ? 'oklch(0.5 0.13 300);background:oklch(0.5 0.13 300);color:#fff' : '#e7e1d5;background:#fff;color:#2a2723') })),
+          fileMissing: !!e && !e.ok, fileIsTable: isTab, fileRows: rows, fileIsText: !!e && e.ok && !isTab, fileText: txt,
+          fileInfo: e && e.ok ? nl + ' regels · ' + txt.length + ' tekens' + (isTab && lines.length > 200 ? ' · eerste 200 rijen getoond' : '') : ''
+        };
+      })(),
       dataRef: this.dataRef, pickData: () => this.dataRef.current && this.dataRef.current.click(),
       onData: e => { const fs = Array.from(e.target.files); e.target.value = ''; if (fs.length) this.addFiles(fs); },
       onSave: () => this.save(),

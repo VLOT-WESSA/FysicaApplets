@@ -1,0 +1,8 @@
+{
+    "naam": "Sam",
+    "stad": "Gent",
+    "vakken": [
+        "fysica",
+        "informatica"
+    ]
+}

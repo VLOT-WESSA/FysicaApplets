@@ -1,0 +1,32 @@
+[{
+"klasnaam": "5BCW",
+"studierichting": "Biotechnologische en Chemische STEM-Wetenschappen",
+"specifieke vakken": ["Fysica","Chemie","Biologie"],
+"leerlingen":[
+{
+"voornaam": "Marthe",
+"leeftijd": 17
+},
+{
+"voornaam": "Mikail",
+"leeftijd": 17
+},
+{
+"voornaam": "Lisa",
+"leeftijd": 16
+},
+{
+"voornaam": "Sinem",
+"leeftijd": 16
+},
+{
+"voornaam": "Matteo",
+"leeftijd": 16
+},
+{
+"voornaam": "Seppe",
+"leeftijd": 16
+}
+]
+}
+]
