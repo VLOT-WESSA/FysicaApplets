@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:30px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Breking en totale reflectie</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
+      <div class="card">
+        <div class="row"><span class="lbl">Invalshoek &theta;&#8321;</span><span class="val">{{ thStr }}</span></div>
+        <div class="sl"><input type="range" min="0" max="85" step="0.5" value="{{ th }}" onInput="{{ onTh }}"></div>
+        <div style="font-size:12px;color:#8c8576">Middenstof 1 (boven)</div>
+        <div class="chips">
+          <sc-for list="{{ m1 }}" as="p" hint-placeholder-count="4">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="font-size:12px;color:#8c8576;margin-top:4px">Middenstof 2 (onder)</div>
+        <div class="chips">
+          <sc-for list="{{ m2 }}" as="p" hint-placeholder-count="4">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="3">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+        <div style="{{ msgStyle }}">{{ msg }}</div>
+      </div>
+      <div class="note">
+        <div class="mono">n&#8321;&middot;sin &theta;&#8321; = n&#8322;&middot;sin &theta;&#8322; &nbsp;&nbsp; n = c / v</div>
+        <div class="mono">sin &theta;<sub>g</sub> = n&#8322; / n&#8321; &nbsp;(als n&#8321; &gt; n&#8322;)</div>
+        <div style="margin-top:4px">{{ noteText }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560; Y0 = 280; OX = 460;
+  MATS = [['Lucht', 1.0], ['Water', 1.33], ['Glas', 1.5], ['Diamant', 2.42]];
+  state = { tab: 'ray', th: 40, n1: 0, n2: 2, showAng: true, showRefl: true, showReflH: false, showWl: true };
+  t = 0;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current; c.addEventListener('pointerdown', this.onDown); window.addEventListener('pointermove', this.onMove); window.addEventListener('pointerup', this.onUp);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) { const c = this.stageRef.current; const r = c.getBoundingClientRect(); const s = Math.min(r.width / this.W, r.height / this.H); return { x: (e.clientX - r.left - (r.width - this.W * s) / 2) / s, y: (e.clientY - r.top - (r.height - this.H * s) / 2) / s }; }
+  onDown = (e) => { if (this.state.tab !== 'ray') return; const p = this.toPx(e); if (p.y < this.Y0) { this.drag = true; this.dragTo(p); } };
+  onMove = (e) => { if (this.drag) this.dragTo(this.toPx(e)); };
+  onUp = () => { this.drag = false; };
+  dragTo(p) { const a = Math.atan2(this.OX - p.x, this.Y0 - p.y) * 180 / Math.PI; this.setState({ th: Math.max(0, Math.min(85, Math.round(a * 2) / 2)) }); }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.state.tab === 'huy') { this.t += dt; this.draw(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  componentDidUpdate() { this.draw(); }
+  n1() { return this.MATS[this.state.n1][1]; }
+  n2() { return this.MATS[this.state.n2][1]; }
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  fresnel(t1, n1, n2) {
+    const s2 = n1 / n2 * Math.sin(t1); if (s2 >= 1) return 1;
+    const t2 = Math.asin(s2), c1 = Math.cos(t1), c2 = Math.cos(t2);
+    const rs = ((n1 * c1 - n2 * c2) / (n1 * c1 + n2 * c2)) ** 2, rp = ((n1 * c2 - n2 * c1) / (n1 * c2 + n2 * c1)) ** 2;
+    return (rs + rp) / 2;
+  }
+  media(ctx) {
+    const tint = (n) => n <= 1.0 ? '#f6f3ec' : n < 1.4 ? '#d9e9f2' : n < 2 ? '#dfe8e4' : '#e4e1f0';
+    ctx.fillStyle = tint(this.n1()); ctx.fillRect(0, 0, this.W, this.Y0);
+    ctx.fillStyle = tint(this.n2()); ctx.fillRect(0, this.Y0, this.W, this.H - this.Y0);
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, this.Y0); ctx.lineTo(this.W, this.Y0); ctx.stroke();
+    ctx.fillStyle = '#4f4a42'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(this.MATS[this.state.n1][0] + '  (n₁ = ' + this.fmt(this.n1(), 2) + ')', 14, 12);
+    ctx.textBaseline = 'bottom'; ctx.fillText(this.MATS[this.state.n2][0] + '  (n₂ = ' + this.fmt(this.n2(), 2) + ')', 14, this.H - 12);
+  }
+  ray(ctx, x0, y0, x1, y1, a, w) {
+    ctx.strokeStyle = 'rgba(220,40,40,' + a + ')'; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const mx = (x0 + x1) / 2, my = (y0 + y1) / 2, ang = Math.atan2(y1 - y0, x1 - x0);
+    ctx.fillStyle = 'rgba(220,40,40,' + a + ')'; ctx.beginPath(); ctx.moveTo(mx + 9 * Math.cos(ang), my + 9 * Math.sin(ang)); ctx.lineTo(mx - 7 * Math.cos(ang - 0.5), my - 7 * Math.sin(ang - 0.5)); ctx.lineTo(mx - 7 * Math.cos(ang + 0.5), my - 7 * Math.sin(ang + 0.5)); ctx.closePath(); ctx.fill();
+  }
+  arcLabel(ctx, from, to, r, col, txt) { // hoeken t.o.v. de normaal, canvas-radialen
+    ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(this.OX, this.Y0, r, Math.min(from, to), Math.max(from, to)); ctx.stroke();
+    const m = (from + to) / 2; ctx.fillStyle = col; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(txt, this.OX + (r + 22) * Math.cos(m), this.Y0 + (r + 22) * Math.sin(m));
+  }
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    this.media(ctx);
+    if (this.state.tab === 'ray') this.drawRay(ctx); else this.drawHuy(ctx);
+  }
+  drawRay(ctx) {
+    const st = this.state, n1 = this.n1(), n2 = this.n2(), t1 = st.th * Math.PI / 180, O = this.OX, Y = this.Y0, L = 250;
+    // normaal
+    ctx.setLineDash([6, 5]); ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(O, Y - 240); ctx.lineTo(O, Y + 240); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('normaal', O + 5, Y - 238);
+    const sx = O - L * Math.sin(t1), sy = Y - L * Math.cos(t1);
+    const R = this.fresnel(t1, n1, n2); const s2 = n1 / n2 * Math.sin(t1); const tir = s2 >= 1;
+    // laser
+    ctx.save(); ctx.translate(sx, sy); ctx.rotate(Math.atan2(Y - sy, O - sx)); ctx.fillStyle = '#4f4a42'; ctx.fillRect(-34, -9, 34, 18); ctx.restore();
+    this.ray(ctx, sx, sy, O, Y, 1, 3);
+    if (st.showRefl || tir) this.ray(ctx, O, Y, O + L * Math.sin(t1), Y - L * Math.cos(t1), Math.max(0.12, R), 1 + 2 * R);
+    let t2 = null;
+    if (!tir) { t2 = Math.asin(s2); this.ray(ctx, O, Y, O + L * Math.sin(t2), Y + L * Math.cos(t2), Math.max(0.15, 1 - R), 1 + 2 * (1 - R)); }
+    if (st.showAng) {
+      const up = -Math.PI / 2, dn = Math.PI / 2;
+      this.arcLabel(ctx, up, up - t1, 60, '#c8443a', 'θ₁');
+      if (st.showRefl || tir) this.arcLabel(ctx, up, up + t1, 78, '#8c8576', 'θᵣ');
+      if (t2 != null) this.arcLabel(ctx, dn, dn - t2, 60, '#2a6fb8', 'θ₂');
+    }
+    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Totale reflectie', O, Y + 30); }
+    if (n1 > n2) { // grenshoek tonen
+      const tc = Math.asin(n2 / n1); ctx.setLineDash([2, 4]); ctx.strokeStyle = 'rgba(138,59,44,0.5)'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(O, Y); ctx.lineTo(O - 200 * Math.sin(tc), Y - 200 * Math.cos(tc)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('grenshoek', O - 200 * Math.sin(tc) - 4, Y - 200 * Math.cos(tc));
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('Sleep in het bovenste deel om de laser te draaien', this.W - 14, 12);
+  }
+  drawHuy(ctx) {
+    const st = this.state, n1 = this.n1(), n2 = this.n2(), Y = this.Y0;
+    const t1 = Math.max(0.5, st.th) * Math.PI / 180, v1 = 60 / n1, v2 = 60 / n2, lam1 = 70 / n1 * 1.0;
+    const s2 = v2 / v1 * Math.sin(t1), tir = s2 >= 1, t2 = tir ? null : Math.asin(s2);
+    const k1 = [Math.sin(t1), Math.cos(t1)];
+    const sNow = v1 * this.t;
+    // golffronten: punten p met p·k1 = s
+    const fronts = [];
+    const sMin = -400, sMax = this.W + this.H;
+    const off = ((sNow % lam1) + lam1) % lam1;
+    for (let s = sMin + off; s < sMax; s += lam1) fronts.push(s);
+    const sOf = (x) => x * k1[0] + Y * k1[1]; // wanneer bereikt het front punt (x, Y)
+    ctx.lineWidth = 2;
+    for (const s of fronts) {
+      const xc = (s - Y * k1[1]) / k1[0]; // snijpunt met grensvlak
+      // deel boven: richting loodrecht op k1, naar rechtsboven
+      ctx.strokeStyle = 'rgba(42,111,184,0.85)'; ctx.beginPath(); ctx.moveTo(xc, Y); ctx.lineTo(xc + 1200 * Math.cos(t1), Y - 1200 * Math.sin(t1)); ctx.stroke();
+      // gebroken front: vertrekt in xc, wanneer het front daar is, richting loodrecht op k2
+      if (!tir) { ctx.strokeStyle = 'rgba(42,138,149,0.9)'; ctx.beginPath(); ctx.moveTo(xc, Y); ctx.lineTo(xc - 1200 * Math.cos(t2), Y + 1200 * Math.sin(t2)); ctx.stroke(); }
+      if (st.showReflH || tir) { ctx.strokeStyle = 'rgba(42,111,184,0.3)'; ctx.beginPath(); ctx.moveTo(xc, Y); ctx.lineTo(xc - 1200 * Math.cos(t1), Y - 1200 * Math.sin(t1)); ctx.stroke(); }
+    }
+    // Huygens-golfjes: punten op het grensvlak die het front al raakte
+    if (st.showWl) {
+      const lamMax = 2.2 * lam1 * (v2 / v1);
+      for (let x = 20; x < this.W; x += 32) {
+        const ph = (((sNow - sOf(x)) % lam1) + lam1) % lam1; const r2 = ph / v1 * v2; // jongste golfje van dit punt
+        for (let r = r2; r <= lamMax; r += lam1 * v2 / v1) {
+          ctx.strokeStyle = 'rgba(200,68,58,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, Y, r, 0, Math.PI); ctx.stroke();
+          if (st.showReflH || tir) { ctx.strokeStyle = 'rgba(200,68,58,0.18)'; ctx.beginPath(); ctx.arc(x, Y, r * v1 / v2, Math.PI, 2 * Math.PI); ctx.stroke(); }
+        }
+        ctx.fillStyle = 'rgba(200,68,58,0.7)'; ctx.beginPath(); ctx.arc(x, Y, 2.5, 0, 7); ctx.fill();
+      }
+    }
+    // stralen (richtingen)
+    const O = this.OX;
+    const arrow = (x, y, dx, dy, col) => { ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 10 * Math.cos(a - 0.4), y + dy - 10 * Math.sin(a - 0.4)); ctx.lineTo(x + dx - 10 * Math.cos(a + 0.4), y + dy - 10 * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill(); };
+    arrow(O - 200 * k1[0], Y - 200 * k1[1], 90 * k1[0], 90 * k1[1], '#2a2723');
+    if (!tir) arrow(O + 80 * Math.sin(t2), Y + 80 * Math.cos(t2), 90 * Math.sin(t2), 90 * Math.cos(t2), '#2a2723');
+    ctx.fillStyle = '#4f4a42'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('blauw: golffronten  ·  rood: Huygens-golfjes vanuit het grensvlak', this.W - 14, 12);
+    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Totale reflectie: de golfjes vormen geen gebroken front', O, Y + 40); }
+  }
+  renderVals() {
+    const st = this.state, n1 = this.n1(), n2 = this.n2();
+    const accent = 'oklch(0.5 0.12 195)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const t1 = st.th * Math.PI / 180, s2 = n1 / n2 * Math.sin(t1), tir = s2 >= 1;
+    const R = this.fresnel(t1, n1, n2);
+    const rows = [
+      { n: 'n₁·sin θ₁', v: this.fmt(n1 * Math.sin(t1), 3) },
+      { n: 'Brekingshoek θ₂', v: tir ? '—' : this.fmt(Math.asin(s2) * 180 / Math.PI, 1) + '°' },
+      { n: 'Terugkaatsingshoek θᵣ', v: this.fmt(st.th, 1) + '°' },
+      { n: 'Snelheid v₁ = c/n₁', v: this.fmt(3e5 / n1, 0) + ' km/s' },
+      { n: 'Snelheid v₂ = c/n₂', v: this.fmt(3e5 / n2, 0) + ' km/s' },
+      { n: 'Grenshoek θg', v: n1 > n2 ? this.fmt(Math.asin(n2 / n1) * 180 / Math.PI, 1) + '°' : 'geen (n₁ ≤ n₂)' },
+      { n: 'Teruggekaatst deel', v: this.fmt(R * 100, 0) + ' %' },
+    ];
+    let msg, ok;
+    if (tir) { msg = 'Totale reflectie: θ₁ is groter dan de grenshoek.'; ok = false; }
+    else if (n2 > n1) { msg = 'Naar een optisch dichtere stof: breking naar de normaal toe.'; ok = true; }
+    else if (n2 < n1) { msg = 'Naar een optisch ijlere stof: breking van de normaal weg.'; ok = true; }
+    else { msg = 'Gelijke brekingsindex: geen breking.'; ok = true; }
+    return {
+      stageRef: this.stageRef,
+      tabs: [['ray', 'Lichtstraal'], ['huy', 'Huygens']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; } })),
+      th: st.th, thStr: this.fmt(st.th, 1) + '°', onTh: e => this.setState({ th: +e.target.value }),
+      m1: this.MATS.map(([n, v], i) => ({ name: n, style: chip(st.n1 === i), onClick: () => this.setState({ n1: i }) })),
+      m2: this.MATS.map(([n, v], i) => ({ name: n, style: chip(st.n2 === i), onClick: () => this.setState({ n2: i }) })),
+      toggles: (st.tab === 'ray' ? [['showAng', 'Hoeken'], ['showRefl', 'Teruggekaatste straal']] : [['showWl', 'Huygens-golfjes'], ['showReflH', 'Teruggekaatste golf']]).map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      rows, msg, msgStyle: 'margin-top:4px;padding:7px 9px;border-radius:8px;font-weight:600;' + (ok ? 'background:#e6f2ea;color:#2f7a45' : 'background:#fbeeea;color:#8a3b2c'),
+      noteText: st.tab === 'ray'
+        ? 'Kies water of glas boven en lucht onder om totale reflectie te zien (glasvezel, luchtspiegeling, de schittering van diamant). Een deel van het licht wordt altijd teruggekaatst; bij scherende inval en vlak onder de grenshoek wordt dat deel groot.'
+        : 'Volgens Huygens is elk punt van een golffront een bron van nieuwe golfjes. Elk punt van het grensvlak dat door het front geraakt wordt, zendt golfjes uit met de snelheid van middenstof 2. De raaklijn aan die golfjes is het nieuwe, gebroken golffront: omdat de golf trager gaat, liggen de fronten dichter op elkaar en buigt de golf naar de normaal.',
+    };
+  }
+}
+</script>
+</body>
+</html>

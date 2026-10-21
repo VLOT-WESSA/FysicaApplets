@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
+  input[type=range]:disabled{opacity:.35}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:5px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:28px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Licht door spleten en rooster</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ modes }}" as="tb" hint-placeholder-count="4">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
+      <div class="card">
+        <div class="row"><span class="lbl">Golflengte &lambda;</span><span class="val">{{ lamStr }}</span></div>
+        <div class="sl"><input type="range" min="400" max="700" step="1" value="{{ lam }}" onInput="{{ onLam }}" disabled="{{ whiteOn }}"></div>
+        <div class="chips">
+          <sc-for list="{{ lasers }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ showA }}" hint-placeholder-val="{{ true }}">
+          <div class="row" style="margin-top:4px"><span class="lbl">{{ aLabel }}</span><span class="val">{{ aStr }}</span></div>
+          <div class="sl"><input type="range" min="20" max="200" step="1" value="{{ a }}" onInput="{{ onA }}"></div>
+        </sc-if>
+        <sc-if value="{{ showD }}" hint-placeholder-val="{{ false }}">
+          <div class="row"><span class="lbl">Spleetafstand d</span><span class="val">{{ dStr }}</span></div>
+          <div class="sl"><input type="range" min="50" max="500" step="5" value="{{ d }}" onInput="{{ onD }}"></div>
+        </sc-if>
+        <sc-if value="{{ showG }}" hint-placeholder-val="{{ false }}">
+          <div class="row"><span class="lbl">Lijnen per mm</span><span class="val">{{ gStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="1200" step="50" value="{{ g }}" onInput="{{ onG }}"></div>
+        </sc-if>
+        <div class="row"><span class="lbl">Afstand tot scherm L</span><span class="val">{{ LStr }}</span></div>
+        <div class="sl"><input type="range" min="0.5" max="3" step="0.05" value="{{ L }}" onInput="{{ onL }}"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="3">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+      </div>
+      <div class="note">
+        <div class="mono">{{ formula }}</div>
+        <div style="margin-top:4px">{{ noteText }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  state = { mode: 'dubbel', lam: 655, a: 80, d: 200, g: 1000, L: 1, white: false, showTheory: true, showEnv: true, cursor: null };
+
+  componentDidMount() {
+    this.setupCanvas(); this.draw();
+    const c = this.stageRef.current; c.addEventListener('pointerdown', this.onDown);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+  }
+  componentDidUpdate() { this.draw(); }
+  componentWillUnmount() { if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) { const c = this.stageRef.current; const r = c.getBoundingClientRect(); const s = Math.min(r.width / this.W, r.height / this.H); return { x: (e.clientX - r.left - (r.width - this.W * s) / 2) / s, y: (e.clientY - r.top - (r.height - this.H * s) / 2) / s }; }
+  onDown = (e) => { const p = this.toPx(e); if (p.y > 170 && p.x > this.gx && p.x < this.gx + this.gw) this.setState({ cursor: (p.x - this.gx - this.gw / 2) / (this.gw / 2) * this.xmax() }); };
+  gx = 30; gw = 860;
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  dg() { return 1e-3 / this.state.g; } // roosterconstante (m)
+  // halve breedte van het getoonde scherm (m)
+  xmax() {
+    const st = this.state, lam = (st.white ? 700 : st.lam) * 1e-9, L = st.L;
+    if (st.mode === 'rooster') { const s = Math.min(0.97, 2.3 * lam / this.dg()); return L * Math.tan(Math.min(Math.asin(s), 1.0)); }
+    return 3.6 * lam * L / (st.a * 1e-6);
+  }
+  intensity(x, lamNm) {
+    const st = this.state, lam = lamNm * 1e-9, th = Math.atan(x / st.L), s = Math.sin(th);
+    const sinc = (u) => Math.abs(u) < 1e-9 ? 1 : Math.sin(u) / u;
+    const a = st.a * 1e-6;
+    const env = st.mode === 'rooster' ? 1 : sinc(Math.PI * a * s / lam) ** 2;
+    if (st.mode === 'enkel' || st.mode === 'haar') return env;
+    const d = st.mode === 'dubbel' ? st.d * 1e-6 : this.dg(), N = st.mode === 'dubbel' ? 2 : 24;
+    const ph = Math.PI * d * s / lam; const sn = Math.sin(ph);
+    const arr = Math.abs(sn) < 1e-7 ? 1 : (Math.sin(N * ph) / (N * sn)) ** 2;
+    return env * arr;
+  }
+  rgb(l) { // golflengte (nm) -> kleur
+    let r = 0, g = 0, b = 0;
+    if (l < 440) { r = -(l - 440) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; } else if (l < 510) { g = 1; b = -(l - 510) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; } else if (l < 645) { r = 1; g = -(l - 645) / 65; } else r = 1;
+    let f = l < 420 ? 0.3 + 0.7 * (l - 380) / 40 : l > 680 ? 0.3 + 0.7 * (750 - l) / 70 : 1; f = Math.max(0.15, f);
+    return [r * f, g * f, b * f];
+  }
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const sc = this.dpr || 1;
+    ctx.setTransform(sc, 0, 0, sc, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state, gx = this.gx, gw = this.gw, X = this.xmax();
+    // --- opstelling ---
+    const col = st.white ? [1, 1, 1] : this.rgb(st.lam), css = 'rgb(' + col.map(v => Math.round(v * 255)).join(',') + ')';
+    ctx.fillStyle = '#4f4a42'; ctx.fillRect(40, 58, 70, 26); ctx.fillStyle = '#fff'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(st.white ? 'witte lamp' : 'laser', 75, 71);
+    ctx.strokeStyle = st.white ? '#b9b09f' : css; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(110, 71); ctx.lineTo(260, 71); ctx.stroke();
+    ctx.fillStyle = '#6f685c'; ctx.fillRect(258, 30, 8, 82);
+    const lbl = { enkel: 'enkele spleet', dubbel: 'dubbele spleet', rooster: 'buigingsrooster', haar: 'haar' }[st.mode];
+    ctx.fillStyle = '#4f4a42'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText(lbl, 262, 116);
+    // stralen naar scherm (waaier)
+    ctx.globalAlpha = 0.25; ctx.fillStyle = st.white ? '#cfc7b6' : css; ctx.beginPath(); ctx.moveTo(266, 71); ctx.lineTo(820, 30); ctx.lineTo(820, 112); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = '#2a2723'; ctx.fillRect(820, 22, 8, 98);
+    ctx.fillStyle = '#4f4a42'; ctx.textBaseline = 'top'; ctx.fillText('scherm', 824, 124);
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(266, 140); ctx.lineTo(820, 140); ctx.moveTo(266, 134); ctx.lineTo(266, 146); ctx.moveTo(820, 134); ctx.lineTo(820, 146); ctx.stroke();
+    ctx.fillStyle = '#4f4a42'; ctx.font = "500 12px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom'; ctx.fillText('L = ' + this.fmt(st.L, 2) + ' m', 543, 138);
+    // --- scherm (beeld) ---
+    const sy = 175, sh = 90, n = 880;
+    const img = ctx.createImageData(n, 1); const vals = new Float64Array(n);
+    const lams = st.white ? Array.from({ length: 31 }, (_, i) => 400 + i * 10) : [st.lam];
+    let vmax = 0, cmax = 0; const rgbs = new Float64Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      const x = (i / (n - 1) * 2 - 1) * X; let R = 0, G = 0, B = 0, I = 0;
+      for (const l of lams) { const v = this.intensity(x, l); const cc = this.rgb(l); R += v * cc[0]; G += v * cc[1]; B += v * cc[2]; I += v; }
+      vals[i] = I / lams.length; vmax = Math.max(vmax, vals[i]);
+      rgbs[i * 3] = R; rgbs[i * 3 + 1] = G; rgbs[i * 3 + 2] = B; cmax = Math.max(cmax, R, G, B);
+    }
+    const gm = (u) => { let q = u / (cmax || 1); if (st.white) q = Math.max(0, q - 0.015) / 0.985; return Math.round(255 * Math.pow(Math.min(1, q), st.white ? 0.45 : 0.55)); };
+    for (let i = 0; i < n; i++) { img.data[i * 4] = gm(rgbs[i * 3]); img.data[i * 4 + 1] = gm(rgbs[i * 3 + 1]); img.data[i * 4 + 2] = gm(rgbs[i * 3 + 2]); img.data[i * 4 + 3] = 255; }
+    const tmp = document.createElement('canvas'); tmp.width = n; tmp.height = 1; tmp.getContext('2d').putImageData(img, 0, 0);
+    ctx.fillStyle = '#000'; ctx.fillRect(gx, sy, gw, sh);
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(tmp, gx, sy, gw, sh);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('Beeld op het scherm (klik om te meten)', gx, sy - 4);
+    // --- grafiek ---
+    const py = 290, ph = 215, base = py + ph;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, py, gw, ph); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(gx, py, gw, ph);
+    const Xp = x => gx + gw / 2 + x / X * gw / 2;
+    // schaalverdeling
+    const raw = X / 5, e10 = Math.pow(10, Math.floor(Math.log10(raw))), mm = raw / e10; const unit = (mm < 1.5 ? 1 : mm < 3.5 ? 2 : mm < 7.5 ? 5 : 10) * e10;
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = '#ece6da';
+    for (let x = -Math.floor(X / unit) * unit; x <= X + 1e-12; x += unit) { const xx = Xp(x); ctx.beginPath(); ctx.moveTo(xx, py); ctx.lineTo(xx, base); ctx.stroke(); ctx.fillText(X > 0.2 ? this.fmt(x * 100, 0) : this.fmt(x * 1000, 0), xx, base + 4); }
+    ctx.textAlign = 'right'; ctx.fillText(X > 0.2 ? 'x (cm)' : 'x (mm)', gx + gw, base + 20);
+    if (st.showEnv && st.mode === 'dubbel') {
+      ctx.strokeStyle = 'rgba(42,39,35,0.35)'; ctx.setLineDash([4, 4]); ctx.beginPath();
+      for (let i = 0; i <= 400; i++) { const x = (i / 200 - 1) * X, th = Math.atan(x / st.L), u = Math.PI * st.a * 1e-6 * Math.sin(th) / (st.lam * 1e-9); const v = Math.abs(u) < 1e-9 ? 1 : (Math.sin(u) / u) ** 2; const p = [Xp(x), base - v * (ph - 20)]; i ? ctx.lineTo(...p) : ctx.moveTo(...p); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = st.white ? '#2a2723' : css; if (!st.white && st.lam > 560 && st.lam < 600) ctx.strokeStyle = '#c9a400';
+    ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i < n; i++) { const p = [gx + i / (n - 1) * gw, base - vals[i] / (vmax || 1) * (ph - 20)]; i ? ctx.lineTo(...p) : ctx.moveTo(...p); }
+    ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Intensiteit I(x)', gx + 8, py + 6);
+    // theoretische posities
+    if (st.showTheory && !st.white) {
+      const lam = st.lam * 1e-9; const marks = [];
+      if (st.mode === 'enkel' || st.mode === 'haar') for (const m of [-3, -2, -1, 1, 2, 3]) { const s = m * lam / (st.a * 1e-6); if (Math.abs(s) < 1) marks.push([st.L * Math.tan(Math.asin(s)), 'min ' + m, '#c8443a']); }
+      else { const d = st.mode === 'dubbel' ? st.d * 1e-6 : this.dg(); for (let m = -8; m <= 8; m++) { const s = m * lam / d; if (Math.abs(s) < 1) marks.push([st.L * Math.tan(Math.asin(s)), 'n = ' + m, '#2f8a4e']); } }
+      ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center';
+      for (const [x, l, cl] of marks) { if (Math.abs(x) > X) continue; ctx.strokeStyle = cl; ctx.beginPath(); ctx.moveTo(Xp(x), sy + sh); ctx.lineTo(Xp(x), base); ctx.stroke(); ctx.fillStyle = cl; ctx.textBaseline = 'top'; if (st.mode !== 'dubbel' || Math.abs(+l.split(' ').pop()) <= 3) ctx.fillText(l, Xp(x), sy + sh + 3); }
+      ctx.setLineDash([]);
+    }
+    // cursor
+    if (st.cursor != null && Math.abs(st.cursor) <= X) {
+      const xx = Xp(st.cursor); ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(xx, sy - 2); ctx.lineTo(xx, base); ctx.stroke();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = xx > gx + gw - 140 ? 'right' : 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(' x = ' + this.fmt(st.cursor * 1000, 1) + ' mm ', xx, py + 24);
+    }
+  }
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.12 195)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tabStyle = (on) => 'min-height:36px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const lam = st.lam * 1e-9, L = st.L;
+    const rows = []; let formula, note;
+    if (st.mode === 'enkel' || st.mode === 'haar') {
+      const x1 = L * Math.tan(Math.asin(Math.min(1, lam / (st.a * 1e-6))));
+      rows.push({ n: 'Eerste minimum x₁', v: this.fmt(x1 * 1000, 2) + ' mm' });
+      rows.push({ n: 'Breedte centrale vlek 2x₁', v: this.fmt(2 * x1 * 1000, 2) + ' mm' });
+      rows.push({ n: (st.mode === 'haar' ? 'Dikte haar' : 'Spleetbreedte') + ' a = λ·L/x₁', v: this.fmt(lam * L / x1 * 1e6, 1) + ' µm' });
+      formula = 'minima: a·sin θ = n·λ   ≈   a = λ·L / x₁';
+      note = st.mode === 'haar' ? 'Een haar in de laserstraal geeft hetzelfde patroon als een spleet van dezelfde breedte (principe van Babinet). Meet de afstand tussen de minima links en rechts en bereken de dikte van het haar.' : 'Hoe smaller de spleet, hoe breder het buigingspatroon. De centrale vlek is twee keer zo breed als de andere maxima.';
+    } else if (st.mode === 'dubbel') {
+      const dx = lam * L / (st.d * 1e-6);
+      rows.push({ n: 'Afstand tussen maxima λ·L/d', v: this.fmt(dx * 1000, 2) + ' mm' });
+      rows.push({ n: 'Eerste orde x₁', v: this.fmt(L * Math.tan(Math.asin(lam / (st.d * 1e-6))) * 1000, 2) + ' mm' });
+      rows.push({ n: 'Eerste minimum omhullende λ·L/a', v: this.fmt(lam * L / (st.a * 1e-6) * 1000, 1) + ' mm' });
+      rows.push({ n: 'Golflengte λ = d·x₁/L', v: this.fmt(st.d * 1e-6 * dx / L * 1e9, 0) + ' nm' });
+      formula = 'maxima: d·sin θ = n·λ   ≈   λ = d·x / L';
+      note = 'Het licht uit beide spleten interfereert: helder waar het weglengteverschil een veelvoud van λ is, donker waar het een halve golflengte verschilt. De buiging aan elke spleet afzonderlijk bepaalt de omhullende (stippellijn).';
+    } else {
+      const d = this.dg(); const s1 = lam / d;
+      rows.push({ n: 'Roosterconstante d', v: this.fmt(d * 1e6, 3) + ' µm' });
+      rows.push({ n: 'Hoek eerste orde', v: s1 < 1 ? this.fmt(Math.asin(s1) * 180 / Math.PI, 1) + '°' : 'bestaat niet' });
+      rows.push({ n: 'Positie eerste orde x₁', v: s1 < 1 ? this.fmt(L * Math.tan(Math.asin(s1)) * 100, 1) + ' cm' : '—' });
+      rows.push({ n: 'Hoogste orde nₘₐₓ', v: String(Math.floor(d / lam)) });
+      formula = 'd·sin θ = n·λ   met   d = 1 / (lijnen per mm)';
+      note = 'Een rooster heeft heel veel spleten: de maxima worden scherp en helder. De afbuighoek hangt af van de golflengte, dus wit licht wordt een spectrum (rood het verst afgebogen). Zo werkt een spectrometer. Voor de tekening zijn 24 spleten gebruikt.';
+    }
+    if (st.cursor != null) rows.push({ n: 'Gemeten met cursor x', v: this.fmt(st.cursor * 1000, 1) + ' mm' });
+    const showA = st.mode !== 'rooster';
+    return {
+      stageRef: this.stageRef,
+      modes: [['enkel', 'Enkele spleet'], ['dubbel', 'Dubbele spleet'], ['haar', 'Haar'], ['rooster', 'Rooster']].map(([k, n]) => ({ name: n, style: tabStyle(st.mode === k), onClick: () => this.setState({ mode: k, cursor: null, white: k === 'rooster' ? st.white : false }) })),
+      lam: st.lam, lamStr: st.white ? 'wit licht' : st.lam + ' nm', onLam: e => this.setState({ lam: +e.target.value }), whiteOn: st.white,
+      lasers: [['Rood 655 nm', 655], ['Groen 532 nm', 532], ['Blauw 450 nm', 450]].map(([n, l]) => ({ name: n, style: chip(!st.white && st.lam === l), onClick: () => this.setState({ lam: l, white: false }) })),
+      showA, showD: st.mode === 'dubbel', showG: st.mode === 'rooster',
+      aLabel: st.mode === 'haar' ? 'Dikte haar a' : 'Spleetbreedte a', a: st.a, aStr: st.a + ' µm', onA: e => this.setState({ a: +e.target.value }),
+      d: st.d, dStr: st.d + ' µm', onD: e => this.setState({ d: +e.target.value }),
+      g: st.g, gStr: st.g + ' /mm', onG: e => this.setState({ g: +e.target.value, cursor: null }),
+      L: st.L, LStr: this.fmt(st.L, 2) + ' m', onL: e => this.setState({ L: +e.target.value, cursor: null }),
+      toggles: (st.mode === 'rooster' ? [['showTheory', 'Theorie'], ['white', 'Wit licht']] : st.mode === 'dubbel' ? [['showTheory', 'Theorie'], ['showEnv', 'Omhullende']] : [['showTheory', 'Theorie']]).map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      rows, formula, noteText: note,
+    };
+  }
+}
+</script>
+</body>
+</html>

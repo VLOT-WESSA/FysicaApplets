@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8862a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8862a;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .sl{height:30px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .fine{flex:1;min-height:30px;font-size:12.5px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-family:'IBM Plex Mono',monospace}
+  table.mt{border-collapse:collapse;width:100%;font-size:12px}
+  table.mt td,table.mt th{padding:2px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
+  table.mt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">I-U-karakteristiek</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div class="card">
+        <div style="font-size:12px;color:#8c8576">Component</div>
+        <div class="chips">
+          <sc-for list="{{ comps }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ isR }}" hint-placeholder-val="{{ false }}">
+          <div class="row" style="margin-top:4px"><span class="lbl">Weerstand R</span><span class="val">{{ RStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="2200" step="10" value="{{ R }}" onInput="{{ onR }}"></div>
+        </sc-if>
+        <sc-if value="{{ isLed }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px;color:#8c8576;margin-top:4px">Kleur LED (golflengte volgens fabrikant)</div>
+          <div class="chips">
+            <sc-for list="{{ leds }}" as="p" hint-placeholder-count="5">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div class="card">
+        <div class="row"><span class="lbl">Bronspanning</span><span class="val">{{ UbStr }}</span></div>
+        <div class="sl"><input type="range" min="0" max="{{ Umax }}" step="0.05" value="{{ Ub }}" onInput="{{ onUb }}"></div>
+        <div style="display:flex;gap:6px">
+          <button class="fine" onClick="{{ onM1 }}">&minus;0,1</button>
+          <button class="fine" onClick="{{ onM01 }}">&minus;0,01</button>
+          <button class="fine" onClick="{{ onP01 }}">+0,01</button>
+          <button class="fine" onClick="{{ onP1 }}">+0,1</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <button onClick="{{ onRec }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Meting noteren</button>
+          <button onClick="{{ onClear }}" style="flex:none;min-height:38px;padding:0 12px;font-size:13px;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff">Wissen</button>
+        </div>
+        <div style="font-size:12px;color:#8c8576;margin-top:4px">Grafiek</div>
+        <div class="chips">
+          <sc-for list="{{ plots }}" as="p" hint-placeholder-count="2">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="2">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+      </div>
+      <div class="card" style="gap:4px">
+        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Meettabel ({{ nMeas }})</span>
+          <button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button></div>
+        <table class="mt">
+          <tr><th>U (V)</th><th>I (mA)</th><th>R (&Omega;)</th></tr>
+          <sc-for list="{{ meas }}" as="m" hint-placeholder-count="3">
+            <tr><td>{{ m.u }}</td><td>{{ m.i }}</td><td>{{ m.r }}</td></tr>
+          </sc-for>
+        </table>
+      </div>
+      <div class="note">{{ noteText }}</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  LEDS = [['Rood', 630, '#e0352b'], ['Oranje', 605, '#f07a1a'], ['Geel', 590, '#f2c018'], ['Groen', 525, '#2fae4e'], ['Blauw', 470, '#2f6fe0']];
+  state = { comp: 'lamp', R: 1000, led: 0, Ub: 0, plot: 'IU', showCurve: true, showFit: true, meas: [], copyLbl: 'Kopieer' };
+
+  componentDidMount() {
+    this.setupCanvas();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.draw();
+  }
+  componentDidUpdate() { this.draw(); }
+  componentWillUnmount() { if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+
+  // ---------- modellen ----------
+  Rs() { return this.state.comp === 'led' ? 330 : 0; } // beschermweerstand
+  lampR(T) { return 6 * (1 + 4.5e-3 * (T - 20)); }      // koude weerstand 6 ohm bij 20 °C
+  lampT(U) { // evenwicht: elektrisch vermogen = straling + geleiding
+    const k = 2.17e-14, h = 1e-4, T0 = 293;
+    let lo = 20, hi = 3200;
+    for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2, R = this.lampR(m), K = m + 273; const f = U * U / R - k * (K ** 4 - T0 ** 4) - h * (K - T0); if (f > 0) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  ledUth() { return 1239.84 / this.LEDS[this.state.led][1] - 0.04; }
+  Icomp(U) { // stroom (A) door de component bij spanning U erover
+    const st = this.state;
+    if (st.comp === 'R') return U / st.R;
+    if (st.comp === 'lamp') return U / this.lampR(this.lampT(U));
+    const nV = 0.045, Rs = 18, x = (U - this.ledUth()) / nV;
+    return nV / Rs * (x > 30 ? x : Math.log(1 + Math.exp(x)));
+  }
+  solve(Ub) { // U over component als bron Ub over (Rs + component)
+    const Rs = this.Rs(); if (!Rs) return Ub;
+    let lo = 0, hi = Ub;
+    for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (m + this.Icomp(m) * Rs > Ub) hi = m; else lo = m; }
+    return (lo + hi) / 2;
+  }
+  Umax() { return this.state.comp === 'lamp' ? 6 : 12; }
+  cur() { const U = this.solve(this.state.Ub); const I = this.Icomp(U); return { U, I }; }
+  fit() { // lineaire trendlijn door het steile deel (LED): punten met I > 2 mA
+    const pts = this.state.meas.filter(m => m.I > 0.002);
+    if (pts.length < 2) return null;
+    const n = pts.length, sx = pts.reduce((a, p) => a + p.U, 0), sy = pts.reduce((a, p) => a + p.I, 0);
+    const sxx = pts.reduce((a, p) => a + p.U * p.U, 0), sxy = pts.reduce((a, p) => a + p.U * p.I, 0);
+    const a = (n * sxy - sx * sy) / (n * sxx - sx * sx), b = (sy - a * sx) / n;
+    return { a, b, U0: -b / a };
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state; const { U, I } = this.cur();
+    // ----- schakeling -----
+    const L = 40, T = 70, Rr = 340, B = 330;
+    ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(L, B); ctx.lineTo(L, T); ctx.lineTo(Rr, T); ctx.lineTo(Rr, B); ctx.lineTo(L, B); ctx.stroke();
+    // bron
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(L - 14, 170, 28, 60);
+    ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(L - 16, 190); ctx.lineTo(L + 16, 190); ctx.stroke();
+    ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(L - 8, 208); ctx.lineTo(L + 8, 208); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(this.fmt(st.Ub, 2) + ' V', L + 22, 200);
+    // ampèremeter
+    this.meter(ctx, 140, T, 'A');
+    // beschermweerstand
+    if (this.Rs()) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.fillRect(Rr - 14, 120, 28, 56); ctx.strokeRect(Rr - 14, 120, 28, 56); ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.fillText('330 Ω', Rr + 20, 148); }
+    // component
+    const cy = 260, cx = Rr;
+    if (st.comp === 'R') { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.fillRect(cx - 14, cy - 30, 28, 60); ctx.strokeRect(cx - 14, cy - 30, 28, 60); }
+    else if (st.comp === 'lamp') {
+      const Tc = this.lampT(U); const g = Math.max(0, Math.min(1, (Tc - 700) / 1600));
+      if (g > 0) { const gr = ctx.createRadialGradient(cx, cy, 3, cx, cy, 70); gr.addColorStop(0, 'rgba(255,214,90,' + 0.9 * g + ')'); gr.addColorStop(1, 'rgba(255,214,90,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, 70, 0, 7); ctx.fill(); }
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 20, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - 14, cy - 14); ctx.lineTo(cx + 14, cy + 14); ctx.moveTo(cx + 14, cy - 14); ctx.lineTo(cx - 14, cy + 14); ctx.stroke();
+    } else {
+      const col = this.LEDS[st.led][2]; const g = Math.min(1, I / 0.008);
+      if (g > 0.03) { const gr = ctx.createRadialGradient(cx, cy, 3, cx, cy, 70); gr.addColorStop(0, this.rgba(col, 0.9 * g)); gr.addColorStop(1, this.rgba(col, 0)); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, 70, 0, 7); ctx.fill(); }
+      ctx.fillStyle = g > 0.03 ? col : '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx - 16, cy - 14); ctx.lineTo(cx + 16, cy - 14); ctx.lineTo(cx, cy + 12); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - 16, cy + 12); ctx.lineTo(cx + 16, cy + 12); ctx.stroke();
+      ctx.lineWidth = 1.5; for (const d of [0, 10]) { ctx.beginPath(); ctx.moveTo(cx + 20, cy - 4 + d); ctx.lineTo(cx + 32, cy - 12 + d); ctx.stroke(); }
+    }
+    // voltmeter parallel
+    ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy - 45); ctx.lineTo(cx + 80, cy - 45); ctx.lineTo(cx + 80, cy + 45); ctx.lineTo(cx, cy + 45); ctx.stroke();
+    this.meter(ctx, cx + 80, cy, 'V');
+    // displays
+    this.display(ctx, 60, 400, 'Ampèremeter', I >= 0.0995 ? this.fmt(I, 3) + ' A' : this.fmt(I * 1000, 2) + ' mA');
+    this.display(ctx, 220, 400, 'Voltmeter', this.fmt(U, 2) + ' V');
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Voltmeter parallel over de component, ampèremeter in serie.', 30, 490);
+    // ----- grafiek -----
+    this.drawPlot(ctx, U, I);
+  }
+  rgba(hex, a) { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  meter(ctx, x, y, l) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 15, 0, 7); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#2a2723'; ctx.font = "700 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(l, x, y + 1); }
+  display(ctx, x, y, title, txt) {
+    ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect(x, y, 140, 70, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#d8e4d0'; ctx.fillRect(x + 10, y + 22, 120, 36);
+    ctx.fillStyle = '#4f4a42'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 70, y + 5);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + 70, y + 41);
+  }
+  drawPlot(ctx, U, I) {
+    const st = this.state; const gx = 500, gy = 30, gw = 390, gh = 470;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx - 50, gy - 20, gw + 70, gh + 70); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(gx - 50, gy - 20, gw + 70, gh + 70);
+    const Umax = st.comp === 'led' ? 4 : this.Umax();
+    const IU = st.plot === 'IU';
+    // schaal
+    const Imax = Math.max(this.Icomp(Math.min(Umax, st.comp === 'led' ? 3.2 : Umax)), 1e-6) * 1.05;
+    let ymax;
+    if (IU) ymax = st.comp === 'led' ? 0.03 : this.nice(Imax);
+    else ymax = st.comp === 'R' ? this.nice(st.R * 1.2) : st.comp === 'lamp' ? 70 : 2000;
+    const X = u => gx + u / Umax * gw, Y = v => gy + gh - v / ymax * gh;
+    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1; ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    for (let i = 0; i <= 5; i++) {
+      const v = ymax * i / 5, y = Y(v); ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx + gw, y); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(IU ? this.fmt(v * 1000, v * 1000 < 10 ? 1 : 0) : this.fmt(v, 0), gx - 5, y);
+    }
+    for (let u = 0; u <= Umax + 1e-9; u += Umax > 6 ? 2 : Umax > 4 ? 1 : 0.5) { const x = X(u); ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x, gy + gh); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(this.fmt(u, Umax > 4 ? 0 : 1), x, gy + gh + 4); }
+    ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh); ctx.lineTo(gx + gw, gy + gh); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(IU ? 'I (mA)' : 'R = U/I (Ω)', gx - 44, gy - 4);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('U (V)', gx + gw, gy + gh + 20);
+    ctx.save(); ctx.beginPath(); ctx.rect(gx, gy, gw, gh); ctx.clip();
+    if (st.showCurve) {
+      ctx.strokeStyle = 'rgba(184,134,42,0.4)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); let first = true;
+      for (let i = 1; i <= 300; i++) { const u = i / 300 * Umax; const ii = this.Icomp(u); const v = IU ? ii : (ii > 1e-7 ? u / ii : NaN); if (!isFinite(v)) continue; first ? ctx.moveTo(X(u), Y(v)) : ctx.lineTo(X(u), Y(v)); first = false; }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    const f = st.comp === 'led' && IU && st.showFit ? this.fit() : null;
+    if (f) { ctx.strokeStyle = '#c8443a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(X(f.U0), Y(0)); ctx.lineTo(X(Umax), Y(f.a * Umax + f.b)); ctx.stroke(); ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(X(f.U0), Y(0), 4, 0, 7); ctx.fill(); }
+    ctx.fillStyle = '#b8862a';
+    for (const m of st.meas) { const v = IU ? m.I : (m.I > 1e-7 ? m.U / m.I : NaN); if (!isFinite(v)) continue; ctx.beginPath(); ctx.arc(X(m.U), Y(v), 4.5, 0, 7); ctx.fill(); }
+    const vn = IU ? I : (I > 1e-7 ? U / I : NaN);
+    if (isFinite(vn)) { ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(U), Y(vn), 7, 0, 7); ctx.stroke(); }
+    ctx.restore();
+    if (f) { ctx.fillStyle = '#c8443a'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('trendlijn (I > 2 mA): snijpunt U = ' + this.fmt(f.U0, 2) + ' V', gx + 8, gy + 6); }
+  }
+  nice(x) { const e = Math.pow(10, Math.floor(Math.log10(x))); const m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
+
+  renderVals() {
+    const st = this.state; const { U, I } = this.cur();
+    const accent = 'oklch(0.52 0.12 75)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const setU = (v) => this.setState({ Ub: Math.max(0, Math.min(this.Umax(), Math.round(v * 100) / 100)) });
+    const rows = [
+      { n: 'Spanning over component U', v: this.fmt(U, 3) + ' V' },
+      { n: 'Stroomsterkte I', v: this.fmt(I * 1000, 2) + ' mA' },
+      { n: 'Weerstand R = U/I', v: I > 1e-7 ? this.fmt(U / I, 1) + ' Ω' : '—' },
+      { n: 'Vermogen P = U·I', v: this.fmt(U * I * 1000, 1) + ' mW' },
+    ];
+    let note;
+    if (st.comp === 'lamp') {
+      rows.push({ n: 'Temperatuur gloeidraad', v: this.fmt(this.lampT(U), 0) + ' °C' });
+      note = 'Een gloeilampje (6 V / 0,1 A) met een wolfraamdraad: koude weerstand 6 Ω, R = R₀(1 + α·ΔT) met α = 4,5·10⁻³ K⁻¹. Hoe groter de spanning, hoe warmer de draad en hoe groter R: de I(U)-grafiek is geen rechte, een gloeilamp is geen ohmse geleider. Meet fijn tussen 0 en 1 V.';
+    } else if (st.comp === 'R') {
+      note = 'Een ohmse weerstand: I is recht evenredig met U, de I(U)-grafiek is een rechte door de oorsprong met richtingscoëfficiënt 1/R.';
+    } else {
+      const lam = this.LEDS[st.led][1], f = 2.998e8 / (lam * 1e-9), ft = this.fit();
+      rows.push({ n: 'Frequentie f = c/λ', v: this.fmt(f / 1e14, 2) + '·10¹⁴ Hz' });
+      rows.push({ n: 'Drempelspanning (trendlijn)', v: ft ? this.fmt(ft.U0, 2) + ' V' : 'noteer metingen' });
+      if (ft) rows.push({ n: 'h ≈ e·U₀/f', v: this.fmt(1.602e-19 * ft.U0 / f * 1e34, 2) + '·10⁻³⁴ J·s' });
+      note = 'LED in doorlaatrichting met een beschermweerstand van 330 Ω. Onder de drempelspanning loopt er bijna geen stroom; daarboven stijgt I ongeveer lineair. Noteer metingen in het steile deel: de trendlijn snijdt de U-as bij U₀ ≈ h·f/e. Herhaal voor elke kleur en zet e·U₀ uit tegen f: de richtingscoëfficiënt is de constante van Planck.';
+    }
+    const meas = st.meas.slice().sort((a, b) => a.U - b.U);
+    return {
+      stageRef: this.stageRef,
+      comps: [['R', 'Weerstand'], ['lamp', 'Gloeilamp'], ['led', 'LED']].map(([k, n]) => ({ name: n, style: chip(st.comp === k), onClick: () => this.setState({ comp: k, Ub: 0, meas: [] }) })),
+      isR: st.comp === 'R', isLed: st.comp === 'led',
+      R: st.R, RStr: st.R + ' Ω', onR: e => this.setState({ R: +e.target.value }),
+      leds: this.LEDS.map(([n, l], i) => ({ name: n + ' ' + l + ' nm', style: chip(st.led === i), onClick: () => this.setState({ led: i, meas: [] }) })),
+      Ub: st.Ub, Umax: this.Umax(), UbStr: this.fmt(st.Ub, 2) + ' V',
+      onUb: e => setU(+e.target.value),
+      onM1: () => setU(st.Ub - 0.1), onM01: () => setU(st.Ub - 0.01), onP01: () => setU(st.Ub + 0.01), onP1: () => setU(st.Ub + 0.1),
+      onRec: () => this.setState({ meas: st.meas.concat([{ U, I }]) }),
+      onClear: () => this.setState({ meas: [] }),
+      plots: [['IU', 'I(U)'], ['RU', 'R(U)']].map(([k, n]) => ({ name: n, style: chip(st.plot === k), onClick: () => this.setState({ plot: k }) })),
+      toggles: [['showCurve', 'Kromme tonen'], ['showFit', 'Trendlijn (LED)']].map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      rows, noteText: note,
+      nMeas: st.meas.length,
+      meas: meas.map(m => ({ u: this.fmt(m.U, 3), i: this.fmt(m.I * 1000, 3), r: m.I > 1e-7 ? this.fmt(m.U / m.I, 1) : '—' })),
+      copyLbl: st.copyLbl,
+      onCopy: () => {
+        const txt = 'U (V)\tI (mA)\tR (ohm)\n' + meas.map(m => [this.fmt(m.U, 3), this.fmt(m.I * 1000, 3), m.I > 1e-7 ? this.fmt(m.U / m.I, 1) : ''].join('\t')).join('\n');
+        try { navigator.clipboard.writeText(txt); this.setState({ copyLbl: 'Gekopieerd' }); setTimeout(() => this.setState({ copyLbl: 'Kopieer' }), 1500); } catch (e) {}
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

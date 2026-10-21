@@ -43,7 +43,7 @@
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Magneetveld rond een draad</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">{{ titleStr }}</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -59,6 +59,11 @@
     </div>
 
     <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ modeTabs }}" as="tb" hint-placeholder-count="3">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
@@ -70,6 +75,29 @@
         <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>1 A</span><span>10 A</span></div>
       </div>
 
+      <sc-if value="{{ isCoil }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:14px;font-weight:600">Aantal windingen N</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ NStr }}</span></div>
+          <input type="range" min="1" max="{{ Nmax }}" step="1" value="{{ N }}" onInput="{{ onN }}" style="width:100%;accent-color:#c0392b">
+          <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:14px;font-weight:600">Straal R</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ RStr }}</span></div>
+          <input type="range" min="1.5" max="6" step="0.1" value="{{ R }}" onInput="{{ onR }}" style="width:100%;accent-color:#c0392b">
+          <sc-if value="{{ isSpoel }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:14px;font-weight:600">Lengte spoel &#8467;</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ LcStr }}</span></div>
+            <input type="range" min="4" max="24" step="0.5" value="{{ Lc }}" onInput="{{ onLc }}" style="width:100%;accent-color:#c0392b">
+          </sc-if>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+            <sc-for list="{{ coilToggles }}" as="tg" hint-placeholder-count="3">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ coilRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>{{ r.n }}</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ r.v }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isDraad }}" hint-placeholder-val="{{ true }}">
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
           <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>
@@ -111,6 +139,7 @@
           </div>
         </div>
       </div>
+      </sc-if>
 
       <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
         <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ banner }}</div>
@@ -134,7 +163,99 @@ class Component extends DCLogic {
   state = {
     curDir: 1, amps: 6,
     showField: false, showCurrent: false, showElec: false, showCompass: false,
+    mode: 'draad', N: 4, R: 4, Lc: 12, cField: true, cAxis: true, cComp: true,
   };
+  comp2 = { x: 7, y: 5 }; // kompas in winding/spoel-modus (cm)
+
+  // ---------- winding en spoel (doorsnede door de as) ----------
+  loopsPos() { // x-posities (cm) van de windingen
+    const st = this.state, N = st.N;
+    if (st.mode === 'winding') return Array.from({ length: N }, (_, i) => (i - (N - 1) / 2) * 0.12);
+    return Array.from({ length: N }, (_, i) => N === 1 ? 0 : -st.Lc / 2 + st.Lc * i / (N - 1));
+  }
+  Bat(x, y) { // B (T) in het vlak z = 0, posities in cm; as = x
+    const st = this.state, a = st.R / 100, I = st.amps * st.curDir, k = 1e-7 * I, M = 40;
+    let bx = 0, by = 0; const X = x / 100, Y = y / 100;
+    for (const xc of this.loopsPos()) {
+      const x0 = xc / 100;
+      for (let j = 0; j < M; j++) {
+        const p1 = 2 * Math.PI * j / M, p2 = 2 * Math.PI * (j + 1) / M, pm = (p1 + p2) / 2;
+        const dlz = a * (Math.sin(p2) - Math.sin(p1));
+        const ry = Y - a * Math.cos(pm), rz = -a * Math.sin(pm), rx = X - x0;
+        const r3 = Math.pow(rx * rx + ry * ry + rz * rz, 1.5) + 1e-15;
+        const dy_ = a * (Math.cos(p2) - Math.cos(p1)), dz_ = dlz; // dl = (0, dy_, dz_)
+        // dl x r
+        const cx = dy_ * rz - dz_ * ry, cy = dz_ * rx; // dl_x = 0
+        bx += k * cx / r3; by += k * cy / r3;
+      }
+    }
+    return { x: bx, y: by };
+  }
+  coilView() { const st = this.state; const ext = Math.max(st.mode === 'spoel' ? st.Lc / 2 + 6 : 8, st.R * 2.2); const k = Math.min(255 / ext, 200 / (st.R * 2.2)); return { cx: 280, cy: 235, k }; }
+  traceLines() {
+    const st = this.state; const key = [st.mode, st.N, st.R, st.Lc, st.curDir].join('|');
+    if (this._lk === key) return this._lines; const V = this.coilView();
+    const lines = []; const xmax = (this.W / 2) / V.k, ymax = (this.H / 2) / V.k;
+    const nS = 7; const xs0 = 0;
+    for (let i = 0; i < nS; i++) {
+      const y0 = -st.R * 0.85 + 1.7 * st.R * (i + 0.5) / nS;
+      for (const dir of [1, -1]) {
+        const pts = []; let x = xs0, y = y0; const h = Math.max(0.05, st.R / 40);
+        for (let n = 0; n < 2500; n++) {
+          const b = this.Bat(x, y); const L = Math.hypot(b.x, b.y); if (L < 1e-12) break;
+          const ux = b.x / L, uy = b.y / L;
+          const b2 = this.Bat(x + ux * h / 2 * dir, y + uy * h / 2 * dir); const L2 = Math.hypot(b2.x, b2.y) || 1;
+          x += b2.x / L2 * h * dir; y += b2.y / L2 * h * dir; pts.push([x, y]);
+          if (Math.abs(x) > xmax || Math.abs(y) > ymax) break;
+          if (n > 30 && Math.hypot(x - xs0, y - y0) < h * 0.8) break;
+          let hit = false; for (const xc of this.loopsPos()) if (Math.hypot(x - xc, Math.abs(y) - st.R) < h * 1.2) hit = true; if (hit) break;
+        }
+        lines.push({ pts, dir, y0 });
+      }
+    }
+    this._lk = key; this._lines = lines; return lines;
+  }
+  drawCoil(ctx) {
+    const st = this.state, V = this.coilView(); const P = (x, y) => ({ X: V.cx + x * V.k, Y: V.cy - y * V.k });
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    if (st.cAxis) { ctx.setLineDash([5, 5]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, V.cy); ctx.lineTo(this.W, V.cy); ctx.stroke(); ctx.setLineDash([]); }
+    if (st.cField) {
+      for (const L of this.traceLines()) {
+        ctx.strokeStyle = 'rgba(100,146,210,0.85)'; ctx.lineWidth = 1.7; ctx.beginPath();
+        let q = P(0, L.y0); ctx.moveTo(q.X, q.Y); for (const [x, y] of L.pts) { q = P(x, y); ctx.lineTo(q.X, q.Y); } ctx.stroke();
+        const m = L.pts[Math.min(L.pts.length - 1, 40)]; const m2 = L.pts[Math.min(L.pts.length - 1, 41)];
+        if (m && m2 && L.dir === 1) { const a = P(...m), b = P(...m2); const an = Math.atan2(b.Y - a.Y, b.X - a.X); ctx.fillStyle = '#5a85c4'; ctx.beginPath(); ctx.moveTo(b.X + 6 * Math.cos(an), b.Y + 6 * Math.sin(an)); ctx.lineTo(b.X - 6 * Math.cos(an - 0.5), b.Y - 6 * Math.sin(an - 0.5)); ctx.lineTo(b.X - 6 * Math.cos(an + 0.5), b.Y - 6 * Math.sin(an + 0.5)); ctx.closePath(); ctx.fill(); }
+      }
+    }
+    // windingen in doorsnede: boven uit het scherm (punt) of erin (kruis)
+    const out = st.curDir === 1;
+    for (const xc of this.loopsPos()) for (const sgn of [1, -1]) {
+      const q = P(xc, sgn * st.R); const isOut = (sgn === 1) === out;
+      ctx.fillStyle = '#f2d6c8'; ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.arc(q.X, q.Y, 7, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#8a3b2c'; ctx.strokeStyle = '#8a3b2c';
+      if (isOut) { ctx.beginPath(); ctx.arc(q.X, q.Y, 2.2, 0, 7); ctx.fill(); }
+      else { ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(q.X - 4, q.Y - 4); ctx.lineTo(q.X + 4, q.Y + 4); ctx.moveTo(q.X + 4, q.Y - 4); ctx.lineTo(q.X - 4, q.Y + 4); ctx.stroke(); }
+    }
+    // polen
+    const half = st.mode === 'spoel' ? st.Lc / 2 : 0.5;
+    const pr = P(half + 1.6, st.R + 1.2), pl = P(-half - 1.6, st.R + 1.2);
+    ctx.font = "700 18px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = out ? '#c8443a' : '#3a6fb8'; ctx.fillText(out ? 'N' : 'Z', pr.X, pr.Y);
+    ctx.fillStyle = out ? '#3a6fb8' : '#c8443a'; ctx.fillText(out ? 'Z' : 'N', pl.X, pl.Y);
+    // kompas
+    if (st.cComp) {
+      const c = P(this.comp2.x, this.comp2.y); const b = this.Bat(this.comp2.x, this.comp2.y); const L = Math.hypot(b.x, b.y) || 1; const ux = b.x / L, uy = -b.y / L;
+      ctx.fillStyle = 'rgba(235,232,227,0.9)'; ctx.strokeStyle = '#a4b0be'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(c.X, c.Y, 22, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#cf4636'; ctx.beginPath(); ctx.moveTo(c.X + ux * 18, c.Y + uy * 18); ctx.lineTo(c.X - uy * 5, c.Y + ux * 5); ctx.lineTo(c.X + uy * 5, c.Y - ux * 5); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#3fa86a'; ctx.beginPath(); ctx.moveTo(c.X - ux * 18, c.Y - uy * 18); ctx.lineTo(c.X - uy * 5, c.Y + ux * 5); ctx.lineTo(c.X + uy * 5, c.Y - ux * 5); ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Doorsnede door de as — ⊙ stroom naar je toe, ⊗ van je weg', 12, 10);
+    ctx.textBaseline = 'bottom'; ctx.fillText('Sleep het kompas', 12, this.H - 10);
+    // schaal 1 cm
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(this.W - 14 - V.k, this.H - 14); ctx.lineTo(this.W - 14, this.H - 14); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText('1 cm', this.W - 14, this.H - 18);
+  }
   elecPhase = 0;
   dragging = false;
 
@@ -233,6 +354,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
+    if (this.state.mode !== 'draad') { this.drawCoil(ctx); return; }
 
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
@@ -388,6 +510,12 @@ class Component extends DCLogic {
     return { sx: (e.clientX - r.left - ox) / s, sy: (e.clientY - r.top - oy) / s };
   }
   onPointerDown(e) {
+    if (this.state.mode !== 'draad') {
+      const { sx, sy } = this.screenFromEvent(e); const V = this.coilView();
+      const cx = V.cx + this.comp2.x * V.k, cy = V.cy - this.comp2.y * V.k;
+      if (Math.hypot(sx - cx, sy - cy) < 30) { this.dragging = true; e.preventDefault(); }
+      return;
+    }
     if (!this.state.showCompass) return;
     const { sx, sy } = this.screenFromEvent(e);
     const C = this.proj({ x: this.comp.x, y: this.compPlaneY || 0, z: this.comp.z });
@@ -398,6 +526,7 @@ class Component extends DCLogic {
   }
   onPointerMove(e) {
     if (!this.dragging) return;
+    if (this.state.mode !== 'draad') { const { sx, sy } = this.screenFromEvent(e); const V = this.coilView(); this.comp2 = { x: (sx - V.cx) / V.k, y: (V.cy - sy) / V.k }; this.forceUpdate(); return; }
     const { sx, sy } = this.screenFromEvent(e);
     const g = this.unproject(sx, sy, this.compPlaneY || 0);
     let r = Math.hypot(g.x, g.z);
@@ -410,7 +539,7 @@ class Component extends DCLogic {
   }
 
   reverse = () => this.setState(s => ({ curDir: -s.curDir }));
-  reset = () => { this.comp = { x: 92, z: 30 }; this.draw(); };
+  reset = () => { this.comp = { x: 92, z: 30 }; this.comp2 = { x: this.state.mode === 'spoel' ? -(this.state.Lc / 2 + 3) : -5, y: -1.5 }; this.draw(); this.forceUpdate(); };
   setAmps = (e) => { const v = parseFloat(e.target.value); this.setState({ amps: v }); };
 
   renderVals() {
@@ -420,9 +549,33 @@ class Component extends DCLogic {
     const banner = 'Sleep het kompas rond de draad en kijk hoe de naald steeds langs de cirkelvormige veldlijn wijst. Druk op \u201cOmpolen stroom\u201d en de naald klapt om. De elektronen (groen) bewegen tegengesteld aan de conventionele stroom (rood).';
     const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
     const cu = pill(st.showCurrent), fi = pill(st.showField), el = pill(st.showElec), co = pill(st.showCompass);
+    const mu0 = 4 * Math.PI * 1e-7;
+    const isCoil = st.mode !== 'draad';
+    const tabStyle = (on) => 'min-height:36px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? '#b8472f' : '#e7e1d5') + ';background:' + (on ? '#b8472f' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const coilRows = [];
+    if (isCoil) {
+      const B0 = this.Bat(0, 0), Bc = Math.hypot(B0.x, B0.y), bk = this.Bat(this.comp2.x, this.comp2.y);
+      const uT = (b) => (b * 1e6 >= 100 ? (b * 1e6).toFixed(0) : (b * 1e6).toFixed(1)).replace('.', ',') + ' \u00B5T';
+      if (st.mode === 'winding') coilRows.push({ n: 'Formule middelpunt \u03BC\u2080NI/(2R)', v: uT(mu0 * st.N * st.amps / (2 * st.R / 100)) });
+      else { coilRows.push({ n: 'Formule lange spoel \u03BC\u2080NI/\u2113', v: uT(mu0 * st.N * st.amps / (st.Lc / 100)) }); coilRows.push({ n: 'Windingen per meter n = N/\u2113', v: Math.round(st.N / (st.Lc / 100)) + ' /m' }); }
+      coilRows.push({ n: 'Berekend in het midden (Biot-Savart)', v: uT(Bc) });
+      coilRows.push({ n: 'Veld bij het kompas', v: uT(Math.hypot(bk.x, bk.y)) });
+    }
+    const coilBanner = st.mode === 'winding'
+      ? 'Een vlakke spoel (N windingen op elkaar) gedraagt zich als een korte staafmagneet. In het middelpunt is B = \u03BC\u2080\u00B7N\u00B7I/(2R): evenredig met N en I, omgekeerd evenredig met de straal. Vergelijk met je smartphonemeting in het labo.'
+      : 'Binnen een lange spoel zijn de veldlijnen evenwijdig en gelijk verdeeld: een homogeen veld B = \u03BC\u2080\u00B7N\u00B7I/\u2113, onafhankelijk van de straal. Buiten lijkt het veld op dat van een staafmagneet. Rechterhandregel: vingers met de stroom mee, de duim wijst naar de noordpool.';
     return {
       stageRef: this.stageRef,
-      banner,
+      titleStr: st.mode === 'draad' ? 'Magneetveld rond een draad' : st.mode === 'winding' ? 'Magneetveld van een winding' : 'Magneetveld van een spoel',
+      modeTabs: [['draad', 'Rechte draad'], ['winding', 'Winding'], ['spoel', 'Spoel']].map(([k, n]) => ({ name: n, style: tabStyle(st.mode === k), onClick: () => { this.comp2 = { x: k === 'spoel' ? -(st.Lc / 2 + 3) : -5, y: -1.5 }; this.setState({ mode: k, N: k === 'spoel' ? 12 : (k === 'winding' ? 4 : st.N) }); } })),
+      isCoil, isDraad: !isCoil, isSpoel: st.mode === 'spoel',
+      N: st.N, Nmax: st.mode === 'spoel' ? 30 : 10, NStr: String(st.N), onN: (e) => this.setState({ N: +e.target.value }),
+      R: st.R, RStr: st.R.toFixed(1).replace('.', ',') + ' cm', onR: (e) => this.setState({ R: +e.target.value }),
+      Lc: st.Lc, LcStr: st.Lc.toFixed(1).replace('.', ',') + ' cm', onLc: (e) => this.setState({ Lc: +e.target.value }),
+      coilToggles: [['cField', 'Veldlijnen'], ['cComp', 'Kompas'], ['cAxis', 'As']].map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      coilRows,
+      banner: isCoil ? coilBanner : banner,
       onReverse: this.reverse,
       onReset: this.reset,
       amps: st.amps,

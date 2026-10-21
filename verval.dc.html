@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#c4553a"/>
+  <rect x="22" y="22" width="26" height="26" rx="5" fill="#fffdf9"/>
+  <rect x="52" y="22" width="26" height="26" rx="5" fill="#fffdf9"/>
+  <rect x="22" y="52" width="26" height="26" rx="5" fill="#fffdf9" opacity="0.45"/>
+  <circle cx="35" cy="35" r="3.5" fill="#c4553a"/>
+  <circle cx="59" cy="29" r="3" fill="#c4553a"/><circle cx="71" cy="41" r="3" fill="#c4553a"/>
+  <circle cx="29" cy="59" r="3" fill="#c4553a"/><circle cx="41" cy="71" r="3" fill="#c4553a"/><circle cx="35" cy="65" r="3" fill="#c4553a"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer}
+  .vt{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:13px}
+  .vt td,.vt th{padding:3px 8px;text-align:right;border-bottom:1px solid #eee7da}
+  .vt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;position:sticky;top:0;background:#fffdf9}
+
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Radioactief verval met dobbelstenen</h1>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      </div>
+    </div>
+
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Instellingen</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Aantal kernen N&#8320;</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ n0 }}</span></div>
+        <input type="range" min="10" max="1000" step="10" value="{{ n0 }}" onChange="{{ onN0 }}" style="width:100%;accent-color:#c4553a;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:500;margin-bottom:6px">Zijden per dobbelsteen</div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onZ6 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z6Bg }};color:{{ z6Fg }}">6</button>
+          <button onClick="{{ onZ12 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z12Bg }};color:{{ z12Fg }}">12</button>
+          <button onClick="{{ onZ20 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z20Bg }};color:{{ z20Fg }}">20</button>
+        </div>
+        <div style="font-size:12px;color:#8c8576;margin-top:10px;line-height:1.4">Een dobbelsteen die de hoogste waarde gooit ({{ zijden }}), is vervallen. Vervalkans per worp: p = 1/{{ zijden }}.</div>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ onGooi }}" style="flex:1;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#c4553a;color:#fff">Gooi</button>
+        <button onClick="{{ onAuto }}" style="flex:1.4;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">{{ autoLbl }}</button>
+      </div>
+      <button onClick="{{ onReset }}" style="font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:9px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw beginnen</button>
+
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:1;min-height:160px;display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Meettabel</span>
+          <button onClick="{{ onKopieer }}" style="font-size:12px;border:1px solid #ddd6c8;border-radius:6px;padding:4px 8px;cursor:pointer;background:#fff;color:#6f685c">{{ kopieerLbl }}</button>
+        </div>
+        <div style="overflow-y:auto;flex:1">
+          <table class="vt">
+            <thead><tr><th>t (worp)</th><th>N</th><th>vervallen</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+                <tr><td>{{ r.t }}</td><td>{{ r.n }}</td><td>{{ r.d }}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { n0: 50, zijden: 6, rev: 0, auto: false, kopieerLbl: 'Kopieer' };
+  stageRef = React.createRef();
+  W = 880; H = 560;
+
+  componentDidMount() {
+    this.reset();
+    this.setupCanvas();
+    this.draw();
+    this._onResize = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._onResize);
+  }
+  componentWillUnmount() { this.stopAuto(); if (this._acStop) this._acStop(); }
+
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+  }
+
+  // ---------- model ----------
+  reset(n0, z) {
+    n0 = n0 || this.state.n0; z = z || this.state.zijden;
+    this.stopAuto();
+    this.zijden = z;
+    this.dice = [];                       // waarden van de laatste worp (enkel overblijvende + net vervallen)
+    for (let i = 0; i < n0; i++) this.dice.push({ v: 1 + Math.floor(Math.random() * (z - 1)), dood: false, nieuw: false });
+    this.history = [{ t: 0, n: n0, d: 0 }];
+    this.thrown = false;
+    this.bump();
+  }
+
+  levend() { return this.dice.filter(d => !d.dood).length; }
+
+  gooi() {
+    // verwijder eerst de dobbelstenen die vorige worp vervielen
+    this.dice = this.dice.filter(d => !d.dood);
+    if (this.dice.length === 0) return false;
+    let weg = 0;
+    for (const d of this.dice) {
+      d.v = 1 + Math.floor(Math.random() * this.zijden);
+      d.dood = d.v === this.zijden;
+      if (d.dood) weg++;
+    }
+    const t = this.history.length;
+    this.history.push({ t, n: this.dice.length - weg, d: weg });
+    this.thrown = true;
+    this.bump();
+    return this.dice.length - weg > 0;
+  }
+
+  bump() { this.setState({ rev: this.state.rev + 1 }); this.draw(); }
+
+  startAuto() {
+    if (this._timer) return;
+    this.setState({ auto: true });
+    this._timer = setInterval(() => {
+      const verder = this.gooi();
+      const n = this.history[this.history.length - 1].n;
+      if (!verder || n < 3 || this.history.length > 200) this.stopAuto();
+    }, 450);
+  }
+  stopAuto() {
+    if (this._timer) { clearInterval(this._timer); this._timer = null; }
+    if (this.state.auto) this.setState({ auto: false });
+  }
+
+  // ---------- tekenen ----------
+  draw() {
+    const c = this.stageRef.current; if (!c || !this.dice) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    this.drawDice(ctx, 20, 20, this.W - 40, 300);
+    this.drawPlot(ctx, 70, 350, this.W - 100, 170);
+  }
+
+  drawDice(ctx, x0, y0, w, h) {
+    const n = this.dice.length;
+    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'left';
+    const N = this.history[this.history.length - 1].n;
+    const txt = this.thrown
+      ? 'Worp ' + (this.history.length - 1) + ': ' + this.history[this.history.length - 1].d + ' vervallen (rood), ' + N + ' over'
+      : 'Start: ' + N + ' kernen. Klik op Gooi.';
+    ctx.fillText(txt, x0, y0 + 4);
+    if (n === 0) return;
+    const top = y0 + 16, hh = h - 16;
+    let cols = Math.ceil(Math.sqrt(n * w / hh));
+    let size = Math.min(w / cols, 44);
+    let rows = Math.ceil(n / cols);
+    while (rows * size > hh) { cols++; size = Math.min(w / cols, 44); rows = Math.ceil(n / cols); }
+    const gap = Math.max(1, size * 0.12), d = size - gap;
+    for (let i = 0; i < n; i++) {
+      const cx = x0 + (i % cols) * size, cy = top + Math.floor(i / cols) * size;
+      const die = this.dice[i];
+      ctx.fillStyle = die.dood ? '#c4553a' : '#fffdf9';
+      ctx.strokeStyle = die.dood ? '#9e3f28' : '#cfc7b6'; ctx.lineWidth = 1;
+      this.rr(ctx, cx, cy, d, d, Math.max(2, d * 0.18)); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = die.dood ? '#fffdf9' : '#2a2723';
+      if (this.zijden === 6 && d >= 14) this.pips(ctx, cx, cy, d, die.v);
+      else if (d >= 12) {
+        ctx.font = "600 " + Math.round(d * 0.48) + "px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(die.v), cx + d / 2, cy + d / 2 + 1); ctx.textBaseline = 'alphabetic';
+      }
+    }
+  }
+
+  pips(ctx, x, y, d, v) {
+    const r = d * 0.09, a = d * 0.27, m = d / 2;
+    const P = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]],
+      5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] }[v];
+    for (const [i, j] of P) { ctx.beginPath(); ctx.arc(x + m + i * a, y + m + j * a, r, 0, 6.2832); ctx.fill(); }
+  }
+
+  drawPlot(ctx, x0, y0, w, h) {
+    const H = this.history, n0 = H[0].n, p = 1 / this.zijden;
+    const tmax = Math.max(10, H.length - 1, Math.ceil(Math.log(0.05) / Math.log(1 - p)));
+    const X = t => x0 + t / tmax * w, Y = n => y0 + h - n / n0 * h;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(x0, y0, w, h);
+    ctx.strokeStyle = '#d9d3c6'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, h);
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c';
+    ctx.textAlign = 'right';
+    for (const f of [0, 0.25, 0.5, 0.75, 1]) {
+      const yy = Y(f * n0); ctx.fillText(String(Math.round(f * n0)), x0 - 6, yy + 4);
+      ctx.strokeStyle = '#eee7da'; ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x0 + w, yy); ctx.stroke();
+    }
+    ctx.textAlign = 'center';
+    const stap = tmax > 40 ? 10 : 5;
+    for (let t = 0; t <= tmax; t += stap) ctx.fillText(String(t), X(t), y0 + h + 15);
+    ctx.fillText('t (worp)', x0 + w / 2, y0 + h + 30);
+    ctx.save(); ctx.translate(x0 - 44, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('N', 0, 0); ctx.restore();
+    // theorie
+    ctx.strokeStyle = '#8c8576'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let t = 0; t <= tmax; t += 0.25) { const yy = Y(n0 * Math.pow(1 - p, t)); if (t === 0) ctx.moveTo(X(t), yy); else ctx.lineTo(X(t), yy); }
+    ctx.stroke(); ctx.setLineDash([]);
+    // meting
+    ctx.fillStyle = '#c4553a';
+    for (const r of H) { ctx.beginPath(); ctx.arc(X(r.t), Y(r.n), 3.5, 0, 6.2832); ctx.fill(); }
+    // legende
+    ctx.textAlign = 'left'; ctx.fillStyle = '#c4553a'; ctx.fillText('● meting', x0 + w - 190, y0 + 16);
+    ctx.fillStyle = '#8c8576'; ctx.fillText('- - N₀·(1 − 1/' + this.zijden + ')ᵗ', x0 + w - 110, y0 + 16);
+  }
+
+  rr(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  kopieer() {
+    const txt = 't\tN\tvervallen\n' + this.history.map(r => r.t + '\t' + r.n + '\t' + r.d).join('\n');
+    const ok = () => { this.setState({ kopieerLbl: 'Gekopieerd!' }); setTimeout(() => this.setState({ kopieerLbl: 'Kopieer' }), 1500); };
+    try { navigator.clipboard.writeText(txt).then(ok, () => {}); } catch (e) {}
+  }
+
+  renderVals() {
+    const seg = a => ({ bg: a ? '#c4553a' : '#fff', fg: a ? '#fff' : '#6f685c' });
+    const z6 = seg(this.state.zijden === 6), z12 = seg(this.state.zijden === 12), z20 = seg(this.state.zijden === 20);
+    const kiesZ = z => { this.setState({ zijden: z }); this.reset(this.state.n0, z); };
+    return {
+      stageRef: this.stageRef,
+      n0: this.state.n0, zijden: this.state.zijden,
+      z6Bg: z6.bg, z6Fg: z6.fg, z12Bg: z12.bg, z12Fg: z12.fg, z20Bg: z20.bg, z20Fg: z20.fg,
+      rows: (this.history || []).map(r => ({ t: r.t, n: r.n, d: r.t === 0 ? '' : r.d })),
+      autoLbl: this.state.auto ? 'Stop' : 'Gooi tot het einde',
+      kopieerLbl: this.state.kopieerLbl,
+      onN0: e => { const v = Number(e.target.value); this.setState({ n0: v }); this.reset(v, this.state.zijden); },
+      onZ6: () => kiesZ(6), onZ12: () => kiesZ(12), onZ20: () => kiesZ(20),
+      onGooi: () => { this.stopAuto(); this.gooi(); },
+      onAuto: () => { if (this.state.auto) this.stopAuto(); else this.startAuto(); },
+      onReset: () => this.reset(),
+      onKopieer: () => this.kopieer(),
+    };
+  }
+}
+</script>
+</body>
+</html>

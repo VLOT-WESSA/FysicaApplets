@@ -86,7 +86,34 @@
             <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
           </sc-for>
         </div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin:12px 0 10px">Weerstanden (labo)</div>
+        <div style="display:flex;gap:7px">
+          <sc-for list="{{ rModeItems }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
+          </sc-for>
+        </div>
       </div>
+      <sc-if value="{{ isRMode }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ rPickers }}" as="rp" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;width:26px">{{ rp.name }}</span>
+              <sc-for list="{{ rp.opts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </sc-for>
+          <div style="font-size:12px;color:#8c8576;margin-top:4px">Ampèremeter in serie met</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ ammOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:2px">Voltmeter parallel over</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ voltOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for></div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <div style="flex:1;background:#f7d54a;border-radius:10px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:#4f4a42">Ampèremeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ ammStr }}</div></div>
+            <div style="flex:1;background:#f7d54a;border-radius:10px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:#4f4a42">Voltmeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ voltStr }}</div></div>
+          </div>
+          <button onClick="{{ toggleAll }}" style="{{ allStyle }}">{{ allLabel }}</button>
+        </div>
+      </sc-if>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
@@ -97,6 +124,7 @@
         <input type="range" min="0" max="12" step="0.1" value="{{ voltage }}" onChange="{{ onU }}" style="width:100%;accent-color:#2f6fb0">
       </div>
 
+      <sc-if value="{{ isLampMode }}" hint-placeholder-val="{{ true }}">
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#1f9e8f"></span>
@@ -105,6 +133,7 @@
         </div>
         <input type="range" min="20" max="200" step="1" value="{{ resistance }}" onChange="{{ onR }}" style="width:100%;accent-color:#1f9e8f">
       </div>
+      </sc-if>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Weergave</div>
@@ -134,7 +163,68 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
 class Component extends DCLogic {
-  state = { voltage: 6, resistance: 60, closed: false, mode: 'enkel', showElec: false, showArrow: false };
+  state = { voltage: 6, resistance: 60, closed: false, mode: 'enkel', showElec: false, showArrow: false,
+            R1: 330, R2: 1000, R3: 2200, amm: 'tot', volt: 'bron', showAll: false };
+  isR() { return this.state.mode.charAt(0) === 'r'; }
+  // weerstanden: rSerie, rPar, rMix (R1 in serie met R2 // R3)
+  rModel() {
+    const st = this.state, U = st.voltage, on = st.closed ? 1 : 0, R1 = st.R1, R2 = st.R2, R3 = st.R3;
+    let Rt, I = {}, V = {};
+    if (st.mode === 'rSerie') { Rt = R1 + R2 + R3; const i = on * U / Rt; I = { tot: i, R1: i, R2: i, R3: i }; V = { R1: i * R1, R2: i * R2, R3: i * R3 }; }
+    else if (st.mode === 'rPar') { Rt = 1 / (1 / R1 + 1 / R2 + 1 / R3); I = { R1: on * U / R1, R2: on * U / R2, R3: on * U / R3 }; I.tot = I.R1 + I.R2 + I.R3; V = { R1: on * U, R2: on * U, R3: on * U }; }
+    else { const R23 = 1 / (1 / R2 + 1 / R3); Rt = R1 + R23; const i = on * U / Rt; const u23 = i * R23; I = { tot: i, R1: i, R2: u23 / R2, R3: u23 / R3 }; V = { R1: i * R1, R2: u23, R3: u23 }; }
+    V.bron = on * U;
+    return { Rt, I, V, P: on * U * I.tot };
+  }
+  resistor(ctx, x, y, vertical, label, hiA, hiV, txt, left) {
+    const w = vertical ? 22 : 56, h = vertical ? 56 : 22;
+    ctx.fillStyle = hiV ? '#fff5d6' : '#fffdf9'; ctx.strokeStyle = '#38352c'; ctx.lineWidth = 2.2;
+    ctx.fillRect(x - w / 2, y - h / 2, w, h); ctx.strokeRect(x - w / 2, y - h / 2, w, h);
+    ctx.fillStyle = '#38352c'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textBaseline = 'middle';
+    if (vertical) { const dx = left ? -16 : 16; ctx.textAlign = left ? 'right' : 'left'; ctx.fillText(label, x + dx, y - 16); ctx.font = "500 10.5px 'IBM Plex Mono', monospace"; txt.forEach((t, i) => ctx.fillText(t, x + dx, y + i * 13)); }
+    else { ctx.textAlign = 'center'; ctx.fillText(label, x, y - 24); ctx.font = "500 10.5px 'IBM Plex Mono', monospace"; ctx.fillText(txt.join('  '), x, y + 24); }
+    if (hiV) { // voltmeter parallel
+      ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+      if (vertical) { const vx = left ? 30 : -30; ctx.beginPath(); ctx.moveTo(x, y - 40); ctx.lineTo(x + vx, y - 40); ctx.lineTo(x + vx, y + 40); ctx.lineTo(x, y + 40); ctx.stroke(); this.meterSym(ctx, x + vx, y, 'V'); }
+      else { ctx.beginPath(); ctx.moveTo(x - 40, y); ctx.lineTo(x - 40, y + 44); ctx.lineTo(x + 40, y + 44); ctx.lineTo(x + 40, y); ctx.stroke(); this.meterSym(ctx, x, y + 44, 'V'); }
+      ctx.setLineDash([]);
+    }
+    if (hiA) { if (vertical) this.meterSym(ctx, x, y + 52, 'A'); else this.meterSym(ctx, x + 52, y, 'A'); }
+    ctx.textBaseline = 'alphabetic';
+  }
+  meterSym(ctx, x, y, l) { ctx.fillStyle = '#fff'; ctx.strokeStyle = l === 'A' ? '#c0392b' : '#7a5ab8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 11, 0, 6.2832); ctx.fill(); ctx.stroke(); ctx.fillStyle = ctx.strokeStyle; ctx.font = "700 12px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(l, x, y + 0.5); }
+  drawR(ctx) {
+    const st = this.state, W = this.W, H = this.H, m = this.rModel();
+    const xL = Math.max(150, W * 0.20), xR = W - Math.max(110, W * 0.14);
+    const yT = H * 0.25, yB = H * 0.78, ymid = (yT + yB) / 2, gap = 9;
+    const xSw = xL + (xR - xL) * 0.13, swGap = 18;
+    const lbl = (k) => k + ' = ' + this.fmtR(st[k]);
+    const meas = (k) => st.showAll ? [this.fmtR(st[k]), this.fmtI3(m.I[k]), m.V[k].toFixed(2) + ' V'] : [this.fmtR(st[k])];
+    this.drawWire(ctx, xL, yT, xSw - swGap, yT);
+    this.drawWire(ctx, xL, yT, xL, ymid - gap); this.drawWire(ctx, xL, ymid + gap, xL, yB);
+    this.battery(ctx, xL, ymid, st.voltage.toFixed(1));
+    this.switchSym(ctx, xSw, yT, st.closed);
+    if (st.volt === 'bron') { ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(xL, yT + 20); ctx.lineTo(xL - 70, yT + 20); ctx.lineTo(xL - 70, yB - 20); ctx.lineTo(xL, yB - 20); ctx.stroke(); ctx.setLineDash([]); this.meterSym(ctx, xL - 70, ymid + 40, 'V'); }
+    const ammTot = st.amm === 'tot';
+    if (st.mode === 'rSerie') {
+      this.drawWire(ctx, xSw + swGap, yT, xR, yT); this.drawWire(ctx, xR, yT, xR, yB); this.drawWire(ctx, xR, yB, xL, yB);
+      const xs = [0.38, 0.6, 0.82].map(f => xL + (xR - xL) * f);
+      ['R1', 'R2', 'R3'].forEach((k, i) => this.resistor(ctx, xs[i], yT, false, k, st.amm === k, st.volt === k, meas(k)));
+      if (ammTot) this.meterSym(ctx, (xL + xR) / 2, yB, 'A');
+    } else if (st.mode === 'rPar') {
+      const xs = [0.4, 0.66, 0.92].map(f => xL + (xR - xL) * f);
+      this.drawWire(ctx, xSw + swGap, yT, xs[2], yT); this.drawWire(ctx, xs[2], yB, xL, yB);
+      ['R1', 'R2', 'R3'].forEach((k, i) => { this.drawWire(ctx, xs[i], yT, xs[i], yB); this.resistor(ctx, xs[i], ymid - 10, true, k, st.amm === k, st.volt === k, meas(k), i < 2); });
+      if (ammTot) this.meterSym(ctx, xL + (xs[0] - xL) * 0.55, yB, 'A');
+    } else {
+      const xr1 = xL + (xR - xL) * 0.4, x2 = xL + (xR - xL) * 0.68, x3 = xL + (xR - xL) * 0.9;
+      this.drawWire(ctx, xSw + swGap, yT, x3, yT); this.drawWire(ctx, x3, yB, xL, yB);
+      this.resistor(ctx, xr1, yT, false, 'R1', st.amm === 'R1', st.volt === 'R1', meas('R1'));
+      [['R2', x2], ['R3', x3]].forEach(([k, x]) => { this.drawWire(ctx, x, yT, x, yB); this.resistor(ctx, x, ymid - 10, true, k, st.amm === k, st.volt === k, meas(k), k === 'R2'); });
+      if (ammTot) this.meterSym(ctx, xL + (xr1 - xL) * 0.3, yB, 'A');
+    }
+    if (!st.closed) { ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Kring open \u2014 geen stroom', (xL + xR) / 2, yB + 30); }
+  }
   stageRef = React.createRef();
   W = 800; H = 460;
   phase = 0;
@@ -256,6 +346,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    if (this.isR()) { this.drawR(ctx); return; }
     const md = this.model();
     if (this.state.mode === 'parallel') this.drawParallel(ctx, md);
     else this.drawLoop(ctx, md);
@@ -343,11 +434,21 @@ class Component extends DCLogic {
     if (I >= 0.001) return (I * 1000).toFixed(0) + ' mA';
     return '0 mA';
   }
+  fmtI3(I) { return I >= 0.1 ? I.toFixed(3) + ' A' : (I * 1000).toFixed(2) + ' mA'; }
   fmtR(R) { return R >= 1000 ? (R / 1000).toFixed(2) + ' k\u03A9' : Math.round(R) + ' \u03A9'; }
   fmtP(P) { return P >= 1 ? P.toFixed(2) + ' W' : (P * 1000).toFixed(0) + ' mW'; }
 
   renderVals() {
-    const md = this.model();
+    const md = this.isR() ? (() => { const m = this.rModel(); return { Itot: m.I.tot, Rtot: m.Rt, Pa: m.P, Pb: 0 }; })() : this.model();
+    const st = this.state, rm = this.rModel();
+    const chipS = (on) => 'min-height:30px;font-size:12px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? '#1f9e8f' : '#e7e1d5') + ';background:' + (on ? '#1f9e8f' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const rModeItems = [{ id: 'rSerie', label: 'Serie' }, { id: 'rPar', label: 'Parallel' }, { id: 'rMix', label: 'Gemengd' }].map(m => {
+      const active = m.id === st.mode;
+      return { id: m.id, label: m.label, bg: active ? '#1f9e8f' : '#fffdf9', fg: active ? '#fff' : '#6f685c', border: active ? '#1f9e8f' : '#e7e1d5', onClick: () => this.setState({ mode: m.id }) };
+    });
+    const rPickers = ['R1', 'R2', 'R3'].map(k => ({ name: k, opts: [330, 1000, 2200, 4700].map(v => ({ label: this.fmtR(v), style: chipS(st[k] === v), onClick: () => this.setState({ [k]: v }) })) }));
+    const ammOpts = [['tot', 'hoofdstroom'], ['R1', 'R1'], ['R2', 'R2'], ['R3', 'R3']].map(([k, l]) => ({ label: l, style: chipS(st.amm === k), onClick: () => this.setState({ amm: k }) }));
+    const voltOpts = [['bron', 'bron'], ['R1', 'R1'], ['R2', 'R2'], ['R3', 'R3']].map(([k, l]) => ({ label: l, style: chipS(st.volt === k), onClick: () => this.setState({ volt: k }) }));
     const modes = [
       { id: 'enkel', label: '1 lamp' },
       { id: 'serie', label: '2 in serie' },
@@ -364,6 +465,9 @@ class Component extends DCLogic {
     });
     const hints = {
       enkel: 'E\u00e9n lamp in een gesloten kring. Stroom volgt uit de wet van Ohm: I = U/R.',
+      rSerie: 'Serie: overal dezelfde stroom, de spanningen tellen op tot de bronspanning. R\u209B = R\u2081 + R\u2082 + R\u2083. Verplaats de ampèremeter en de voltmeter zoals in het labo.',
+      rPar: 'Parallel: over elke tak dezelfde spanning, de takstromen tellen op tot de hoofdstroom. 1/R\u209B = 1/R\u2081 + 1/R\u2082 + 1/R\u2083.',
+      rMix: 'Gemengd: R\u2081 staat in serie met de parallelschakeling van R\u2082 en R\u2083. Bereken eerst R\u2082\u2083, dan R\u209B, de hoofdstroom en de deelspanningen, en controleer met de meters.',
       serie: 'In serie tellen de weerstanden op (2R), dus de stroom halveert en beide lampen branden zwakker.',
       parallel: 'Parallel staat elke lamp op de volle spanning: even helder als \u00e9\u00e9n lamp, maar de batterij levert dubbele stroom.',
     };
@@ -376,7 +480,11 @@ class Component extends DCLogic {
       iStr: this.fmtI(md.Itot), rTotStr: this.fmtR(md.Rtot), pStr: this.fmtP(md.Pa + md.Pb),
       onU: (e) => this.setState({ voltage: Number(e.target.value) }),
       onR: (e) => this.setState({ resistance: Number(e.target.value) }),
-      modeItems,
+      modeItems, rModeItems, rPickers, ammOpts, voltOpts,
+      isRMode: this.isR(), isLampMode: !this.isR(),
+      ammStr: this.fmtI3(rm.I[st.amm] || 0), voltStr: (rm.V[st.volt] || 0).toFixed(2) + ' V',
+      toggleAll: () => this.setState({ showAll: !st.showAll }), allLabel: st.showAll ? 'Alle meetwaarden verbergen' : 'Alle meetwaarden tonen',
+      allStyle: 'min-height:32px;font-size:12.5px;border-radius:8px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723',
       toggleSwitch: () => this.setState({ closed: !this.state.closed }),
       swLabel: on ? 'Gesloten' : 'Open',
       swBg: on ? '#1f9e8f' : '#fbecea', swFg: on ? '#fff' : '#b8472f',

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .sub{font-size:12px;color:#8c8576}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Spectraallijnen en Balmerreeks</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div class="card">
+        <div class="sub">Overgang in waterstof (of klik op twee niveaus)</div>
+        <div class="row"><span style="font-size:14px;font-weight:500">Van niveau n&#7522;</span></div>
+        <div class="chips">
+          <sc-for list="{{ ups }}" as="p" hint-placeholder-count="6">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div class="row" style="margin-top:4px"><span style="font-size:14px;font-weight:500">Naar niveau n<sub>f</sub></span></div>
+        <div class="chips">
+          <sc-for list="{{ lows }}" as="p" hint-placeholder-count="5">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ onFire }}" style="margin-top:6px;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ fireLabel }}</button>
+        <div class="sub" style="margin-top:4px">Spectrum</div>
+        <div class="chips">
+          <sc-for list="{{ kinds }}" as="p" hint-placeholder-count="2">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div class="sub" style="margin-top:4px">Vergelijk met</div>
+        <div class="chips">
+          <sc-for list="{{ elems }}" as="p" hint-placeholder-count="5">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+      </div>
+      <div class="note">
+        <div class="mono">E<sub>n</sub> = &minus;13,6 eV / n&sup2; &nbsp;&nbsp; E<sub>foton</sub> = h&middot;f = h&middot;c/&lambda;</div>
+        <div class="mono">1/&lambda; = R<sub>H</sub>&middot;(1/n<sub>f</sub>&sup2; &minus; 1/n&#7522;&sup2;)</div>
+        <div style="margin-top:4px">Een elektron dat terugvalt naar een lager niveau zendt een foton uit met precies het energieverschil. Daarom bestaat het spectrum uit losse lijnen. Overgangen naar n = 2 vormen de <b>Balmerreeks</b> (zichtbaar), naar n = 1 de Lymanreeks (UV) en naar n = 3 de Paschenreeks (IR). In een <b>absorptiespectrum</b> ontbreken precies dezelfde kleuren. Elk element heeft zijn eigen &lsquo;vingerafdruk&rsquo;.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  ELEMS = {
+    He: ['Helium', [447.1, 471.3, 492.2, 501.6, 587.6, 667.8, 706.5]],
+    Na: ['Natrium', [589.0, 589.6, 568.8, 498.3, 616.1]],
+    Hg: ['Kwik (spaarlamp)', [404.7, 435.8, 546.1, 577.0, 579.1]],
+    Ne: ['Neon', [585.2, 588.2, 594.5, 597.6, 603.0, 607.4, 609.6, 614.3, 616.4, 621.7, 626.6, 633.4, 638.3, 640.2, 650.7, 659.9, 667.8, 692.9, 703.2]],
+  };
+  state = { ni: 3, nf: 2, kind: 'em', comp: null, pick: null };
+  anim = null;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current; c.addEventListener('pointerdown', this.onDown);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) { const c = this.stageRef.current; const r = c.getBoundingClientRect(); const s = Math.min(r.width / this.W, r.height / this.H); return { x: (e.clientX - r.left - (r.width - this.W * s) / 2) / s, y: (e.clientY - r.top - (r.height - this.H * s) / 2) / s }; }
+  En(n) { return -13.6 / (n * n); }
+  ySc(E) { return 40 + 330 * Math.pow(-E / 13.6, 0.42); } // niet-lineaire schaal: hoge niveaus liggen niet op elkaar
+  onDown = (e) => {
+    const p = this.toPx(e); if (p.x > 330 || p.y > 400) return;
+    let best = null, bd = 12;
+    for (let n = 1; n <= 6; n++) { const d = Math.abs(p.y - this.ySc(this.En(n))); if (d < bd) { bd = d; best = n; } }
+    if (!best) return;
+    if (this.state.pick == null) this.setState({ pick: best });
+    else { const a = this.state.pick, b = best; if (a !== b) this.setState({ ni: Math.max(a, b), nf: Math.min(a, b), pick: null }, () => this.fire()); else this.setState({ pick: null }); }
+  };
+  lam(ni, nf) { return 1239.84 / (this.En(ni) - this.En(nf)); }
+  rgb(l) {
+    let r = 0, g = 0, b = 0;
+    if (l < 380 || l > 780) return [0.55, 0.55, 0.55];
+    if (l < 440) { r = -(l - 440) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; } else if (l < 510) { g = 1; b = -(l - 510) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; } else if (l < 645) { r = 1; g = -(l - 645) / 65; } else r = 1;
+    const f = l < 420 ? 0.3 + 0.7 * (l - 380) / 40 : l > 700 ? 0.3 + 0.7 * (780 - l) / 80 : 1;
+    return [r * f, g * f, b * f];
+  }
+  css(l, a) { const c = this.rgb(l); return 'rgba(' + c.map(v => Math.round(v * 255)).join(',') + ',' + (a == null ? 1 : a) + ')'; }
+  fire() { this.anim = { t: 0, ni: this.state.ni, nf: this.state.nf, kind: this.state.kind }; }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    if (this.anim) { this.anim.t += dt; if (this.anim.t > 2.4) this.anim = null; }
+    this.draw();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  series(nf) { return { 1: 'Lyman (UV)', 2: 'Balmer (zichtbaar)', 3: 'Paschen (IR)', 4: 'Brackett (IR)' }[nf] || ''; }
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state;
+    // --- energieniveaus ---
+    const x0 = 70, x1 = 300;
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Energieniveaus waterstof', 20, 8);
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x0, this.ySc(0)); ctx.lineTo(x1, this.ySc(0)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#4f4a42'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('n=∞', x0 - 6, this.ySc(0));
+    for (let n = 1; n <= 6; n++) {
+      const y = this.ySc(this.En(n)); const sel = n === st.ni || n === st.nf || n === st.pick;
+      ctx.strokeStyle = sel ? '#2a2723' : '#8c8576'; ctx.lineWidth = sel ? 2.5 : 1.5; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+      ctx.fillStyle = '#4f4a42'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      if (n <= 5) ctx.fillText('n=' + n, x0 - 6, y);
+      ctx.textAlign = 'left'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; if (n <= 5) ctx.fillText(this.fmt(this.En(n), 2) + ' eV', x1 + 6, y);
+      if (n === st.pick) { ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(x0 + 8, y, 5, 0, 7); ctx.fill(); }
+    }
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.textBaseline = 'middle'; ctx.fillText('0 eV (ionisatie)', x1 + 6, this.ySc(0));
+    // alle Balmer-pijlen licht, gekozen overgang sterk
+    const arrowAt = (ni, nf, x, col, w) => {
+      const ya = this.ySc(this.En(ni)), yb = this.ySc(this.En(nf)); const em = st.kind === 'em';
+      const from = em ? ya : yb, to = em ? yb : ya;
+      ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, from); ctx.lineTo(x, to - Math.sign(to - from) * 8); ctx.stroke();
+      const sg = Math.sign(to - from); ctx.beginPath(); ctx.moveTo(x, to); ctx.lineTo(x - 5, to - sg * 10); ctx.lineTo(x + 5, to - sg * 10); ctx.closePath(); ctx.fill();
+    };
+    [[3, 2], [4, 2], [5, 2], [6, 2]].forEach(([a, b], i) => { if (!(a === st.ni && b === st.nf)) arrowAt(a, b, 110 + i * 22, this.css(this.lam(a, b), 0.35), 1.5); });
+    const L = this.lam(st.ni, st.nf);
+    arrowAt(st.ni, st.nf, 230, L >= 380 && L <= 780 ? this.css(L) : '#6f685c', 3.5);
+    // foton-animatie
+    if (this.anim) {
+      const a = this.anim, La = this.lam(a.ni, a.nf), y = (this.ySc(this.En(a.ni)) + this.ySc(this.En(a.nf))) / 2;
+      const p = a.t / 2.4, xs = a.kind === 'em' ? 250 + p * 300 : 550 - p * 300;
+      ctx.strokeStyle = La >= 380 && La <= 780 ? this.css(La) : '#6f685c'; ctx.lineWidth = 2.5; ctx.beginPath();
+      const k = 2 * Math.PI / Math.max(8, Math.min(30, La / 25));
+      for (let i = -40; i <= 40; i++) { const xx = xs + i, env = Math.exp(-(i * i) / 400); ctx.lineTo(xx, y + 12 * env * Math.sin(k * i - a.t * 20)); }
+      ctx.stroke();
+      ctx.fillStyle = '#4f4a42'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(a.kind === 'em' ? 'uitgezonden foton' : 'geabsorbeerd foton', xs, y - 16);
+    }
+    // --- zichtbaar spectrum ---
+    const sx = 360, sw = 540, sy = 50, sh = 70, lmin = 380, lmax = 750;
+    const X = l => sx + (l - lmin) / (lmax - lmin) * sw;
+    const bar = (y, h, lines, title, kind) => {
+      if (kind === 'em') { ctx.fillStyle = '#0d0c0b'; ctx.fillRect(sx, y, sw, h); }
+      else { for (let i = 0; i < sw; i++) { ctx.fillStyle = this.css(lmin + i / sw * (lmax - lmin)); ctx.fillRect(sx + i, y, 1.2, h); } }
+      for (const l of lines) { if (l < lmin || l > lmax) continue; ctx.fillStyle = kind === 'em' ? this.css(l) : '#0d0c0b'; ctx.fillRect(X(l) - 1.5, y, 3, h); }
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(title, sx, y - 4);
+    };
+    const balmer = []; for (let n = 3; n <= 9; n++) balmer.push(this.lam(n, 2));
+    bar(sy, sh, balmer, (st.kind === 'em' ? 'Emissiespectrum' : 'Absorptiespectrum') + ' waterstof (zichtbaar deel)', st.kind);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let l = 400; l <= 750; l += 50) ctx.fillText(l + '', X(l), sy + sh + 3);
+    [['Hα', 3], ['Hβ', 4], ['Hγ', 5], ['Hδ', 6]].forEach(([n, k]) => { const l = this.lam(k, 2); ctx.fillStyle = '#4f4a42'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText(n, X(l), sy + sh + 17); });
+    if (L >= lmin && L <= lmax) { ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.strokeRect(X(L) - 5, sy - 3, 10, sh + 6); }
+    if (st.comp) {
+      const [name, lines] = this.ELEMS[st.comp];
+      bar(sy + 140, sh, lines, (st.kind === 'em' ? 'Emissiespectrum ' : 'Absorptiespectrum ') + name, st.kind);
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      for (let l = 400; l <= 750; l += 50) ctx.fillText(l + '', X(l), sy + 140 + sh + 3);
+    }
+    // --- volledig bereik (log) met reeksen ---
+    const fy = 330, fh = 46, f0 = 80, f1 = 2000;
+    const XL = l => sx + Math.log(l / f0) / Math.log(f1 / f0) * sw;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(sx, fy, sw, fh); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(sx, fy, sw, fh);
+    for (let i = 0; i < 200; i++) { const l = 380 + i * 2; ctx.fillStyle = this.css(l, 0.5); ctx.fillRect(XL(l), fy, XL(l + 2) - XL(l) + 0.5, fh); }
+    const ser = [[1, '#7a5ab8'], [2, '#2a2723'], [3, '#b8862a']];
+    for (const [nf, col] of ser) for (let n = nf + 1; n <= 12; n++) { const l = this.lam(n, nf); const sel = n === st.ni && nf === st.nf; ctx.strokeStyle = sel ? '#c8443a' : col; ctx.lineWidth = sel ? 3 : 1.3; ctx.beginPath(); ctx.moveTo(XL(l), fy); ctx.lineTo(XL(l), fy + fh); ctx.stroke(); }
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('Alle reeksen (logaritmische schaal)', sx, fy - 4);
+    ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#7a5ab8'; ctx.textAlign = 'center'; ctx.fillText('Lyman', XL(105), fy + fh + 18);
+    ctx.fillStyle = '#2a2723'; ctx.fillText('Balmer', XL(480), fy + fh + 18);
+    ctx.fillStyle = '#b8862a'; ctx.fillText('Paschen', XL(1300), fy + fh + 18);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    for (const l of [100, 200, 500, 1000, 2000]) ctx.fillText(l + ' nm', XL(l), fy + fh + 3);
+    ctx.fillText('UV', XL(200), fy + fh + 32); ctx.fillText('zichtbaar', XL(550), fy + fh + 32); ctx.fillText('IR', XL(1500), fy + fh + 32);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Klik op twee niveaus om een overgang te kiezen.', 20, 420);
+  }
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.12 195)';
+    const chip = (on, dis) => 'min-height:32px;min-width:38px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:' + (dis ? 'default' : 'pointer') + ';padding:0 9px;opacity:' + (dis ? '0.4' : '1') + ';border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const L = this.lam(st.ni, st.nf), dE = this.En(st.ni) - this.En(st.nf);
+    const zone = L < 380 ? 'ultraviolet' : L > 780 ? 'infrarood' : 'zichtbaar';
+    const rows = [
+      { n: 'Overgang', v: st.ni + ' → ' + st.nf },
+      { n: 'Reeks', v: this.series(st.nf) },
+      { n: 'Energieverschil ΔE', v: this.fmt(dE, 3) + ' eV' },
+      { n: 'Fotonenergie', v: this.fmt(dE * 1.602, 3) + '·10⁻¹⁹ J' },
+      { n: 'Frequentie f = ΔE/h', v: this.fmt(dE * 1.602e-19 / 6.626e-34 / 1e14, 3) + '·10¹⁴ Hz' },
+      { n: 'Golflengte λ = hc/ΔE', v: this.fmt(L, 1) + ' nm' },
+      { n: 'Gebied', v: zone },
+    ];
+    const set = (o) => this.setState(o, () => this.fire());
+    return {
+      stageRef: this.stageRef,
+      ups: [2, 3, 4, 5, 6].map(n => ({ name: n + '', style: chip(st.ni === n, n <= st.nf), onClick: () => { if (n > st.nf) set({ ni: n }); } })),
+      lows: [1, 2, 3, 4].map(n => ({ name: n + '', style: chip(st.nf === n, n >= st.ni), onClick: () => { if (n < st.ni) set({ nf: n }); } })),
+      onFire: () => this.fire(), fireLabel: st.kind === 'em' ? 'Laat het elektron terugvallen' : 'Laat een foton absorberen',
+      kinds: [['em', 'Emissie'], ['abs', 'Absorptie']].map(([k, n]) => ({ name: n, style: chip(st.kind === k), onClick: () => set({ kind: k }) })),
+      elems: [[null, 'Geen']].concat(Object.keys(this.ELEMS).map(k => [k, this.ELEMS[k][0]])).map(([k, n]) => ({ name: n, style: chip(st.comp === k), onClick: () => this.setState({ comp: k }) })),
+      rows,
+    };
+  }
+}
+</script>
+</body>
+</html>

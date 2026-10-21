@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:30px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">De looping</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+      <div class="card">
+        <div class="row"><span class="lbl">Starthoogte h</span><span class="val">{{ hStr }}</span></div>
+        <div class="sl"><input type="range" min="0.5" max="6" step="0.05" value="{{ h }}" onInput="{{ onH }}"></div>
+        <div class="row"><span class="lbl">Straal looping R</span><span class="val">{{ RStr }}</span></div>
+        <div class="sl"><input type="range" min="0.5" max="1.6" step="0.05" value="{{ R }}" onInput="{{ onR }}"></div>
+        <div class="row"><span class="lbl">Massa karretje m</span><span class="val">{{ mStr }}</span></div>
+        <div class="sl"><input type="range" min="0.5" max="5" step="0.1" value="{{ m }}" onInput="{{ onM }}"></div>
+        <div class="chips">
+          <sc-for list="{{ presets }}" as="p" hint-placeholder-count="3">
+            <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="4">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="7">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+        <div style="{{ msgStyle }}">{{ msg }}</div>
+      </div>
+      <div class="note">
+        <div class="mono">top: F<sub>z</sub> + F<sub>N</sub> = m&middot;v&sup2;/R &nbsp; &rArr; &nbsp; v<sub>min</sub> = &radic;(g&middot;R)</div>
+        <div class="mono">m&middot;g&middot;h = m&middot;g&middot;2R + &frac12;m&middot;v&sup2; &nbsp; &rArr; &nbsp; h<sub>min</sub> = 2,5&middot;R</div>
+        <div style="margin-top:4px">In het hoogste punt wijzen zwaartekracht en normaalkracht allebei naar het middelpunt; samen leveren ze de centripetale kracht. Is de snelheid te klein, dan zou F<sub>N</sub> negatief moeten worden: de baan kan niet trekken, dus het karretje valt uit de baan. Wrijving wordt verwaarloosd; de massa valt weg uit h<sub>min</sub>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560; g = 9.81; slope = 40 * Math.PI / 180;
+  state = { h: 3, R: 1, m: 1, showF: true, showV: true, showEn: true, slow: true };
+  running = false; s = 0; v = 0; phase = 'ramp'; free = null; trail = []; topV = null; topN = null; fell = false; done = false;
+
+  componentDidMount() {
+    this.setupCanvas();
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  reset() { this.running = false; this.s = 0; this.v = 0; this.phase = 'ramp'; this.free = null; this.trail = []; this.topV = null; this.topN = null; this.fell = false; this.done = false; this.forceUpdate(); }
+  rampLen() { return this.state.h / Math.sin(this.slope); }
+  // positie (m) langs de baan: helling, dan looping (start onderaan, tegenwijzerzin), dan rechtdoor
+  pos(s) {
+    const st = this.state, L = this.rampLen(), R = st.R;
+    if (s < L) { const d = L - s; return { x: -d * Math.cos(this.slope), y: d * Math.sin(this.slope), seg: 'ramp', tx: Math.cos(this.slope), ty: -Math.sin(this.slope) }; }
+    const sl = s - L;
+    if (sl < 2 * Math.PI * R) { const ph = sl / R; return { x: R * Math.sin(ph), y: R * (1 - Math.cos(ph)), seg: 'loop', ph, tx: Math.cos(ph), ty: Math.sin(ph) }; }
+    return { x: sl - 2 * Math.PI * R, y: 0, seg: 'flat', tx: 1, ty: 0 };
+  }
+  Nof(p, v) { const st = this.state; if (p.seg === 'loop') return st.m * v * v / st.R + st.m * this.g * Math.cos(p.ph); if (p.seg === 'ramp') return st.m * this.g * Math.cos(this.slope); return st.m * this.g; }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const st = this.state;
+    if (this.running && !this.done) {
+      const n = 40, h = dt * (st.slow ? 0.4 : 1) / n;
+      for (let i = 0; i < n && !this.done; i++) {
+        if (this.free) {
+          const f = this.free; f.vy -= this.g * h; f.x += f.vx * h; f.y += f.vy * h;
+          this.trail.push({ x: f.x, y: f.y });
+          if (f.y <= 0) { f.y = 0; this.done = true; this.running = false; }
+          continue;
+        }
+        const p = this.pos(this.s);
+        // energiebehoud zonder wrijving: v uit de hoogte
+        const v = Math.sqrt(Math.max(0, 2 * this.g * (st.h - p.y)));
+        if (p.seg === 'loop') {
+          const N = this.Nof(p, v);
+          if (Math.abs(p.ph - Math.PI) < 0.02 && this.topV == null) { this.topV = v; this.topN = N; }
+          if (N < 0 || (v < 1e-3 && p.ph > 0.1)) { // loskomen (of stilvallen en terugglijden)
+            if (v < 1e-3) { this.done = true; this.running = false; this.fell = true; break; }
+            this.free = { x: p.x, y: p.y, vx: v * p.tx, vy: v * p.ty }; this.fell = true; continue;
+          }
+        }
+        this.v = v; this.s += Math.max(v, 0.05) * h;
+        this.trail.push({ x: p.x, y: p.y }); if (this.trail.length > 3000) this.trail.shift();
+        const L = this.rampLen(); if (this.s > L + 2 * Math.PI * st.R + 3.2) { this.done = true; this.running = false; }
+      }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.15) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  arrow(ctx, x, y, dx, dy, col, label) {
+    const L = Math.hypot(dx, dy); if (L < 3) return; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
+    const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 10 * Math.cos(a - 0.42), y + dy - 10 * Math.sin(a - 0.42)); ctx.lineTo(x + dx - 10 * Math.cos(a + 0.42), y + dy - 10 * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
+    ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14);
+  }
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const sc0 = this.dpr || 1;
+    ctx.setTransform(sc0, 0, 0, sc0, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state, R = st.R, L = this.rampLen();
+    const xmin = -L * Math.cos(this.slope) - 0.3, xmax = R + 3.4;
+    const k = Math.min(620 / (xmax - xmin), 440 / Math.max(st.h + 0.3, 2 * R + 0.5));
+    const gy = 500, ox = 20 - xmin * k;
+    const P = (x, y) => ({ X: ox + x * k, Y: gy - y * k });
+    // grond
+    ctx.fillStyle = '#e2dccf'; ctx.fillRect(0, gy, 680, 40);
+    // h_min-lijn
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = '#c8443a'; ctx.lineWidth = 1.2; const yh = P(0, 2.5 * R).Y;
+    ctx.beginPath(); ctx.moveTo(10, yh); ctx.lineTo(670, yh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#c8443a'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('hₘᵢₙ = 2,5·R', 670, yh - 2);
+    // baan
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath();
+    for (let s = 0; s <= L + 2 * Math.PI * R + 3.3; s += 0.02) { const p = this.pos(s); const q = P(p.x, p.y); s ? ctx.lineTo(q.X, q.Y) : ctx.moveTo(q.X, q.Y); }
+    ctx.stroke();
+    const cc = P(0, R); ctx.fillStyle = '#6f685c'; ctx.beginPath(); ctx.arc(cc.X, cc.Y, 3, 0, 7); ctx.fill();
+    // starthoogte
+    const s0 = P(-L * Math.cos(this.slope), st.h);
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(s0.X, s0.Y); ctx.lineTo(s0.X, gy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#4f4a42'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('h = ' + this.fmt(st.h, 2) + ' m', s0.X + 6, gy - 6);
+    // spoor
+    if (this.trail.length > 1) { ctx.strokeStyle = this.fell ? 'rgba(200,68,58,0.6)' : 'rgba(58,111,184,0.5)'; ctx.lineWidth = 2; ctx.beginPath(); this.trail.forEach((t, i) => { const q = P(t.x, t.y); i ? ctx.lineTo(q.X, q.Y) : ctx.moveTo(q.X, q.Y); }); ctx.stroke(); }
+    // karretje
+    let x, y, tx, ty, v, p = null;
+    if (this.free) { x = this.free.x; y = this.free.y; v = Math.hypot(this.free.vx, this.free.vy); tx = this.free.vx / (v || 1); ty = this.free.vy / (v || 1); }
+    else { p = this.pos(this.s); x = p.x; y = p.y; tx = p.tx; ty = p.ty; v = Math.sqrt(Math.max(0, 2 * this.g * (st.h - p.y))); }
+    const q = P(x, y);
+    // normaal naar binnen (bij looping) of omhoog
+    let nx = -ty, ny = tx; // links van rijrichting = binnenkant looping
+    const cr = 9 + 3 * Math.sqrt(st.m);
+    const off = this.free ? (this.done ? -cr : 0) : cr;
+    const bx = q.X + (this.free ? 0 : nx * off), by = q.Y - (this.free ? -off : ny * off);
+    ctx.save(); ctx.translate(bx, by); ctx.rotate(-Math.atan2(ty, tx));
+    ctx.fillStyle = this.fell ? '#c8443a' : '#3a6fb8'; ctx.beginPath(); ctx.roundRect(-cr * 1.4, -cr, cr * 2.8, cr * 2, 5); ctx.fill();
+    ctx.restore();
+    if (st.showF && !this.free) {
+      const fs = 18 / st.m;
+      this.arrow(ctx, bx, by, 0, st.m * this.g * fs * 0.9, '#2f8a4e', 'Fz');
+      const N = this.Nof(p, v);
+      if (N > 0) this.arrow(ctx, bx, by, nx * N * fs * 0.9, -ny * N * fs * 0.9, '#7a5ab8', 'FN');
+    }
+    if (st.showV && v > 0.05) this.arrow(ctx, bx, by, tx * v * 9, -ty * v * 9, '#d9822b', 'v');
+    // energie
+    if (st.showEn) {
+      const Ek = 0.5 * st.m * v * v, Ep = st.m * this.g * y, E = st.m * this.g * st.h;
+      const ex = 720, ey = 470, eh = 330, sc = eh / Math.max(E, 1e-6);
+      [['Eₖ', Ek, '#d9822b'], ['Eₚ', Ep, '#3a6fb8'], ['Eₜₒₜ', Ek + Ep, '#2a2723']].forEach(([n, val, col], i) => {
+        ctx.fillStyle = col; ctx.fillRect(ex + i * 56, ey - val * sc, 40, val * sc);
+        ctx.fillStyle = '#4f4a42'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(n, ex + 20 + i * 56, ey + 6);
+        ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(val, 1) + ' J', ex + 20 + i * 56, ey + 24);
+      });
+      ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(ex - 8, ey); ctx.lineTo(ex + 160, ey); ctx.stroke();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('Energie', ex - 8, ey - eh - 10);
+    }
+  }
+  renderVals() {
+    const st = this.state; const g = this.g;
+    const accent = 'oklch(0.5 0.13 255)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const hmin = 2.5 * st.R, vtop2 = 2 * g * (st.h - 2 * st.R);
+    const vtop = vtop2 > 0 ? Math.sqrt(vtop2) : null, Ntop = vtop != null ? st.m * vtop2 / st.R - st.m * g : null;
+    let p = this.free ? null : this.pos(this.s);
+    const vNow = this.free ? Math.hypot(this.free.vx, this.free.vy) : Math.sqrt(Math.max(0, 2 * g * (st.h - p.y)));
+    const NNow = p ? this.Nof(p, vNow) : 0;
+    let msg, ok;
+    if (st.h >= hmin - 1e-9) { msg = 'h ≥ 2,5·R: het karretje haalt de looping.'; ok = true; }
+    else { msg = 'h < 2,5·R: te traag in de looping, het karretje valt uit de baan.'; ok = false; }
+    const set = (o) => { this.setState(o); this.reset(); };
+    return {
+      stageRef: this.stageRef,
+      onPlay: () => { if (this.done) this.reset(); this.running = !this.running; this.forceUpdate(); },
+      playLabel: this.running ? 'Pauze' : (this.done ? 'Opnieuw' : (this.s > 0 ? 'Verder' : 'Start')),
+      onReset: () => this.reset(),
+      h: st.h, R: st.R, m: st.m,
+      hStr: this.fmt(st.h, 2) + ' m', RStr: this.fmt(st.R, 2) + ' m', mStr: this.fmt(st.m, 1) + ' kg',
+      onH: e => set({ h: +e.target.value }), onR: e => set({ R: +e.target.value }), onM: e => set({ m: +e.target.value }),
+      presets: [['h = 2R', 2], ['h = 2,5R', 2.5], ['h = 3R', 3]].map(([n, f]) => ({ name: n, style: chip(Math.abs(st.h - f * st.R) < 0.03), onClick: () => set({ h: Math.min(6, Math.round(f * st.R * 100) / 100) }) })),
+      toggles: [['showF', 'Krachten'], ['showV', 'Snelheid'], ['showEn', 'Energie'], ['slow', 'Vertraagd']].map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      rows: [
+        { n: 'Minimale starthoogte 2,5·R', v: this.fmt(hmin, 2) + ' m' },
+        { n: 'Minimale snelheid in top √(gR)', v: this.fmt(Math.sqrt(g * st.R), 2) + ' m/s' },
+        { n: 'Snelheid in top (theorie)', v: vtop != null ? this.fmt(vtop, 2) + ' m/s' : 'haalt top niet' },
+        { n: 'Normaalkracht in top (theorie)', v: Ntop != null ? this.fmt(Ntop, 1) + ' N' : '—' },
+        { n: 'Snelheid onderaan √(2gh)', v: this.fmt(Math.sqrt(2 * g * st.h), 2) + ' m/s' },
+        { n: 'Snelheid nu', v: this.fmt(vNow, 2) + ' m/s' },
+        { n: 'Normaalkracht nu', v: this.free ? '0 N (los)' : this.fmt(NNow, 1) + ' N  (' + this.fmt(NNow / (st.m * g), 2) + '·mg)' },
+      ],
+      msg, msgStyle: 'margin-top:4px;padding:7px 9px;border-radius:8px;font-weight:600;' + (ok ? 'background:#e6f2ea;color:#2f7a45' : 'background:#fbeeea;color:#8a3b2c'),
+    };
+  }
+}
+</script>
+</body>
+</html>

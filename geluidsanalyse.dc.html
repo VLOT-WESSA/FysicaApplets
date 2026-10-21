@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#1f7fa0"/>
+  <path d="M14 40 Q22 18 30 40 T46 40 T62 40 T78 40 T86 40" fill="none" stroke="#fffdf9" stroke-width="3"/>
+  <rect x="18" y="66" width="6" height="18" fill="#fffdf9"/>
+  <rect x="34" y="58" width="6" height="26" fill="#fffdf9"/>
+  <rect x="50" y="72" width="6" height="12" fill="#fffdf9"/>
+  <rect x="66" y="76" width="6" height="8" fill="#fffdf9"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f7fa0;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f7fa0;cursor:pointer}
+  .kaart{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .kop{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px}
+  .knop{flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:7px 4px;cursor:pointer;background:#fff;color:#2a2723}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.5}
+  .uitleg{font-size:12px;color:#8c8576;line-height:1.4}
+  .ht{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+  .ht td,.ht th{padding:2px 6px;text-align:right;border-bottom:1px solid #eee7da}
+  .ht th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c}
+
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Geluidsanalyse</h1>
+  </div>
+
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;cursor:crosshair;touch-action:none"></canvas>
+      </div>
+    </div>
+
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-right:2px">
+
+      <div class="kaart">
+        <div class="kop">1. Geluid opnemen of openen</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button class="knop" onClick="{{ onD1 }}" style="background:{{ d1Bg }};color:{{ d1Fg }}">1 s</button>
+          <button class="knop" onClick="{{ onD2 }}" style="background:{{ d2Bg }};color:{{ d2Fg }}">2 s</button>
+          <button class="knop" onClick="{{ onD4 }}" style="background:{{ d4Bg }};color:{{ d4Fg }}">4 s</button>
+          <button class="knop" onClick="{{ onD8 }}" style="background:{{ d8Bg }};color:{{ d8Fg }}">8 s</button>
+        </div>
+        <button onClick="{{ onRec }}" style="width:100%;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:10px;cursor:pointer;background:{{ recBg }};color:#fff;margin-bottom:6px">{{ recLbl }}</button>
+        <label style="display:block;text-align:center;font-size:13px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:8px;cursor:pointer;background:#fff;color:#2a2723">
+          Geluidsbestand openen&hellip;
+          <input type="file" accept="audio/*" onChange="{{ onFile }}" style="display:none">
+        </label>
+        <div class="uitleg" style="margin-top:8px">{{ status }}</div>
+      </div>
+
+      <div class="kaart">
+        <div class="kop">2. Fragment kiezen en beluisteren</div>
+        <div class="uitleg" style="margin-bottom:6px">Sleep in de bovenste balk over een stabiel stuk van het geluid. Versleep de randen om bij te stellen.</div>
+        <div class="mono">{{ selTxt }}</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="knop" onClick="{{ onPlaySel }}">&#9654; Fragment</button>
+          <button class="knop" onClick="{{ onPlayAll }}">&#9654; Alles</button>
+          <button class="knop" onClick="{{ onStop }}">&#9632; Stop</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="knop" onClick="{{ onSelAll }}">Hele opname</button>
+          <button class="knop" onClick="{{ onSel50 }}">50 ms rond midden</button>
+        </div>
+      </div>
+
+      <div class="kaart">
+        <div class="kop">3. Tijdsdomein: periode meten</div>
+        <div class="uitleg" style="margin-bottom:6px">Klik in de golfvorm (midden) om cursor A en daarna B te plaatsen, bv. 5 periodes uit elkaar.</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span style="font-size:13px;font-weight:500">Aantal periodes tussen A en B</span><span class="mono">{{ nPer }}</span></div>
+        <input type="range" min="1" max="20" step="1" value="{{ nPer }}" onChange="{{ onNPer }}" style="width:100%;accent-color:#1f7fa0;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span style="font-size:13px;font-weight:500">Inzoomen in de golfvorm</span><span class="mono">{{ dzTxt }}</span></div>
+        <input type="range" min="0" max="100" step="1" value="{{ dz }}" onChange="{{ onDz }}" style="width:100%;accent-color:#1f7fa0;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span style="font-size:13px;font-weight:500">Schuiven</span></div>
+        <input type="range" min="0" max="1000" step="1" value="{{ dpos }}" onChange="{{ onDpos }}" style="width:100%;accent-color:#1f7fa0;margin-bottom:6px">
+        <div class="mono" style="white-space:pre-line">{{ cursorTxt }}</div>
+      </div>
+
+      <div class="kaart">
+        <div class="kop">4. Spectrum: grondtoon en boventonen</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button class="knop" onClick="{{ onLin }}" style="background:{{ linBg }};color:{{ linFg }}">Lineair</button>
+          <button class="knop" onClick="{{ onLog }}" style="background:{{ logBg }};color:{{ logFg }}">Logaritmisch</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span style="font-size:13px;font-weight:500">Max. frequentie</span><span class="mono">{{ fmax }} Hz</span></div>
+        <input type="range" min="500" max="10000" step="500" value="{{ fmax }}" onChange="{{ onFmax }}" style="width:100%;accent-color:#1f7fa0;margin-bottom:6px">
+        <div class="uitleg">Klik op een piek om ze te kiezen. Maak de laagste duidelijke piek de grondtoon: de applet zoekt dan de harmonischen.</div>
+        <div class="mono" style="margin:6px 0">{{ piekTxt }}</div>
+        <div style="display:flex;gap:6px">
+          <button class="knop" onClick="{{ onZetF0 }}">Gekozen piek = grondtoon</button>
+          <button class="knop" onClick="{{ onAutoF0 }}">Automatisch</button>
+        </div>
+        <sc-if value="{{ heeftF0 }}" hint-placeholder-val="{{ false }}">
+          <table class="ht" style="margin-top:8px">
+            <thead><tr><th>n</th><th>f (Hz)</th><th>f / f&#8320;</th><th>dB</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ harm }}" as="h" hint-placeholder-count="5">
+                <tr><td>{{ h.n }}</td><td>{{ h.f }}</td><td>{{ h.r }}</td><td>{{ h.db }}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </sc-if>
+      </div>
+
+      <div class="kaart">
+        <div class="kop">5. Voor je verslag</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="knop" onClick="{{ onPng }}">Afbeelding (PNG)</button>
+          <button class="knop" onClick="{{ onWav }}">Opname (WAV)</button>
+        </div>
+        <button class="knop" onClick="{{ onKopieer }}" style="width:100%;margin-top:6px">{{ kopieerLbl }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = { duur: 2, opnemen: false, niveau: 0, rev: 0, nPer: 5, dz: 60, dpos: 0, logAs: false, fmax: 3000, kopieerLbl: 'Tabel kopiëren',
+            status: 'Er staat een voorbeeldgeluid klaar. Klik op Opnemen en maak je eigen geluid; de browser vraagt toestemming voor de microfoon.' };
+  stageRef = React.createRef();
+  W = 880; H = 600;
+  OV = { x: 60, y: 26, w: 790, h: 70 };    // overzicht volledige opname
+  WV = { x: 60, y: 152, w: 790, h: 160 };  // golfvorm van het fragment
+  SP = { x: 60, y: 372, w: 790, h: 190 };  // spectrum
+  samples = null; sr = 44100;
+  selA = 0; selB = 0;                      // selectie in samples
+  curA = null; curB = null;                // cursors in seconden
+  piek = null; f0 = null; harm = [];
+  speel = null;                            // { ac, bron, start, t0, t1 }
+  sleep = null;
+
+  componentDidMount() {
+    this.nieuwSignaal(this.demoSignaal(), null);
+    this.setupCanvas();
+    const cv = this.stageRef.current;
+    this._down = e => this.muisNeer(e); this._move = e => this.muisBeweeg(e); this._up = () => {
+      if (!this.sleep) return;
+      this.sleep = null;
+      // een klik zonder slepen: kies 50 ms rond het aangeklikte punt
+      if (this.selB - this.selA < Math.round(0.005 * this.sr)) {
+        const h = Math.round(0.025 * this.sr), m = this.selA;
+        this.selA = Math.max(0, m - h); this.selB = Math.min(this.samples.length, m + h);
+      }
+      this.analyse();
+    };
+    if (cv) { cv.addEventListener('pointerdown', this._down); cv.addEventListener('pointermove', this._move); }
+    window.addEventListener('pointerup', this._up);
+    this._onResize = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(cv && cv.parentElement, this._onResize);
+    this.raf = requestAnimationFrame(this.lus);
+  }
+  componentWillUnmount() {
+    this.stopOpname(); this.stopSpelen(); cancelAnimationFrame(this.raf);
+    const cv = this.stageRef.current;
+    if (cv) { cv.removeEventListener('pointerdown', this._down); cv.removeEventListener('pointermove', this._move); }
+    window.removeEventListener('pointerup', this._up);
+    if (this._acStop) this._acStop();
+  }
+  setupCanvas() { const c = this.stageRef.current; if (c) this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+
+  lus = () => { if (this.speel) this.draw(); this.raf = requestAnimationFrame(this.lus); };
+
+  // voorbeeld: 0-0,9 s klank (220 Hz + harmonischen), 0,9-1,2 s stilte, 1,2-2 s ruis
+  demoSignaal() {
+    this.sr = 44100;
+    const n = 2 * this.sr, a = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const t = i / this.sr;
+      if (t < 0.9) {
+        const env = Math.min(1, t / 0.05) * Math.min(1, (0.9 - t) / 0.05);
+        a[i] = env * (0.45 * Math.sin(2 * Math.PI * 220 * t) + 0.25 * Math.sin(2 * Math.PI * 440 * t + 0.6)
+          + 0.15 * Math.sin(2 * Math.PI * 660 * t + 1.1) + 0.07 * Math.sin(2 * Math.PI * 880 * t + 2));
+      } else if (t > 1.2) a[i] = 0.25 * (Math.random() * 2 - 1);
+    }
+    return a;
+  }
+
+  // ---------- opnemen / openen ----------
+  async startOpname() {
+    this.stopSpelen();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.setState({ status: 'Deze browser laat geen microfoonopname toe (gebruik https of open een geluidsbestand).' }); return;
+    }
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    } catch (e) { this.setState({ status: 'Geen toegang tot de microfoon (' + e.name + ').' }); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ac = new AC();
+    const sr = this.ac.sampleRate, nodig = Math.round(this.state.duur * sr);
+    const buf = new Float32Array(nodig); let k = 0;
+    const src = this.ac.createMediaStreamSource(this.stream);
+    const proc = this.ac.createScriptProcessor(2048, 1, 1);
+    const stil = this.ac.createGain(); stil.gain.value = 0;
+    proc.onaudioprocess = (ev) => {
+      const inp = ev.inputBuffer.getChannelData(0); let m = 0;
+      for (let i = 0; i < inp.length; i++) { if (k < nodig) buf[k++] = inp[i]; m = Math.max(m, Math.abs(inp[i])); }
+      this.setState({ niveau: m, status: 'Bezig met opnemen… ' + (k / sr).toFixed(1) + ' / ' + this.state.duur + ' s   niveau ' + this.balk(m) });
+      if (k >= nodig) { this.stopOpname(); this.sr = sr; this.nieuwSignaal(buf, 'Opname klaar (' + this.state.duur + ' s).'); }
+    };
+    src.connect(proc); proc.connect(stil); stil.connect(this.ac.destination);
+    this.proc = proc;
+    this.setState({ opnemen: true });
+  }
+  balk(m) { const n = Math.round(Math.min(1, m) * 12); return '█'.repeat(n) + '░'.repeat(12 - n) + (m > 0.98 ? ' TE LUID' : ''); }
+  stopOpname() {
+    if (this.proc) { this.proc.onaudioprocess = null; try { this.proc.disconnect(); } catch (e) {} this.proc = null; }
+    if (this.stream) { this.stream.getTracks().forEach(t => t.stop()); this.stream = null; }
+    if (this.ac) { try { this.ac.close(); } catch (e) {} this.ac = null; }
+    if (this.state.opnemen) this.setState({ opnemen: false });
+  }
+  async openBestand(e) {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    this.stopSpelen();
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext; const ac = new AC();
+      const ab = await ac.decodeAudioData(await f.arrayBuffer()); ac.close();
+      const n = Math.min(ab.length, Math.round(30 * ab.sampleRate));
+      this.sr = ab.sampleRate;
+      this.nieuwSignaal(ab.getChannelData(0).slice(0, n), f.name + ': ' + (n / this.sr).toFixed(1) + ' s' + (ab.length > n ? ' (eerste 30 s)' : '') + '.');
+    } catch (err) { this.setState({ status: 'Dit bestand kan niet gelezen worden.' }); }
+    e.target.value = '';
+  }
+  nieuwSignaal(data, status) {
+    this.samples = data;
+    this.curA = null; this.curB = null; this.piek = null; this.f0 = null; this.harm = [];
+    // standaardselectie: het luidste stuk van ongeveer 0,2 s
+    const L = Math.min(data.length, Math.round(0.2 * this.sr)); let best = 0, bi = 0, som = 0;
+    const stap = Math.max(1, Math.round(L / 20));
+    for (let s = 0; s + L <= data.length; s += stap) {
+      som = 0; for (let i = s; i < s + L; i += 8) som += data[i] * data[i];
+      if (som > best) { best = som; bi = s; }
+    }
+    this.selA = bi; this.selB = bi + L;
+    let m = 0; for (let i = 0; i < data.length; i++) m = Math.max(m, Math.abs(data[i]));
+    let extra = '';
+    if (m > 0.98) extra = ' Let op: het signaal is te groot (clipping). Ga verder van de microfoon en neem opnieuw op.';
+    else if (m < 0.02) extra = ' Het signaal is erg klein. Ga dichter bij de microfoon.';
+    if (status !== null) this.setState({ status: status + extra });
+    this.analyse();
+  }
+
+  // ---------- afspelen ----------
+  speelAf(a, b) {
+    this.stopSpelen();
+    const AC = window.AudioContext || window.webkitAudioContext; const ac = new AC();
+    const n = b - a; if (n < 2) return;
+    const buf = ac.createBuffer(1, n, this.sr);
+    buf.copyToChannel(this.samples.slice(a, b), 0);
+    const bron = ac.createBufferSource(); bron.buffer = buf; bron.connect(ac.destination);
+    // korte fragmenten (bv. 50 ms) herhalen, zodat je ze kunt horen
+    const kort = n / this.sr < 0.5;
+    if (kort) bron.loop = true;
+    bron.start();
+    this.speel = { ac, bron, start: ac.currentTime, a, b, kort };
+    bron.onended = () => { if (this.speel && this.speel.bron === bron) this.stopSpelen(); };
+    if (kort) this.speel.timer = setTimeout(() => this.stopSpelen(), 2000);
+  }
+  stopSpelen() {
+    if (!this.speel) return;
+    clearTimeout(this.speel.timer);
+    try { this.speel.bron.stop(); } catch (e) {}
+    try { this.speel.ac.close(); } catch (e) {}
+    this.speel = null; this.draw();
+  }
+  speelPositie() {
+    if (!this.speel) return null;
+    const t = this.speel.ac.currentTime - this.speel.start, n = this.speel.b - this.speel.a;
+    let k = Math.round(t * this.sr); if (this.speel.kort) k = k % n;
+    return this.speel.a + Math.min(k, n);
+  }
+
+  // ---------- selectie en muis ----------
+  canvasXY(e) {
+    const c = this.stageRef.current, r = c.getBoundingClientRect();
+    const k = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * k) / 2, oy = (r.height - this.H * k) / 2;
+    return { x: (e.clientX - r.left - ox) / k, y: (e.clientY - r.top - oy) / k };
+  }
+  binnen(p, P) { return p.x >= P.x - 4 && p.x <= P.x + P.w + 4 && p.y >= P.y - 6 && p.y <= P.y + P.h + 6; }
+  ovNaarSample(x) { const O = this.OV; return Math.round(Math.max(0, Math.min(1, (x - O.x) / O.w)) * this.samples.length); }
+  sampleNaarOv(s) { const O = this.OV; return O.x + s / this.samples.length * O.w; }
+
+  muisNeer(e) {
+    if (!this.samples) return;
+    const p = this.canvasXY(e);
+    if (this.binnen(p, this.OV)) {
+      const xa = this.sampleNaarOv(this.selA), xb = this.sampleNaarOv(this.selB);
+      if (Math.abs(p.x - xa) < 7) this.sleep = { soort: 'a' };
+      else if (Math.abs(p.x - xb) < 7) this.sleep = { soort: 'b' };
+      else if (p.x > xa && p.x < xb) this.sleep = { soort: 'schuif', dx: this.ovNaarSample(p.x) - this.selA };
+      else { const s = this.ovNaarSample(p.x); this.selA = s; this.selB = s; this.sleep = { soort: 'nieuw', vast: s }; }
+      e.preventDefault();
+    } else if (this.binnen(p, this.WV)) {
+      const W = this.WV, [da, db] = this.detail(), t = (da + Math.max(0, Math.min(1, (p.x - W.x) / W.w)) * (db - da)) / this.sr;
+      if (this.curA === null || this.curB !== null) { this.curA = t; this.curB = null; } else this.curB = t;
+      this.setState({ rev: this.state.rev + 1 }); this.draw();
+    } else if (this.binnen(p, this.SP)) {
+      this.kiesPiek(p.x);
+    }
+  }
+  muisBeweeg(e) {
+    if (!this.sleep || !this.samples) return;
+    const s = this.ovNaarSample(this.canvasXY(e).x), N = this.samples.length, min = Math.round(0.005 * this.sr);
+    const sl = this.sleep;
+    if (sl.soort === 'a') this.selA = Math.min(s, this.selB - min);
+    else if (sl.soort === 'b') this.selB = Math.max(s, this.selA + min);
+    else if (sl.soort === 'schuif') { const L = this.selB - this.selA; this.selA = Math.max(0, Math.min(N - L, s - sl.dx)); this.selB = this.selA + L; }
+    else { this.selA = Math.min(sl.vast, s); this.selB = Math.max(sl.vast, s); if (this.selB - this.selA < min) this.selB = Math.min(N, this.selA + min); }
+    this.selA = Math.max(0, this.selA); this.selB = Math.min(N, this.selB);
+    this.curA = null; this.curB = null;
+    this.draw();   // het spectrum wordt herberekend bij het loslaten
+  }
+  // zichtbaar deel van het fragment in de golfvorm (zoom 0 = heel fragment, 100 = 1/40 ervan, min. 2 ms)
+  detail() {
+    const L = Math.max(2, this.selB - this.selA);
+    const Ld = Math.max(Math.min(L, Math.round(0.002 * this.sr)), Math.round(L * Math.pow(1 / 40, this.state.dz / 100)));
+    const a = this.selA + Math.round((L - Ld) * this.state.dpos / 1000);
+    return [a, a + Ld];
+  }
+  zetSelectie(a, b) { this.selA = Math.max(0, a); this.selB = Math.min(this.samples.length, b); this.curA = null; this.curB = null; this.analyse(); }
+
+  // ---------- spectrum ----------
+  fft(re, im) {
+    const n = re.length;
+    for (let i = 1, j = 0; i < n; i++) {
+      let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
+      if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; }
+    }
+    for (let len = 2; len <= n; len <<= 1) {
+      const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (let i = 0; i < n; i += len) {
+        let cr = 1, ci = 0;
+        for (let k = 0; k < len / 2; k++) {
+          const a = i + k, b = a + len / 2;
+          const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+          re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+          const ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr;
+        }
+      }
+    }
+  }
+  analyse() {
+    // Welch: stukken van max. 16384 samples (50 % overlap), elk met Hann-venster, aangevuld tot N = 16384
+    const N = 16384, L = this.selB - this.selA, seg = Math.min(L, N), hop = Math.max(1, Math.floor(seg / 2));
+    const mag = new Float64Array(N / 2); let aantal = 0;
+    const re = new Float64Array(N), im = new Float64Array(N);
+    for (let s = this.selA; s + seg <= this.selB || aantal === 0; s += hop) {
+      re.fill(0); im.fill(0);
+      for (let i = 0; i < seg; i++) re[i] = (this.samples[s + i] || 0) * (0.5 - 0.5 * Math.cos(2 * Math.PI * i / (seg - 1)));
+      this.fft(re, im);
+      for (let i = 0; i < N / 2; i++) mag[i] += Math.hypot(re[i], im[i]);
+      aantal++; if (aantal > 60) break;
+    }
+    let mx = 1e-12; for (let i = 3; i < N / 2; i++) mag[i] /= aantal, mx = Math.max(mx, mag[i]);
+    this.spec = { mag, mx, N, df: this.sr / N, res: this.sr / seg };
+    if (this.f0 !== null) this.zoekHarmonischen();
+    this.setState({ rev: this.state.rev + 1 });
+    this.draw();
+  }
+  interp(i) {
+    const m = this.spec.mag; if (i <= 0 || i >= m.length - 1) return i * this.spec.df;
+    const a = Math.log(m[i - 1] + 1e-12), b = Math.log(m[i] + 1e-12), c = Math.log(m[i + 1] + 1e-12);
+    const p = 0.5 * (a - c) / ((a - 2 * b + c) || 1e-12);
+    return (i + Math.max(-0.5, Math.min(0.5, p))) * this.spec.df;
+  }
+  maxRond(fL, fR) {
+    const df = this.spec.df, m = this.spec.mag;
+    let bi = Math.max(1, Math.round(fL / df)), bv = 0;
+    for (let i = Math.max(1, Math.floor(fL / df)); i <= Math.min(m.length - 2, Math.ceil(fR / df)); i++) if (m[i] > bv) { bv = m[i]; bi = i; }
+    return { f: this.interp(bi), db: 20 * Math.log10(bv / this.spec.mx + 1e-12) };
+  }
+  kiesPiek(x) {
+    const pk = this.maxRond(this.xNaarF(Math.max(this.SP.x, x - 18)), this.xNaarF(x + 18));
+    this.piek = pk; this.setState({ rev: this.state.rev + 1 }); this.draw();
+  }
+  autoF0() {
+    // laagste piek die minstens -20 dB haalt (boven 50 Hz)
+    const m = this.spec.mag, df = this.spec.df, drempel = this.spec.mx * 0.1;
+    for (let i = Math.ceil(50 / df); i < m.length - 1; i++) {
+      if (m[i] > drempel && m[i] >= m[i - 1] && m[i] >= m[i + 1]) {
+        // neem het maximum in de buurt (± 3 %)
+        const f = i * df; this.piek = this.maxRond(f * 0.97, f * 1.03); this.f0 = this.piek.f; this.zoekHarmonischen(); return;
+      }
+    }
+  }
+  zoekHarmonischen() {
+    this.harm = [];
+    for (let n = 1; n <= 6; n++) {
+      const doel = n * this.f0; if (doel > this.sr / 2 - 100) break;
+      const pk = this.maxRond(doel * 0.96, doel * 1.04);
+      this.harm.push({ n, f: pk.f, r: pk.f / this.f0, db: pk.db });
+    }
+  }
+
+  // ---------- assen ----------
+  fNaarX(f) { const P = this.SP, fm = this.state.fmax; return this.state.logAs ? P.x + Math.log(Math.max(f, 20) / 20) / Math.log(fm / 20) * P.w : P.x + f / fm * P.w; }
+  xNaarF(x) { const P = this.SP, fm = this.state.fmax, r = (x - P.x) / P.w; return this.state.logAs ? 20 * Math.pow(fm / 20, r) : r * fm; }
+  mooieStap(x) { const p = Math.pow(10, Math.floor(Math.log10(x))), r = x / p; return (r < 1.5 ? 1 : r < 3.5 ? 2 : r < 7.5 ? 5 : 10) * p; }
+
+  // ---------- tekenen ----------
+  draw() {
+    const c = this.stageRef.current; if (!c || !this.samples || !this.spec) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    this.tekenOverzicht(ctx); this.tekenGolf(ctx); this.tekenSpectrum(ctx);
+  }
+  titel(ctx, x, y, t, rechts) {
+    ctx.textAlign = 'left'; ctx.font = "600 12px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#2a2723'; ctx.fillText(t, x, y);
+    if (rechts) { ctx.textAlign = 'right'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c'; ctx.fillText(rechts[1], rechts[0], y); }
+  }
+  golflijn(ctx, P, a, b) {
+    const my = P.y + P.h / 2, amp = P.h / 2 - 4, n = Math.max(1, b - a);
+    ctx.strokeStyle = '#1f7fa0'; ctx.lineWidth = 1.2; ctx.beginPath();
+    if (n <= P.w * 2) {
+      for (let i = 0; i <= n; i++) { const x = P.x + i / n * P.w, y = my - (this.samples[a + i] || 0) * amp; if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+    } else {
+      for (let px = 0; px < P.w; px++) {
+        const i0 = a + Math.floor(px / P.w * n), i1 = a + Math.floor((px + 1) / P.w * n);
+        let lo = 1, hi = -1; for (let i = i0; i < Math.max(i1, i0 + 1); i++) { const v = this.samples[i] || 0; if (v < lo) lo = v; if (v > hi) hi = v; }
+        ctx.moveTo(P.x + px + 0.5, my - hi * amp); ctx.lineTo(P.x + px + 0.5, my - lo * amp);
+      }
+    }
+    ctx.stroke();
+  }
+  tijdas(ctx, P, t0, t1) {
+    const L = t1 - t0, stap = this.mooieStap(L / 7), ms = stap < 0.1;
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center';
+    for (let t = Math.ceil(t0 / stap - 1e-9) * stap; t <= t1 + 1e-9; t += stap) {
+      const x = P.x + (t - t0) / L * P.w;
+      ctx.fillText(ms ? (t * 1000).toFixed(stap < 0.001 ? 2 : stap < 0.01 ? 1 : 0) : t.toFixed(stap < 1 ? 1 : 0), x, P.y + P.h + 14);
+    }
+    ctx.textAlign = 'right'; ctx.fillText(ms ? 't (ms)' : 't (s)', P.x + P.w, P.y + P.h + 28);
+  }
+  tekenOverzicht(ctx) {
+    const O = this.OV, N = this.samples.length;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(O.x, O.y, O.w, O.h); ctx.strokeStyle = '#d9d3c6'; ctx.lineWidth = 1; ctx.strokeRect(O.x, O.y, O.w, O.h);
+    this.golflijn(ctx, O, 0, N);
+    const xa = this.sampleNaarOv(this.selA), xb = this.sampleNaarOv(this.selB);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(O.x, O.y, xa - O.x, O.h); ctx.fillRect(xb, O.y, O.x + O.w - xb, O.h);
+    ctx.fillStyle = 'rgba(232,140,40,0.18)'; ctx.fillRect(xa, O.y, Math.max(2, xb - xa), O.h);
+    ctx.strokeStyle = '#e08a28'; ctx.lineWidth = 2;
+    for (const x of [xa, xb]) { ctx.beginPath(); ctx.moveTo(x, O.y - 3); ctx.lineTo(x, O.y + O.h + 3); ctx.stroke(); ctx.fillStyle = '#e08a28'; ctx.fillRect(x - 3, O.y - 6, 6, 6); }
+    // zichtbaar deel van de golfvorm
+    const [da, db] = this.detail(), xda = this.sampleNaarOv(da), xdb = this.sampleNaarOv(db);
+    ctx.fillStyle = '#e08a28'; ctx.fillRect(xda, O.y + O.h - 4, Math.max(2, xdb - xda), 4);
+    this.tijdas(ctx, O, 0, N / this.sr);
+    this.titel(ctx, O.x, O.y - 10, 'Hele opname — sleep om een fragment te kiezen');
+    const sp = this.speelPositie();
+    if (sp !== null) { const x = this.sampleNaarOv(sp); ctx.strokeStyle = '#c4553a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, O.y); ctx.lineTo(x, O.y + O.h); ctx.stroke(); }
+  }
+  tekenGolf(ctx) {
+    const P = this.WV, [a, b] = this.detail(), t0 = a / this.sr, t1 = b / this.sr;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(P.x, P.y, P.w, P.h); ctx.strokeStyle = '#e08a28'; ctx.lineWidth = 1.5; ctx.strokeRect(P.x, P.y, P.w, P.h);
+    ctx.strokeStyle = '#eee7da'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(P.x, P.y + P.h / 2); ctx.lineTo(P.x + P.w, P.y + P.h / 2); ctx.stroke();
+    this.golflijn(ctx, P, a, b);
+    this.tijdas(ctx, P, t0, t1);
+    this.titel(ctx, P.x, P.y - 10, 'Golfvorm (ingezoomd in het fragment) — klik voor cursor A en B', [P.x + P.w, 'zichtbaar: ' + ((b - a) / this.sr * 1000).toFixed(1) + ' ms']);
+    const cur = (t, kleur, lbl) => {
+      if (t === null || t < t0 || t > t1) return;
+      const x = P.x + (t - t0) / (t1 - t0) * P.w;
+      ctx.strokeStyle = kleur; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
+      ctx.fillStyle = kleur; ctx.textAlign = 'center'; ctx.font = "600 12px 'IBM Plex Sans', sans-serif"; ctx.fillText(lbl, x, P.y + 12);
+    };
+    cur(this.curA, '#c4553a', 'A'); cur(this.curB, '#7a4fb0', 'B');
+    const sp = this.speelPositie();
+    if (sp !== null && sp >= a && sp <= b) { const x = P.x + (sp - a) / (b - a) * P.w; ctx.strokeStyle = 'rgba(196,85,58,0.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke(); }
+  }
+  tekenSpectrum(ctx) {
+    const P = this.SP, sp = this.spec, fm = this.state.fmax, dbMin = -80;
+    const Y = db => P.y + P.h - (Math.max(db, dbMin) - dbMin) / -dbMin * P.h;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(P.x, P.y, P.w, P.h); ctx.strokeStyle = '#d9d3c6'; ctx.lineWidth = 1; ctx.strokeRect(P.x, P.y, P.w, P.h);
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right';
+    for (let db = 0; db >= dbMin; db -= 20) { ctx.fillText(db + ' dB', P.x - 6, Y(db) + 4); ctx.strokeStyle = '#eee7da'; ctx.beginPath(); ctx.moveTo(P.x, Y(db)); ctx.lineTo(P.x + P.w, Y(db)); ctx.stroke(); }
+    ctx.textAlign = 'center';
+    const ticks = this.state.logAs ? [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000] : [];
+    if (!this.state.logAs) { const st = this.mooieStap(fm / 8); for (let f = 0; f <= fm + 1e-9; f += st) ticks.push(f); }
+    for (const f of ticks) { if (f > fm) continue; const x = this.fNaarX(f); ctx.fillText(f >= 1000 ? (f / 1000) + 'k' : String(f), x, P.y + P.h + 14); ctx.strokeStyle = '#eee7da'; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke(); }
+    ctx.textAlign = 'right'; ctx.fillText('f (Hz)', P.x + P.w, P.y + P.h + 28);
+    ctx.save(); ctx.beginPath(); ctx.rect(P.x, P.y, P.w, P.h); ctx.clip();
+    // harmonischen van f0
+    if (this.f0 !== null) {
+      ctx.strokeStyle = 'rgba(122,79,176,0.45)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+      for (let n = 1; n * this.f0 <= fm; n++) { const x = this.fNaarX(n * this.f0); ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
+        ctx.fillStyle = '#7a4fb0'; ctx.font = "600 10px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText(n === 1 ? 'f₀' : n + 'f₀', x, P.y + P.h - 4); }
+      ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = '#1f7fa0'; ctx.lineWidth = 1.3; ctx.beginPath();
+    for (let px = 0; px <= P.w; px++) {
+      const fa = this.xNaarF(P.x + px), fb = this.xNaarF(P.x + px + 1);
+      const ia = Math.max(1, Math.floor(fa / sp.df)), ib = Math.max(ia, Math.min(sp.mag.length - 1, Math.floor(fb / sp.df)));
+      let m = 0; for (let i = ia; i <= ib; i++) if (sp.mag[i] > m) m = sp.mag[i];
+      const y = Y(20 * Math.log10(m / sp.mx + 1e-12)); if (px === 0) ctx.moveTo(P.x, y); else ctx.lineTo(P.x + px, y);
+    }
+    ctx.stroke();
+    if (this.piek) {
+      const x = this.fNaarX(this.piek.f);
+      ctx.strokeStyle = '#c4553a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
+      ctx.fillStyle = '#c4553a'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; const r = x > P.x + P.w - 100;
+      ctx.textAlign = r ? 'right' : 'left'; ctx.fillText(this.piek.f.toFixed(1) + ' Hz', x + (r ? -5 : 5), P.y + 15);
+    }
+    ctx.restore();
+    this.titel(ctx, P.x, P.y - 10, 'Spectrum van het fragment', [P.x + P.w, 'resolutie ≈ ' + sp.res.toFixed(1) + ' Hz']);
+  }
+
+  // ---------- export ----------
+  downloadBlob(blob, naam) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = naam; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+  png() { const c = this.stageRef.current; if (c) c.toBlob(b => b && this.downloadBlob(b, 'geluidsanalyse.png')); }
+  wav() {
+    const d = this.samples, n = d.length, buf = new ArrayBuffer(44 + 2 * n), v = new DataView(buf);
+    const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    str(0, 'RIFF'); v.setUint32(4, 36 + 2 * n, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, this.sr, true); v.setUint32(28, this.sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, 2 * n, true);
+    for (let i = 0; i < n; i++) v.setInt16(44 + 2 * i, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+    this.downloadBlob(new Blob([buf], { type: 'audio/wav' }), 'opname.wav');
+  }
+  kopieer() {
+    let t = 'Fragment\t' + (this.selA / this.sr).toFixed(3) + ' s tot ' + (this.selB / this.sr).toFixed(3) + ' s\n';
+    if (this.curA !== null && this.curB !== null) { const dt = Math.abs(this.curB - this.curA); t += 'Delta t (' + this.state.nPer + ' periodes)\t' + (dt * 1000).toFixed(2) + ' ms\nT\t' + (dt / this.state.nPer * 1000).toFixed(3) + ' ms\nf = 1/T\t' + (this.state.nPer / dt).toFixed(1) + ' Hz\n'; }
+    if (this.harm.length) { t += '\nn\tf (Hz)\tf/f0\tdB\n' + this.harm.filter(h => h.db >= -60).map(h => h.n + '\t' + h.f.toFixed(1) + '\t' + h.r.toFixed(3) + '\t' + h.db.toFixed(0)).join('\n'); }
+    t = t.replace(/\./g, ',');
+    const ok = () => { this.setState({ kopieerLbl: 'Gekopieerd!' }); setTimeout(() => this.setState({ kopieerLbl: 'Tabel kopiëren' }), 1500); };
+    try { navigator.clipboard.writeText(t).then(ok, () => {}); } catch (e) {}
+  }
+
+  renderVals() {
+    const seg = a => ({ bg: a ? '#1f7fa0' : '#fff', fg: a ? '#fff' : '#2a2723' });
+    const d = n => seg(this.state.duur === n), li = seg(!this.state.logAs), lo = seg(this.state.logAs);
+    const sr = this.sr, fmtT = t => t < 1 ? (t * 1000).toFixed(1) + ' ms' : t.toFixed(3) + ' s';
+    let selTxt = '';
+    if (this.samples) selTxt = 'van ' + fmtT(this.selA / sr) + ' tot ' + fmtT(this.selB / sr) + '  (' + ((this.selB - this.selA) / sr * 1000).toFixed(1) + ' ms)';
+    let cursorTxt = 'A: –   B: –';
+    if (this.curA !== null) cursorTxt = 'A: ' + fmtT(this.curA) + '   B: ' + (this.curB !== null ? fmtT(this.curB) : '–');
+    if (this.curA !== null && this.curB !== null) {
+      const dt = Math.abs(this.curB - this.curA), n = this.state.nPer;
+      cursorTxt += '\nΔt = ' + fmtT(dt) + '\nT = Δt / ' + n + ' = ' + fmtT(dt / n) + '\nf = 1/T = ' + (n / dt).toFixed(1) + ' Hz';
+    }
+    const piekTxt = this.piek ? 'Gekozen piek: ' + this.piek.f.toFixed(1) + ' Hz (' + this.piek.db.toFixed(0) + ' dB)' : 'Nog geen piek gekozen.';
+    const herteken = () => setTimeout(() => this.draw(), 0);
+    const mid = Math.round((this.selA + this.selB) / 2), h = Math.round(0.025 * sr);
+    return {
+      stageRef: this.stageRef, status: this.state.status,
+      d1Bg: d(1).bg, d1Fg: d(1).fg, d2Bg: d(2).bg, d2Fg: d(2).fg, d4Bg: d(4).bg, d4Fg: d(4).fg, d8Bg: d(8).bg, d8Fg: d(8).fg,
+      linBg: li.bg, linFg: li.fg, logBg: lo.bg, logFg: lo.fg,
+      recBg: this.state.opnemen ? '#c4553a' : '#1f7fa0', recLbl: this.state.opnemen ? 'Bezig… (klik om te stoppen)' : 'Opnemen',
+      selTxt, cursorTxt, piekTxt, nPer: this.state.nPer, fmax: this.state.fmax, kopieerLbl: this.state.kopieerLbl,
+      heeftF0: this.f0 !== null && this.harm.length > 0,
+      harm: this.harm.map(x => x.db < -60 ? { n: x.n, f: '–', r: '–', db: 'geen' }
+        : { n: x.n, f: x.f.toFixed(1), r: x.r.toFixed(3), db: x.db.toFixed(0) }),
+      onD1: () => this.setState({ duur: 1 }), onD2: () => this.setState({ duur: 2 }), onD4: () => this.setState({ duur: 4 }), onD8: () => this.setState({ duur: 8 }),
+      onRec: () => { if (this.state.opnemen) this.stopOpname(); else this.startOpname(); },
+      onFile: e => this.openBestand(e),
+      onPlaySel: () => this.speelAf(this.selA, this.selB),
+      onPlayAll: () => this.speelAf(0, this.samples.length),
+      onStop: () => this.stopSpelen(),
+      onSelAll: () => this.zetSelectie(0, this.samples.length),
+      onSel50: () => this.zetSelectie(mid - h, mid + h),
+      onNPer: e => this.setState({ nPer: Number(e.target.value) }),
+      dz: this.state.dz, dpos: this.state.dpos,
+      dzTxt: this.samples ? 'venster ' + fmtT((this.detail()[1] - this.detail()[0]) / sr) : '',
+      onDz: e => { this.setState({ dz: Number(e.target.value) }); herteken(); },
+      onDpos: e => { this.setState({ dpos: Number(e.target.value) }); herteken(); },
+      onLin: () => { this.setState({ logAs: false }); herteken(); },
+      onLog: () => { this.setState({ logAs: true }); herteken(); },
+      onFmax: e => { this.setState({ fmax: Number(e.target.value) }); herteken(); },
+      onZetF0: () => { if (this.piek) { this.f0 = this.piek.f; this.zoekHarmonischen(); this.setState({ rev: this.state.rev + 1 }); this.draw(); } },
+      onAutoF0: () => { this.autoF0(); this.setState({ rev: this.state.rev + 1 }); this.draw(); },
+      onPng: () => this.png(), onWav: () => this.wav(), onKopieer: () => this.kopieer(),
+    };
+  }
+}
+</script>
+</body>
+</html>

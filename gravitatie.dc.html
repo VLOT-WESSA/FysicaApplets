@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:30px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  table.kt{border-collapse:collapse;width:100%;font-size:12px}
+  table.kt td,table.kt th{padding:3px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
+  table.kt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  table.kt td:first-child,table.kt th:first-child{text-align:left;font-family:'IBM Plex Sans',sans-serif}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Gravitatie &amp; satellieten</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
+
+      <sc-if value="{{ isSat }}" hint-placeholder-val="{{ true }}">
+        <div class="card">
+          <div class="row"><span class="lbl">Hoogte h boven het aardoppervlak</span></div>
+          <div class="row"><span style="font-size:12px;color:#8c8576">200 km &ndash; 400 000 km</span><span class="val">{{ hStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="1" step="0.0005" value="{{ hs }}" onInput="{{ onH }}"></div>
+          <div class="row"><span class="lbl">Massa satelliet m</span><span class="val">{{ mStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="5000" step="50" value="{{ m }}" onInput="{{ onM }}"></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:2px">Voorbeelden</div>
+          <div class="chips">
+            <sc-for list="{{ satPresets }}" as="p" hint-placeholder-count="5">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#8c8576;margin-top:4px">Tempo</div>
+          <div class="chips">
+            <sc-for list="{{ satSpeeds }}" as="p" hint-placeholder-count="4">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <sc-for list="{{ satToggles }}" as="tg" hint-placeholder-count="4">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <div class="row"><span>Baanstraal r = R + h</span><span>{{ rStr }}</span></div>
+          <div class="row"><span>Gravitatieveldsterkte g(r)</span><span>{{ gStr }}</span></div>
+          <div class="row"><span>Gravitatiekracht F<sub>g</sub></span><span style="color:#2f8a4e;font-weight:600">{{ FStr }}</span></div>
+          <div class="row"><span>Baansnelheid v</span><span style="color:#d9822b;font-weight:600">{{ vStr }}</span></div>
+          <div class="row"><span>Omlooptijd T</span><span style="font-weight:600">{{ TStr }}</span></div>
+          <div class="row"><span>Rotatieperiode aarde</span><span>23 h 56 min</span></div>
+          <div style="{{ geoStyle }}">{{ geoMsg }}</div>
+        </div>
+        <div class="note">
+          <div class="mono">F<sub>g</sub> = G&middot;M&middot;m / r&sup2; = m&middot;v&sup2; / r</div>
+          <div class="mono">v = &radic;(G&middot;M / r) &nbsp;&nbsp; T = 2&pi;&middot;&radic;(r&sup3; / (G&middot;M))</div>
+          <div style="margin-top:4px">De gravitatiekracht levert de centripetale kracht. Een <b>geostationaire</b> satelliet draait in het evenaarsvlak met dezelfde periode als de aarde (23 h 56 min) en hangt zo altijd boven hetzelfde punt. Zet <i>Meedraaien met aarde</i> aan om dat te zien. Voor h &rarr; 0 vind je de eerste kosmische snelheid v<sub>1</sub> &asymp; 7,9 km/s.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isKep }}" hint-placeholder-val="{{ false }}">
+        <div class="card">
+          <div class="row"><span class="lbl">Halve lange as a</span><span class="val">{{ aStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="1" step="0.001" value="{{ as }}" onInput="{{ onA }}"></div>
+          <div class="row"><span class="lbl">Excentriciteit e</span><span class="val">{{ eStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="0.97" step="0.005" value="{{ e }}" onInput="{{ onE }}"></div>
+          <div class="chips">
+            <sc-for list="{{ kepPresets }}" as="p" hint-placeholder-count="5">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#8c8576;margin-top:4px">Tempo</div>
+          <div class="chips">
+            <sc-for list="{{ kepSpeeds }}" as="p" hint-placeholder-count="3">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <sc-for list="{{ kepToggles }}" as="tg" hint-placeholder-count="4">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <div class="row"><span>Perihelium r<sub>p</sub> = a(1&minus;e)</span><span>{{ rpStr }}</span></div>
+          <div class="row"><span>Aphelium r<sub>a</sub> = a(1+e)</span><span>{{ raStr }}</span></div>
+          <div class="row"><span>Snelheid in perihelium</span><span style="color:#d9822b">{{ vpStr }}</span></div>
+          <div class="row"><span>Snelheid in aphelium</span><span style="color:#d9822b">{{ vaStr }}</span></div>
+          <div class="row"><span>Snelheid nu</span><span style="color:#d9822b;font-weight:600">{{ vNowStr }}</span></div>
+          <div class="row"><span>Omlooptijd T</span><span style="font-weight:600">{{ TkStr }}</span></div>
+          <div class="row"><span>Oppervlak per vak (T/12)</span><span>{{ areaStr }}</span></div>
+        </div>
+        <div class="card" style="gap:4px">
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Derde wet: T&sup2; / a&sup3;</div>
+          <table class="kt">
+            <tr><th>Planeet</th><th>a (AE)</th><th>T (jaar)</th><th>T&sup2;/a&sup3;</th></tr>
+            <sc-for list="{{ kepRows }}" as="kr" hint-placeholder-count="9">
+              <tr style="{{ kr.style }}"><td>{{ kr.n }}</td><td>{{ kr.a }}</td><td>{{ kr.T }}</td><td>{{ kr.q }}</td></tr>
+            </sc-for>
+          </table>
+        </div>
+        <div class="note">
+          <b>1</b> De baan is een ellips met de zon in een brandpunt. <b>2</b> De voerstraal bestrijkt in gelijke tijden gelijke oppervlakken: elk gekleurd vak duurt T/12 en heeft hetzelfde oppervlak. Daarom gaat de planeet sneller bij het perihelium. <b>3</b> T&sup2;/a&sup3; is voor alle planeten rond de zon gelijk (1 jaar&sup2;/AE&sup3;): de omlooptijd hangt enkel af van a, niet van e.
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isLag }}" hint-placeholder-val="{{ false }}">
+        <div class="card">
+          <div style="font-size:12px;color:#8c8576">Systeem</div>
+          <div class="chips">
+            <sc-for list="{{ lagPresets }}" as="p" hint-placeholder-count="4">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div class="row" style="margin-top:4px"><span class="lbl">Massaverhouding &mu; = m<sub>2</sub>/(m<sub>1</sub>+m<sub>2</sub>)</span></div>
+          <div class="row"><span></span><span class="val">{{ muStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="1" step="0.001" value="{{ mus }}" onInput="{{ onMu }}"></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:2px">Testdeeltje loslaten bij</div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+            <sc-for list="{{ lagPoints }}" as="p" hint-placeholder-count="5">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div class="row" style="margin-top:4px"><span class="lbl">Kleine verstoring</span><span class="val">{{ dStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="0.05" step="0.001" value="{{ dl }}" onInput="{{ onDl }}"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <sc-for list="{{ lagToggles }}" as="tg" hint-placeholder-count="2">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <sc-for list="{{ lagRows }}" as="lr" hint-placeholder-count="5">
+            <div class="row"><span>{{ lr.n }}</span><span>{{ lr.v }}</span></div>
+          </sc-for>
+          <div style="{{ stabStyle }}">{{ stabMsg }}</div>
+        </div>
+        <div class="note">
+          Het beeld draait mee met de twee hemellichamen. De kleuren tonen de effectieve potentiaal (gravitatie + middelpuntvliedend effect); in de vijf <b>Lagrangepunten</b> heffen de krachten elkaar op en blijft een klein voorwerp op zijn plaats. L1, L2 en L3 zijn onstabiel: een kleine verstoring en het deeltje drijft weg. L4 en L5 zijn stabiel zolang &mu; &lt; 0,0385 (Trojanen bij Jupiter, mogelijke ruimtekolonies bij aarde&ndash;maan). Klik ergens in het veld om daar een deeltje los te laten.
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  GM = 3.986e14; RE = 6.371e6; TE = 86164;
+  state = {
+    tab: 'sat',
+    hs: 0.6, m: 1000, satSpeed: 3600, coRot: false, showV: true, showF: true, showTrail: true,
+    as: 0.4, e: 0.4, kepSpeed: 'auto', showSect: true, showKV: true, showKF: false, showAxes: true,
+    mus: 0, dl: 0.01, showPot: true, showTrailL: true
+  };
+  running = true; t = 0; trail = [];
+  part = null; ptrail = [];
+
+  componentDidMount() {
+    this.setupCanvas();
+    this.state.mus = this.muToS(0.01215);
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+    this.forceUpdate();
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
+  }
+  onDown = (e) => {
+    if (this.state.tab !== 'lag') return;
+    const p = this.toPx(e); const L = this.lagView();
+    const x = (p.x - L.cx) / L.k, y = -(p.y - L.cy) / L.k;
+    this.part = { x, y, vx: 0, vy: 0, dead: false }; this.ptrail = []; this.running = true; this.forceUpdate();
+  };
+
+  // ---------- helpers ----------
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  big(x) { return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  sci(x, n) { if (x === 0) return '0'; const ex = Math.floor(Math.log10(Math.abs(x))); const m = x / Math.pow(10, ex); return this.fmt(m, n) + '·10' + this.sup(ex); }
+  sup(n) { const d = '⁰¹²³⁴⁵⁶⁷⁸⁹'; return String(n).split('').map(ch => ch === '-' ? '⁻' : d[+ch]).join(''); }
+  dur(s) {
+    if (s < 3600) return this.fmt(s / 60, 1) + ' min';
+    if (s < 86400 * 2) { const h = Math.floor(s / 3600), m = Math.round((s - h * 3600) / 60); return h + ' h ' + (m < 10 ? '0' : '') + m + ' min'; }
+    return this.fmt(s / 86400, 2) + ' dagen';
+  }
+  arrow(ctx, x, y, dx, dy, col, w, label) {
+    const L = Math.hypot(dx, dy); if (L < 3) return;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
+    const a = Math.atan2(dy, dx), hl = 10;
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - hl * Math.cos(a - 0.42), y + dy - hl * Math.sin(a - 0.42)); ctx.lineTo(x + dx - hl * Math.cos(a + 0.42), y + dy - hl * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
+    if (label) { ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14); }
+  }
+
+  // ---------- satelliet ----------
+  hOf(s) { return 200e3 * Math.pow(400000 / 200, s); }
+  sOfH(h) { return Math.log(h / 200e3) / Math.log(2000); }
+  satVals() {
+    const h = this.hOf(this.state.hs), r = this.RE + h;
+    const v = Math.sqrt(this.GM / r), T = 2 * Math.PI * Math.sqrt(r * r * r / this.GM);
+    return { h, r, v, T, g: this.GM / (r * r) };
+  }
+
+  // ---------- kepler ----------
+  aOf(s) { return 0.2 * Math.pow(40 / 0.2, s); }
+  sOfA(a) { return Math.log(a / 0.2) / Math.log(200); }
+  kepPos(t) {
+    const a = this.aOf(this.state.as), e = this.state.e, T = Math.pow(a, 1.5);
+    const M = 2 * Math.PI * (((t / T) % 1) + 1) % (2 * Math.PI);
+    let E = e < 0.8 ? M : Math.PI;
+    for (let i = 0; i < 30; i++) { const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-10) break; }
+    const b = a * Math.sqrt(1 - e * e);
+    return { x: a * (Math.cos(E) - e), y: b * Math.sin(E) };
+  }
+
+  // ---------- lagrange ----------
+  muOf(s) { return 0.0005 * Math.pow(0.3 / 0.0005, s); }
+  muToS(mu) { return Math.log(mu / 0.0005) / Math.log(600); }
+  lagView() { return { cx: 460, cy: 280, k: 205 }; }
+  phi(x, y, mu) {
+    const r1 = Math.hypot(x + mu, y), r2 = Math.hypot(x - 1 + mu, y);
+    return -(1 - mu) / r1 - mu / r2 - (x * x + y * y) / 2;
+  }
+  lPoints(mu) {
+    const f = (x) => { const a = x + mu, b = x - 1 + mu; return x - (1 - mu) * a / Math.pow(Math.abs(a), 3) - mu * b / Math.pow(Math.abs(b), 3); };
+    const bis = (lo, hi) => { let flo = f(lo); for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2, fm = f(m); if ((fm > 0) === (flo > 0)) { lo = m; flo = fm; } else hi = m; } return (lo + hi) / 2; };
+    const e = 1e-6;
+    return [
+      { n: 'L1', x: bis(-mu + e, 1 - mu - e), y: 0 },
+      { n: 'L2', x: bis(1 - mu + e, 2), y: 0 },
+      { n: 'L3', x: bis(-2, -mu - e), y: 0 },
+      { n: 'L4', x: 0.5 - mu, y: Math.sqrt(3) / 2 },
+      { n: 'L5', x: 0.5 - mu, y: -Math.sqrt(3) / 2 },
+    ];
+  }
+  acc(p, mu) {
+    const r1 = Math.hypot(p.x + mu, p.y), r2 = Math.hypot(p.x - 1 + mu, p.y);
+    const k1 = (1 - mu) / (r1 * r1 * r1), k2 = mu / (r2 * r2 * r2);
+    return { ax: 2 * p.vy + p.x - k1 * (p.x + mu) - k2 * (p.x - 1 + mu), ay: -2 * p.vx + p.y - k1 * p.y - k2 * p.y, r1, r2 };
+  }
+  stepPart(dt, mu) {
+    const p = this.part; if (!p || p.dead) return;
+    const f = (s) => { const a = this.acc(s, mu); return { x: s.vx, y: s.vy, vx: a.ax, vy: a.ay }; };
+    const add = (s, d, h) => ({ x: s.x + d.x * h, y: s.y + d.y * h, vx: s.vx + d.vx * h, vy: s.vy + d.vy * h });
+    const k1 = f(p), k2 = f(add(p, k1, dt / 2)), k3 = f(add(p, k2, dt / 2)), k4 = f(add(p, k3, dt));
+    p.x += dt / 6 * (k1.x + 2 * k2.x + 2 * k3.x + k4.x); p.y += dt / 6 * (k1.y + 2 * k2.y + 2 * k3.y + k4.y);
+    p.vx += dt / 6 * (k1.vx + 2 * k2.vx + 2 * k3.vx + k4.vx); p.vy += dt / 6 * (k1.vy + 2 * k2.vy + 2 * k3.vy + k4.vy);
+    const r1 = Math.hypot(p.x + mu, p.y), r2 = Math.hypot(p.x - 1 + mu, p.y);
+    if (r1 < 0.05 || r2 < 0.02 || Math.hypot(p.x, p.y) > 3) p.dead = true;
+  }
+  releaseAt(i) {
+    const mu = this.muOf(this.state.mus); const L = this.lPoints(mu)[i]; const d = this.state.dl;
+    const ang = Math.atan2(L.y, L.x + mu);
+    this.part = { x: L.x + d * Math.cos(ang), y: L.y + d * Math.sin(ang), vx: 0, vy: 0, dead: false, from: i };
+    this.ptrail = []; this.running = true; this.forceUpdate();
+  }
+  potImage(mu) {
+    const key = mu.toFixed(6) + (this.state.showPot ? 'p' : 'n');
+    if (this._potKey === key) return this._pot;
+    const sc = 3, w = Math.ceil(this.W / sc), h = Math.ceil(this.H / sc);
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const cx = cv.getContext('2d'); const img = cx.createImageData(w, h);
+    const V = this.lagView(); const Ls = this.lPoints(mu);
+    const lv = Ls.slice(0, 3).map(L => this.phi(L.x, L.y, mu)).concat([this.phi(Ls[3].x, Ls[3].y, mu)]);
+    const hi = lv[3], lo = hi - 0.35;
+    const grid = new Float64Array(w * h);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+      const x = (i * sc + sc / 2 - V.cx) / V.k, y = -(j * sc + sc / 2 - V.cy) / V.k;
+      grid[j * w + i] = this.phi(x, y, mu);
+    }
+    const side = (P, L) => P > L;
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+      const P = grid[j * w + i];
+      let t = (P - lo) / (hi - lo); t = Math.max(0, Math.min(1, t));
+      const band = Math.floor(t * 12) % 2;
+      let R = 240 - 52 * (1 - t), G = 237 - 38 * (1 - t), B = 230 - 8 * (1 - t);
+      if (band) { R -= 5; G -= 4; B -= 1; }
+      let line = false;
+      const Pr = i + 1 < w ? grid[j * w + i + 1] : P, Pd = j + 1 < h ? grid[(j + 1) * w + i] : P;
+      for (const L of lv) if (side(P, L) !== side(Pr, L) || side(P, L) !== side(Pd, L)) line = true;
+      if (line) { R = 130; G = 118; B = 165; }
+      const o = (j * w + i) * 4; img.data[o] = R; img.data[o + 1] = G; img.data[o + 2] = B; img.data[o + 3] = 255;
+    }
+    cx.putImageData(img, 0, 0);
+    this._potKey = key; this._pot = cv; return cv;
+  }
+
+  // ---------- loop ----------
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const st = this.state;
+    if (this.running) {
+      if (st.tab === 'sat') {
+        this.t += dt * st.satSpeed;
+      } else if (st.tab === 'kep') {
+        const T = Math.pow(this.aOf(st.as), 1.5);
+        this.t += dt * (st.kepSpeed === 'auto' ? T / 10 : 1);
+      } else if (this.part && !this.part.dead) {
+        const mu = this.muOf(st.mus); const n = 40, h = dt * 2.2 / n;
+        for (let i = 0; i < n; i++) this.stepPart(h, mu);
+        this.ptrail.push({ x: this.part.x, y: this.part.y }); if (this.ptrail.length > 1500) this.ptrail.shift();
+      }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.25) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    if (this.state.tab === 'sat') this.drawSat(ctx);
+    else if (this.state.tab === 'kep') this.drawKep(ctx);
+    else this.drawLag(ctx);
+  }
+
+  drawSat(ctx) {
+    const st = this.state, sv = this.satVals();
+    const cx = 290, cy = 280;
+    const k = 225 / sv.r; const Rp = Math.max(5, this.RE * k), rp = sv.r * k;
+    const thE = 2 * Math.PI * this.t / this.TE, thS = 2 * Math.PI * this.t / sv.T;
+    const rot = st.coRot ? -thE : 0;
+    // stars
+    ctx.fillStyle = '#d8d2c4';
+    for (let i = 0; i < 60; i++) { const x = (i * 157) % 580, y = (i * 263) % 540 + 8; ctx.fillRect(x, y, 1.5, 1.5); }
+    // orbit
+    ctx.setLineDash([5, 5]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(cx, cy, rp, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    // earth
+    const gr = ctx.createRadialGradient(cx - Rp * 0.3, cy - Rp * 0.3, Rp * 0.1, cx, cy, Rp);
+    gr.addColorStop(0, '#7fb2e0'); gr.addColorStop(1, '#2f6aa8');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 7); ctx.fill();
+    if (Rp > 14) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1;
+      for (let i = 0; i < 6; i++) { const a = thE + rot + i * Math.PI / 3; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rp * Math.cos(a), cy - Rp * Math.sin(a)); ctx.stroke(); }
+    }
+    // ground station
+    const ga = thE + rot;
+    const gx = cx + Rp * Math.cos(ga), gy = cy - Rp * Math.sin(ga);
+    ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(gx, gy, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    if (Rp > 14) ctx.fillText('grondstation', gx + 8 * Math.cos(ga) + (Math.cos(ga) < 0 ? -64 : 0), gy - 10 * Math.sin(ga));
+    // satellite
+    const sa = thS + rot;
+    const sx = cx + rp * Math.cos(sa), sy = cy - rp * Math.sin(sa);
+    if (st.showTrail) {
+      this.trail.push({ x: sx, y: sy }); if (this.trail.length > 240) this.trail.shift();
+      ctx.strokeStyle = 'rgba(58,111,184,0.35)'; ctx.lineWidth = 2; ctx.beginPath();
+      this.trail.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+    } else this.trail = [];
+    ctx.strokeStyle = 'rgba(111,104,92,0.5)'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(sx, sy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.save(); ctx.translate(sx, sy); ctx.rotate(-sa);
+    ctx.fillStyle = '#6f685c'; ctx.fillRect(-4, -13, 8, 26);
+    ctx.fillStyle = '#3a6fb8'; ctx.fillRect(-3, -24, 6, 10); ctx.fillRect(-3, 14, 6, 10);
+    ctx.restore();
+    const ux = (cx - sx) / rp, uy = (cy - sy) / rp;
+    if (st.showF) this.arrow(ctx, sx, sy, ux * 60, uy * 60, '#2f8a4e', 3, 'Fg');
+    if (st.showV) {
+      let vx = -Math.sin(sa), vy = -Math.cos(sa);
+      const L = 30 + 50 * sv.v / 7800;
+      if (st.coRot) { // relatieve snelheid in meedraaiend stelsel
+        const wrel = 2 * Math.PI / sv.T - 2 * Math.PI / this.TE; const vr = wrel * sv.r; const f = vr / sv.v;
+        vx *= f; vy *= f;
+      }
+      this.arrow(ctx, sx, sy, vx * L, vy * L, '#d9822b', 3, 'v');
+    }
+    // scale
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(st.coRot ? 'Meedraaiend met de aarde (bovenaanzicht noordpool)' : 'Bovenaanzicht vanaf de noordpool', 14, 12);
+    ctx.fillText('t = ' + this.dur(this.t), 14, 30);
+    // T(h) graph
+    const X0 = 620, Y0 = 60, GW = 270, GH = 420;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
+    ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText('Omlooptijd T in functie van h', X0, Y0 - 30);
+    const hmin = 200e3, hmax = 400000e3;
+    const Tof = h => 2 * Math.PI * Math.sqrt(Math.pow(this.RE + h, 3) / this.GM);
+    const Tmin = 3600, Tmax = 3600 * 1000;
+    const gxp = h => X0 + Math.log(h / hmin) / Math.log(hmax / hmin) * GW;
+    const gyp = T => Y0 + GH - Math.log(T / Tmin) / Math.log(Tmax / Tmin) * GH;
+    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576';
+    [1e6, 1e7, 1e8].forEach(h => { const x = gxp(h); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + GH); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(this.big(h / 1000) + ' km', x, Y0 + GH + 4); });
+    [[3600, '1 h'], [36000, '10 h'], [86164, '23,9 h'], [360000, '100 h'], [3600000, '1000 h']].forEach(([T, l]) => { const y = gyp(T); ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X0 + GW, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(l, X0 - 2, y); });
+    ctx.strokeStyle = '#c8443a'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X0, gyp(this.TE)); ctx.lineTo(X0 + GW, gyp(this.TE)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
+    for (let i = 0; i <= 100; i++) { const h = hmin * Math.pow(hmax / hmin, i / 100); const x = gxp(h), y = gyp(Tof(h)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+    ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(gxp(sv.h), gyp(sv.T), 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('h (logaritmisch) →', X0 + GW - 100, Y0 + GH + 20);
+    ctx.fillStyle = '#c8443a'; ctx.textBaseline = 'bottom'; ctx.fillText('rotatie aarde', X0 + 4, gyp(this.TE) - 2);
+  }
+
+  drawKep(ctx) {
+    const st = this.state; const a = this.aOf(st.as), e = st.e, b = a * Math.sqrt(1 - e * e), T = Math.pow(a, 1.5);
+    const k = Math.min(780 / (2 * a), 470 / (2 * b));
+    const ecx = 460, cy = 290; const sunX = ecx + a * e * k;
+    const P = (x, y) => ({ X: sunX + x * k, Y: cy - y * k });
+    // axes
+    if (st.showAxes) {
+      ctx.strokeStyle = '#ddd5c6'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(ecx - a * k - 10, cy); ctx.lineTo(ecx + a * k + 10, cy); ctx.moveTo(ecx, cy - b * k - 6); ctx.lineTo(ecx, cy + b * k + 6); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#b9b09f'; ctx.beginPath(); ctx.arc(ecx - a * e * k, cy, 3, 0, 7); ctx.fill();
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      if (e > 0.05) ctx.fillText('tweede brandpunt', ecx - a * e * k, cy + 6);
+      ctx.fillText('a', ecx + a * k / 2, cy + 4);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('b', ecx + 5, cy - b * k / 2);
+    }
+    // sectors
+    const N = 12;
+    if (st.showSect) {
+      const tc = ((this.t % T) + T) % T; const cur = Math.floor(tc / T * N);
+      for (let i = 0; i < N; i++) {
+        ctx.beginPath(); const s0 = P(0, 0); ctx.moveTo(s0.X, s0.Y);
+        for (let j = 0; j <= 24; j++) { const q = this.kepPos((i + j / 24) / N * T); const p = P(q.x, q.y); ctx.lineTo(p.X, p.Y); }
+        ctx.closePath();
+        ctx.fillStyle = i === cur ? 'rgba(217,130,43,0.45)' : (i % 2 ? 'rgba(58,111,184,0.16)' : 'rgba(58,111,184,0.08)'); ctx.fill();
+      }
+    }
+    // orbit
+    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.ellipse(ecx, cy, a * k, b * k, 0, 0, 7); ctx.stroke();
+    // sun
+    const sg = ctx.createRadialGradient(sunX, cy, 2, sunX, cy, 16); sg.addColorStop(0, '#fff3b0'); sg.addColorStop(1, '#f0a020');
+    ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sunX, cy, 13, 0, 7); ctx.fill();
+    // labels perihelium/aphelium
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'bottom';
+    const pp = P(a * (1 - e), 0), pa = P(-a * (1 + e), 0);
+    ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(pp.X, pp.Y, 3, 0, 7); ctx.arc(pa.X, pa.Y, 3, 0, 7); ctx.fill();
+    ctx.fillStyle = '#6f685c'; ctx.textAlign = 'left'; ctx.fillText('perihelium', Math.min(pp.X + 6, this.W - 70), pp.Y - 4);
+    ctx.textAlign = 'right'; ctx.fillText('aphelium', Math.max(pa.X - 6, 60), pa.Y - 4);
+    // planet
+    const q = this.kepPos(this.t); const pl = P(q.x, q.y); const r = Math.hypot(q.x, q.y);
+    ctx.strokeStyle = 'rgba(111,104,92,0.6)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(sunX, cy); ctx.lineTo(pl.X, pl.Y); ctx.stroke();
+    const q2 = this.kepPos(this.t + T * 1e-4); const tx = q2.x - q.x, ty = q2.y - q.y, tl = Math.hypot(tx, ty) || 1;
+    const v = Math.sqrt(2 / r - 1 / a); // in eenheden 2pi AE/jaar (= 29,8 km/s)
+    if (st.showKV) this.arrow(ctx, pl.X, pl.Y, tx / tl * v * 45, -ty / tl * v * 45, '#d9822b', 3, 'v');
+    if (st.showKF) { const f = Math.min(110, 30 / (r * r) * (a < 1 ? 1 : a * a)); this.arrow(ctx, pl.X, pl.Y, -q.x / r * f, q.y / r * f, '#2f8a4e', 3, 'Fg'); }
+    ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(pl.X, pl.Y, 8, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('t = ' + this.fmt(this.t, 2) + ' jaar', 14, 12);
+    // scale bar 1 AE
+    const sb = Math.min(200, k); const lab = k > 400 ? '0,5 AE' : '1 AE'; const len = k > 400 ? k / 2 : k;
+    if (len < 260) { ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(14, 540); ctx.lineTo(14 + len, 540); ctx.stroke(); ctx.textBaseline = 'bottom'; ctx.fillText(lab, 14, 534); }
+  }
+
+  drawLag(ctx) {
+    const st = this.state, mu = this.muOf(st.mus), V = this.lagView();
+    if (st.showPot) { ctx.imageSmoothingEnabled = true; ctx.drawImage(this.potImage(mu), 0, 0, Math.ceil(this.W / 3) * 3, Math.ceil(this.H / 3) * 3); }
+    const P = (x, y) => ({ X: V.cx + x * V.k, Y: V.cy - y * V.k });
+    // orbit of m2 (in rest frame) for reference
+    ctx.strokeStyle = 'rgba(111,104,92,0.35)'; ctx.setLineDash([4, 5]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(P(-mu, 0).X, V.cy, V.k, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    const Ls = this.lPoints(mu);
+    // triangle lines to L4/L5
+    ctx.strokeStyle = 'rgba(111,104,92,0.3)';
+    [3, 4].forEach(i => { const a = P(-mu, 0), b = P(1 - mu, 0), l = P(Ls[i].x, Ls[i].y); ctx.beginPath(); ctx.moveTo(a.X, a.Y); ctx.lineTo(l.X, l.Y); ctx.lineTo(b.X, b.Y); ctx.stroke(); });
+    // bodies
+    const b1 = P(-mu, 0), b2 = P(1 - mu, 0);
+    ctx.fillStyle = '#2f6aa8'; ctx.beginPath(); ctx.arc(b1.X, b1.Y, 15, 0, 7); ctx.fill();
+    ctx.fillStyle = '#9a927f'; ctx.beginPath(); ctx.arc(b2.X, b2.Y, 7, 0, 7); ctx.fill();
+    const names = this.sysNames(mu);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(names[0], b1.X, b1.Y + 18); ctx.fillText(names[1], b2.X, b2.Y + 11);
+    // L points
+    Ls.forEach((L, i) => {
+      const p = P(L.x, L.y);
+      ctx.strokeStyle = i >= 3 && mu < 0.0385 ? '#2f8a4e' : '#c8443a'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(p.X - 6, p.Y - 6); ctx.lineTo(p.X + 6, p.Y + 6); ctx.moveTo(p.X + 6, p.Y - 6); ctx.lineTo(p.X - 6, p.Y + 6); ctx.stroke();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'bottom';
+      ctx.fillText(L.n, p.X, p.Y - 8);
+    });
+    // particle
+    if (this.part) {
+      if (st.showTrailL && this.ptrail.length > 1) {
+        ctx.strokeStyle = 'rgba(217,130,43,0.7)'; ctx.lineWidth = 1.6; ctx.beginPath();
+        this.ptrail.forEach((q, i) => { const p = P(q.x, q.y); i ? ctx.lineTo(p.X, p.Y) : ctx.moveTo(p.X, p.Y); }); ctx.stroke();
+      }
+      const p = P(this.part.x, this.part.y);
+      ctx.fillStyle = this.part.dead ? '#8c8576' : '#d9822b'; ctx.beginPath(); ctx.arc(p.X, p.Y, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Meedraaiend assenstelsel — groen × = stabiel, rood × = onstabiel', 14, 12);
+  }
+  sysNames(mu) {
+    if (Math.abs(mu - 0.01215) < 0.0004) return ['Aarde', 'Maan'];
+    if (Math.abs(mu - 0.000954) < 0.00005) return ['Zon', 'Jupiter'];
+    if (Math.abs(mu - 0.108) < 0.004) return ['Pluto', 'Charon'];
+    return ['m₁', 'm₂'];
+  }
+
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.13 255)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));
+    const resetAll = () => { this.t = 0; this.trail = []; this.part = null; this.ptrail = []; this.forceUpdate(); };
+    const sv = this.satVals();
+    const near = (x, y) => Math.abs(x - y) / y < 0.004;
+    const satPresets = [['ISS', 408e3], ['GPS', 20200e3], ['Geostationair', 35786e3], ['Maan', 378000e3]].map(([n, h]) => ({ name: n, style: chip(near(sv.h, h)), onClick: () => { this.setState({ hs: this.sOfH(h) }); this.trail = []; } }));
+    const satSpeeds = [[60, '1 min/s'], [600, '10 min/s'], [3600, '1 h/s'], [86400, '1 dag/s']].map(([v, n]) => ({ name: n, style: chip(st.satSpeed === v), onClick: () => this.setState({ satSpeed: v }) }));
+    const geoD = (sv.T - this.TE) / this.TE;
+    let geoMsg, geoStyle;
+    if (Math.abs(geoD) < 0.01) { geoMsg = 'T = rotatieperiode aarde: de satelliet is geostationair.'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:8px;background:#e6f2ea;color:#2f7a45;font-weight:600'; }
+    else { geoMsg = geoD < 0 ? 'Sneller dan de aarde: schuift naar het oosten t.o.v. de grond.' : 'Trager dan de aarde: blijft achter (naar het westen).'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:8px;background:#f4f1ea;color:#6f685c'; }
+
+    const a = this.aOf(st.as), e = st.e, Tk = Math.pow(a, 1.5);
+    const near2 = (x, y) => Math.abs(x - y) / y < 0.01;
+    const kepPresets = [['Mercurius', 0.387, 0.206], ['Aarde', 1, 0.017], ['Mars', 1.524, 0.093], ['Jupiter', 5.203, 0.049], ['Halley', 17.83, 0.967]].map(([n, A, E]) => ({ name: n, style: chip(near2(a, A) && Math.abs(e - E) < 0.003), onClick: () => { this.setState({ as: this.sOfA(A), e: Math.min(0.97, E) }); this.t = 0; } }));
+    const kepSpeeds = [['auto', '1 omloop = 10 s'], [1, '1 jaar/s']].map(([v, n]) => ({ name: n, style: chip(st.kepSpeed === v), onClick: () => this.setState({ kepSpeed: v }) }));
+    const pl = [['Mercurius', 0.387, 0.241], ['Venus', 0.723, 0.615], ['Aarde', 1, 1], ['Mars', 1.524, 1.881], ['Jupiter', 5.203, 11.86], ['Saturnus', 9.537, 29.46], ['Uranus', 19.19, 84.01], ['Neptunus', 30.07, 164.8]];
+    const kepRows = pl.map(([n, A, T]) => ({ n, a: this.fmt(A, 3), T: this.fmt(T, T < 10 ? 3 : 1), q: this.fmt(T * T / (A * A * A), 3), style: '' }))
+      .concat([{ n: 'Deze baan', a: this.fmt(a, 3), T: this.fmt(Tk, Tk < 10 ? 3 : 1), q: this.fmt(1, 3), style: 'background:#fbefe0;font-weight:600' }]);
+    const vU = 29.78; const q = this.kepPos(this.t); const rNow = Math.hypot(q.x, q.y);
+
+    const mu = this.muOf(st.mus); const Ls = this.lPoints(mu); const nm = this.sysNames(mu);
+    const lagPresets = [['Aarde–Maan', 0.01215], ['Zon–Jupiter', 0.000954], ['Pluto–Charon', 0.108]].map(([n, m]) => ({ name: n, style: chip(Math.abs(mu - m) / m < 0.03), onClick: () => { this.setState({ mus: this.muToS(m) }); this.part = null; this.ptrail = []; } }));
+    const lagPoints = Ls.map((L, i) => ({ name: L.n, style: chip(this.part && this.part.from === i), onClick: () => this.releaseAt(i) }));
+    const dist = { 'Aarde': 384400, 'Zon': 778.5e6, 'Pluto': 19596 }[nm[0]];
+    const lagRows = Ls.map(L => {
+      const d1 = Math.hypot(L.x + mu, L.y);
+      return { n: L.n + ' afstand tot ' + nm[0], v: dist ? (dist > 1e7 ? this.fmt(d1 * dist / 1e6, 0) + ' miljoen km' : this.big(d1 * dist) + ' km') : this.fmt(d1, 3) + ' d' };
+    });
+    const stable = mu < 0.0385;
+    return {
+      stageRef: this.stageRef,
+      tabs: [['sat', 'Satelliet'], ['kep', 'Kepler'], ['lag', 'Lagrange']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; this.trail = []; this.running = true; } })),
+      isSat: st.tab === 'sat', isKep: st.tab === 'kep', isLag: st.tab === 'lag',
+      onPlay: () => { this.running = !this.running; this.forceUpdate(); },
+      playLabel: this.running ? 'Pauze' : 'Verder',
+      onReset: resetAll,
+      // sat
+      hs: st.hs, m: st.m,
+      hStr: this.big(sv.h / 1000) + ' km', mStr: this.big(st.m) + ' kg',
+      onH: (ev) => { this.setState({ hs: parseFloat(ev.target.value) }); this.trail = []; },
+      onM: (ev) => this.setState({ m: parseFloat(ev.target.value) }),
+      satPresets, satSpeeds,
+      satToggles: tog([['showF', 'Kracht Fɢ'], ['showV', 'Snelheid v'], ['showTrail', 'Spoor'], ['coRot', 'Meedraaien met aarde']]),
+      rStr: this.big(sv.r / 1000) + ' km', gStr: (sv.g >= 0.1 ? this.fmt(sv.g, 2) : this.fmt(sv.g * 1000, 2) + '·10⁻³') + ' N/kg',
+      FStr: (st.m * sv.g >= 10 ? this.big(st.m * sv.g) : this.fmt(st.m * sv.g, 2)) + ' N', vStr: this.fmt(sv.v / 1000, 2) + ' km/s', TStr: this.dur(sv.T),
+      geoMsg, geoStyle,
+      // kepler
+      as: st.as, e: st.e,
+      aStr: this.fmt(a, a < 10 ? 3 : 1) + ' AE', eStr: this.fmt(e, 3),
+      onA: (ev) => this.setState({ as: parseFloat(ev.target.value) }),
+      onE: (ev) => this.setState({ e: parseFloat(ev.target.value) }),
+      kepPresets, kepSpeeds,
+      kepToggles: tog([['showSect', 'Perkenwet'], ['showKV', 'Snelheid v'], ['showKF', 'Kracht Fɢ'], ['showAxes', 'Assen ellips']]),
+      rpStr: this.fmt(a * (1 - e), 3) + ' AE', raStr: this.fmt(a * (1 + e), 3) + ' AE',
+      vpStr: this.fmt(vU * Math.sqrt((1 + e) / (a * (1 - e))), 1) + ' km/s', vaStr: this.fmt(vU * Math.sqrt((1 - e) / (a * (1 + e))), 1) + ' km/s',
+      vNowStr: this.fmt(vU * Math.sqrt(2 / rNow - 1 / a), 1) + ' km/s',
+      TkStr: this.fmt(Tk, Tk < 10 ? 3 : 1) + ' jaar', areaStr: this.fmt(Math.PI * a * a * Math.sqrt(1 - e * e) / 12, 3) + ' AE²',
+      kepRows,
+      // lagrange
+      mus: st.mus, dl: st.dl,
+      muStr: mu < 0.01 ? this.fmt(mu * 1000, 3) + '·10⁻³' : this.fmt(mu, 4),
+      onMu: (ev) => { this.setState({ mus: parseFloat(ev.target.value) }); this.part = null; this.ptrail = []; },
+      dStr: this.fmt(st.dl, 3) + ' d', onDl: (ev) => this.setState({ dl: parseFloat(ev.target.value) }),
+      lagPresets, lagPoints,
+      lagToggles: tog([['showPot', 'Potentiaal'], ['showTrailL', 'Spoor']]),
+      lagRows,
+      stabMsg: stable ? 'L4 en L5 zijn stabiel (μ < 0,0385).' : 'L4 en L5 zijn hier onstabiel (μ > 0,0385).',
+      stabStyle: 'margin-top:4px;padding:7px 9px;border-radius:8px;font-weight:600;' + (stable ? 'background:#e6f2ea;color:#2f7a45' : 'background:#fbeeea;color:#8a3b2c'),
+    };
+  }
+}
+</script>
+</body>
+</html>

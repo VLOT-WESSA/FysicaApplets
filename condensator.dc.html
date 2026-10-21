@@ -42,6 +42,7 @@
       <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" onPointerLeave="{{ onUp }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
+      <sc-if value="{{ isCap }}" hint-placeholder-val="{{ true }}">
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
         <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;background:#c8443a;display:inline-block"></span>vrije positieve lading</div>
         <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;background:#3b6fc4;display:inline-block"></span>vrije negatieve lading</div>
@@ -49,8 +50,14 @@
         <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#b9812a;border-radius:2px;display:inline-block"></span>veldlijnen E</div>
         <div style="display:flex;align-items:center;gap:8px">Sleep de rechterplaat om d te veranderen.</div>
       </div>
+      </sc-if>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:none">
+        <button onClick="{{ onModeCap }}" style="{{ modeCapStyle }}">Capaciteit</button>
+        <button onClick="{{ onModeRC }}" style="{{ modeRCStyle }}">Laden &amp; ontladen</button>
+      </div>
+      <sc-if value="{{ isCap }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;gap:4px;flex:none;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
         <button onClick="{{ onConnect }}" style="{{ conTab }}">Verbonden met bron</button>
         <button onClick="{{ onDisconnect }}" style="{{ disTab }}">Losgekoppeld</button>
@@ -98,7 +105,49 @@
         <sc-if value="{{ noRows }}" hint-placeholder-val="{{ true }}">
           <div style="font-size:12.5px;color:#6f685c;line-height:1.5">Verander telkens één grootheid en noteer C. Kopieer de tabel naar een rekenblad en zet C uit tegen A, d of 1/d.</div>
         </sc-if>
+
       </div>
+      </sc-if>
+      <sc-if value="{{ isRC }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:8px;flex:none">
+          <button onClick="{{ onCharge }}" style="{{ chargeStyle }}">Opladen (S1)</button>
+          <button onClick="{{ onDischarge }}" style="{{ dischargeStyle }}">Ontladen (S2)</button>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:#8c8576">Capaciteit elco</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcCs }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:4px">Weerstand</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcRs }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px"><span style="font-size:14px;font-weight:500">Bronspanning</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rcUStr }}</span></div>
+          <div style="height:30px;display:flex;align-items:center"><input type="range" min="1" max="25" step="1" value="{{ rcU }}" onInput="{{ onRcU }}"></div>
+          <div style="font-size:12px;color:#8c8576">Tempo</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcSpeeds }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
+          <div style="display:flex;justify-content:space-between"><span>Tijdconstante &tau; = R&middot;C</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ tauStr }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Beginstroom I<sub>0</sub> = U/R</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ I0Str }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Stroom nu</span><span style="font-family:'IBM Plex Mono',monospace;color:#c8443a;font-weight:600">{{ rcIStr }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Spanning over C</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rcUcStr }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Tijd sinds omschakelen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rcTStr }}</span></div>
+        </div>
+        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;gap:8px">
+            <button onClick="{{ onRcRec }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Tijdstip noteren</button>
+            <button onClick="{{ onRcCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ rcCopyLabel }}</button>
+            <button onClick="{{ onRcClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
+          </div>
+          <div style="display:grid;grid-template-columns:28px repeat(3,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
+            <span style="color:#8c8576">nr</span><span style="color:#8c8576">t (s)</span><span style="color:#8c8576">I (&micro;A)</span><span style="color:#8c8576">U<sub>C</sub> (V)</span>
+            <sc-for list="{{ rcRows }}" as="r" hint-placeholder-count="0">
+              <span style="color:#8c8576">{{ r.n }}</span><span>{{ r.t }}</span><span>{{ r.i }}</span><span>{{ r.u }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">I(t) = I<sub>0</sub>&middot;e<sup>&minus;t/&tau;</sup> &nbsp;&nbsp; &tau; = R&middot;C</div>
+          <div style="margin-top:6px">Laad de elco op (S1) en schakel om naar S2: de condensator ontlaadt via R. De stroom daalt exponentieel; na &tau; is nog 37 % over, na 5&tau; is de condensator praktisch leeg. Noteer de tijdstippen waarop de stroom 12, 11, &hellip; 1 &micro;A bereikt en teken een exponenti&euml;le trendlijn.</div>
+        </div>
+      </sc-if>
     </div>
   </div>
 </div>
@@ -108,14 +157,91 @@ class Component extends DCLogic {
   stageRef = React.createRef();
   W = 880; H = 560;
   mats = [{ n: 'Lucht', er: 1.0 }, { n: 'Paraffine', er: 2.2 }, { n: 'Papier', er: 3.5 }, { n: 'Glas', er: 6.0 }];
-  state = { d: 4, A: 300, Ub: 50, mat: 0, connected: true, Qfix: 0, rows: [], copied: false };
+  state = { d: 4, A: 300, Ub: 50, mat: 0, connected: true, Qfix: 0, rows: [], copied: false,
+            mode: 'cap', rcC: 100e-6, rcR: 1e6, rcU: 12, rcSpeed: 1, rcSw: 'open', rcRows: [], rcCopied: false };
+  uc = 0; rcT = 0; rcHist = []; rcTot = 0;
 
   componentDidMount() {
     this.setupCanvas(); this.draw();
     this._rz = () => { this.setupCanvas(); this.draw(); };
     this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
   }
-  componentWillUnmount() { if (this._acStop) this._acStop(); }
+  componentWillUnmount() { if (this._acStop) this._acStop(); cancelAnimationFrame(this.raf); }
+
+  // ---------- RC: laden en ontladen ----------
+  rcI() { const st = this.state; if (st.rcSw === 'charge') return (st.rcU - this.uc) / st.rcR; if (st.rcSw === 'discharge') return -this.uc / st.rcR; return 0; }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const st = this.state;
+    if (st.mode === 'rc') {
+      const h = dt * st.rcSpeed, tau = st.rcR * st.rcC;
+      if (st.rcSw === 'charge') this.uc = st.rcU + (this.uc - st.rcU) * Math.exp(-h / tau);
+      else if (st.rcSw === 'discharge') this.uc *= Math.exp(-h / tau);
+      if (st.rcSw !== 'open') { this.rcT += h; this.rcTot += h; this.rcHist.push({ t: this.rcTot, i: this.rcI(), u: this.uc }); if (this.rcHist.length > 6000) this.rcHist.shift(); }
+      this.draw();
+      this._r = (this._r || 0) + dt; if (this._r > 0.2) { this._r = 0; this.forceUpdate(); }
+    }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  drawRC(ctx) {
+    const st = this.state; const I = this.rcI();
+    ctx.strokeStyle = '#5d574d'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    const xl = 50, xm = 175, xr = 330, yt = 80, yb = 330, xs = 260;
+    // draden: bron - S1 - knooppunt - R - C - terug; S2 tussen knooppunt en onderdraad
+    ctx.beginPath(); ctx.moveTo(xl, 180); ctx.lineTo(xl, yt); ctx.lineTo(95, yt);
+    ctx.moveTo(135, yt); ctx.lineTo(xm - 30, yt); ctx.moveTo(xm + 30, yt); ctx.lineTo(xr, yt); ctx.lineTo(xr, 198);
+    ctx.moveTo(xr, 212); ctx.lineTo(xr, 265); ctx.moveTo(xr, 295); ctx.lineTo(xr, yb); ctx.lineTo(xl, yb); ctx.lineTo(xl, 230);
+    ctx.moveTo(xs, yt); ctx.lineTo(xs, 180); ctx.moveTo(xs, 220); ctx.lineTo(xs, yb); ctx.stroke();
+    // bron
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(xl - 16, 195); ctx.lineTo(xl + 16, 195); ctx.stroke(); ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(xl - 8, 212); ctx.lineTo(xl + 8, 212); ctx.stroke();
+    ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xl, 180); ctx.lineTo(xl, 195); ctx.moveTo(xl, 212); ctx.lineTo(xl, 230); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(st.rcU + ' V', xl + 20, 205);
+    // S1
+    ctx.lineWidth = 2.5; ctx.fillStyle = '#5d574d';
+    ctx.beginPath(); ctx.arc(95, yt, 3.5, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(135, yt, 3.5, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(95, yt); if (st.rcSw === 'charge') ctx.lineTo(135, yt); else ctx.lineTo(95 + 36 * Math.cos(-0.6), yt + 36 * Math.sin(-0.6)); ctx.stroke();
+    ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('S1', 115, yt - 16);
+    // R
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.fillRect(xm - 30, yt - 12, 60, 24); ctx.strokeRect(xm - 30, yt - 12, 60, 24);
+    ctx.fillStyle = '#2a2723'; ctx.font = "500 12px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom'; ctx.fillText('R = ' + this.si(st.rcR, 'Ω'), xm, yt - 16);
+    // C
+    ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(xr - 22, 198); ctx.lineTo(xr + 22, 198); ctx.moveTo(xr - 22, 212); ctx.lineTo(xr + 22, 212); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "500 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('C = ' + this.si(st.rcC, 'F'), xr + 30, 205);
+    ctx.fillStyle = '#c8443a'; ctx.fillRect(xr - 22, 189, 44 * Math.min(1, this.uc / 25), 5);
+    // S2
+    ctx.lineWidth = 2.5; ctx.fillStyle = '#5d574d'; ctx.beginPath(); ctx.arc(xs, 180, 3.5, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(xs, 220, 3.5, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#5d574d'; ctx.beginPath(); ctx.moveTo(xs, 220); if (st.rcSw === 'discharge') ctx.lineTo(xs, 180); else ctx.lineTo(xs - 28, 194); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('S2', xs - 14, 210);
+    // µA-meter
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(xr, 280, 15, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "700 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.fillText('µA', xr, 281);
+    // displays
+    ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect(60, 380, 130, 66, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#d8e4d0'; ctx.fillRect(70, 402, 110, 34); ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(Math.abs(I) * 1e6, 1), 125, 420);
+    ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('µA-meter', 125, 391);
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(210, 380, 130, 66, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(this.rcT, 1) + ' s', 275, 420);
+    ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('stopwatch', 275, 391);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(st.rcSw === 'charge' ? 'S1 dicht: de condensator laadt op via R.' : st.rcSw === 'discharge' ? 'S2 dicht: de condensator ontlaadt via R.' : 'Beide schakelaars open.', 40, 470);
+    if (st.rcSpeed > 1) ctx.fillText('Tempo ×' + st.rcSpeed, 40, 490);
+    // grafieken
+    const tau = st.rcR * st.rcC, tw = Math.max(5 * tau, 1), tNow = this.rcTot, t0 = Math.max(0, tNow - tw);
+    const g = (y, h, title, key, max, col, unit) => {
+      const x = 400, w = 465;
+      ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+      const ym = y + h / 2; ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, ym); ctx.lineTo(x + w, ym); ctx.stroke();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 8, y + 6);
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.fillText('+' + unit(max), x + w - 6, y + 6); ctx.textBaseline = 'bottom'; ctx.fillText('−' + unit(max), x + w - 6, y + h - 4);
+      ctx.textAlign = 'left'; ctx.fillText('venster 5τ = ' + this.fmt(5 * tau, 0) + ' s', x + 8, y + h - 4);
+      ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); let f = true;
+      for (const d of this.rcHist) { if (d.t < t0) continue; const X = x + (d.t - t0) / tw * w, Y = ym - d[key] / max * (h / 2 - 22); f ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y); f = false; }
+      ctx.stroke(); ctx.restore();
+    };
+    g(30, 240, 'Stroom I(t)  (laden +, ontladen −)', 'i', st.rcU / st.rcR, '#c8443a', v => this.fmt(v * 1e6, 1) + ' µA');
+    g(290, 240, 'Spanning over C', 'u', 25, '#a8761f', v => this.fmt(v, 0) + ' V');
+  }
   componentDidUpdate() { this.draw(); }
   setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
 
@@ -134,7 +260,7 @@ class Component extends DCLogic {
 
   fmt(x, n) { return x.toFixed(n).replace('.', ','); }
   si(v, unit) {
-    const p = [[1e-12, 'p'], [1e-9, 'n'], [1e-6, 'µ'], [1e-3, 'm'], [1, ''], [1e3, 'k']];
+    const p = [[1e-12, 'p'], [1e-9, 'n'], [1e-6, 'µ'], [1e-3, 'm'], [1, ''], [1e3, 'k'], [1e6, 'M']];
     let k = p[0]; for (const q of p) if (Math.abs(v) >= q[0]) k = q;
     const x = v / k[0]; const d = x >= 100 ? 0 : x >= 10 ? 1 : 2;
     return this.fmt(x, d) + ' ' + k[1] + unit;
@@ -168,6 +294,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const s = this.dpr || 1;
     ctx.setTransform(s, 0, 0, s, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
+    if (this.state.mode === 'rc') { this.drawRC(ctx); return; }
     const G = this.geo(); const { hp, dx, dy, g, T, xL, xR, yTop, yBot } = G;
     const er = this.er(); const U = this.U(); const E = U / (this.state.d * 1e-3);
     const mx = dx / 2, my = dy / 2;
@@ -292,6 +419,10 @@ class Component extends DCLogic {
     const C = this.C(), Q = this.Q(), U = this.U(), E = U / (st.d * 1e-3);
     const on = 'flex:1;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff';
     const off = 'flex:1;font-size:13px;font-weight:500;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:transparent;color:#4f4a42';
+    const acc = 'oklch(0.52 0.12 75)';
+    const chipS = (o) => 'min-height:32px;font-size:12.5px;font-weight:' + (o ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 10px;border:1px solid ' + (o ? acc : '#e7e1d5') + ';background:' + (o ? acc : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
+    const tabS = (o) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (o ? '#2a2723' : '#e7e1d5') + ';background:' + (o ? '#2a2723' : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
+    const bigS = (o) => 'flex:1;min-height:40px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (o ? acc : '#e7e1d5') + ';background:' + (o ? acc : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
     const rows = st.rows.map((r, i) => ({ n: i + 1, d: this.fmt(r.d, 1), A: String(r.A), er: this.fmt(r.er, 1), C: this.fmt(r.C * 1e12, 1) }));
     return {
       stageRef: this.stageRef,
@@ -317,12 +448,14 @@ class Component extends DCLogic {
         ? 'De bron houdt U constant. Verander je C, dan stroomt er lading bij of af.'
         : 'Losgekoppeld blijft Q constant. Verander je C, dan verandert U = Q/C.',
       onDown: (e) => {
+        if (st.mode === 'rc') return;
         const p = this.canvasPt(e); const G = this.geo();
         if (p.x > G.xR - 16 && p.x < G.xR + G.T + G.dx + 16 && p.y > G.yTop + G.dy - 10 && p.y < G.yBot + 10) {
           this.drag = true; e.currentTarget.setPointerCapture(e.pointerId);
         }
       },
       onMove: (e) => {
+        if (st.mode === 'rc') return;
         const p = this.canvasPt(e); const G = this.geo();
         const c = this.stageRef.current;
         if (!this.drag) {
@@ -340,6 +473,26 @@ class Component extends DCLogic {
       },
       copyLabel: st.copied ? 'Gekopieerd' : 'Kopieer tabel',
       rows, hasRows: rows.length > 0, noRows: rows.length === 0,
+      isCap: st.mode === 'cap', isRC: st.mode === 'rc',
+      modeCapStyle: tabS(st.mode === 'cap'), modeRCStyle: tabS(st.mode === 'rc'),
+      onModeCap: () => this.setState({ mode: 'cap' }), onModeRC: () => this.setState({ mode: 'rc' }),
+      chargeStyle: bigS(st.rcSw === 'charge'), dischargeStyle: bigS(st.rcSw === 'discharge'),
+      onCharge: () => { this.rcT = 0; this.setState({ rcSw: st.rcSw === 'charge' ? 'open' : 'charge' }); },
+      onDischarge: () => { this.rcT = 0; this.setState({ rcSw: st.rcSw === 'discharge' ? 'open' : 'discharge' }); },
+      rcCs: [100e-6, 220e-6, 470e-6].map(v => ({ name: this.si(v, 'F'), style: chipS(st.rcC === v), onClick: () => this.setState({ rcC: v }) })),
+      rcRs: [220e3, 470e3, 1e6].map(v => ({ name: this.si(v, 'Ω'), style: chipS(st.rcR === v), onClick: () => this.setState({ rcR: v }) })),
+      rcU: st.rcU, rcUStr: st.rcU + ' V', onRcU: (e) => this.setState({ rcU: +e.target.value }),
+      rcSpeeds: [1, 5, 20, 100].map(v => ({ name: '×' + v, style: chipS(st.rcSpeed === v), onClick: () => this.setState({ rcSpeed: v }) })),
+      tauStr: this.fmt(st.rcR * st.rcC, 1) + ' s', I0Str: this.fmt(st.rcU / st.rcR * 1e6, 1) + ' µA',
+      rcIStr: this.fmt(Math.abs(this.rcI()) * 1e6, 2) + ' µA', rcUcStr: this.fmt(this.uc, 2) + ' V', rcTStr: this.fmt(this.rcT, 1) + ' s',
+      onRcRec: () => this.setState({ rcRows: st.rcRows.concat([{ t: this.rcT, i: Math.abs(this.rcI()), u: this.uc }]), rcCopied: false }),
+      onRcClear: () => this.setState({ rcRows: [], rcCopied: false }),
+      onRcCopy: () => {
+        const txt = 't (s)\tI (µA)\tUc (V)\n' + st.rcRows.map(r => [this.fmt(r.t, 1), this.fmt(r.i * 1e6, 2), this.fmt(r.u, 2)].join('\t')).join('\n');
+        try { navigator.clipboard.writeText(txt); this.setState({ rcCopied: true }); } catch (e) {}
+      },
+      rcCopyLabel: st.rcCopied ? 'Gekopieerd' : 'Kopieer',
+      rcRows: st.rcRows.map((r, i) => ({ n: i + 1, t: this.fmt(r.t, 1), i: this.fmt(r.i * 1e6, 2), u: this.fmt(r.u, 2) })),
     };
   }
 }

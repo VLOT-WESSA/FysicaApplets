@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f8a4e;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f8a4e;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:30px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Elektromagnetische inductie</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isMag }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:10px;flex:none">
+          <button onClick="{{ onDrop }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">Laat vallen</button>
+          <button onClick="{{ onFlip }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Magneet omdraaien</button>
+        </div>
+        <div class="card">
+          <div class="row"><span class="lbl">Aantal windingen N</span><span class="val">{{ NStr }}</span></div>
+          <div class="sl"><input type="range" min="50" max="2000" step="50" value="{{ N }}" onInput="{{ onN }}"></div>
+          <div class="row"><span class="lbl">Valhoogte boven de spoel</span><span class="val">{{ hStr }}</span></div>
+          <div class="sl"><input type="range" min="0.05" max="0.30" step="0.01" value="{{ h0 }}" onInput="{{ onH }}"></div>
+          <div class="row"><span class="lbl">Magneten op elkaar</span><span class="val">{{ nmStr }}</span></div>
+          <div class="sl"><input type="range" min="1" max="2" step="1" value="{{ nm }}" onInput="{{ onNm }}"></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:2px">Aangesloten op de spoel</div>
+          <div class="chips">
+            <sc-for list="{{ meters }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <sc-for list="{{ magToggles }}" as="tg" hint-placeholder-count="4">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <div class="row"><span>Snelheid magneet</span><span>{{ vStr }}</span></div>
+          <div class="row"><span>Flux N&middot;&Phi; door de spoel</span><span>{{ phiStr }}</span></div>
+          <div class="row"><span>Inductiespanning &epsilon;</span><span style="color:#c8443a;font-weight:600">{{ emfStr }}</span></div>
+          <div class="row"><span>Grootste |&epsilon;| deze worp</span><span>{{ peakStr }}</span></div>
+        </div>
+        <div class="note">
+          <div class="mono">&epsilon; = &minus;N&middot;&Delta;&Phi;/&Delta;t</div>
+          <div style="margin-top:4px">Sleep de magneet met de muis door de spoel of laat hem vallen. Alleen een <b>veranderende</b> flux wekt spanning op: hoe sneller, hoe groter &epsilon;. Volgens de <b>wet van Lenz</b> werkt de inductiestroom de oorzaak tegen: de spoel krijgt een pool die de naderende magneet afstoot en de vertrekkende magneet aantrekt. De LED's geven pas licht vanaf ongeveer 1,8 V.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:10px;flex:none">
+          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ playLabel }}</button>
+        </div>
+        <div class="card">
+          <div class="row"><span class="lbl">Aantal windingen N</span><span class="val">{{ gNStr }}</span></div>
+          <div class="sl"><input type="range" min="10" max="500" step="10" value="{{ gN }}" onInput="{{ onGN }}"></div>
+          <div class="row"><span class="lbl">Magnetische inductie B</span><span class="val">{{ gBStr }}</span></div>
+          <div class="sl"><input type="range" min="0.05" max="1" step="0.05" value="{{ gB }}" onInput="{{ onGB }}"></div>
+          <div class="row"><span class="lbl">Oppervlak spoel A</span><span class="val">{{ gAStr }}</span></div>
+          <div class="sl"><input type="range" min="10" max="200" step="5" value="{{ gA }}" onInput="{{ onGA }}"></div>
+          <div class="row"><span class="lbl">Toerental f</span><span class="val">{{ gfStr }}</span></div>
+          <div class="sl"><input type="range" min="0.2" max="3" step="0.1" value="{{ gf }}" onInput="{{ onGf }}"></div>
+          <div style="font-size:12px;color:#8c8576;margin-top:2px">Aansluiting</div>
+          <div class="chips">
+            <sc-for list="{{ collectors }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <div class="row"><span>Hoeksnelheid &omega; = 2&pi;f</span><span>{{ gwStr }}</span></div>
+          <div class="row"><span>Maximale flux N&middot;B&middot;A</span><span>{{ gPhiStr }}</span></div>
+          <div class="row"><span>Topspanning &epsilon;<sub>max</sub> = N&middot;B&middot;A&middot;&omega;</span><span style="color:#c8443a;font-weight:600">{{ gEmaxStr }}</span></div>
+          <div class="row"><span>Spanning nu</span><span>{{ gNowStr }}</span></div>
+        </div>
+        <div class="note">
+          <div class="mono">&Phi; = B&middot;A&middot;cos(&omega;t) &nbsp;&nbsp; &epsilon; = N&middot;B&middot;A&middot;&omega;&middot;sin(&omega;t)</div>
+          <div style="margin-top:4px">De flux is maximaal als de spoel loodrecht op het veld staat, maar dan is de spanning nul: de flux verandert daar het traagst. Met <b>sleepringen</b> krijg je wisselspanning; een <b>commutator</b> keert elke halve omwenteling de aansluiting om, zodat de spanning altijd hetzelfde teken heeft (pulserende gelijkspanning, zoals bij de dynamo of de gelijkstroommotor).</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTr }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:10px;flex:none">
+          <button onClick="{{ onSwitch }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ switchLabel }}</button>
+        </div>
+        <div class="card">
+          <div class="row"><span class="lbl">Primaire windingen N<sub>p</sub></span><span class="val">{{ NpStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="1200" step="100" value="{{ Np }}" onInput="{{ onNp }}"></div>
+          <div class="row"><span class="lbl">Secundaire windingen N<sub>s</sub></span><span class="val">{{ NsStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="2400" step="100" value="{{ Ns }}" onInput="{{ onNs }}"></div>
+          <div class="row"><span class="lbl">Primaire spanning U<sub>p</sub></span><span class="val">{{ UpStr }}</span></div>
+          <div class="sl"><input type="range" min="1" max="12" step="0.5" value="{{ Up }}" onInput="{{ onUp }}"></div>
+          <div class="row"><span class="lbl">Belasting R</span><span class="val">{{ RlStr }}</span></div>
+          <div class="sl"><input type="range" min="10" max="1000" step="10" value="{{ Rl }}" onInput="{{ onRl }}"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <sc-for list="{{ trToggles }}" as="tg" hint-placeholder-count="3">
+              <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="out">
+          <div class="row"><span>N<sub>s</sub> / N<sub>p</sub></span><span>{{ ratioStr }}</span></div>
+          <div class="row"><span>Secundaire spanning U<sub>s</sub></span><span style="color:#c8443a;font-weight:600">{{ UsStr }}</span></div>
+          <div class="row"><span>U<sub>s</sub> / U<sub>p</sub></span><span>{{ uRatioStr }}</span></div>
+          <div class="row"><span>Secundaire stroom I<sub>s</sub></span><span>{{ IsStr }}</span></div>
+          <div class="row"><span>Primaire stroom I<sub>p</sub></span><span>{{ IpStr }}</span></div>
+          <div class="row"><span>Vermogen P<sub>p</sub> &asymp; P<sub>s</sub></span><span>{{ PStr }}</span></div>
+        </div>
+        <div class="note">
+          <div class="mono">U<sub>s</sub> / U<sub>p</sub> = N<sub>s</sub> / N<sub>p</sub> = I<sub>p</sub> / I<sub>s</sub></div>
+          <div style="margin-top:4px">De wisselstroom in de primaire spoel maakt een veranderende flux in de ijzeren kern, die ook door de secundaire spoel gaat. Zonder juk lekt een groot deel van de flux weg. Met <b>gelijkspanning</b> verandert de flux niet, dus is er geen secundaire spanning, behalve heel even bij het aan- en uitschakelen. Spanningen zijn effectieve waarden; de grafiek toont 50 Hz vertraagd.</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  MU0 = 4 * Math.PI * 1e-7;
+  state = {
+    tab: 'mag',
+    N: 1000, h0: 0.30, nm: 1, meter: 'led', slow: true, showLenz: true, showField: true,
+    gN: 100, gB: 0.4, gA: 100, gf: 0.5, coll: 'ring', gRun: true,
+    Np: 600, Ns: 300, Up: 4, Rl: 100, dc: false, yoke: true, on: true
+  };
+  // magneet: z = positie van het midden t.o.v. het midden van de spoel (m, omhoog positief)
+  z = 0.30; vz = 0; mode = 'idle'; flip = false; dragging = false; hist = []; tSim = 0; peak = 0; ledR = 0; ledY = 0; emf = 0;
+  gTh = 0; gHist = []; gT = 0;
+  trT = 0; trHist = []; dcT = 999; dcSign = 0;
+  k = 1100; coilY = 330; coilR = 0.016; coilL = 0.04; magL = 0.02;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown);
+    window.addEventListener('pointermove', this.onMove);
+    window.addEventListener('pointerup', this.onUp);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.z = this.state.h0 + this.coilL / 2 + this.magL / 2;
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf); if (this._acStop) this._acStop();
+    const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown);
+    window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp);
+  }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) {
+    const c = this.stageRef.current; const r = c.getBoundingClientRect();
+    const s = Math.min(r.width / this.W, r.height / this.H);
+    const ox = (r.width - this.W * s) / 2, oy = (r.height - this.H * s) / 2;
+    return { x: (e.clientX - r.left - ox) / s, y: (e.clientY - r.top - oy) / s };
+  }
+  zToY(z) { return this.coilY - z * this.k; }
+  yToZ(y) { return (this.coilY - y) / this.k; }
+  zMin() { return this.yToZ(545) + this.magL / 2; }
+  zMax() { return this.yToZ(18) - this.magL / 2; }
+  onDown = (e) => {
+    if (this.state.tab !== 'mag') return;
+    const p = this.toPx(e); const my = this.zToY(this.z); const half = this.magL * this.state.nm * this.k / 2 + 8;
+    if (Math.abs(p.x - 260) < 40 && Math.abs(p.y - my) < half + 10) {
+      this.dragging = true; this.mode = 'drag'; this.dragOff = my - p.y; this.peak = 0; e.preventDefault();
+    }
+  };
+  onMove = (e) => {
+    if (!this.dragging) return;
+    const p = this.toPx(e); let z = this.yToZ(p.y + this.dragOff);
+    z = Math.max(this.zMin(), Math.min(this.zMax(), z)); this.dragTarget = z;
+  };
+  onUp = () => { if (this.dragging) { this.dragging = false; this.mode = 'idle'; this.vz = 0; } };
+
+  // flux door de spoel: som over N windingen verdeeld over de spoellengte, puntdipool(s)
+  fluxAt(z) {
+    const st = this.state; const m = 1.6 * st.nm * (this.flip ? 1 : -1); // A·m², N-pool naar onder => moment naar onder
+    const R = this.coilR, n = 11; let s = 0;
+    for (let i = 0; i < n; i++) {
+      const zi = z - (-this.coilL / 2 + this.coilL * (i + 0.5) / n);
+      s += this.MU0 * m * R * R / (2 * Math.pow(R * R + zi * zi, 1.5));
+    }
+    return s / n; // flux per winding (Wb)
+  }
+
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  uStr(u) { const a = Math.abs(u); return a >= 1 ? this.fmt(u, 2) + ' V' : this.fmt(u * 1000, a >= 0.01 ? 0 : 1) + ' mV'; }
+
+  loop = (ts) => {
+    const rdt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const st = this.state;
+    if (st.tab === 'mag') this.stepMag(rdt);
+    else if (st.tab === 'gen') this.stepGen(rdt);
+    else this.stepTr(rdt);
+    this.draw();
+    this._r = (this._r || 0) + rdt; if (this._r > 0.15) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  stepMag(rdt) {
+    const st = this.state; const slow = st.slow ? 0.12 : 1;
+    const n = 20; const dt = rdt * slow / n;
+    for (let i = 0; i < n; i++) {
+      const z0 = this.z, phi0 = this.fluxAt(z0);
+      if (this.mode === 'fall') {
+        this.vz -= 9.81 * dt; this.z += this.vz * dt;
+        if (this.z <= this.zMin()) { this.z = this.zMin(); this.vz = 0; this.mode = 'idle'; }
+      } else if (this.mode === 'drag' && this.dragTarget != null) {
+        const nz = z0 + (this.dragTarget - z0) * Math.min(1, rdt * 25 / n);
+        this.vz = (nz - z0) / (rdt / n); this.z = nz; // sleep in echte tijd
+      } else this.vz = 0;
+      const dts = this.mode === 'drag' ? rdt / n : dt;
+      const e = -st.N * (this.fluxAt(this.z) - phi0) / dts;
+      this.emf = e;
+      if (Math.abs(e) > this.peak) this.peak = Math.abs(e);
+      if (e > 1.8) this.ledR = Math.max(this.ledR, Math.min(1, (e - 1.8) / 2 + 0.3));
+      if (e < -1.8) this.ledY = Math.max(this.ledY, Math.min(1, (-e - 1.8) / 2 + 0.3));
+      this.tSim += this.mode === 'drag' ? rdt / n : dt;
+      if (i % 2 === 0) this.hist.push({ t: this.tSim, p: st.N * this.fluxAt(this.z), e });
+    }
+    const keep = st.slow ? 0.6 : 3;
+    while (this.hist.length && this.hist[0].t < this.tSim - keep) this.hist.shift();
+    this.ledR = Math.max(0, this.ledR - rdt * 2.5); this.ledY = Math.max(0, this.ledY - rdt * 2.5);
+  }
+  stepGen(rdt) {
+    const st = this.state; if (!st.gRun) return;
+    this.gT += rdt; this.gTh += 2 * Math.PI * st.gf * rdt;
+    this.gHist.push({ t: this.gT, th: this.gTh }); while (this.gHist.length && this.gHist[0].t < this.gT - 4) this.gHist.shift();
+  }
+  stepTr(rdt) {
+    this.trT += rdt; this.dcT += rdt;
+    this.trHist.push({ t: this.trT, up: this.trUp(this.trT), us: this.trUs(this.trT) });
+    while (this.trHist.length && this.trHist[0].t < this.trT - 3) this.trHist.shift();
+  }
+  // getekende momentwaarden (50 Hz vertraagd tot 1 Hz)
+  trK() { return this.state.yoke ? 0.96 : 0.35; }
+  trUp(t) { const st = this.state; if (!st.on) return 0; return st.dc ? st.Up : st.Up * Math.SQRT2 * Math.sin(2 * Math.PI * t); }
+  trUs(t) {
+    const st = this.state; const r = st.Ns / st.Np * this.trK();
+    if (st.dc) return this.dcSign * st.Up * r * Math.exp(-this.dcT / 0.08);
+    if (!st.on) return 0;
+    return st.Up * Math.SQRT2 * r * Math.sin(2 * Math.PI * t);
+  }
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    if (this.state.tab === 'mag') this.drawMag(ctx);
+    else if (this.state.tab === 'gen') this.drawGen(ctx);
+    else this.drawTr(ctx);
+  }
+  graph(ctx, x, y, w, h, title, data, key, col, unit, tWin, tNow, fixedMax) {
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
+    ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
+    let mx = fixedMax || 0; if (!fixedMax) data.forEach(d => { mx = Math.max(mx, Math.abs(d[key])); }); if (mx < 1e-12) mx = 1;
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 8, y + 6);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
+    ctx.fillText('+' + unit(mx), x + w - 6, y + 6); ctx.textBaseline = 'bottom'; ctx.fillText('−' + unit(mx), x + w - 6, y + h - 4);
+    ctx.textAlign = 'left'; ctx.fillText('t →', x + 8, y + h - 4);
+    if (data.length < 2) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath();
+    data.forEach((d, i) => { const X = x + w - (tNow - d.t) / tWin * w, Y = y + h / 2 - d[key] / mx * (h / 2 - 22); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+    ctx.stroke(); ctx.restore();
+  }
+
+  drawMag(ctx) {
+    const st = this.state; const cx = 260, cy = this.coilY, k = this.k;
+    const R = this.coilR * k, L = this.coilL * k;
+    // tube
+    ctx.fillStyle = 'rgba(200,215,230,0.35)'; ctx.fillRect(cx - R + 5, 10, 2 * R - 10, 535);
+    ctx.strokeStyle = 'rgba(120,140,160,0.5)'; ctx.lineWidth = 1; ctx.strokeRect(cx - R + 5, 10, 2 * R - 10, 535);
+    // soft landing
+    ctx.fillStyle = '#e0d6c2'; ctx.fillRect(cx - 50, 545, 100, 10);
+    // coil back windings
+    const nw = 16;
+    ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 2;
+    for (let i = 0; i < nw; i++) { const y = cy - L / 2 + L * (i + 0.5) / nw; ctx.beginPath(); ctx.ellipse(cx, y, R + 14, 6, 0, Math.PI, 2 * Math.PI); ctx.stroke(); }
+    // field lines of magnet
+    const mz = this.z; const my = this.zToY(mz); const ml = this.magL * st.nm * k;
+    if (st.showField) {
+      ctx.strokeStyle = 'rgba(58,111,184,0.35)'; ctx.lineWidth = 1.2;
+      for (const w of [16, 28, 44]) { for (const sgn of [-1, 1]) { ctx.beginPath(); ctx.ellipse(cx + sgn * w, my, w, ml / 2 + w * 1.4, 0, 0, 7); ctx.stroke(); } }
+    }
+    // magnet
+    const top = my - ml / 2; const northDown = !this.flip;
+    ctx.fillStyle = northDown ? '#3a6fb8' : '#c8443a'; ctx.fillRect(cx - 9, top, 18, ml / 2);
+    ctx.fillStyle = northDown ? '#c8443a' : '#3a6fb8'; ctx.fillRect(cx - 9, my, 18, ml / 2);
+    ctx.fillStyle = '#fff'; ctx.font = "700 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(northDown ? 'Z' : 'N', cx, top + ml / 4); ctx.fillText(northDown ? 'N' : 'Z', cx, my + ml / 4);
+    ctx.strokeStyle = this.dragging ? '#2a2723' : 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(cx - 9, top, 18, ml);
+    // coil front windings + Lenz current arrows
+    const e = this.emf; const cur = Math.abs(e) > 0.02 ? Math.sign(e) : 0;
+    for (let i = 0; i < nw; i++) {
+      const y = cy - L / 2 + L * (i + 0.5) / nw;
+      ctx.strokeStyle = cur ? 'rgba(200,68,58,' + Math.min(1, 0.35 + Math.abs(e) / 4) + ')' : '#c08848'; ctx.lineWidth = 2.6;
+      ctx.beginPath(); ctx.ellipse(cx, y, R + 14, 6, 0, 0, Math.PI); ctx.stroke();
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('spoel (' + st.N + ' w.)', cx - R - 22, cy);
+    if (st.showLenz && cur) {
+      // e > 0: moment spoel omhoog -> bovenkant N, stroom vooraan naar rechts
+      for (const yy of [cy - L / 4, cy + L / 4]) {
+        const dir = cur; ctx.fillStyle = '#c8443a';
+        const ax = cx + dir * 4, ay = yy + 6.5;
+        ctx.beginPath(); ctx.moveTo(ax + dir * 9, ay); ctx.lineTo(ax - dir * 3, ay - 6); ctx.lineTo(ax - dir * 3, ay + 6); ctx.closePath(); ctx.fill();
+      }
+      const topPole = cur > 0 ? 'N' : 'Z', botPole = cur > 0 ? 'Z' : 'N';
+      const pc = p => p === 'N' ? '#c8443a' : '#3a6fb8';
+      ctx.font = "700 15px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left';
+      ctx.fillStyle = pc(topPole); ctx.fillText(topPole, cx + R + 22, cy - L / 2 - 4);
+      ctx.fillStyle = pc(botPole); ctx.fillText(botPole, cx + R + 22, cy + L / 2 + 4);
+      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif";
+      ctx.fillText('geïnduceerde polen', cx + R + 38, cy - L / 2 - 4);
+    }
+    // wires to meter
+    const mx = 430, myy = 330;
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(cx + R + 14, cy - L / 2 + 2); ctx.lineTo(mx - 30, cy - L / 2 + 2); ctx.lineTo(mx - 30, myy - 40);
+    ctx.moveTo(cx + R + 14, cy + L / 2 - 2); ctx.lineTo(mx + 30, cy + L / 2 - 2); ctx.lineTo(mx + 30, myy + 40); ctx.stroke();
+    if (st.meter === 'led') {
+      // two antiparallel LEDs
+      const drawLed = (x, y, col, on, up) => {
+        if (on > 0.02) { const g = ctx.createRadialGradient(x, y, 2, x, y, 34); g.addColorStop(0, col.replace('A', on)); g.addColorStop(1, col.replace('A', 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 34, 0, 7); ctx.fill(); }
+        ctx.fillStyle = on > 0.02 ? col.replace('A', 1) : col.replace('A', 0.3); ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); if (up) { ctx.moveTo(x - 9, y + 7); ctx.lineTo(x + 9, y + 7); ctx.lineTo(x, y - 7); } else { ctx.moveTo(x - 9, y - 7); ctx.lineTo(x + 9, y - 7); ctx.lineTo(x, y + 7); } ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); const by = up ? y - 7 : y + 7; ctx.moveTo(x - 9, by); ctx.lineTo(x + 9, by); ctx.stroke();
+      };
+      ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(mx - 30, myy - 40); ctx.lineTo(mx + 30, myy - 40); ctx.moveTo(mx - 30, myy + 40); ctx.lineTo(mx + 30, myy + 40);
+      ctx.moveTo(mx - 30, myy - 40); ctx.lineTo(mx - 30, myy + 40); ctx.moveTo(mx + 30, myy - 40); ctx.lineTo(mx + 30, myy + 40); ctx.stroke();
+      drawLed(mx - 30, myy, 'rgba(220,40,40,A)', this.ledR, true);
+      drawLed(mx + 30, myy, 'rgba(240,190,20,A)', this.ledY, false);
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText('rood', mx - 30, myy + 46); ctx.fillText('geel', mx + 30, myy + 46);
+    } else {
+      ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.roundRect(mx - 46, myy - 44, 92, 88, 10); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#d8e4d0'; ctx.fillRect(mx - 36, myy - 34, 72, 28);
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 15px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const mv = Math.max(-199.9, Math.min(199.9, this.emf * 1000));
+      ctx.fillText(Math.abs(this.emf * 1000) > 199.9 ? '  1. ' : this.fmt(mv, 1), mx, myy - 20);
+      ctx.font = "500 10px 'IBM Plex Sans',sans-serif"; ctx.fillText('mV  (200 mV DC)', mx, myy + 6);
+      ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(mx, myy + 26, 9, 0, 7); ctx.fill();
+    }
+    // graphs
+    const tw = st.slow ? 0.6 : 3;
+    this.graph(ctx, 560, 20, 345, 245, 'Flux N·Φ (mWb)', this.hist, 'p', '#3a6fb8', v => this.fmt(v * 1000, 2), tw, this.tSim);
+    this.graph(ctx, 560, 285, 345, 255, 'Inductiespanning ε', this.hist, 'e', '#c8443a', v => this.uStr(v), tw, this.tSim);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(st.slow ? 'Slow motion (×0,12)' : 'Echte tijd', 14, 12);
+    if (this.mode === 'idle' && !this.dragging) ctx.fillText('Sleep de magneet', 14, 30);
+  }
+
+  drawGen(ctx) {
+    const st = this.state; const th = this.gTh; const cx = 250, cy = 270;
+    // poles
+    ctx.fillStyle = '#c8443a'; ctx.fillRect(40, cy - 110, 70, 220); ctx.fillStyle = '#3a6fb8'; ctx.fillRect(390, cy - 110, 70, 220);
+    ctx.fillStyle = '#fff'; ctx.font = "700 26px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', 75, cy); ctx.fillText('Z', 425, cy);
+    // field lines
+    ctx.strokeStyle = 'rgba(58,111,184,0.3)'; ctx.lineWidth = 1.2;
+    for (let i = -4; i <= 4; i++) { const y = cy + i * 24; ctx.beginPath(); ctx.moveTo(112, y); ctx.lineTo(388, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(388, y); ctx.lineTo(380, y - 4); ctx.lineTo(380, y + 4); ctx.closePath(); ctx.fillStyle = 'rgba(58,111,184,0.4)'; ctx.fill(); }
+    // coil: rectangle rotating about vertical axis; normal makes angle th with B (horizontal)
+    const half = 40 + Math.sqrt(st.gA) * 3.2, hh = 70 + Math.sqrt(st.gA) * 2;
+    const wproj = half * Math.sin(th); // breedte zichtbaar
+    const front = Math.cos(th) > 0;
+    ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 2 + Math.min(6, st.gN / 80);
+    ctx.fillStyle = 'rgba(232,170,90,' + (0.12 + 0.18 * Math.abs(Math.cos(th))) + ')';
+    ctx.beginPath(); ctx.rect(cx - Math.abs(wproj), cy - hh, 2 * Math.abs(wproj), 2 * hh); ctx.fill(); ctx.stroke();
+    // flux shading text
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, cy - hh - 30); ctx.lineTo(cx, cy + hh + 50); ctx.stroke(); ctx.setLineDash([]);
+    // normal vector (top view inset)
+    const ix = 250, iy = 485;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(ix - 80, iy - 55, 160, 100); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(ix - 80, iy - 55, 160, 100);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('bovenaanzicht', ix - 74, iy - 51);
+    // spoel als lijnstuk loodrecht op de normaal n = (cos th, sin th)
+    ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 4;
+    const nx = Math.cos(th), ny = Math.sin(th);
+    ctx.beginPath(); ctx.moveTo(ix - 34 * ny, iy + 5 + 34 * nx); ctx.lineTo(ix + 34 * ny, iy + 5 - 34 * nx); ctx.stroke();
+    this.arrowS(ctx, ix, iy + 5, nx * 30, -ny * 30, '#2f8a4e');
+    ctx.fillStyle = '#2f8a4e'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('n', ix + nx * 36 - 3, iy + 5 - ny * 36 - 6);
+    ctx.fillStyle = '#3a6fb8'; ctx.fillText('B →', ix + 44, iy + 26);
+    // collector + lamp
+    const e = st.gN * st.gB * st.gA * 1e-4 * 2 * Math.PI * st.gf * Math.sin(th);
+    const out = st.coll === 'ring' ? e : Math.abs(e);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(st.coll === 'ring' ? 'sleepringen → wisselspanning' : 'commutator → gelijkgerichte spanning', cx, cy + hh + 56);
+    // graphs
+    const N = st.gN, BA = st.gB * st.gA * 1e-4, w = 2 * Math.PI * st.gf, emax = N * BA * w;
+    const data = this.gHist.map(d => { const ee = N * BA * w * Math.sin(d.th); return { t: d.t, p: N * BA * Math.cos(d.th), e: st.coll === 'ring' ? ee : Math.abs(ee) }; });
+    this.graph(ctx, 520, 20, 385, 245, 'Flux N·Φ (mWb)', data, 'p', '#3a6fb8', v => this.fmt(v * 1000, 1), 4, this.gT, N * BA);
+    this.graph(ctx, 520, 285, 385, 255, 'Inductiespanning ε', data, 'e', '#c8443a', v => this.uStr(v), 4, this.gT, Math.max(emax, 1e-9));
+  }
+  arrowS(ctx, x, y, dx, dy, col) {
+    const L = Math.hypot(dx, dy); if (L < 2) return; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
+    const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 8 * Math.cos(a - 0.45), y + dy - 8 * Math.sin(a - 0.45)); ctx.lineTo(x + dx - 8 * Math.cos(a + 0.45), y + dy - 8 * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill();
+  }
+
+  drawTr(ctx) {
+    const st = this.state; const t = this.trT;
+    // core
+    const x0 = 70, y0 = 90, w = 360, h = 300, th = 46;
+    ctx.fillStyle = '#9aa0a6';
+    ctx.fillRect(x0, y0 + th, th, h - th); ctx.fillRect(x0 + w - th, y0 + th, th, h - th); ctx.fillRect(x0, y0 + h - th, w, th);
+    if (st.yoke) ctx.fillRect(x0, y0, w, th); else { ctx.strokeStyle = '#9aa0a6'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeRect(x0, y0 - 30, w, th); ctx.setLineDash([]); ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('juk verwijderd', x0 + w / 2, y0 - 34); }
+    // flux arrows circulating in core
+    const phi = st.dc ? (st.on ? 1 : 0) : -Math.cos(2 * Math.PI * t) * (st.on ? 1 : 0);
+    const amp = Math.abs(phi);
+    if (amp > 0.05) {
+      const dir = Math.sign(phi);
+      const path = st.yoke ? [[x0 + th / 2, y0 + h - th / 2], [x0 + th / 2, y0 + th / 2], [x0 + w - th / 2, y0 + th / 2], [x0 + w - th / 2, y0 + h - th / 2]] : [[x0 + th / 2, y0 + h - th / 2], [x0 + th / 2, y0 + th / 2]];
+      ctx.fillStyle = 'rgba(58,111,184,' + (0.25 + 0.6 * amp) + ')';
+      const segs = st.yoke ? [[0, 1], [1, 2], [2, 3], [3, 0]] : [[0, 1]];
+      for (const [a, b] of segs) {
+        const A = path[a], Bp = path[b % path.length];
+        for (let f = 0.25; f < 1; f += 0.5) {
+          const px = A[0] + (Bp[0] - A[0]) * f, py = A[1] + (Bp[1] - A[1]) * f;
+          let dx = Bp[0] - A[0], dy = Bp[1] - A[1]; const L = Math.hypot(dx, dy); dx /= L; dy /= L; dx *= dir; dy *= dir;
+          ctx.beginPath(); ctx.moveTo(px + dx * 12, py + dy * 12); ctx.lineTo(px - dx * 8 - dy * 8, py - dy * 8 + dx * 8); ctx.lineTo(px - dx * 8 + dy * 8, py - dy * 8 - dx * 8); ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+    // coils
+    const drawCoil = (x, n, col, label) => {
+      const turns = Math.round(4 + n / 120);
+      const top = y0 + th + 20, bot = y0 + h - th - 14;
+      ctx.strokeStyle = col; ctx.lineWidth = 3;
+      for (let i = 0; i < turns; i++) { const y = top + (bot - top) * (i + 0.5) / turns; ctx.beginPath(); ctx.ellipse(x, y, th / 2 + 10, 5, 0, 0, Math.PI); ctx.stroke(); }
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, x, y0 + h + 10);
+    };
+    drawCoil(x0 + th / 2, st.Np, '#c08848', 'Nₚ = ' + st.Np);
+    drawCoil(x0 + w - th / 2, st.Ns, '#c06048', 'Nₛ = ' + st.Ns);
+    // source & lamp
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x0 - 6, y0 + th + 24); ctx.lineTo(x0 - 40, y0 + th + 24); ctx.lineTo(x0 - 40, y0 + h - th - 18); ctx.lineTo(x0 - 6, y0 + h - th - 18); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x0 - 40, y0 + h / 2, 17, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(st.dc ? '=' : '~', x0 - 40, y0 + h / 2);
+    const xr = x0 + w + 6; ctx.beginPath(); ctx.moveTo(xr, y0 + th + 24); ctx.lineTo(xr + 34, y0 + th + 24); ctx.lineTo(xr + 34, y0 + h - th - 18); ctx.lineTo(xr, y0 + h - th - 18); ctx.stroke();
+    const Us = this.usEff(); const bright = st.dc ? Math.abs(this.trUs(t)) / 12 : Math.min(1, Us / 12);
+    if (bright > 0.02) { const g = ctx.createRadialGradient(xr + 34, y0 + h / 2, 3, xr + 34, y0 + h / 2, 40); g.addColorStop(0, 'rgba(255,214,90,' + Math.min(0.9, bright) + ')'); g.addColorStop(1, 'rgba(255,214,90,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(xr + 34, y0 + h / 2, 40, 0, 7); ctx.fill(); }
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(xr + 34, y0 + h / 2, 14, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xr + 24, y0 + h / 2 - 10); ctx.lineTo(xr + 44, y0 + h / 2 + 10); ctx.moveTo(xr + 44, y0 + h / 2 - 10); ctx.lineTo(xr + 24, y0 + h / 2 + 10); ctx.stroke();
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('belasting R', xr + 52, y0 + h / 2 - 6);
+    // graphs
+    const mx = Math.max(st.Up * Math.SQRT2, st.Up * Math.SQRT2 * st.Ns / st.Np);
+    this.graph(ctx, 560, 20, 345, 245, 'Primaire spanning uₚ', this.trHist, 'up', '#a9743a', v => this.fmt(v, 1) + ' V', 3, t, mx);
+    this.graph(ctx, 560, 285, 345, 255, 'Secundaire spanning uₛ', this.trHist, 'us', '#c8443a', v => this.fmt(v, 1) + ' V', 3, t, mx);
+  }
+  usEff() { const st = this.state; if (st.dc || !st.on) return 0; return st.Up * st.Ns / st.Np * this.trK(); }
+
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.12 150)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));
+    const N = st.gN, BA = st.gB * st.gA * 1e-4, w = 2 * Math.PI * st.gf, emax = N * BA * w;
+    const eNow = emax * Math.sin(this.gTh);
+    const Us = this.usEff(), Is = Us / st.Rl, Ip = Is * st.Ns / st.Np;
+    const I = (x) => x >= 1 ? this.fmt(x, 2) + ' A' : this.fmt(x * 1000, 1) + ' mA';
+    return {
+      stageRef: this.stageRef,
+      tabs: [['mag', 'Magneet & spoel'], ['gen', 'Generator'], ['tr', 'Transformator']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => this.setState({ tab: k }) })),
+      isMag: st.tab === 'mag', isGen: st.tab === 'gen', isTr: st.tab === 'tr',
+      // magneet
+      N: st.N, h0: st.h0, nm: st.nm,
+      NStr: st.N, hStr: this.fmt(st.h0 * 100, 0) + ' cm', nmStr: st.nm === 1 ? '1 magneet' : '2 magneten',
+      onN: e => this.setState({ N: +e.target.value }), onH: e => { const h = +e.target.value; this.setState({ h0: h }); if (this.mode !== 'fall') this.z = Math.min(this.zMax(), h + this.coilL / 2 + this.magL * st.nm / 2); },
+      onNm: e => this.setState({ nm: +e.target.value }),
+      onDrop: () => { this.z = Math.min(this.zMax(), st.h0 + this.coilL / 2 + this.magL * st.nm / 2); this.vz = 0; this.mode = 'fall'; this.peak = 0; },
+      onFlip: () => { this.flip = !this.flip; this.forceUpdate(); },
+      meters: [['led', "LED's (antiparallel)"], ['mv', 'Multimeter (mV)']].map(([k, n]) => ({ name: n, style: chip(st.meter === k), onClick: () => this.setState({ meter: k }) })),
+      magToggles: tog([['slow', 'Slow motion'], ['showLenz', 'Wet van Lenz'], ['showField', 'Veldlijnen']]),
+      vStr: this.fmt(Math.abs(this.vz), 2) + ' m/s', phiStr: this.fmt(st.N * this.fluxAt(this.z) * 1000, 2) + ' mWb', emfStr: this.uStr(this.emf), peakStr: this.uStr(this.peak),
+      // generator
+      gN: st.gN, gB: st.gB, gA: st.gA, gf: st.gf,
+      gNStr: st.gN, gBStr: this.fmt(st.gB, 2) + ' T', gAStr: st.gA + ' cm²', gfStr: this.fmt(st.gf, 1) + ' Hz',
+      onGN: e => this.setState({ gN: +e.target.value }), onGB: e => this.setState({ gB: +e.target.value }), onGA: e => this.setState({ gA: +e.target.value }), onGf: e => this.setState({ gf: +e.target.value }),
+      collectors: [['ring', 'Sleepringen'], ['comm', 'Commutator']].map(([k, n]) => ({ name: n, style: chip(st.coll === k), onClick: () => this.setState({ coll: k }) })),
+      onPlay: () => this.setState({ gRun: !st.gRun }), playLabel: st.gRun ? 'Pauze' : 'Draaien',
+      gwStr: this.fmt(w, 2) + ' rad/s', gPhiStr: this.fmt(N * BA * 1000, 1) + ' mWb', gEmaxStr: this.uStr(emax), gNowStr: this.uStr(st.coll === 'ring' ? eNow : Math.abs(eNow)),
+      // transformator
+      Np: st.Np, Ns: st.Ns, Up: st.Up, Rl: st.Rl,
+      NpStr: st.Np, NsStr: st.Ns, UpStr: this.fmt(st.Up, 1) + ' V', RlStr: st.Rl + ' Ω',
+      onNp: e => this.setState({ Np: +e.target.value }), onNs: e => this.setState({ Ns: +e.target.value }), onUp: e => this.setState({ Up: +e.target.value }), onRl: e => this.setState({ Rl: +e.target.value }),
+      trToggles: [['yoke', 'Juk op de kern'], ['dc', 'Gelijkspanning']].map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => { this.setState({ [k]: !st[k] }); this.dcT = 999; } })),
+      onSwitch: () => { const on = !st.on; this.setState({ on }); this.dcT = 0; this.dcSign = on ? 1 : -1; },
+      switchLabel: st.on ? 'Bron uitschakelen' : 'Bron inschakelen',
+      ratioStr: this.fmt(st.Ns / st.Np, 2), UsStr: this.fmt(Us, 2) + ' V', uRatioStr: st.on && !st.dc ? this.fmt(Us / st.Up, 2) : '—',
+      IsStr: I(Is), IpStr: I(Ip), PStr: this.fmt(Us * Is, 2) + ' W',
+    };
+  }
+}
+</script>
+</body>
+</html>

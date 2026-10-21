@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .lbl{font-size:14px;font-weight:500}
+  .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:5px}
+  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .sl{height:28px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Massa-veersysteem</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:none">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2">
+          <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">{{ resetLabel }}</button>
+      </div>
+      <div class="card">
+        <div class="row"><span class="lbl">Massa m</span><span class="val">{{ mStr }}</span></div>
+        <div class="sl"><input type="range" min="0.05" max="1" step="0.05" value="{{ m }}" onInput="{{ onM }}"></div>
+        <div class="row"><span class="lbl">Veerconstante k</span><span class="val">{{ kStr }}</span></div>
+        <div class="sl"><input type="range" min="5" max="60" step="1" value="{{ k }}" onInput="{{ onK }}"></div>
+        <div class="row"><span class="lbl">Demping b</span><span class="val">{{ bStr }}</span></div>
+        <div class="sl"><input type="range" min="0" max="2" step="0.02" value="{{ b }}" onInput="{{ onB }}"></div>
+        <sc-if value="{{ isForced }}" hint-placeholder-val="{{ false }}">
+          <div class="row"><span class="lbl">Aandrijffrequentie f<sub>a</sub></span><span class="val">{{ fdStr }}</span></div>
+          <div class="sl"><input type="range" min="0.2" max="4" step="0.02" value="{{ fd }}" onInput="{{ onFd }}"></div>
+          <button onClick="{{ onToRes }}" style="min-height:32px;font-size:12.5px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer">Zet f<sub>a</sub> op de eigenfrequentie</button>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <sc-for list="{{ toggles }}" as="tg" hint-placeholder-count="3">
+            <button onClick="{{ tg.onClick }}" style="{{ tg.style }}">{{ tg.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="out">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <div class="row"><span>{{ r.n }}</span><span>{{ r.v }}</span></div>
+        </sc-for>
+      </div>
+      <div class="note">
+        <div class="mono">f<sub>0</sub> = (1/2&pi;)&middot;&radic;(k/m) &nbsp;&nbsp; T = 2&pi;&middot;&radic;(m/k)</div>
+        <div style="margin-top:4px">{{ noteText }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 920; H = 560;
+  state = { tab: 'free', m: 0.2, k: 20, b: 0, fd: 1.2, showGraph: true, showEn: true, showF: true };
+  x = 0.08; v = 0; t = 0; running = false; hist = []; phiD = 0;
+  cross = []; Tmeas = null; dragging = false; maxAmp = 0; ampLog = [];
+  ppm = 1000; // px per m
+  topY = 40; cx = 170;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown); window.addEventListener('pointermove', this.onMove); window.addEventListener('pointerup', this.onUp);
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) { const c = this.stageRef.current; const r = c.getBoundingClientRect(); const s = Math.min(r.width / this.W, r.height / this.H); return { x: (e.clientX - r.left - (r.width - this.W * s) / 2) / s, y: (e.clientY - r.top - (r.height - this.H * s) / 2) / s }; }
+  eqY() { return this.topY + 130 + 160 * (1 - Math.exp(-(this.state.m * 9.81 / this.state.k) / 0.25)); } // evenwichtsstand (getekend, niet op schaal)
+  massY() { return this.eqY() + Math.max(-0.13, Math.min(0.13, this.x)) * this.ppm * 1.5; }
+  onDown = (e) => { if (this.state.tab !== 'free') return; const p = this.toPx(e); if (Math.abs(p.x - this.cx) < 40 && Math.abs(p.y - this.massY()) < 34) { this.dragging = true; this.running = false; e.preventDefault(); } };
+  onMove = (e) => { if (!this.dragging) return; const p = this.toPx(e); this.x = Math.max(-0.1, Math.min(0.1, (p.y - this.eqY()) / (this.ppm * 1.5))); this.v = 0; };
+  onUp = () => { if (this.dragging) { this.dragging = false; this.start(); } };
+  start() { this.running = true; this.t = 0; this.hist = []; this.cross = []; this.Tmeas = null; this.phiD = 0; this.forceUpdate(); }
+  w0() { return Math.sqrt(this.state.k / this.state.m); }
+  ampTheory(fd) { const st = this.state, w = 2 * Math.PI * fd, F0 = 0.15; return F0 / Math.sqrt((st.k - st.m * w * w) ** 2 + (st.b * w) ** 2); }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const st = this.state;
+    if (this.running) {
+      const n = 20, h = dt / n;
+      for (let i = 0; i < n; i++) {
+        const F = st.tab === 'forced' ? 0.15 * Math.cos(this.phiD) : 0;
+        const a = (-st.k * this.x - st.b * this.v + F) / st.m;
+        this.v += a * h; const xo = this.x; this.x += this.v * h; this.t += h; this.phiD += 2 * Math.PI * st.fd * h;
+        if (xo < 0 && this.x >= 0) { this.cross.push(this.t); if (this.cross.length > 6) this.cross.shift(); if (this.cross.length >= 2) this.Tmeas = (this.cross[this.cross.length - 1] - this.cross[0]) / (this.cross.length - 1); }
+      }
+      this.hist.push({ t: this.t, x: this.x, v: this.v }); while (this.hist.length && this.hist[0].t < this.t - 6) this.hist.shift();
+      if (st.tab === 'forced') { const recent = this.hist.filter(p => p.t > this.t - Math.max(2, 2 / st.fd)); this.maxAmp = recent.reduce((m, p) => Math.max(m, Math.abs(p.x)), 0); }
+    }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.2) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  arrow(ctx, x, y, dy, col, label) { if (Math.abs(dy) < 3) return; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + dy); ctx.stroke(); const s = Math.sign(dy); ctx.beginPath(); ctx.moveTo(x, y + dy); ctx.lineTo(x - 6, y + dy - s * 10); ctx.lineTo(x + 6, y + dy - s * 10); ctx.closePath(); ctx.fill(); ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + 9, y + dy - s * 6); }
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const st = this.state, cx = this.cx;
+    // ophanging (beweegt bij gedwongen trilling)
+    const drv = st.tab === 'forced' ? 12 * Math.cos(this.phiD) : 0;
+    const top = this.topY + drv;
+    ctx.fillStyle = '#6f685c'; ctx.fillRect(cx - 70, top - 14, 140, 10);
+    if (st.tab === 'forced') { ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('aandrijving ↕', cx + 78, top - 9); }
+    const my = this.massY(), mh = 26 + 26 * Math.sqrt(st.m);
+    // evenwichtslijn
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 90, this.eqY()); ctx.lineTo(cx + 110, this.eqY()); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('evenwicht', cx + 60, this.eqY() - 2);
+    // veer
+    const y0 = top - 4, y1 = my - mh / 2, nc = 16, wv = 18 + st.k / 6;
+    ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, y0); ctx.lineTo(cx, y0 + 10);
+    for (let i = 0; i <= nc; i++) { const y = y0 + 10 + (y1 - y0 - 20) * i / nc; ctx.lineTo(cx + (i === 0 || i === nc ? 0 : (i % 2 ? wv : -wv)), y); }
+    ctx.lineTo(cx, y1); ctx.stroke();
+    // massa
+    ctx.fillStyle = '#3a6fb8'; ctx.fillRect(cx - 30, my - mh / 2, 60, mh); ctx.strokeStyle = this.dragging ? '#2a2723' : '#2a4f86'; ctx.lineWidth = 2; ctx.strokeRect(cx - 30, my - mh / 2, 60, mh);
+    ctx.fillStyle = '#fff'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(Math.round(st.m * 1000) + ' g', cx, my);
+    // liniaal
+    ctx.strokeStyle = '#cfc7b6'; ctx.lineWidth = 1; ctx.fillStyle = '#8c8576'; ctx.font = "500 10px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
+    for (let d = -10; d <= 10; d += 2) { const y = this.eqY() + d / 100 * this.ppm * 1.5; ctx.beginPath(); ctx.moveTo(cx - 60, y); ctx.lineTo(cx - 52, y); ctx.stroke(); if (d % 4 === 0) ctx.fillText((d > 0 ? '+' : '') + d + ' cm', cx - 64, y); }
+    // terugroepende kracht
+    if (st.showF) this.arrow(ctx, cx + 42, my, -st.k * this.x * 120, '#2f8a4e', 'F = −k·u');
+    if (!this.running && st.tab === 'free' && !this.dragging) { ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Sleep de massa omlaag of omhoog en laat los', cx, 525); }
+    // energie
+    if (st.showEn) {
+      const Ek = 0.5 * st.m * this.v * this.v, Ep = 0.5 * st.k * this.x * this.x;
+      const Em = Math.max(0.5 * st.k * 0.1 * 0.1 * 0.3, Ek + Ep, 1e-6) * 1.1; const bx = 300, by = 500, bh = 200;
+      const bars = [['Eₖ', Ek, '#d9822b'], ['Eₚ', Ep, '#3a6fb8'], ['E', Ek + Ep, '#2a2723']];
+      const sc = bh / (this._emax = Math.max(this._emax || 0, Em));
+      bars.forEach(([n, v, col], i) => { ctx.fillStyle = col; ctx.fillRect(bx + i * 34, by - v * sc, 24, v * sc); ctx.fillStyle = '#4f4a42'; ctx.font = "600 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(n, bx + 12 + i * 34, by + 4); });
+      ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(bx - 6, by); ctx.lineTo(bx + 100, by); ctx.stroke();
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('energie (trilling)', bx - 6, by - bh - 8);
+    }
+    // grafieken
+    const gx = 420, gw = 485;
+    if (st.tab === 'free' || st.showGraph) {
+      const gy = 20, gh = st.tab === 'forced' ? 235 : 520;
+      ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, gy, gw, gh); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+      const ym = gy + gh / 2, sc = (gh / 2 - 20) / 0.1;
+      ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(gx, ym); ctx.lineTo(gx + gw, ym); ctx.stroke();
+      ctx.strokeStyle = '#ece6da'; for (let i = 1; i < 6; i++) { const X = gx + i / 6 * gw; ctx.beginPath(); ctx.moveTo(X, gy); ctx.lineTo(X, gy + gh); ctx.stroke(); }
+      if (st.tab === 'free' && st.b > 0 && this.hist.length) { // omhullende
+        const A0 = Math.abs(this.hist[0].x) || 0.08, g = st.b / (2 * st.m); ctx.strokeStyle = 'rgba(42,39,35,0.35)'; ctx.setLineDash([4, 4]);
+        for (const sg of [1, -1]) { ctx.beginPath(); for (let i = 0; i <= 100; i++) { const tt = this.t - 6 + i / 100 * 6; if (tt < 0) continue; const X = gx + gw - (this.t - tt) / 6 * gw; const Y = ym - sg * A0 * Math.exp(-g * tt) * sc; ctx.lineTo(X, Y); } ctx.stroke(); } ctx.setLineDash([]);
+      }
+      ctx.save(); ctx.beginPath(); ctx.rect(gx, gy, gw, gh); ctx.clip();
+      ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
+      this.hist.forEach((p, i) => { const X = gx + gw - (this.t - p.t) / 6 * gw, Y = ym + p.x * sc; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Uitwijking u(t)  (omlaag = getekend omlaag)', gx + 8, gy + 6);
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('6 s venster, lijntjes per seconde', gx + gw - 6, gy + gh - 4);
+    }
+    if (st.tab === 'forced') {
+      const gy = st.showGraph ? 275 : 20, gh = st.showGraph ? 265 : 520;
+      ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, gy, gw, gh); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+      const fmax = 4; let amax = 0; for (let i = 1; i <= 200; i++) amax = Math.max(amax, this.ampTheory(i / 200 * fmax)); amax = Math.min(Math.max(amax, 0.02), 0.5) * 1.1;
+      const X = f => gx + 30 + f / fmax * (gw - 45), Y = a => gy + gh - 28 - Math.min(a, amax) / amax * (gh - 60);
+      ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(gx + 30, gy + 26); ctx.lineTo(gx + 30, gy + gh - 28); ctx.lineTo(gx + gw - 10, gy + gh - 28); ctx.stroke();
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      for (let f = 0; f <= fmax; f++) ctx.fillText(f + ' Hz', X(f), gy + gh - 24);
+      const f0 = this.w0() / (2 * Math.PI);
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = '#c8443a'; ctx.beginPath(); ctx.moveTo(X(f0), gy + 26); ctx.lineTo(X(f0), gy + gh - 28); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#c8443a'; ctx.textAlign = 'left'; ctx.fillText('f₀', X(f0) + 4, gy + 28);
+      ctx.strokeStyle = '#2a8a95'; ctx.lineWidth = 2.2; ctx.beginPath();
+      for (let i = 1; i <= 300; i++) { const f = i / 300 * fmax; const p = [X(f), Y(this.ampTheory(f))]; i > 1 ? ctx.lineTo(...p) : ctx.moveTo(...p); } ctx.stroke();
+      ctx.fillStyle = '#2a8a95'; ctx.beginPath(); ctx.arc(X(st.fd), Y(this.ampTheory(st.fd)), 6, 0, 7); ctx.fill();
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Resonantiekromme: amplitude in functie van fₐ', gx + 8, gy + 6);
+      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('fₐ →', gx + gw - 8, gy + gh - 30);
+    }
+  }
+  renderVals() {
+    const st = this.state; const w0 = this.w0(), f0 = w0 / (2 * Math.PI), T0 = 1 / f0;
+    const accent = 'oklch(0.5 0.12 195)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const forced = st.tab === 'forced';
+    const rows = [
+      { n: 'Eigenfrequentie f₀ = √(k/m)/2π', v: this.fmt(f0, 3) + ' Hz' },
+      { n: 'Periode T = 2π√(m/k)', v: this.fmt(T0, 3) + ' s' },
+      { n: 'Gemeten periode (nuldoorgangen)', v: this.Tmeas ? this.fmt(this.Tmeas, 3) + ' s' : '—' },
+      { n: 'Statische uitrekking m·g/k', v: this.fmt(st.m * 9.81 / st.k * 100, 1) + ' cm' },
+    ];
+    if (forced) {
+      rows.push({ n: 'Verhouding fₐ / f₀', v: this.fmt(st.fd / f0, 2) });
+      rows.push({ n: 'Amplitude (theorie, stationair)', v: this.fmt(Math.min(this.ampTheory(st.fd), 9.99) * 100, 1) + ' cm' });
+      rows.push({ n: 'Amplitude (gemeten)', v: this.fmt(this.maxAmp * 100, 1) + ' cm' });
+    } else {
+      rows.push({ n: 'Uitwijking nu', v: this.fmt(this.x * 100, 1) + ' cm' });
+      rows.push({ n: 'Snelheid nu', v: this.fmt(this.v, 2) + ' m/s' });
+    }
+    return {
+      stageRef: this.stageRef,
+      tabs: [['free', 'Vrije trilling'], ['forced', 'Gedwongen trilling']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k, b: k === 'forced' ? Math.max(st.b, 0.3) : st.b }); this.x = k === 'forced' ? 0 : 0.08; this.v = 0; if (k === 'forced') this.start(); else { this.running = false; this.hist = []; } this._emax = 0; } })),
+      isForced: forced,
+      onPlay: () => { if (!this.running && this.t === 0) this.start(); else { this.running = !this.running; this.forceUpdate(); } },
+      playLabel: this.running ? 'Pauze' : (this.t > 0 ? 'Verder' : 'Loslaten'),
+      onReset: () => { this.x = forced ? 0 : 0.08; this.v = 0; this.t = 0; this.hist = []; this.cross = []; this.Tmeas = null; this.running = forced; this.phiD = 0; this._emax = 0; this.forceUpdate(); },
+      resetLabel: forced ? 'Opnieuw' : 'Reset',
+      m: st.m, k: st.k, b: st.b, fd: st.fd,
+      mStr: Math.round(st.m * 1000) + ' g', kStr: st.k + ' N/m', bStr: this.fmt(st.b, 2) + ' kg/s', fdStr: this.fmt(st.fd, 2) + ' Hz',
+      onM: e => { this.setState({ m: +e.target.value }); this.cross = []; this.Tmeas = null; this._emax = 0; },
+      onK: e => { this.setState({ k: +e.target.value }); this.cross = []; this.Tmeas = null; this._emax = 0; },
+      onB: e => this.setState({ b: +e.target.value }),
+      onFd: e => this.setState({ fd: +e.target.value }),
+      onToRes: () => this.setState({ fd: Math.round(f0 * 50) / 50 }),
+      toggles: (forced ? [['showGraph', 'u(t)-grafiek'], ['showF', 'Kracht'], ['showEn', 'Energie']] : [['showF', 'Kracht'], ['showEn', 'Energie']]).map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      rows,
+      noteText: forced
+        ? 'De ophanging wordt periodiek op en neer bewogen. Na een inschakelverschijnsel trilt de massa met de frequentie van de aandrijving. Komt fₐ in de buurt van de eigenfrequentie f₀, dan wordt de amplitude heel groot: resonantie. Meer demping maakt de piek lager en breder.'
+        : 'Zonder demping blijft de totale energie constant en wisselt ze tussen kinetische en elastische energie. Met demping neemt de amplitude exponentieel af (stippellijn) en gaat energie verloren als warmte. De periode hangt af van m en k, niet van de amplitude.',
+    };
+  }
+}
+</script>
+</body>
+</html>
