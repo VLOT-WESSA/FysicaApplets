@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
+  .sub{font-size:12px;color:#8c8576}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  table.tt{border-collapse:collapse;font-size:12.5px;width:100%}
+  table.tt td,table.tt th{padding:2px 5px;text-align:center;font-family:'IBM Plex Mono',monospace}
+  table.tt th{font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  .ttwrap{max-height:300px;overflow:auto}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:80vh}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Logische poorten en flipflops</h1>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f7f5f0;border:1px solid #e7e1d5;border-radius:14px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" tabindex="0" onContextMenu="{{ onCtx }}" style="width:100%;height:100%;display:block;touch-action:none;outline:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div class="card">
+        <div class="row"><span class="hd">Bewerken</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c">{{ zoomStr }}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <button onClick="{{ onUndo }}" style="{{ undoStyle }}" title="Ctrl+Z">&#8630; Terug</button>
+          <button onClick="{{ onRedo }}" style="{{ redoStyle }}" title="Ctrl+Y">&#8631; Opnieuw</button>
+          <button onClick="{{ onSelAll }}" style="{{ plainStyle }}" title="Ctrl+A">Alles</button>
+          <button onClick="{{ onFit }}" style="{{ plainStyle }}">Passend</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <button onClick="{{ onZoomOut }}" style="{{ plainStyle }}">&minus; Uitzoomen</button>
+          <button onClick="{{ onZoom100 }}" style="{{ plainStyle }}">100 %</button>
+          <button onClick="{{ onZoomIn }}" style="{{ plainStyle }}">+ Inzoomen</button>
+        </div>
+        <div class="sub" style="line-height:1.45">Sleep over een leeg stuk om een gebied te selecteren; Shift+klik voegt toe. Scrollwiel = zoomen; slepen met de rechtermuisknop of met spatie ingedrukt = verschuiven.</div>
+      </div>
+      <div class="card">
+        <div class="hd">Onderdelen toevoegen</div>
+        <div class="chips">
+          <sc-for list="{{ ioBtns }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div class="row" style="margin-top:4px"><span class="sub">Poorten met</span>
+          <span class="chips"><sc-for list="{{ nBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button></sc-for></span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <sc-for list="{{ gateBtns }}" as="b" hint-placeholder-count="7">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div class="sub" style="margin-top:4px">Flipflops (D en JK op de stijgende flank)</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <sc-for list="{{ ffBtns }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div class="sub" style="margin-top:2px;line-height:1.45">Sleep van een uitgang (rechts) naar een ingang (links) om een draad te trekken. Klik op een ingang A&ndash;E om ze 0 of 1 te maken. Selecteer en druk op Delete om te verwijderen.</div>
+      </div>
+
+      <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+        <div class="card">
+          <div class="row"><span class="hd">Selectie</span><span style="font-size:13px;font-weight:600">{{ selName }}</span></div>
+          <sc-if value="{{ selIsOut }}" hint-placeholder-val="{{ false }}">
+            <div class="sub">Naam van de uitgang</div>
+            <input type="text" value="{{ selLabel }}" onInput="{{ onLabel }}" maxlength="6" style="padding:7px 9px;border:1px solid #ddd6c8;border-radius:8px;font-size:14px;font-family:'IBM Plex Mono',monospace">
+          </sc-if>
+          <button onClick="{{ onDelete }}" style="min-height:34px;font-size:13px;font-weight:600;border:1px solid #e3b9ae;border-radius:9px;background:#fbeeea;color:#8a3b2c;cursor:pointer">Verwijderen</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasClk }}" hint-placeholder-val="{{ false }}">
+      <div class="card">
+        <div class="hd">Klok</div>
+        <div class="chips">
+          <sc-for list="{{ clkModes }}" as="b" hint-placeholder-count="2">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+          <button onClick="{{ onPulse }}" style="{{ pulseStyle }}">Klokpuls &#8593;&#8595;</button>
+        </div>
+        <sc-if value="{{ clkAuto }}" hint-placeholder-val="{{ true }}">
+          <div class="row"><span style="font-size:13.5px">Frequentie</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">{{ freqStr }}</span></div>
+          <input type="range" min="0.25" max="4" step="0.25" value="{{ freq }}" onInput="{{ onFreq }}">
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <div class="card">
+        <div class="hd">Weergave</div>
+        <div class="row"><span class="sub">Symbolen</span>
+          <span class="chips"><sc-for list="{{ styleBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button></sc-for></span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <sc-for list="{{ viewBtns }}" as="b" hint-placeholder-count="2">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">{{ tableTitle }}</div>
+        <sc-if value="{{ tableNote }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px;color:#6f685c;line-height:1.45">{{ tableNote }}</div>
+        </sc-if>
+        <sc-if value="{{ ttMsg }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12.5px;color:#6f685c;line-height:1.5">{{ ttMsg }}</div>
+        </sc-if>
+        <sc-if value="{{ hasTT }}" hint-placeholder-val="{{ false }}">
+          <div class="ttwrap">
+            <sc-raw-table class="tt">
+              <sc-raw-tr><sc-for list="{{ ttHead }}" as="h" hint-placeholder-count="3"><sc-raw-th style="{{ h.style }}">{{ h.t }}</sc-raw-th></sc-for></sc-raw-tr>
+              <sc-for list="{{ ttRows }}" as="r" hint-placeholder-count="4">
+                <sc-raw-tr style="{{ r.style }}"><sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="3"><sc-raw-td style="{{ c.style }}">{{ c.t }}</sc-raw-td></sc-for></sc-raw-tr>
+              </sc-for>
+            </sc-raw-table>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="card">
+        <div class="hd">Voorbeelden en bestand</div>
+        <div class="chips">
+          <sc-for list="{{ examples }}" as="b" hint-placeholder-count="5">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px">
+          <button onClick="{{ onSave }}" style="{{ plainStyle }}">Opslaan</button>
+          <button onClick="{{ onOpen }}" style="{{ plainStyle }}">Openen</button>
+          <button onClick="{{ onClear }}" style="{{ plainStyle }}">Alles wissen</button>
+        </div>
+        <input type="file" accept=".json,application/json" ref="{{ fileRef }}" onChange="{{ onFile }}" style="display:none">
+        <sc-if value="{{ fileMsg }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12.5px;color:#8a3b2c">{{ fileMsg }}</div>
+        </sc-if>
+      </div>
+
+      <div class="note">
+        <b>RS-flipflop</b>: S = 1 zet Q op 1, R = 1 zet Q op 0, S = R = 0 onthoudt; S = R = 1 is verboden. <b>D-flipflop</b>: bij de stijgende klokflank wordt Q = D. <b>JK-flipflop</b>: bij de stijgende flank 00 = onthouden, 10 = set, 01 = reset, 11 = omklappen (toggle). Een open ingang telt als 0.
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  fileRef = React.createRef();
+  W = 1000; H = 620; DIAG = 170;
+  LETTERS = ['A', 'B', 'C', 'D', 'E'];
+  OUTNAMES = ['X', 'Y', 'Z', 'U', 'V', 'W'];
+  GATES = ['AND', 'OR', 'NAND', 'NOR', 'XOR', 'XNOR', 'NOT'];
+  state = { nIn: 2, style: 'ansi', showDiag: false, showVals: false, clkAuto: true, freq: 1, sel: null, fileMsg: '', rev: 0 };
+  comps = []; wires = []; nextId = 1;
+  drag = null; wireDrag = null; hover = null; band = null; pan = null; spaceDown = false;
+  view = { s: 1, ox: 0, oy: 0 }; // wereld -> scherm: X = (x - ox) * s
+  undoStack = []; redoStack = [];
+  clkT = 0; manualClk = 0; pulseT = 0;
+  hist = []; histT = 0;
+
+  componentDidMount() {
+    this.setupCanvas();
+    const c = this.stageRef.current;
+    c.addEventListener('pointerdown', this.onDown);
+    window.addEventListener('pointermove', this.onMove);
+    window.addEventListener('pointerup', this.onUp);
+    window.addEventListener('keydown', this.onKey);
+    window.addEventListener('keyup', this.onKeyUp);
+    c.addEventListener('wheel', this.onWheel, { passive: false });
+    this._rz = () => { this.setupCanvas(); this.draw(); };
+    this._acStop = AppletCore.observe(c && c.parentElement, this._rz);
+    this.loadExample('halve');
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf); if (this._acStop) this._acStop();
+    const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown);
+    window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); window.removeEventListener('keydown', this.onKey); window.removeEventListener('keyup', this.onKeyUp);
+    if (c) c.removeEventListener('wheel', this.onWheel);
+  }
+  toWorld(p) { const v = this.view; return { x: p.x / v.s + v.ox, y: p.y / v.s + v.oy }; }
+  // ---------- ongedaan maken ----------
+  snap() { return JSON.stringify({ c: this.comps.map(c => ({ id: c.id, type: c.type, x: c.x, y: c.y, n: c.n, label: c.label, val: c.val, q: c.q })), w: this.wires, n: this.nextId }); }
+  restore(str) {
+    const d = JSON.parse(str);
+    this.comps = d.c.map(o => Object.assign({ out: [0, 1], prevClk: null }, o)); this.wires = d.w; this.nextId = d.n;
+    this.setState({ sel: null });
+  }
+  pushUndo(str) { this.undoStack.push(str || this.snap()); if (this.undoStack.length > 100) this.undoStack.shift(); this.redoStack = []; }
+  undo() { if (!this.undoStack.length) return; this.redoStack.push(this.snap()); this.restore(this.undoStack.pop()); }
+  redo() { if (!this.redoStack.length) return; this.undoStack.push(this.snap()); this.restore(this.redoStack.pop()); }
+  // ---------- zoom ----------
+  zoomAt(f, px, py) {
+    const v = this.view, ns = Math.max(0.3, Math.min(3, v.s * f)); if (px == null) { px = this.W / 2; py = this.edH() / 2; }
+    const w = this.toWorld({ x: px, y: py }); v.s = ns; v.ox = w.x - px / ns; v.oy = w.y - py / ns; this.bump();
+  }
+  fit() {
+    if (!this.comps.length) { this.view = { s: 1, ox: 0, oy: 0 }; this.bump(); return; }
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (const c of this.comps) { const z = this.size(c); x0 = Math.min(x0, c.x - 30); y0 = Math.min(y0, c.y - 20); x1 = Math.max(x1, c.x + z.w + (c.type === 'OUT' ? 90 : 30)); y1 = Math.max(y1, c.y + z.h + 30); }
+    const eh = this.edH(), s = Math.max(0.3, Math.min(1.6, Math.min(this.W / (x1 - x0), eh / (y1 - y0))));
+    this.view = { s, ox: (x0 + x1) / 2 - this.W / (2 * s), oy: (y0 + y1) / 2 - eh / (2 * s) }; this.bump();
+  }
+  onWheel = (e) => { const p = this.toPx(e); if (p.y > this.edH()) return; e.preventDefault(); this.zoomAt(e.deltaY < 0 ? 1.12 : 1 / 1.12, p.x, p.y); };
+  selIds() { const s = this.state.sel; return s && s.kind === 'comps' ? s.ids : []; }
+  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  toPx(e) { const c = this.stageRef.current; const r = c.getBoundingClientRect(); const s = Math.min(r.width / this.W, r.height / this.H); return { x: (e.clientX - r.left - (r.width - this.W * s) / 2) / s, y: (e.clientY - r.top - (r.height - this.H * s) / 2) / s }; }
+  edH() { return this.state.showDiag ? this.H - this.DIAG - 10 : this.H; }
+  bump() { this.setState({ rev: this.state.rev + 1 }); }
+
+  // ---------- onderdelen ----------
+  size(c) {
+    if (c.type === 'IN') return { w: 54, h: 34 };
+    if (c.type === 'CLK') return { w: 64, h: 34 };
+    if (c.type === 'OUT') return { w: 40, h: 40 };
+    if (c.type === 'NOT') return { w: 60, h: 40 };
+    if (c.type === 'RS' || c.type === 'D' || c.type === 'JK') return { w: 84, h: 90 };
+    return { w: 70, h: c.n === 3 ? 64 : 50 };
+  }
+  pins(c) {
+    const { w, h } = this.size(c), x = c.x, y = c.y;
+    const I = (dy, name) => ({ x: x - 12, y: y + dy, name }), O = (dy, name) => ({ x: x + w + 12, y: y + dy, name });
+    if (c.type === 'IN' || c.type === 'CLK') return { ins: [], outs: [O(h / 2, '')] };
+    if (c.type === 'OUT') return { ins: [I(h / 2, '')], outs: [] };
+    if (c.type === 'NOT') return { ins: [I(h / 2, '')], outs: [O(h / 2, '')] };
+    if (c.type === 'RS') return { ins: [I(25, 'S'), I(65, 'R')], outs: [O(25, 'Q'), O(65, 'Q̄')] };
+    if (c.type === 'D') return { ins: [I(25, 'D'), I(65, 'CLK')], outs: [O(25, 'Q'), O(65, 'Q̄')] };
+    if (c.type === 'JK') return { ins: [I(20, 'J'), I(45, 'CLK'), I(70, 'K')], outs: [O(25, 'Q'), O(65, 'Q̄')] };
+    const ys = c.n === 3 ? [12, 32, 52] : [14, 36];
+    return { ins: ys.map(v => I(v, '')), outs: [O(h / 2, '')] };
+  }
+  add(type, x, y, extra) {
+    const c = Object.assign({ id: this.nextId++, type, x, y, n: this.GATES.includes(type) && type !== 'NOT' ? this.state.nIn : 0, out: [0, 1], q: 0, prevClk: null, val: 0, label: '' }, extra || {});
+    if (type === 'OUT' && !c.label) { const used = this.comps.filter(k => k.type === 'OUT').map(k => k.label); c.label = this.OUTNAMES.find(n => !used.includes(n)) || ('X' + c.id); }
+    if (type === 'IN' && !c.label) { const used = this.comps.filter(k => k.type === 'IN').map(k => k.label); c.label = this.LETTERS.find(n => !used.includes(n)); if (!c.label) return null; }
+    if (type === 'CLK') c.label = 'CLK';
+    this.comps.push(c); return c;
+  }
+  spot() { // vrije plaats voor een nieuw onderdeel
+    const k = this.comps.length % 8; return { x: 300 + (k % 4) * 30, y: 60 + k * 26 };
+  }
+  addFromPalette(type) {
+    const v = this.view, vw = this.W / v.s, vh = this.edH() / v.s, sn = (q) => Math.round(q / 10) * 10;
+    const p = this.spot(); let x = v.ox + p.x / v.s, y = v.oy + p.y / v.s;
+    if (type === 'IN') { const ins = this.comps.filter(c => c.type === 'IN').length; x = v.ox + 30 / v.s; y = v.oy + (40 + ins * 70) / v.s; }
+    if (type === 'OUT') { const outs = this.comps.filter(c => c.type === 'OUT').length; x = v.ox + vw - 100 / v.s; y = v.oy + (40 + outs * 70) / v.s; }
+    if (type === 'CLK') { if (this.comps.some(c => c.type === 'CLK')) { this.setState({ fileMsg: 'Er is al een klok; verbind ze met meerdere flipflops.' }); return; } x = v.ox + 30 / v.s; y = v.oy + vh - 60 / v.s; }
+    if (type === 'IN' && this.comps.filter(c => c.type === 'IN').length >= 5) { this.setState({ fileMsg: 'Er zijn maximaal vijf ingangen (A tot E).' }); return; }
+    this.pushUndo();
+    const c = this.add(type, sn(x), sn(Math.min(y, v.oy + vh - 100 / v.s)));
+    this.setState({ sel: { kind: 'comps', ids: [c.id] }, fileMsg: '' });
+  }
+  byId(id) { return this.comps.find(c => c.id === id); }
+  wireTo(cid, pin) { return this.wires.find(w => w.to.c === cid && w.to.p === pin); }
+  connect(fc, fp, tc, tp) { this.wires = this.wires.filter(w => !(w.to.c === tc && w.to.p === tp)); this.wires.push({ from: { c: fc, p: fp }, to: { c: tc, p: tp } }); }
+  removeSel() {
+    const s = this.state.sel; if (!s) return;
+    this.pushUndo();
+    if (s.kind === 'comps') { const ids = s.ids; this.comps = this.comps.filter(c => !ids.includes(c.id)); this.wires = this.wires.filter(w => !ids.includes(w.from.c) && !ids.includes(w.to.c)); }
+    else this.wires = this.wires.filter(w => w !== s.w);
+    this.setState({ sel: null });
+  }
+
+  // ---------- simulatie ----------
+  inVal(c, i) { const w = this.wireTo(c.id, i); if (!w) return 0; const s = this.byId(w.from.c); return s ? (s.out[w.from.p] ? 1 : 0) : 0; }
+  gateOut(type, v) {
+    const and = v.every(x => x), or = v.some(x => x), xor = v.reduce((a, x) => a ^ x, 0);
+    switch (type) { case 'AND': return +and; case 'OR': return +or; case 'NAND': return +!and; case 'NOR': return +!or; case 'XOR': return xor; case 'XNOR': return 1 - xor; case 'NOT': return 1 - v[0]; }
+    return 0;
+  }
+  clkLevel() { if (this.clkOverride != null) return this.clkOverride; return this.state.clkAuto ? (Math.floor(this.clkT * 2 * this.state.freq) % 2) : this.manualClk; }
+  settle() { // poorten na elkaar herberekenen tot alles stabiel is (ook terugkoppelingen)
+    for (let it = 0; it < 60; it++) {
+      let ch = false;
+      for (const c of this.comps) {
+        let o0 = c.out[0], o1 = c.out[1];
+        if (c.type === 'IN') o0 = c.val;
+        else if (c.type === 'CLK') o0 = this.clkLevel();
+        else if (this.GATES.includes(c.type)) { const n = c.type === 'NOT' ? 1 : c.n; const v = []; for (let i = 0; i < n; i++) v.push(this.inVal(c, i)); o0 = this.gateOut(c.type, v); }
+        else if (c.type === 'RS') {
+          const S = this.inVal(c, 0), R = this.inVal(c, 1);
+          if (S && R) { c.bad = true; o0 = 0; o1 = 0; } else { if (S) c.q = 1; else if (R) c.q = 0; c.bad = false; o0 = c.q; o1 = 1 - c.q; }
+        } else if (c.type === 'D' || c.type === 'JK') { o0 = c.q; o1 = 1 - c.q; }
+        if (o0 !== c.out[0] || o1 !== c.out[1]) { c.out = [o0, o1]; ch = true; }
+      }
+      if (!ch) return true;
+    }
+    return false;
+  }
+  step() {
+    this.settle();
+    for (let pass = 0; pass < 10; pass++) {
+      const edges = [];
+      for (const c of this.comps) {
+        if (c.type !== 'D' && c.type !== 'JK') continue;
+        const k = this.inVal(c, 1); // CLK-ingang
+        if (c.prevClk === null) { c.prevClk = k; continue; } // geen flank bij het plaatsen
+        if (k && !c.prevClk) edges.push(c);
+        c.prevClk = k;
+      }
+      if (!edges.length) break;
+      const nq = edges.map(c => {
+        if (c.type === 'D') return this.inVal(c, 0);
+        const J = this.inVal(c, 0), K = this.inVal(c, 2);
+        return J && K ? 1 - c.q : J ? 1 : K ? 0 : c.q;
+      });
+      edges.forEach((c, i) => { c.q = nq[i]; });
+      this.settle();
+    }
+  }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    this.clkT += dt;
+    if (this.pulseT > 0) { this.pulseT -= dt; if (this.pulseT <= 0) this.manualClk = 0; }
+    this.step();
+    this.histT += dt;
+    if (this.histT >= 0.04) { this.histT = 0; this.record(); }
+    this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.25) { this._r = 0; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  signals() {
+    const s = [];
+    this.comps.filter(c => c.type === 'CLK').forEach(c => s.push({ name: 'CLK', id: c.id, p: 0 }));
+    this.comps.filter(c => c.type === 'IN').sort((a, b) => a.label < b.label ? -1 : 1).forEach(c => s.push({ name: c.label, id: c.id, p: 0 }));
+    this.ffs().forEach((c, j) => s.push({ name: 'Q' + (j + 1) + ' (' + c.type + ')', id: c.id, p: 0 }));
+    this.comps.filter(c => c.type === 'OUT').sort((a, b) => a.label < b.label ? -1 : 1).forEach(c => s.push({ name: c.label, id: c.id, out: true }));
+    return s;
+  }
+  record() {
+    const sig = this.signals(); const snap = {};
+    for (const g of sig) { const c = this.byId(g.id); snap[g.id] = g.out ? this.inVal(c, 0) : c.out[g.p]; }
+    this.hist.push(snap); if (this.hist.length > 250) this.hist.shift();
+  }
+
+  // ---------- waarheidstabel ----------
+  truthTable() {
+    const ins = this.comps.filter(c => c.type === 'IN').sort((a, b) => a.label < b.label ? -1 : 1);
+    const outs = this.comps.filter(c => c.type === 'OUT').sort((a, b) => a.label < b.label ? -1 : 1);
+    if (this.comps.some(c => ['CLK', 'D', 'JK', 'RS'].includes(c.type))) return { msg: 'Deze schakeling bevat een klok of flipflop: de uitgang hangt dan ook af van de vorige toestand. Gebruik het tijdsdiagram.' };
+    if (!ins.length || !outs.length) return { msg: 'Plaats minstens één ingang en één uitgang om de waarheidstabel te zien.' };
+    const save = ins.map(c => c.val), rows = [];
+    for (let i = 0; i < (1 << ins.length); i++) {
+      ins.forEach((c, j) => { c.val = (i >> (ins.length - 1 - j)) & 1; });
+      const ok = this.settle();
+      rows.push({ bits: ins.map(c => c.val), outs: outs.map(o => ok ? this.inVal(o, 0) : '?'), cur: false });
+    }
+    ins.forEach((c, j) => { c.val = save[j]; }); this.settle();
+    const curIdx = save.reduce((a, v) => a * 2 + v, 0); if (rows[curIdx]) rows[curIdx].cur = true;
+    return { ins: ins.map(c => c.label), outs: outs.map(c => c.label), rows };
+  }
+
+  ffs() { return this.comps.filter(c => c.type === 'D' || c.type === 'JK' || c.type === 'RS'); }
+  // statentabel: huidige toestand + ingangen -> volgende toestand na één stijgende klokflank
+  stateTable() {
+    const ffs = this.ffs(), ins = this.comps.filter(c => c.type === 'IN').sort((a, b) => a.label < b.label ? -1 : 1);
+    const outs = this.comps.filter(c => c.type === 'OUT').sort((a, b) => a.label < b.label ? -1 : 1);
+    const hasClk = this.comps.some(c => c.type === 'CLK'), nb = ffs.length + ins.length;
+    if (nb > 6) return { msg: 'De statentabel wordt enkel getoond voor samen maximaal 6 flipflops en ingangen.' };
+    const save = { q: ffs.map(c => c.q), pc: ffs.map(c => c.prevClk), v: ins.map(c => c.val), out: this.comps.map(c => c.out.slice()) };
+    const rows = [];
+    for (let i = 0; i < (1 << nb); i++) {
+      const bits = []; for (let j = nb - 1; j >= 0; j--) bits.push((i >> j) & 1);
+      ffs.forEach((c, j) => { c.q = bits[j]; c.prevClk = null; });
+      ins.forEach((c, j) => { c.val = bits[ffs.length + j]; });
+      this.clkOverride = 0; this.settle(); this.step();
+      const o = outs.map(k => this.inVal(k, 0));
+      if (hasClk) { this.clkOverride = 1; this.step(); }
+      rows.push({ q: bits.slice(0, ffs.length), x: bits.slice(ffs.length), nq: ffs.map(c => c.q), o });
+    }
+    this.clkOverride = null;
+    ffs.forEach((c, j) => { c.q = save.q[j]; c.prevClk = save.pc[j]; }); ins.forEach((c, j) => { c.val = save.v[j]; });
+    this.comps.forEach((c, j) => { c.out = save.out[j]; }); this.settle();
+    const cur = save.q.concat(save.v).reduce((a, b) => a * 2 + b, 0); if (rows[cur]) rows[cur].cur = true;
+    return { ffs: ffs.map((c, j) => 'Q' + (j + 1)), ins: ins.map(c => c.label), outs: outs.map(c => c.label), rows, hasClk };
+  }
+
+  // ---------- muis ----------
+  hitPin(p) {
+    for (const c of this.comps) { const P = this.pins(c);
+      for (let i = 0; i < P.outs.length; i++) if (Math.hypot(p.x - P.outs[i].x, p.y - P.outs[i].y) < 10) return { c: c.id, p: i, dir: 'out' };
+      for (let i = 0; i < P.ins.length; i++) if (Math.hypot(p.x - P.ins[i].x, p.y - P.ins[i].y) < 10) return { c: c.id, p: i, dir: 'in' };
+    }
+    return null;
+  }
+  hitComp(p) { for (let i = this.comps.length - 1; i >= 0; i--) { const c = this.comps[i], s = this.size(c); if (p.x >= c.x - 4 && p.x <= c.x + s.w + 4 && p.y >= c.y - 4 && p.y <= c.y + s.h + 4) return c; } return null; }
+  wKey(w) { return w.from.c + '.' + w.from.p + '>' + w.to.c + '.' + w.to.p; }
+  wirePts(w) { return this.routesAll().get(this.wKey(w)) || null; }
+  clean(pts) { return pts.filter((q, i) => i === 0 || Math.abs(q.x - pts[i - 1].x) + Math.abs(q.y - pts[i - 1].y) > 0.5); }
+  // alle draden samen routeren: draden van dezelfde uitgang delen één verticale baan,
+  // en banen van verschillende uitgangen houden minstens 14 px afstand (ruimte voor twee boogjes)
+  routesAll() {
+    const key = this.comps.map(c => c.id + ',' + c.x + ',' + c.y + ',' + c.n).join(';') + '|' + this.wires.map(w => this.wKey(w)).join(';');
+    if (this._rk === key) return this._rm;
+    const m = new Map(), nets = new Map(); let nBack = 0; const backY = [];
+    for (const w of this.wires) {
+      const a = this.byId(w.from.c), b = this.byId(w.to.c); if (!a || !b) continue;
+      const A = this.pins(a).outs[w.from.p], B = this.pins(b).ins[w.to.p]; if (!A || !B) continue;
+      if (B.x - A.x >= 30) { const k = w.from.c + ':' + w.from.p; if (!nets.has(k)) nets.set(k, []); nets.get(k).push({ w, A, B }); }
+      else { // terugkoppeling: elk een eigen verticale en horizontale baan
+        const base = Math.abs(A.y - B.y) > 50 ? Math.round((A.y + B.y) / 2) : Math.max(A.y, B.y) + 50;
+        let dy = 0; for (let t = 0; t < 20; t++) { dy = (t % 2 ? 1 : -1) * Math.ceil(t / 2) * 14; if (backY.every(y => Math.abs(y - (base + dy)) >= 14)) break; }
+        backY.push(base + dy); m.set(this.wKey(w), this.route(A, B, 14 * nBack, dy)); nBack++;
+      }
+    }
+    const list = Array.from(nets.values()).map(arr => {
+      const A = arr[0].A, minBx = Math.min.apply(null, arr.map(o => o.B.x)), ys = arr.map(o => o.B.y).concat([A.y]);
+      return { arr, A, lo: A.x + 10, hi: minBx - 10, des: (A.x + minBx) / 2, y0: Math.min.apply(null, ys), y1: Math.max.apply(null, ys) };
+    }).sort((p, q) => p.des - q.des);
+    const lanes = [];
+    for (const n of list) {
+      let best = null;
+      if (n.lo <= n.hi) for (let k = 0; k < 60; k++) {
+        const d = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 14, x = Math.round(n.des + d);
+        if (x < n.lo || x > n.hi) continue;
+        if (lanes.every(l => Math.abs(l.x - x) >= 14 || l.y1 < n.y0 - 8 || l.y0 > n.y1 + 8)) { best = x; break; }
+      }
+      if (best === null) best = Math.round(n.lo <= n.hi ? n.des : (n.A.x + n.hi + 12) / 2);
+      lanes.push({ x: best, y0: n.y0, y1: n.y1 });
+      n.arr.forEach(o => m.set(this.wKey(o.w), this.clean([o.A, { x: best, y: o.A.y }, { x: best, y: o.B.y }, o.B])));
+    }
+    this._rk = key; this._rm = m; return m;
+  }
+  // pad met enkel rechte hoeken: rechts uit de uitgang, verticaal, rechts in de ingang
+  route(A, B, off, dy) {
+    let pts;
+    if (B.x - A.x >= 30) {
+      const xm = Math.max(A.x + 10, Math.min(B.x - 10, Math.round((A.x + B.x) / 2 + (off || 0))));
+      pts = [A, { x: xm, y: A.y }, { x: xm, y: B.y }, B];
+    } else { // ingang ligt links van de uitgang: eromheen lopen
+      const ym = (Math.abs(A.y - B.y) > 50 ? Math.round((A.y + B.y) / 2) : Math.max(A.y, B.y) + 50) + (dy || 0);
+      const x1 = A.x + 14 + Math.abs(off || 0), x2 = B.x - 14 - Math.abs(off || 0);
+      pts = [A, { x: x1, y: A.y }, { x: x1, y: ym }, { x: x2, y: ym }, { x: x2, y: B.y }, B];
+    }
+    return pts.filter((q, i) => i === 0 || Math.abs(q.x - pts[i - 1].x) + Math.abs(q.y - pts[i - 1].y) > 0.5);
+  }
+  segDist(p, a, b) { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy || 1; const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / L)); return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy); }
+  hitWire(p) { for (const w of this.wires) { const P = this.wirePts(w); if (!P) continue; for (let i = 1; i < P.length; i++) if (this.segDist(p, P[i - 1], P[i]) < 6) return w; } return null; }
+  // teken een pad; horizontale stukken maken een boogje over verticale stukken van andere draden
+  strokePath(ctx, P, verts) {
+    const r = 5; ctx.beginPath(); ctx.moveTo(P[0].x, P[0].y); // boogje enkel als de kruising niet in een hoek valt
+    for (let i = 1; i < P.length; i++) {
+      const a = P[i - 1], b = P[i];
+      if (Math.abs(a.y - b.y) < 0.5 && verts) {
+        const dir = Math.sign(b.x - a.x), lo = Math.min(a.x, b.x), hi = Math.max(a.x, b.x);
+        const xs = verts.filter(v => v.x > lo + r + 1 && v.x < hi - r - 1 && a.y > v.y1 + 1 && a.y < v.y2 - 1).map(v => v.x).sort((u, v) => (u - v) * dir);
+        let last = null;
+        for (const xc of xs) { if (last !== null && Math.abs(xc - last) < 2 * r + 1) continue; ctx.lineTo(xc - dir * r, a.y); ctx.arc(xc, a.y, r, dir > 0 ? Math.PI : 0, dir > 0 ? 0 : Math.PI, dir < 0); last = xc; }
+      }
+      ctx.lineTo(b.x, b.y);
+    }
+    ctx.stroke();
+  }
+  onDown = (e) => {
+    const sp = this.toPx(e); if (sp.y > this.edH()) return;
+    const cv = this.stageRef.current; if (cv && cv.focus) cv.focus({ preventScroll: true });
+    if (e.button === 1 || e.button === 2 || this.spaceDown) { this.pan = { sx: sp.x, sy: sp.y, ox: this.view.ox, oy: this.view.oy }; e.preventDefault(); return; }
+    const p = this.toWorld(sp);
+    const pin = this.hitPin(p);
+    if (pin) { this.wireDrag = { start: pin, x: p.x, y: p.y }; e.preventDefault(); return; }
+    const c = this.hitComp(p);
+    if (c) {
+      let ids = this.selIds();
+      if (e.shiftKey) { ids = ids.includes(c.id) ? ids.filter(i => i !== c.id) : ids.concat([c.id]); this.setState({ sel: ids.length ? { kind: 'comps', ids } : null }); e.preventDefault(); return; }
+      if (!ids.includes(c.id)) ids = [c.id];
+      const group = this.comps.filter(k => ids.includes(k.id)).map(k => ({ k, x0: k.x, y0: k.y }));
+      this.drag = { c, group, sx: p.x, sy: p.y, moved: false, before: this.snap() };
+      this.setState({ sel: { kind: 'comps', ids } }); e.preventDefault(); return;
+    }
+    const w = this.hitWire(p);
+    if (w) { this.setState({ sel: { kind: 'wire', w } }); return; }
+    this.band = { x0: p.x, y0: p.y, x1: p.x, y1: p.y, add: e.shiftKey ? this.selIds() : [] };
+    if (!e.shiftKey) this.setState({ sel: null });
+  };
+  onMove = (e) => {
+    const sp = this.toPx(e);
+    if (this.pan) { this.view.ox = this.pan.ox - (sp.x - this.pan.sx) / this.view.s; this.view.oy = this.pan.oy - (sp.y - this.pan.sy) / this.view.s; return; }
+    const p = this.toWorld(sp);
+    if (this.wireDrag) { this.wireDrag.x = p.x; this.wireDrag.y = p.y; return; }
+    if (this.band) { this.band.x1 = p.x; this.band.y1 = p.y; return; }
+    if (this.drag) {
+      const d = this.drag;
+      if (Math.hypot(p.x - d.sx, p.y - d.sy) > 4 / this.view.s) d.moved = true;
+      if (d.moved) { const dx = Math.round((p.x - d.sx) / 10) * 10, dy = Math.round((p.y - d.sy) / 10) * 10; d.group.forEach(g => { g.k.x = g.x0 + dx; g.k.y = g.y0 + dy; }); }
+    }
+  };
+  onUp = (e) => {
+    if (this.pan) { this.pan = null; this.bump(); return; }
+    if (this.wireDrag) {
+      const p = this.toWorld(this.toPx(e)), end = this.hitPin(p), s = this.wireDrag.start; this.wireDrag = null;
+      if (end && end.dir !== s.dir && end.c !== s.c) { const o = s.dir === 'out' ? s : end, i = s.dir === 'out' ? end : s; this.pushUndo(); this.connect(o.c, o.p, i.c, i.p); this.bump(); }
+      return;
+    }
+    if (this.band) {
+      const b = this.band; this.band = null;
+      const x0 = Math.min(b.x0, b.x1), x1 = Math.max(b.x0, b.x1), y0 = Math.min(b.y0, b.y1), y1 = Math.max(b.y0, b.y1);
+      if (x1 - x0 < 3 && y1 - y0 < 3) return;
+      const ids = this.comps.filter(c => { const z = this.size(c); return c.x < x1 && c.x + z.w > x0 && c.y < y1 && c.y + z.h > y0; }).map(c => c.id);
+      const all = Array.from(new Set(b.add.concat(ids)));
+      this.setState({ sel: all.length ? { kind: 'comps', ids: all } : null });
+      return;
+    }
+    if (this.drag) {
+      const d = this.drag; this.drag = null;
+      if (d.moved) this.pushUndo(d.before);
+      else if (d.c.type === 'IN' && d.group.length === 1) { this.pushUndo(d.before); d.c.val = 1 - d.c.val; }
+      this.bump();
+    }
+  };
+  onKey = (e) => {
+    const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+    const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+    if (mod && k === 'z' && !e.shiftKey) { this.undo(); e.preventDefault(); return; }
+    if (mod && (k === 'y' || (k === 'z' && e.shiftKey))) { this.redo(); e.preventDefault(); return; }
+    if (mod && k === 'a') { this.setState({ sel: this.comps.length ? { kind: 'comps', ids: this.comps.map(c => c.id) } : null }); e.preventDefault(); return; }
+    if (e.key === 'Escape') { this.setState({ sel: null }); return; }
+    if (e.key === ' ') { this.spaceDown = true; const cv = this.stageRef.current; if (cv) cv.style.cursor = 'grab'; e.preventDefault(); return; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && this.state.sel) { this.removeSel(); e.preventDefault(); }
+  };
+  onKeyUp = (e) => { if (e.key === ' ') { this.spaceDown = false; const cv = this.stageRef.current; if (cv) cv.style.cursor = ''; } };
+
+  // ---------- tekenen ----------
+  fmt(x, n) { return x.toFixed(n).replace('.', ','); }
+  draw() {
+    const cv = this.stageRef.current; if (!cv) return;
+    const ctx = cv.getContext('2d'); const s = this.dpr || 1;
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const eh = this.edH(), st = this.state, v = this.view;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, this.W, eh); ctx.clip();
+    ctx.setTransform(s * v.s, 0, 0, s * v.s, -v.ox * v.s * s, -v.oy * v.s * s);
+    // raster (enkel het zichtbare deel)
+    const gx0 = Math.floor(v.ox / 20) * 20 + 10, gy0 = Math.floor(v.oy / 20) * 20 + 10, gx1 = v.ox + this.W / v.s, gy1 = v.oy + eh / v.s;
+    if (v.s > 0.45) { ctx.fillStyle = '#e6e1d6'; for (let x = gx0; x < gx1; x += 20) for (let y = gy0; y < gy1; y += 20) ctx.fillRect(x, y, 1.4, 1.4); }
+    // draden: eerst alle paden en hun verticale stukken (per net = per uitgang)
+    const paths = this.wires.map(w => ({ w, P: this.wirePts(w), net: w.from.c + ':' + w.from.p })).filter(o => o.P);
+    const vertsOf = (net) => { const v = []; paths.forEach(o => { if (o.net === net) return; for (let i = 1; i < o.P.length; i++) { const a = o.P[i - 1], b = o.P[i]; if (Math.abs(a.x - b.x) < 0.5) v.push({ x: a.x, y1: Math.min(a.y, b.y), y2: Math.max(a.y, b.y) }); } }); return v; };
+    ctx.lineJoin = 'miter'; ctx.lineCap = 'butt';
+    for (const o of paths) {
+      const src = this.byId(o.w.from.c); const on = src.out[o.w.from.p];
+      const sel = st.sel && st.sel.kind === 'wire' && st.sel.w === o.w;
+      ctx.strokeStyle = sel ? '#7a5ab8' : on ? '#2f8a4e' : '#8c8576'; ctx.lineWidth = sel ? 4 : on ? 3 : 2;
+      this.strokePath(ctx, o.P, vertsOf(o.net));
+    }
+    // aftakpunten: plaatsen waar minstens drie richtingen van hetzelfde net samenkomen
+    const byNet = new Map(); paths.forEach(o => { if (!byNet.has(o.net)) byNet.set(o.net, []); byNet.get(o.net).push(o); });
+    byNet.forEach((arr, net) => {
+      if (arr.length < 2) return;
+      const segs = []; arr.forEach(o => { for (let i = 1; i < o.P.length; i++) segs.push([o.P[i - 1], o.P[i]]); });
+      const pts = []; arr.forEach(o => o.P.forEach(q => pts.push(q)));
+      const done = new Set();
+      for (const q of pts) {
+        const k = Math.round(q.x) + ',' + Math.round(q.y); if (done.has(k)) continue; done.add(k);
+        const dirs = new Set();
+        for (const [a, b] of segs) {
+          const onSeg = this.segDist(q, a, b) < 0.6; if (!onSeg) continue;
+          const atA = Math.hypot(q.x - a.x, q.y - a.y) < 0.6, atB = Math.hypot(q.x - b.x, q.y - b.y) < 0.6;
+          const dx = Math.sign(Math.round(b.x - a.x)), dy = Math.sign(Math.round(b.y - a.y));
+          if (!atA) dirs.add((-dx) + ',' + (-dy));
+          if (!atB) dirs.add(dx + ',' + dy);
+        }
+        if (dirs.size >= 3) { const on = this.byId(arr[0].w.from.c).out[arr[0].w.from.p]; ctx.fillStyle = on ? '#2f8a4e' : '#6f685c'; ctx.beginPath(); ctx.arc(q.x, q.y, 3.6, 0, 7); ctx.fill(); }
+      }
+    });
+    ctx.lineCap = 'round';
+    if (this.wireDrag) { const c = this.byId(this.wireDrag.start.c), P = this.pins(c), pp = this.wireDrag.start.dir === 'out' ? P.outs[this.wireDrag.start.p] : P.ins[this.wireDrag.start.p];
+      const A = this.wireDrag.start.dir === 'out' ? pp : { x: this.wireDrag.x, y: this.wireDrag.y }, B = this.wireDrag.start.dir === 'out' ? { x: this.wireDrag.x, y: this.wireDrag.y } : pp;
+      ctx.setLineDash([6, 4]); ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 2; this.strokePath(ctx, this.route(A, B, 0), null); ctx.setLineDash([]); }
+    // onderdelen
+    for (const c of this.comps) this.drawComp(ctx, c);
+    if (this.band) { const b = this.band; ctx.fillStyle = 'rgba(122,90,184,0.08)'; ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 1 / v.s; ctx.setLineDash([5 / v.s, 4 / v.s]); ctx.fillRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.setLineDash([]); }
+    ctx.restore();
+    if (!this.comps.length) { ctx.fillStyle = '#8c8576'; ctx.font = "500 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Voeg onderdelen toe met de knoppen rechts, of kies een voorbeeld.', this.W / 2, eh / 2); }
+    if (st.showDiag) this.drawDiag(ctx);
+  }
+  pinDot(ctx, p, v) { ctx.fillStyle = v ? '#2f8a4e' : '#fff'; ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(p.x, p.y, 4.5, 0, 7); ctx.fill(); ctx.stroke(); }
+  drawComp(ctx, c) {
+    const st = this.state, { w, h } = this.size(c), x = c.x, y = c.y, P = this.pins(c);
+    const sel = st.sel && st.sel.kind === 'comps' && st.sel.ids.includes(c.id);
+    const ink = '#2a2723';
+    // aansluitdraadjes
+    ctx.strokeStyle = ink; ctx.lineWidth = 2;
+    P.ins.forEach(p => { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(x + (c.type === 'OUT' ? 4 : 0), p.y); ctx.stroke(); });
+    P.outs.forEach(p => { ctx.beginPath(); ctx.moveTo(x + w, p.y); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+    if (c.type === 'IN' || c.type === 'CLK') {
+      const on = c.out[0];
+      ctx.fillStyle = on ? '#2f8a4e' : '#fff'; ctx.strokeStyle = sel ? '#7a5ab8' : ink; ctx.lineWidth = sel ? 3 : 2;
+      ctx.beginPath(); ctx.roundRect(x, y, w, h, 8); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = on ? '#fff' : ink; ctx.font = "700 15px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      if (c.type === 'IN') { ctx.fillText(c.label, x + 9, y + h / 2); ctx.font = "600 15px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.fillText(on ? '1' : '0', x + w - 9, y + h / 2); }
+      else { ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('CLK', x + 7, y + h / 2); ctx.strokeStyle = on ? '#fff' : ink; ctx.lineWidth = 1.6; ctx.beginPath(); const bx = x + 34; ctx.moveTo(bx, y + 24); ctx.lineTo(bx + 6, y + 24); ctx.lineTo(bx + 6, y + 10); ctx.lineTo(bx + 14, y + 10); ctx.lineTo(bx + 14, y + 24); ctx.lineTo(bx + 22, y + 24); ctx.stroke(); }
+    } else if (c.type === 'OUT') {
+      const on = this.inVal(c, 0), cx = x + 20, cy = y + 20;
+      if (on) { const g = ctx.createRadialGradient(cx, cy, 3, cx, cy, 34); g.addColorStop(0, 'rgba(255,210,70,0.9)'); g.addColorStop(1, 'rgba(255,210,70,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 34, 0, 7); ctx.fill(); }
+      ctx.fillStyle = on ? '#ffd24a' : '#fff'; ctx.strokeStyle = sel ? '#7a5ab8' : ink; ctx.lineWidth = sel ? 3 : 2; ctx.beginPath(); ctx.arc(cx, cy, 16, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx - 11, cy - 11); ctx.lineTo(cx + 11, cy + 11); ctx.moveTo(cx + 11, cy - 11); ctx.lineTo(cx - 11, cy + 11); ctx.stroke();
+      ctx.fillStyle = ink; ctx.font = "700 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(c.label + ' = ' + on, x + 42, cy);
+    } else if (c.type === 'RS' || c.type === 'D' || c.type === 'JK') {
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = sel ? '#7a5ab8' : ink; ctx.lineWidth = sel ? 3 : 2; ctx.beginPath(); ctx.rect(x, y, w, h); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = ink; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'middle';
+      P.ins.forEach(p => { if (p.name === 'CLK') { ctx.beginPath(); ctx.moveTo(x, p.y - 7); ctx.lineTo(x + 10, p.y); ctx.lineTo(x, p.y + 7); ctx.stroke(); } else { ctx.textAlign = 'left'; ctx.fillText(p.name, x + 6, p.y); } });
+      P.outs.forEach(p => { ctx.textAlign = 'right'; ctx.fillText(p.name, x + w - 6, p.y); });
+      ctx.textAlign = 'center'; ctx.font = "700 13px 'IBM Plex Sans',sans-serif"; ctx.fillStyle = '#7a5ab8'; ctx.fillText(c.type === 'RS' ? 'RS' : c.type === 'D' ? 'D-FF' : 'JK-FF', x + w / 2, y + h / 2);
+      const fi = this.ffs().indexOf(c); ctx.fillStyle = '#4f4a42'; ctx.font = "700 12px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom'; ctx.fillText('Q' + (fi + 1), x + w / 2, y - 3); ctx.textBaseline = 'middle';
+      if (c.bad) { ctx.fillStyle = '#c8443a'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('S = R = 1!', x + w / 2, y + h + 10); }
+    } else this.drawGate(ctx, c, sel);
+    // pinnen
+    P.ins.forEach((p, i) => this.pinDot(ctx, p, this.inVal(c, i)));
+    P.outs.forEach((p, i) => this.pinDot(ctx, p, c.out[i]));
+    if (st.showVals) {
+      ctx.font = "600 11px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom';
+      P.outs.forEach((p, i) => { ctx.fillStyle = c.out[i] ? '#2f8a4e' : '#8c8576'; ctx.textAlign = 'left'; ctx.fillText(String(c.out[i]), p.x + 6, p.y - 3); });
+      if (c.type !== 'OUT') P.ins.forEach((p, i) => { const v = this.inVal(c, i); ctx.fillStyle = v ? '#2f8a4e' : '#8c8576'; ctx.textAlign = 'right'; ctx.fillText(String(v), p.x - 6, p.y - 3); });
+    }
+  }
+  drawGate(ctx, c, sel) {
+    const { w, h } = this.size(c), x = c.x, y = c.y, t = c.type, ink = '#2a2723';
+    const neg = t === 'NAND' || t === 'NOR' || t === 'XNOR' || t === 'NOT';
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = sel ? '#7a5ab8' : ink; ctx.lineWidth = sel ? 3 : 2;
+    const bw = neg ? w - 10 : w; // ruimte voor het bolletje
+    if (this.state.style === 'iec') {
+      ctx.beginPath(); ctx.rect(x + 6, y, bw - 12, h); ctx.fill(); ctx.stroke();
+      const sym = { AND: '&', NAND: '&', OR: '≥1', NOR: '≥1', XOR: '=1', XNOR: '=1', NOT: '1' }[t];
+      ctx.fillStyle = ink; ctx.font = "600 16px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(sym, x + bw / 2, y + h / 2);
+      if (neg) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + bw - 1, y + h / 2, 5, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x + bw + 4, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke(); }
+      else { ctx.beginPath(); ctx.moveTo(x + bw - 6, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke(); }
+      // ingangsdraadjes tot de rechthoek
+      return;
+    }
+    ctx.beginPath();
+    if (t === 'NOT') { ctx.moveTo(x + 6, y + 4); ctx.lineTo(x + bw - 4, y + h / 2); ctx.lineTo(x + 6, y + h - 4); ctx.closePath(); }
+    else if (t === 'AND' || t === 'NAND') { const r = h / 2; ctx.moveTo(x + 6, y); ctx.lineTo(x + bw - r, y); ctx.arc(x + bw - r, y + r, r, -Math.PI / 2, Math.PI / 2); ctx.lineTo(x + 6, y + h); ctx.closePath(); }
+    else { // OR, NOR, XOR, XNOR
+      const x0 = x + (t === 'XOR' || t === 'XNOR' ? 12 : 6);
+      ctx.moveTo(x0, y); ctx.quadraticCurveTo(x0 + (bw - x0 + x) * 0.6, y, x + bw, y + h / 2); ctx.quadraticCurveTo(x0 + (bw - x0 + x) * 0.6, y + h, x0, y + h); ctx.quadraticCurveTo(x0 + 14, y + h / 2, x0, y); ctx.closePath();
+    }
+    ctx.fill(); ctx.stroke();
+    if (t === 'XOR' || t === 'XNOR') { ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.quadraticCurveTo(x + 18, y + h / 2, x + 4, y + h); ctx.stroke(); }
+    if (neg) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + bw + 1, y + h / 2, 5, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x + bw + 6, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke(); }
+    // naam van de poort onder het symbool
+    ctx.fillStyle = '#8c8576'; ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t, x + w / 2, y + h + 2);
+  }
+  drawDiag(ctx) {
+    const y0 = this.H - this.DIAG, x0 = 120, w = this.W - x0 - 14;
+    ctx.fillStyle = '#fffdf9'; ctx.fillRect(4, y0 - 4, this.W - 8, this.DIAG); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(4, y0 - 4, this.W - 8, this.DIAG);
+    const sig = this.signals();
+    if (!sig.length) { ctx.fillStyle = '#8c8576'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Tijdsdiagram: plaats ingangen, een klok of uitgangen.', 14, y0 + this.DIAG / 2 - 4); return; }
+    const rh = Math.min(26, (this.DIAG - 22) / sig.length), n = 250;
+    ctx.fillStyle = '#8c8576'; ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('tijdsdiagram (laatste 10 s) →', this.W - 14, y0 - 1);
+    sig.forEach((g, r) => {
+      const yb = y0 + 12 + r * rh + rh - 4, yt = yb - rh + 8;
+      ctx.fillStyle = '#4f4a42'; ctx.font = "600 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(g.name, x0 - 8, (yb + yt) / 2);
+      ctx.strokeStyle = '#ece6da'; ctx.beginPath(); ctx.moveTo(x0, yb); ctx.lineTo(x0 + w, yb); ctx.stroke();
+      ctx.strokeStyle = g.name === 'CLK' ? '#7a5ab8' : g.out ? '#c08a1e' : '#2f8a4e'; ctx.lineWidth = 1.8; ctx.beginPath();
+      let prev = null;
+      this.hist.forEach((s, i) => { const v = s[g.id]; if (v === undefined) { prev = null; return; } const X = x0 + w - (this.hist.length - 1 - i) / (n - 1) * w, Y = v ? yt : yb; if (prev === null) ctx.moveTo(X, Y); else { if (prev !== v) ctx.lineTo(X, prev ? yt : yb); ctx.lineTo(X, Y); } prev = v; });
+      ctx.stroke();
+    });
+  }
+
+  // ---------- voorbeelden ----------
+  clearAll() { this.comps = []; this.wires = []; this.nextId = 1; this.hist = []; }
+  loadExample(k) {
+    if (this.comps.length) this.pushUndo();
+    this.clearAll(); const nIn = this.state.nIn; const G = (type, x, y, n) => this.add(type, x, y, { n: n || 2 });
+    const W = (a, ap, b, bp) => this.connect(a.id, ap, b.id, bp);
+    if (k === 'halve') {
+      const A = this.add('IN', 40, 67), B = this.add('IN', 40, 259), X = G('XOR', 300, 70), N = G('AND', 300, 240), S = this.add('OUT', 560, 75, { label: 'S' }), C = this.add('OUT', 560, 245, { label: 'C' });
+      W(A, 0, X, 0); W(B, 0, X, 1); W(A, 0, N, 0); W(B, 0, N, 1); W(X, 0, S, 0); W(N, 0, C, 0);
+    } else if (k === 'vol') {
+      const A = this.add('IN', 40, 60), B = this.add('IN', 40, 160), Ci = this.add('IN', 40, 300);
+      const X1 = G('XOR', 220, 70), X2 = G('XOR', 460, 120), A1 = G('AND', 460, 230), A2 = G('AND', 460, 320), O = G('OR', 660, 260);
+      const S = this.add('OUT', 760, 125, { label: 'S' }), Co = this.add('OUT', 860, 265, { label: 'Cout' });
+      W(A, 0, X1, 0); W(B, 0, X1, 1); W(X1, 0, X2, 0); W(Ci, 0, X2, 1); W(X1, 0, A1, 0); W(Ci, 0, A1, 1); W(A, 0, A2, 0); W(B, 0, A2, 1); W(A1, 0, O, 0); W(A2, 0, O, 1); W(X2, 0, S, 0); W(O, 0, Co, 0);
+    } else if (k === 'latch') {
+      const R = this.add('IN', 40, 80, { label: 'B' }), S = this.add('IN', 40, 280, { label: 'A' }); // A = set, B = reset
+      const N1 = G('NOR', 320, 80), N2 = G('NOR', 320, 270), Q = this.add('OUT', 620, 85, { label: 'Q' }), Qb = this.add('OUT', 620, 275, { label: 'Qn' });
+      W(R, 0, N1, 0); W(N2, 0, N1, 1); W(S, 0, N2, 1); W(N1, 0, N2, 0); W(N1, 0, Q, 0); W(N2, 0, Qb, 0);
+    } else if (k === 'deler') {
+      const K = this.add('CLK', 40, 180), F = this.add('D', 300, 150), X = this.add('OUT', 560, 155, { label: 'X' });
+      W(K, 0, F, 1); W(F, 1, F, 0); W(F, 0, X, 0);
+    } else if (k === 'teller') {
+      const A = this.add('IN', 40, 0, { val: 1 }), K = this.add('CLK', 40, 58);
+      const F1 = this.add('JK', 260, 30), F2 = this.add('JK', 520, 250), X = this.add('OUT', 820, 35, { label: 'X' }), Y = this.add('OUT', 820, 255, { label: 'Y' });
+      W(A, 0, F1, 0); W(A, 0, F1, 2); W(A, 0, F2, 0); W(A, 0, F2, 2); W(K, 0, F1, 1); W(F1, 1, F2, 1); W(F1, 0, X, 0); W(F2, 0, Y, 0);
+    }
+    this.setState({ sel: null, fileMsg: '', nIn });
+    this.view = { s: 1, ox: 0, oy: 0 };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const accent = 'oklch(0.5 0.12 300)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const addS = 'min-height:34px;font-size:12.5px;font-weight:600;border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
+    const plain = 'min-height:34px;font-size:13px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723';
+    const ids = this.selIds(), sel = ids.length === 1 ? this.byId(ids[0]) : null;
+    const seq = this.comps.some(c => ['CLK', 'D', 'JK', 'RS'].includes(c.type));
+    let tt = seq ? this.stateTable() : this.truthTable();
+    let ttHead = [], ttRows = [], tableNote = '';
+    const sep = 'border-left:1px solid #e7e1d5;';
+    if (seq && tt.rows) {
+      ttHead = tt.ffs.map(n => ({ t: n, style: 'color:#7a5ab8' })).concat(tt.ins.map((n, i) => ({ t: n, style: i === 0 ? sep : '' })))
+        .concat(tt.ffs.map((n, i) => ({ t: n + '\u207A', style: 'color:#7a5ab8;' + (i === 0 ? sep : '') }))).concat(tt.outs.map((n, i) => ({ t: n, style: 'color:#c08a1e;' + (i === 0 ? sep : '') })));
+      const cell = (v, st2, col) => ({ t: String(v), style: (col ? 'color:' + (v ? '#2f8a4e' : '#8c8576') + ';font-weight:600;' : '') + (st2 || '') });
+      ttRows = tt.rows.map(r => ({ style: r.cur ? 'background:#f4f0fb;font-weight:600' : '', cells: r.q.map(v => cell(v)).concat(r.x.map((v, i) => cell(v, i === 0 ? sep : ''))).concat(r.nq.map((v, i) => cell(v, i === 0 ? sep : '', true))).concat(r.o.map((v, i) => cell(v, i === 0 ? sep : '', true))) }));
+      tableNote = tt.hasClk ? 'Huidige toestand Q en ingangen \u2192 volgende toestand Q\u207A na \u00E9\u00E9n stijgende klokflank. De uitgangen gelden v\u00F3\u00F3r de flank. Q1, Q2 \u2026 staan boven de flipflops.' : 'Zonder klok: Q\u207A is de toestand nadat de ingangen zijn aangelegd (bv. bij een RS-flipflop).';
+      tt = { rows: ttRows };
+    } else if (tt.rows) {
+      ttHead = tt.ins.map(n => ({ t: n, style: '' })).concat(tt.outs.map((n, i) => ({ t: n, style: 'color:#c08a1e;' + (i === 0 ? 'border-left:1px solid #e7e1d5' : '') })));
+      ttRows = tt.rows.map(r => ({ style: r.cur ? 'background:#f4f0fb;font-weight:600' : '', cells: r.bits.map(b => ({ t: String(b), style: '' })).concat(r.outs.map((o, i) => ({ t: String(o), style: 'color:' + (o === 1 ? '#2f8a4e' : '#8c8576') + ';font-weight:600;' + (i === 0 ? 'border-left:1px solid #e7e1d5' : '') }))) }));
+    }
+    const typeName = (c) => ({ IN: 'Ingang ' + c.label, CLK: 'Klok', OUT: 'Uitgang ' + c.label, RS: 'RS-flipflop', D: 'D-flipflop', JK: 'JK-flipflop' }[c.type] || (c.type + (c.type === 'NOT' ? '' : ' (' + c.n + ' ingangen)')));
+    return {
+      stageRef: this.stageRef, fileRef: this.fileRef,
+      ioBtns: [['IN', '+ Ingang (A–E)'], ['OUT', '+ Uitgang (lamp)'], ['CLK', '+ Klok']].map(([t, n]) => ({ name: n, style: addS, onClick: () => this.addFromPalette(t) })),
+      nBtns: [2, 3].map(n => ({ name: n + ' ingangen', style: chip(st.nIn === n), onClick: () => this.setState({ nIn: n }) })),
+      gateBtns: this.GATES.map(g => ({ name: g, style: addS, onClick: () => this.addFromPalette(g) })),
+      ffBtns: [['RS', 'RS'], ['D', 'D'], ['JK', 'JK']].map(([t, n]) => ({ name: n + '-flipflop', style: addS, onClick: () => this.addFromPalette(t) })),
+      hasSel: !!(st.sel), selName: sel ? typeName(sel) : ids.length > 1 ? ids.length + ' onderdelen' : (st.sel ? 'Draad' : ''), selIsOut: !!(sel && sel.type === 'OUT'), selLabel: sel ? sel.label : '',
+      onLabel: (e) => { if (sel) { if (this._lblFor !== sel.id) { this.pushUndo(); this._lblFor = sel.id; } sel.label = e.target.value.toUpperCase().slice(0, 6) || sel.label; this.bump(); } },
+      zoomStr: Math.round(this.view.s * 100) + ' %',
+      onUndo: () => this.undo(), onRedo: () => this.redo(),
+      undoStyle: plain + ';opacity:' + (this.undoStack.length ? 1 : 0.45), redoStyle: plain + ';opacity:' + (this.redoStack.length ? 1 : 0.45),
+      onSelAll: () => this.setState({ sel: this.comps.length ? { kind: 'comps', ids: this.comps.map(c => c.id) } : null }),
+      onFit: () => this.fit(), onZoomIn: () => this.zoomAt(1.25), onZoomOut: () => this.zoomAt(1 / 1.25), onZoom100: () => { const c = this.toWorld({ x: this.W / 2, y: this.edH() / 2 }); this.view.s = 1; this.view.ox = c.x - this.W / 2; this.view.oy = c.y - this.edH() / 2; this.bump(); },
+      onCtx: (e) => e.preventDefault(),
+      onDelete: () => this.removeSel(),
+      clkModes: [[true, 'Automatisch'], [false, 'Handmatig']].map(([v, n]) => ({ name: n, style: chip(st.clkAuto === v), onClick: () => { this.manualClk = 0; this.setState({ clkAuto: v }); } })),
+      hasClk: this.comps.some(c => c.type === 'CLK'), clkAuto: st.clkAuto, freq: st.freq, freqStr: this.fmt(st.freq, 2) + ' Hz', onFreq: (e) => this.setState({ freq: +e.target.value }),
+      onPulse: () => { if (st.clkAuto) this.setState({ clkAuto: false }); this.manualClk = 1; this.pulseT = 0.35; },
+      pulseStyle: plain + ';padding:0 10px',
+      styleBtns: [['ansi', 'ANSI'], ['iec', 'IEC']].map(([k, n]) => ({ name: n, style: chip(st.style === k), onClick: () => this.setState({ style: k }) })),
+      viewBtns: [['showDiag', 'Tijdsdiagram'], ['showVals', 'Waarden 0/1']].map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
+      ttMsg: tt.msg || '', hasTT: !!tt.rows, ttHead, ttRows, tableTitle: seq ? 'Statentabel' : 'Waarheidstabel', tableNote,
+      examples: [['halve', 'Halve opteller'], ['vol', 'Volledige opteller'], ['latch', 'NOR-latch'], ['deler', 'D-FF deler'], ['teller', '2-bit teller (JK)']].map(([k, n]) => ({ name: n, style: plain + ';padding:0 9px', onClick: () => this.loadExample(k) })),
+      plainStyle: plain,
+      onClear: () => { if (this.comps.length) this.pushUndo(); this.clearAll(); this.view = { s: 1, ox: 0, oy: 0 }; this.setState({ sel: null, fileMsg: '' }); },
+      onSave: () => {
+        const data = { versie: 1, stijl: st.style, onderdelen: this.comps.map(c => ({ id: c.id, type: c.type, x: c.x, y: c.y, n: c.n, label: c.label, val: c.val })), draden: this.wires.map(w => ({ van: [w.from.c, w.from.p], naar: [w.to.c, w.to.p] })) };
+        const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'schakeling.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      },
+      onOpen: () => { if (this.fileRef.current) this.fileRef.current.click(); },
+      onFile: (e) => {
+        const f = e.target.files && e.target.files[0]; if (!f) return; const rd = new FileReader();
+        rd.onload = () => {
+          try {
+            const d = JSON.parse(rd.result); if (!d || !Array.isArray(d.onderdelen)) throw new Error('geen schakeling');
+            this.pushUndo(); this.clearAll();
+            d.onderdelen.forEach(o => { this.comps.push({ id: o.id, type: o.type, x: o.x, y: o.y, n: o.n || 0, label: o.label || '', val: o.val || 0, out: [0, 1], q: 0, prevClk: null }); this.nextId = Math.max(this.nextId, o.id + 1); });
+            (d.draden || []).forEach(w => this.connect(w.van[0], w.van[1], w.naar[0], w.naar[1]));
+            this.setState({ sel: null, fileMsg: '', style: d.stijl === 'iec' ? 'iec' : 'ansi' }); this.fit();
+          } catch (er) { this.setState({ fileMsg: 'Dit bestand kon niet geopend worden.' }); }
+        };
+        rd.readAsText(f); e.target.value = '';
+      },
+      fileMsg: st.fileMsg,
+    };
+  }
+}
+</script>
+</body>
+</html>

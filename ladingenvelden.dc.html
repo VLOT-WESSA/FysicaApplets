@@ -157,7 +157,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
 class Component extends DCLogic {
   W = 720; H = 480;
-  MPP = 0.0024;
+  MPP = 0.0025;   // meter per eenheid: een rasterhokje (40 eenheden) is precies 10 cm
   K = 8.99e9;
   stageRef = React.createRef();
   nextId = 1;
@@ -474,12 +474,21 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#7a6f12'; ctx.lineWidth = 2; ctx.stroke();
     ctx.beginPath(); ctx.arc(s.x, s.y, 2.4, 0, 6.2832); ctx.fillStyle = '#5a520d'; ctx.fill();
     const txt = this.state.charges.length ? (mag >= 1000 ? (mag / 1000).toFixed(2).replace('.', ',') + ' kN/C' : mag.toFixed(0) + ' N/C') : '0 N/C';
+    // bij raster: ook de afstand tot de dichtstbijzijnde lading tonen
+    let txt2 = '';
+    if (this.state.gridOn && this.state.charges.length) {
+      let d = Infinity;
+      for (const c of this.state.charges) d = Math.min(d, Math.hypot(s.x - c.x, s.y - c.y));
+      txt2 = 'r = ' + (d * this.MPP * 100).toFixed(1).replace('.', ',') + ' cm';
+    }
     ctx.font = "600 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
-    const tw = ctx.measureText(txt).width;
+    const tw = Math.max(ctx.measureText(txt).width, txt2 ? ctx.measureText(txt2).width : 0);
+    const bh = txt2 ? 38 : 22;
     const bx = s.x + 13, by = s.y - 27;
     ctx.fillStyle = 'rgba(255,253,249,0.96)'; ctx.strokeStyle = '#e2d9a0'; ctx.lineWidth = 1;
-    this.rr(ctx, bx, by, tw + 14, 22, 6); ctx.fill(); ctx.stroke();
+    this.rr(ctx, bx, by, tw + 14, bh, 6); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#5a520d'; ctx.fillText(txt, bx + 7, by + 15);
+    if (txt2) { ctx.fillStyle = '#6f685c'; ctx.fillText(txt2, bx + 7, by + 31); }
   }
 
   arrow(ctx, x, y, ang, len, color, head) {

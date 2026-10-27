@@ -109,12 +109,12 @@
       <div class="card" style="gap:4px">
         <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Meettabel ({{ nMeas }})</span>
           <button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button></div>
-        <table class="mt">
-          <tr><th>U (V)</th><th>I (mA)</th><th>R (&Omega;)</th></tr>
+        <sc-raw-table class="mt">
+          <sc-raw-tr><sc-raw-th>U (V)</sc-raw-th><sc-raw-th>I (mA)</sc-raw-th><sc-raw-th>R (&Omega;)</sc-raw-th></sc-raw-tr>
           <sc-for list="{{ meas }}" as="m" hint-placeholder-count="3">
-            <tr><td>{{ m.u }}</td><td>{{ m.i }}</td><td>{{ m.r }}</td></tr>
+            <sc-raw-tr><sc-raw-td>{{ m.u }}</sc-raw-td><sc-raw-td>{{ m.i }}</sc-raw-td><sc-raw-td>{{ m.r }}</sc-raw-td></sc-raw-tr>
           </sc-for>
-        </table>
+        </sc-raw-table>
       </div>
       <div class="note">{{ noteText }}</div>
     </div>

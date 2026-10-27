@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8086-simulator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4}
+  button{font-family:inherit}
+  a{color:#6f685c}
+  a:hover{color:#2a2723}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer}
+  .row{display:flex;justify-content:space-between;align-items:baseline}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
+  .sub{font-size:12px;color:#8c8576}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  table.tt{border-collapse:collapse;font-size:12px;width:100%}
+  table.tt td,table.tt th{padding:1px 4px;text-align:center;font-family:'IBM Plex Mono',monospace}
+  table.tt th{font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  .ttwrap{max-height:250px;overflow:auto}
+  textarea.src{width:100%;height:210px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.45;padding:8px 9px;border:1px solid #ddd6c8;border-radius:8px;background:#fff;color:#2a2723;tab-size:4;white-space:pre}
+  input.hx{width:62px;padding:5px 6px;border:1px solid #ddd6c8;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:80vh}
+  }
+</style>
+<script src="./applet-core.js"></script>
+</helmet>
+<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">8086-simulator</h1>
+    <span class="sub">BIU, instructiewachtrij, EU, registers, vlaggen, geheugen en stack</span>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="flex:1;min-height:0;background:#f7f5f0;border:1px solid #e7e1d5;border-radius:14px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;outline:none"></canvas>
+      </div>
+    </div>
+    <div style="flex:none;width:370px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div class="card">
+        <div class="row"><span class="hd">Uitvoeren</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c">{{ statStr }}</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <button onClick="{{ onTick }}" style="{{ btnA }}">&#9654; 1 klokcyclus</button>
+          <button onClick="{{ onIns }}" style="{{ btnA }}">&#9197; 1 instructie</button>
+          <button onClick="{{ onRun }}" style="{{ runStyle }}">{{ runLabel }}</button>
+          <button onClick="{{ onReset }}" style="{{ btnP }}">&#8634; Opnieuw</button>
+        </div>
+        <div class="row"><span class="sub">Weergave</span><button onClick="{{ onAdv }}" style="{{ advStyle }}">Uitgebreid</button></div>
+        <div class="row"><span class="sub">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">{{ rateStr }}</span></div>
+        <input type="range" min="0" max="6" step="1" value="{{ rateIdx }}" onInput="{{ onRate }}">
+        <sc-if value="{{ hasFault }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12.5px;color:#8a3b2c;background:#fbeeea;border:1px solid #e3b9ae;border-radius:8px;padding:6px 9px">{{ faultMsg }}</div>
+        </sc-if>
+      </div>
+
+      <div class="card">
+        <div class="hd">Programma (assembler)</div>
+        <textarea class="src" spellcheck="false" value="{{ src }}" onInput="{{ onSrc }}"></textarea>
+        <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12.5px;color:#8a3b2c;line-height:1.5">
+            <sc-for list="{{ errs }}" as="e" hint-placeholder-count="1"><div>regel {{ e.line }}: {{ e.msg }}</div></sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ okMsg }}" hint-placeholder-val="{{ true }}">
+          <div class="sub">{{ okMsg }}</div>
+        </sc-if>
+        <div class="sub" style="margin-top:2px">Voorbeelden</div>
+        <div class="chips">
+          <sc-for list="{{ examples }}" as="b" hint-placeholder-count="5">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">Machinecode</div>
+        <div class="ttwrap">
+          <sc-raw-table class="tt">
+            <sc-raw-tr><sc-raw-th>IP</sc-raw-th><sc-raw-th>bytes</sc-raw-th><sc-raw-th style="text-align:left">instructie</sc-raw-th></sc-raw-tr>
+            <sc-for list="{{ listing }}" as="r" hint-placeholder-count="4">
+              <sc-raw-tr style="{{ r.style }}"><sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="3"><sc-raw-td style="{{ c.style }}">{{ c.t }}</sc-raw-td></sc-for></sc-raw-tr>
+            </sc-for>
+          </sc-raw-table>
+        </div>
+        <div class="sub">De gele rij is de instructie die nu wordt uitgevoerd (of als volgende aan de beurt is).</div>
+      </div>
+
+      <sc-if value="{{ adv }}" hint-placeholder-val="{{ false }}">
+      <div class="card">
+        <div class="hd">Segmenten (hex)</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:end">
+          <sc-for list="{{ segInputs }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;gap:2px"><span class="sub" style="font-family:'IBM Plex Mono',monospace">{{ s.name }}</span>
+            <input class="hx" type="text" maxlength="4" value="{{ s.val }}" onInput="{{ s.onInput }}" style="{{ s.style }}"></div>
+          </sc-for>
+        </div>
+        <div class="sub" style="line-height:1.45">Verander CS, DS, SS of ES en kijk hoe het fysieke adres (segment &times; 16 + offset) verandert. Het programma wordt opnieuw geladen.</div>
+      </div>
+      </sc-if>
+
+      <div class="card">
+        <div class="row"><span class="hd">Geheugen</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6f685c">{{ memTitle }}</span></div>
+        <sc-if value="{{ adv }}" hint-placeholder-val="{{ false }}"><div class="chips">
+          <sc-for list="{{ memSegBtns }}" as="b" hint-placeholder-count="4">
+            <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <button onClick="{{ onMemPrev }}" style="{{ btnP }}">&#9664; 64 bytes</button>
+          <button onClick="{{ onMemNext }}" style="{{ btnP }}">64 bytes &#9654;</button>
+        </div></sc-if>
+        <div class="ttwrap" style="max-height:none">
+          <sc-raw-table class="tt">
+            <sc-raw-tr><sc-for list="{{ memHead }}" as="h" hint-placeholder-count="9"><sc-raw-th>{{ h }}</sc-raw-th></sc-for></sc-raw-tr>
+            <sc-for list="{{ memRows }}" as="r" hint-placeholder-count="8">
+              <sc-raw-tr><sc-for list="{{ r }}" as="c" hint-placeholder-count="9"><sc-raw-td style="{{ c.style }}">{{ c.t }}</sc-raw-td></sc-for></sc-raw-tr>
+            </sc-for>
+          </sc-raw-table>
+        </div>
+        <div class="sub"><span style="background:#ffd9d2;padding:0 4px;border-radius:3px">rood</span> = recent geschreven, <span style="background:#d6e6ff;padding:0 4px;border-radius:3px">blauw</span> = recent gelezen. Cijfers staan little endian: het laagste byte staat op het laagste adres.</div>
+      </div>
+
+      <div class="card">
+        <div class="row"><span class="hd">Stack</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6f685c">{{ stackTitle }}</span></div>
+        <div class="ttwrap">
+          <sc-raw-table class="tt">
+            <sc-raw-tr><sc-raw-th></sc-raw-th><sc-raw-th>SS:offset</sc-raw-th><sc-raw-th>fysiek</sc-raw-th><sc-raw-th>woord</sc-raw-th></sc-raw-tr>
+            <sc-for list="{{ stackRows }}" as="r" hint-placeholder-count="6">
+              <sc-raw-tr style="{{ r.style }}"><sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4"><sc-raw-td style="{{ c.style }}">{{ c.t }}</sc-raw-td></sc-for></sc-raw-tr>
+            </sc-for>
+          </sc-raw-table>
+        </div>
+        <div class="sub">De stack groeit naar <b>lagere</b> adressen: PUSH verlaagt SP met 2 en schrijft daarna.</div>
+      </div>
+
+      <sc-if value="{{ adv }}" hint-placeholder-val="{{ false }}">
+      <div class="card">
+        <div class="hd">Laatst uitgevoerd</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.55;color:#4f4a42;max-height:130px;overflow:auto">
+          <sc-for list="{{ logLines }}" as="l" hint-placeholder-count="4"><div>{{ l }}</div></sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <div class="note">
+        De <b>BIU</b> haalt bytes op en stopt ze in een wachtrij; de <b>EU</b> haalt instructies uit die wachtrij, decodeert en voert ze uit. Een sprong maakt de wachtrij leeg. Zet <b>Uitgebreid</b> aan voor meer details (segmenten, alle vlaggen, buscycli, binaire ALU).
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+/* ===== 8086-kern: assembler, decoder en machine (BIU + EU) ===== */
+const R16 = ['AX', 'CX', 'DX', 'BX', 'SP', 'BP', 'SI', 'DI'];
+const R8 = ['AL', 'CL', 'DL', 'BL', 'AH', 'CH', 'DH', 'BH'];
+const SR = ['ES', 'CS', 'SS', 'DS'];
+const ALUN = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'];
+const SHFN = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', 'SHL', 'SAR'];
+const JCC = { JO: 0x70, JNO: 0x71, JB: 0x72, JC: 0x72, JNAE: 0x72, JAE: 0x73, JNB: 0x73, JNC: 0x73, JE: 0x74, JZ: 0x74, JNE: 0x75, JNZ: 0x75, JBE: 0x76, JNA: 0x76, JA: 0x77, JNBE: 0x77, JS: 0x78, JNS: 0x79, JP: 0x7A, JPE: 0x7A, JNP: 0x7B, JPO: 0x7B, JL: 0x7C, JNGE: 0x7C, JGE: 0x7D, JNL: 0x7D, JLE: 0x7E, JNG: 0x7E, JG: 0x7F, JNLE: 0x7F, LOOPNE: 0xE0, LOOPNZ: 0xE0, LOOPE: 0xE1, LOOPZ: 0xE1, LOOP: 0xE2, JCXZ: 0xE3 };
+const JNAME = { 0x70: 'JO', 0x71: 'JNO', 0x72: 'JC', 0x73: 'JNC', 0x74: 'JZ', 0x75: 'JNZ', 0x76: 'JBE', 0x77: 'JA', 0x78: 'JS', 0x79: 'JNS', 0x7A: 'JP', 0x7B: 'JNP', 0x7C: 'JL', 0x7D: 'JGE', 0x7E: 'JLE', 0x7F: 'JG', 0xE0: 'LOOPNZ', 0xE1: 'LOOPZ', 0xE2: 'LOOP', 0xE3: 'JCXZ' };
+const F = { CF: 1, PF: 4, AF: 16, ZF: 64, SF: 128, TF: 256, IF: 512, DF: 1024, OF: 2048 };
+const hex = (v, n) => (v >>> 0).toString(16).toUpperCase().padStart(n, '0');
+const asmHex = (v) => { const h = (v >>> 0).toString(16).toUpperCase(); return (/^[A-F]/.test(h) ? '0' : '') + h + 'h'; };
+const asmNum = (v) => (v >= 0 && v < 10 ? String(v) : asmHex(v));
+const s8 = (b) => (b & 0x80 ? b - 256 : b);
+const s16 = (w) => (w & 0x8000 ? w - 65536 : w);
+
+/* ---------- assembler ---------- */
+function parseNum(s) {
+  s = s.trim(); let m;
+  if ((m = /^([-+]?)(\d+)$/.exec(s))) return (m[1] === '-' ? -1 : 1) * parseInt(m[2], 10);
+  if ((m = /^([-+]?)(0x[0-9a-f]+)$/i.exec(s))) return (m[1] === '-' ? -1 : 1) * parseInt(m[2], 16);
+  if ((m = /^([-+]?)([0-9][0-9a-f]*)h$/i.exec(s))) return (m[1] === '-' ? -1 : 1) * parseInt(m[2], 16);
+  if ((m = /^([-+]?)([01]+)b$/i.exec(s))) return (m[1] === '-' ? -1 : 1) * parseInt(m[2], 2);
+  if ((m = /^'(.)'$/.exec(s))) return m[1].charCodeAt(0);
+  return null;
+}
+function splitTop(s) {
+  const out = []; let depth = 0, q = null, cur = '';
+  for (const ch of s) {
+    if (q) { cur += ch; if (ch === q) q = null; continue; }
+    if (ch === "'" || ch === '"') { q = ch; cur += ch; continue; }
+    if (ch === '[') depth++; if (ch === ']') depth--;
+    if (ch === ',' && depth === 0) { out.push(cur.trim()); cur = ''; } else cur += ch;
+  }
+  if (cur.trim() !== '' || out.length) out.push(cur.trim());
+  return out;
+}
+class AsmErr extends Error { }
+function memEA(m) { // EA-klokcycli volgens de 8086-tabel
+  const hasD = m.dlabel || (m.disp !== 0);
+  if (!m.base && !m.index) return 6;
+  if (m.base && m.index) { const same = (m.base === 'BX' && m.index === 'SI') || (m.base === 'BP' && m.index === 'DI'); return (same ? 7 : 8) + (hasD ? 4 : 0); }
+  return hasD ? 9 : 5;
+}
+function memRM(m) {
+  if (!m.base && !m.index) return { mod: 0, rm: 6, disp: [m.disp & 255, (m.disp >> 8) & 255] };
+  let rm;
+  if (m.base === 'BX' && m.index === 'SI') rm = 0; else if (m.base === 'BX' && m.index === 'DI') rm = 1;
+  else if (m.base === 'BP' && m.index === 'SI') rm = 2; else if (m.base === 'BP' && m.index === 'DI') rm = 3;
+  else if (m.index === 'SI') rm = 4; else if (m.index === 'DI') rm = 5; else if (m.base === 'BP') rm = 6; else rm = 7;
+  const d = m.disp;
+  if (!m.dlabel && d === 0 && rm !== 6) return { mod: 0, rm, disp: [] };
+  if (!m.dlabel && d >= -128 && d <= 127) return { mod: 1, rm, disp: [d & 255] };
+  return { mod: 2, rm, disp: [d & 255, (d >> 8) & 255] };
+}
+const mrm = (mod, reg, rm) => (mod << 6) | (reg << 3) | rm;
+function rmBytes(reg, o) {
+  if (o.t === 'r16' || o.t === 'r8') return [mrm(3, reg, o.n)];
+  const m = memRM(o); return [mrm(m.mod, reg, m.rm)].concat(m.disp);
+}
+const isReg = (o) => o.t === 'r16' || o.t === 'r8';
+const isRM = (o) => isReg(o) || o.t === 'mem';
+
+function assemble(src) {
+  const errors = [], lines = src.split(/\r?\n/), items = [], labels = {};
+  let section = 'code', pending = [];
+  const err = (line, msg) => errors.push({ line, msg });
+  const defLabel = (name, line, sec) => { if (labels[name]) err(line, 'label "' + name + '" bestaat al'); labels[name] = { sec, off: 0, line }; };
+  lines.forEach((raw, i) => {
+    const ln = i + 1; let t = raw.replace(/;.*$/, '').trim(); if (!t) return;
+    let m;
+    while ((m = /^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/.exec(t))) { pending.push({ name: m[1], line: ln }); t = m[2].trim(); }
+    if (!t) return;
+    const up = t.toUpperCase();
+    if (up === '.DATA') { section = 'data'; return; }
+    if (up === '.CODE') { section = 'code'; return; }
+    // label zonder dubbele punt vóór DB/DW (bv. "tabel DW 1,2")
+    let m2 = /^([A-Za-z_][A-Za-z0-9_]*)\s+(DB|DW)\b\s*(.*)$/i.exec(t);
+    let mn, rest;
+    if (m2 && !R16.includes(m2[1].toUpperCase()) && !R8.includes(m2[1].toUpperCase())) { pending.push({ name: m2[1], line: ln }); mn = m2[2].toUpperCase(); rest = m2[3]; }
+    else { const mm = /^([A-Za-z]+)\s*(.*)$/.exec(t); if (!mm) { err(ln, 'onbegrijpelijke regel: ' + t); return; } mn = mm[1].toUpperCase(); rest = mm[2]; }
+    const it = { line: ln, mn, ops: rest.trim() ? splitTop(rest.trim()) : [], sec: section, labels: pending, text: t };
+    pending.forEach((p) => defLabel(p.name, p.line, section)); pending = [];
+    items.push(it);
+  });
+  pending.forEach((p) => defLabel(p.name, p.line, section));
+  pending.forEach((p) => { labels[p.name].off = -1; });
+  if (errors.length) return { ok: false, errors };
+
+  // ---- gegevenssectie ----
+  const dataBytes = []; const dataItems = items.filter((x) => x.sec === 'data');
+  for (const it of dataItems) {
+    it.off = dataBytes.length; it.labels.forEach((p) => { labels[p.name].off = it.off; });
+    try {
+      if (it.mn !== 'DB' && it.mn !== 'DW') throw new AsmErr('in .DATA zijn enkel DB en DW toegestaan');
+      if (!it.ops.length) throw new AsmErr(it.mn + ' heeft waarden nodig');
+      for (const op of it.ops) {
+        let mm;
+        if ((mm = /^(.+?)\s+DUP\s*\(\s*(.+)\s*\)$/i.exec(op))) {
+          const n = parseNum(mm[1]); const v = mm[2].trim() === '?' ? 0 : parseNum(mm[2]);
+          if (n === null || v === null || n < 0) throw new AsmErr('ongeldige DUP: ' + op);
+          for (let k = 0; k < n; k++) { if (it.mn === 'DB') dataBytes.push(v & 255); else dataBytes.push(v & 255, (v >> 8) & 255); }
+        } else if (/^'.*'$|^".*"$/.test(op) && op.length > 3) {
+          if (it.mn !== 'DB') throw new AsmErr('tekst kan enkel met DB');
+          for (const ch of op.slice(1, -1)) dataBytes.push(ch.charCodeAt(0) & 255);
+        } else if (op === '?') { if (it.mn === 'DB') dataBytes.push(0); else dataBytes.push(0, 0); }
+        else {
+          const v = parseNum(op); if (v === null) throw new AsmErr('ongeldige waarde: ' + op);
+          if (it.mn === 'DB') dataBytes.push(v & 255); else dataBytes.push(v & 255, (v >> 8) & 255);
+        }
+      }
+    } catch (e) { if (e instanceof AsmErr) err(it.line, e.message); else throw e; }
+  }
+  pending.forEach(() => { });
+  Object.keys(labels).forEach((k) => { if (labels[k].off === -1) labels[k].off = labels[k].sec === 'data' ? dataBytes.length : 0; });
+
+  // ---- codesectie: iteratief (JMP kort of nabij) ----
+  const codeItems = items.filter((x) => x.sec === 'code');
+  const near = new Set();
+  const lookup = (name, ln) => { const l = labels[name]; if (!l) throw new AsmErr('onbekend label "' + name + '"'); return l; };
+
+  function parseOperand(s) {
+    let o = s.trim(), size = null, m;
+    if ((m = /^(BYTE|WORD)\s+PTR\s+(.*)$/i.exec(o))) { size = m[1].toUpperCase() === 'BYTE' ? 8 : 16; o = m[2].trim(); }
+    const U = o.toUpperCase();
+    if (R16.includes(U)) return { t: 'r16', n: R16.indexOf(U), name: U };
+    if (R8.includes(U)) return { t: 'r8', n: R8.indexOf(U), name: U };
+    if (SR.includes(U)) return { t: 'sreg', n: SR.indexOf(U), name: U };
+    if ((m = /^OFFSET\s+([A-Za-z_]\w*)$/i.exec(o))) { const l = lookup(m[1]); return { t: 'imm', v: l.off, fixed16: true }; }
+    if (o[0] === '[') {
+      if (o[o.length - 1] !== ']') throw new AsmErr('haakje ] ontbreekt in ' + o);
+      const inner = o.slice(1, -1).replace(/\s+/g, ''); if (!inner) throw new AsmErr('lege geheugenverwijzing []');
+      const terms = inner.replace(/-/g, '+-').split('+').filter((x) => x !== '');
+      const mem = { t: 'mem', base: null, index: null, disp: 0, dlabel: false, size };
+      for (const tm of terms) {
+        const neg = tm[0] === '-'; const body = neg ? tm.slice(1) : tm; const B = body.toUpperCase();
+        if (B === 'BX' || B === 'BP') { if (neg || mem.base) throw new AsmErr('ongeldige basisregister-combinatie in ' + o); mem.base = B; }
+        else if (B === 'SI' || B === 'DI') { if (neg || mem.index) throw new AsmErr('ongeldige indexregister-combinatie in ' + o); mem.index = B; }
+        else if (R16.includes(B) || R8.includes(B)) throw new AsmErr('register ' + B + ' kan niet tussen [ ]: gebruik BX, BP, SI of DI');
+        else { const v = parseNum(body); if (v !== null) mem.disp += neg ? -v : v; else if (/^[A-Za-z_]\w*$/.test(body)) { const l = lookup(body); mem.disp += (neg ? -1 : 1) * l.off; mem.dlabel = true; } else throw new AsmErr('onbekende term "' + body + '" in ' + o); }
+      }
+      mem.disp = mem.disp | 0; if (!mem.base && !mem.index) mem.disp &= 0xFFFF;
+      return mem;
+    }
+    const v = parseNum(o);
+    if (v !== null) return { t: 'imm', v };
+    if (/^[A-Za-z_]\w*$/.test(o)) { const l = lookup(o); return { t: 'label', name: o, l, size }; }
+    throw new AsmErr('operand niet begrepen: ' + o);
+  }
+  const asMem = (o) => (o.t === 'label' ? { t: 'mem', base: null, index: null, disp: o.l.off & 0xFFFF, dlabel: true, size: o.size } : o);
+  const osize = (a, b, ln) => {
+    for (const o of [a, b]) if (o) { if (o.t === 'r16') return 16; if (o.t === 'r8') return 8; }
+    for (const o of [a, b]) if (o && o.t === 'mem' && o.size) return o.size;
+    throw new AsmErr('geef de grootte op met BYTE PTR of WORD PTR');
+  };
+  function need(ops, n, mn) { if (ops.length !== n) throw new AsmErr(mn + ' heeft ' + n + ' operand' + (n === 1 ? '' : 'en') + ' nodig'); }
+  function fitS8(v) { return v >= -128 && v <= 127; }
+
+  function encode(it, pc) {
+    const mn = it.mn; let ops = it.ops;
+    const noOps = { NOP: [0x90], HLT: [0xF4], CLC: [0xF8], STC: [0xF9], CMC: [0xF5], CBW: [0x98], CWD: [0x99], RET: [0xC3], PUSHF: [0x9C], POPF: [0x9D], CLI: [0xFA], STI: [0xFB], CLD: [0xFC], STD: [0xFD] };
+    if (noOps[mn]) { need(ops, 0, mn); return noOps[mn].slice(); }
+    if (JCC[mn] !== undefined || mn === 'JMP' || mn === 'CALL') {
+      need(ops, 1, mn);
+      const o = parseOperand(ops[0]); if (o.t !== 'label') throw new AsmErr(mn + ' springt naar een label');
+      if (o.l.sec !== 'code') throw new AsmErr('"' + o.name + '" is een gegevenslabel, geen sprongdoel');
+      const target = o.l.off;
+      if (mn === 'CALL') return [0xE8, (target - (pc + 3)) & 255, ((target - (pc + 3)) >> 8) & 255];
+      if (mn === 'JMP') {
+        const rel = target - (pc + 2);
+        if (near.has(it) || !fitS8(rel)) { near.add(it); const r = target - (pc + 3); return [0xE9, r & 255, (r >> 8) & 255]; }
+        return [0xEB, rel & 255];
+      }
+      const rel = target - (pc + 2);
+      if (!fitS8(rel) && it.final) throw new AsmErr('sprong te ver voor ' + mn + ' (max. 127 bytes): gebruik een tussenstap met JMP');
+      return [JCC[mn], rel & 255];
+    }
+    const O = ops.map(parseOperand).map(asMem);
+    if (mn === 'MOV') {
+      need(O, 2, mn); const [d, s] = O;
+      if (d.t === 'sreg') {
+        if (d.name === 'CS') throw new AsmErr('MOV CS, ... is niet toegestaan');
+        if (!(s.t === 'r16' || s.t === 'mem')) throw new AsmErr('MOV naar een segmentregister kan enkel vanuit een 16-bit register of geheugen (niet met een getal)');
+        return [0x8E].concat(rmBytes(d.n, s));
+      }
+      if (s.t === 'sreg') { if (!(d.t === 'r16' || d.t === 'mem')) throw new AsmErr('kan segmentregister enkel naar een 16-bit register of geheugen kopiëren'); return [0x8C].concat(rmBytes(s.n, d)); }
+      const sz = osize(d, s);
+      if (d.t === 'mem' && s.t === 'mem') throw new AsmErr('MOV kan niet van geheugen naar geheugen (gebruik een register als tussenstap)');
+      if (isReg(d) && s.t === 'imm') {
+        if (d.t === 'r16') return [0xB8 + d.n, s.v & 255, (s.v >> 8) & 255];
+        return [0xB0 + d.n, s.v & 255];
+      }
+      if (d.t === 'mem' && s.t === 'imm') {
+        if (!d.size) throw new AsmErr('geef de grootte op: MOV WORD PTR [..], waarde  (of BYTE PTR)');
+        return sz === 16 ? [0xC7].concat(rmBytes(0, d), [s.v & 255, (s.v >> 8) & 255]) : [0xC6].concat(rmBytes(0, d), [s.v & 255]);
+      }
+      if (isReg(d) && isReg(s)) { if (d.t !== s.t) throw new AsmErr('beide registers moeten even breed zijn'); return [sz === 16 ? 0x89 : 0x88].concat(rmBytes(s.n, d)); }
+      if (isReg(s) && d.t === 'mem') {
+        if (!d.base && !d.index && s.n === 0) return [sz === 16 ? 0xA3 : 0xA2, d.disp & 255, (d.disp >> 8) & 255];
+        return [sz === 16 ? 0x89 : 0x88].concat(rmBytes(s.n, d));
+      }
+      if (isReg(d) && s.t === 'mem') {
+        if (!s.base && !s.index && d.n === 0) return [sz === 16 ? 0xA1 : 0xA0, s.disp & 255, (s.disp >> 8) & 255];
+        return [sz === 16 ? 0x8B : 0x8A].concat(rmBytes(d.n, s));
+      }
+      throw new AsmErr('deze combinatie van operanden kan niet bij MOV');
+    }
+    if (ALUN.includes(mn)) {
+      need(O, 2, mn); const [d, s] = O, k = ALUN.indexOf(mn), base = k * 8;
+      if (d.t === 'sreg' || s.t === 'sreg') throw new AsmErr(mn + ' werkt niet op segmentregisters');
+      const sz = osize(d, s);
+      if (d.t === 'mem' && s.t === 'mem') throw new AsmErr(mn + ' kan niet van geheugen naar geheugen');
+      if (s.t === 'imm') {
+        if (d.t === 'mem' && !d.size) throw new AsmErr('geef de grootte op: ' + mn + ' WORD PTR [..], waarde');
+        if (sz === 8) { if (d.t === 'r8' && d.n === 0) return [base + 4, s.v & 255]; return [0x80].concat(rmBytes(k, d), [s.v & 255]); }
+        const sv = s16(s.v & 0xFFFF);
+        if (!s.fixed16 && fitS8(sv)) return [0x83].concat(rmBytes(k, d), [sv & 255]);
+        if (d.t === 'r16' && d.n === 0) return [base + 5, s.v & 255, (s.v >> 8) & 255];
+        return [0x81].concat(rmBytes(k, d), [s.v & 255, (s.v >> 8) & 255]);
+      }
+      if (isReg(s)) { if (isReg(d) && d.t !== s.t) throw new AsmErr('beide registers moeten even breed zijn'); return [base + (sz === 16 ? 1 : 0)].concat(rmBytes(s.n, d)); }
+      if (isReg(d) && s.t === 'mem') return [base + (sz === 16 ? 3 : 2)].concat(rmBytes(d.n, s));
+      throw new AsmErr('deze combinatie van operanden kan niet bij ' + mn);
+    }
+    if (mn === 'TEST') {
+      need(O, 2, mn); const [d, s] = O; const sz = osize(d, s);
+      if (s.t === 'imm') { if (d.t === 'mem' && !d.size) throw new AsmErr('geef de grootte op: TEST WORD PTR [..], waarde'); return [sz === 16 ? 0xF7 : 0xF6].concat(rmBytes(0, d), sz === 16 ? [s.v & 255, (s.v >> 8) & 255] : [s.v & 255]); }
+      if (isReg(s) && isRM(d)) return [sz === 16 ? 0x85 : 0x84].concat(rmBytes(s.n, d));
+      throw new AsmErr('ongeldige operanden voor TEST');
+    }
+    if (mn === 'PUSH' || mn === 'POP') {
+      need(O, 1, mn); const o = O[0]; if (o.t !== 'r16') throw new AsmErr(mn + ' werkt in deze simulator enkel met een 16-bit register');
+      return [(mn === 'PUSH' ? 0x50 : 0x58) + o.n];
+    }
+    if (mn === 'XCHG') {
+      need(O, 2, mn); let [a, b] = O; if (!isReg(a) && isReg(b)) [a, b] = [b, a]; if (!isReg(a) || !isRM(b)) throw new AsmErr('ongeldige operanden voor XCHG');
+      if (a.t === 'r16' && b.t === 'r16') { if (a.n === 0) return [0x90 + b.n]; if (b.n === 0) return [0x90 + a.n]; }
+      return [a.t === 'r16' ? 0x87 : 0x86].concat(rmBytes(a.n, b));
+    }
+    if (mn === 'LEA') { need(O, 2, mn); const [d, s] = O; if (d.t !== 'r16' || s.t !== 'mem') throw new AsmErr('LEA r16, [geheugen]'); return [0x8D].concat(rmBytes(d.n, s)); }
+    if (mn === 'INC' || mn === 'DEC') {
+      need(O, 1, mn); const o = O[0], k = mn === 'INC' ? 0 : 1;
+      if (o.t === 'r16') return [(k ? 0x48 : 0x40) + o.n];
+      if (o.t === 'r8') return [0xFE].concat(rmBytes(k, o));
+      if (o.t === 'mem') { if (!o.size) throw new AsmErr('geef de grootte op: ' + mn + ' WORD PTR [..]'); return [o.size === 16 ? 0xFF : 0xFE].concat(rmBytes(k, o)); }
+      throw new AsmErr('ongeldige operand voor ' + mn);
+    }
+    const grp3 = { NOT: 2, NEG: 3, MUL: 4, IMUL: 5, DIV: 6, IDIV: 7 };
+    if (grp3[mn] !== undefined) {
+      need(O, 1, mn); const o = O[0]; if (!isRM(o)) throw new AsmErr('ongeldige operand voor ' + mn);
+      let sz = o.t === 'r16' ? 16 : o.t === 'r8' ? 8 : o.size; if (!sz) throw new AsmErr('geef de grootte op: ' + mn + ' WORD PTR [..]');
+      return [sz === 16 ? 0xF7 : 0xF6].concat(rmBytes(grp3[mn], o));
+    }
+    if (['SHL', 'SAL', 'SHR', 'SAR', 'ROL', 'ROR', 'RCL', 'RCR'].includes(mn)) {
+      need(O, 2, mn); const [d, c] = O; const k = { ROL: 0, ROR: 1, RCL: 2, RCR: 3, SHL: 4, SAL: 4, SHR: 5, SAR: 7 }[mn];
+      if (!isRM(d)) throw new AsmErr('ongeldige operand voor ' + mn);
+      let sz = d.t === 'r16' ? 16 : d.t === 'r8' ? 8 : d.size; if (!sz) throw new AsmErr('geef de grootte op: ' + mn + ' WORD PTR [..], 1');
+      if (c.t === 'imm' && c.v === 1) return [sz === 16 ? 0xD1 : 0xD0].concat(rmBytes(k, d));
+      if (c.t === 'r8' && c.n === 1) return [sz === 16 ? 0xD3 : 0xD2].concat(rmBytes(k, d));
+      throw new AsmErr('de 8086 kan enkel schuiven over 1 bit of over CL bits (bv. ' + mn + ' AX, 1 of ' + mn + ' AX, CL)');
+    }
+    throw new AsmErr('onbekende instructie: ' + mn);
+  }
+
+  let lastErrors = [];
+  const sizes = new Map();
+  for (let iter = 0; iter < 12; iter++) {
+    let pc = 0; const nearBefore = near.size; lastErrors = [];
+    for (const it of codeItems) {
+      it.off = pc; it.labels.forEach((p) => { labels[p.name].off = pc; });
+      try { const b = encode(it, pc); it.bytes = b; pc += b.length; } catch (e) { if (e instanceof AsmErr) { lastErrors.push({ line: it.line, msg: e.message }); it.bytes = []; } else throw e; }
+    }
+    Object.keys(labels).forEach((k) => { if (labels[k].sec === 'code' && labels[k].off === -1) labels[k].off = pc; });
+    if (near.size === nearBefore && iter > 0) break;
+  }
+  // slotpas: labels aan het einde van de code
+  let pc = 0; lastErrors = [];
+  for (const it of codeItems) {
+    it.off = pc; it.labels.forEach((p) => { labels[p.name].off = pc; }); it.final = true;
+    try { const b = encode(it, pc); it.bytes = b; pc += b.length; } catch (e) { if (e instanceof AsmErr) { lastErrors.push({ line: it.line, msg: e.message }); it.bytes = []; } else throw e; }
+  }
+  Object.keys(labels).forEach((k) => { if (labels[k].sec === 'code' && labels[k].off === -1) labels[k].off = pc; });
+  // sprongen opnieuw coderen met de definitieve labels
+  pc = 0; lastErrors = [];
+  for (const it of codeItems) {
+    it.off = pc; try { const b = encode(it, pc); it.bytes = b; pc += b.length; } catch (e) { if (e instanceof AsmErr) { lastErrors.push({ line: it.line, msg: e.message }); it.bytes = []; } else throw e; }
+  }
+  errors.push(...lastErrors);
+  if (errors.length) return { ok: false, errors: errors.sort((a, b) => a.line - b.line) };
+  const code = []; const listing = [];
+  for (const it of codeItems) { listing.push({ line: it.line, off: it.off, bytes: it.bytes, text: it.text, labels: it.labels.map((p) => p.name) }); code.push(...it.bytes); }
+  const lab = {}; Object.keys(labels).forEach((k) => { lab[k] = { sec: labels[k].sec, off: labels[k].off }; });
+  return { ok: true, errors: [], code, data: dataBytes, listing, labels: lab, dataItems: dataItems.map((d) => ({ line: d.line, off: d.off, text: d.text })) };
+}
+
+/* ---------- decoder ---------- */
+class NeedByte extends Error { }
+function decode(rd, at) {
+  let p = 0; const b = () => rd(p++);
+  const w = () => { const lo = b(), hi = b(); return lo | (hi << 8); };
+  const op0 = b();
+  const mk = (o) => Object.assign({ size: 16, d: null, s: null, base: 2, r: false, wr: false }, o);
+  const modrm = () => {
+    const x = b(), mod = x >> 6, reg = (x >> 3) & 7, rm = x & 7;
+    if (mod === 3) return { mod, reg, rm, opd: null };
+    let base = null, index = null, disp = 0, ea;
+    const combos = [['BX', 'SI'], ['BX', 'DI'], ['BP', 'SI'], ['BP', 'DI'], [null, 'SI'], [null, 'DI'], ['BP', null], ['BX', null]];
+    if (mod === 0 && rm === 6) { disp = w(); base = null; index = null; }
+    else { [base, index] = combos[rm]; if (mod === 1) disp = s8(b()); else if (mod === 2) disp = s16(w()); }
+    const m = { k: 'm', base, index, disp, dlabel: false };
+    return { mod, reg, rm, opd: m };
+  };
+  const rmOp = (mr, sz) => (mr.mod === 3 ? { k: 'r', n: mr.rm, size: sz } : Object.assign({ size: sz }, mr.opd));
+  const memText = (m, sz, needPtr) => {
+    let t = '';
+    if (m.base) t += m.base; if (m.index) t += (t ? '+' : '') + m.index;
+    if (!m.base && !m.index) t = asmHex(m.disp & 0xFFFF); else if (m.disp > 0) t += '+' + asmNum(m.disp); else if (m.disp < 0) t += '-' + asmNum(-m.disp);
+    return (needPtr ? (sz === 16 ? 'WORD PTR ' : 'BYTE PTR ') : '') + '[' + t + ']';
+  };
+  const opText = (o, needPtr) => { if (o.k === 'r') return (o.size === 16 ? R16 : R8)[o.n]; if (o.k === 's') return SR[o.n]; if (o.k === 'i') return asmNum(o.v & (o.size === 8 ? 255 : 0xFFFF)); if (o.k === 'cl') return 'CL'; if (o.k === 'one') return '1'; return memText(o, o.size, needPtr); };
+  const eaOf = (o) => (o.k === 'm' ? memEA({ base: o.base, index: o.index, disp: o.disp, dlabel: false }) : 0);
+  const finish = (ins) => {
+    ins.len = p;
+    const d = ins.d, s = ins.s;
+    const needPtr = (d && d.k === 'm' && (!s || s.k === 'i' || s.k === 'cl' || s.k === 'one')) || (!s && d && d.k === 'm');
+    if (ins.jump) ins.text = ins.op + ' ' + asmHex((at + ins.len + ins.rel) & 0xFFFF);
+    else ins.text = ins.op + (d ? ' ' + opText(d, needPtr) : '') + (s ? ', ' + opText(s, false) : '');
+    ins.ea = (d && d.k === 'm' ? eaOf(d) : 0) || (s && s.k === 'm' ? eaOf(s) : 0);
+    return ins;
+  };
+  // eenvoudige een-byte-instructies
+  const simple = { 0x90: ['NOP', 3], 0xF4: ['HLT', 2], 0xF8: ['CLC', 2], 0xF9: ['STC', 2], 0xF5: ['CMC', 2], 0x98: ['CBW', 2], 0x99: ['CWD', 5], 0xC3: ['RET', 3], 0x9C: ['PUSHF', 4], 0x9D: ['POPF', 4], 0xFA: ['CLI', 2], 0xFB: ['STI', 2], 0xFC: ['CLD', 2], 0xFD: ['STD', 2] };
+  if (simple[op0]) { const [op, base] = simple[op0]; const ins = mk({ op, base }); if (op === 'RET') { ins.r = true; ins.stack = true; ins.flush = true; } if (op === 'PUSHF') { ins.wr = true; ins.stack = true; } if (op === 'POPF') { ins.r = true; ins.stack = true; } return finish(ins); }
+  if (op0 >= 0x40 && op0 <= 0x4F) { const o = { k: 'r', n: op0 & 7, size: 16 }; return finish(mk({ op: op0 < 0x48 ? 'INC' : 'DEC', d: o, base: 2 })); }
+  if (op0 >= 0x50 && op0 <= 0x5F) { const o = { k: 'r', n: op0 & 7, size: 16 }; const push = op0 < 0x58; return finish(mk({ op: push ? 'PUSH' : 'POP', d: o, base: 3, wr: push, r: !push, stack: true })); }
+  if (op0 > 0x90 && op0 <= 0x97) { return finish(mk({ op: 'XCHG', d: { k: 'r', n: 0, size: 16 }, s: { k: 'r', n: op0 & 7, size: 16 }, base: 3 })); }
+  if (op0 >= 0xB0 && op0 <= 0xB7) { const v = b(); return finish(mk({ op: 'MOV', size: 8, d: { k: 'r', n: op0 & 7, size: 8 }, s: { k: 'i', v, size: 8 }, base: 4 })); }
+  if (op0 >= 0xB8 && op0 <= 0xBF) { const v = w(); return finish(mk({ op: 'MOV', d: { k: 'r', n: op0 & 7, size: 16 }, s: { k: 'i', v, size: 16 }, base: 4 })); }
+  if ((op0 >= 0x70 && op0 <= 0x7F) || (op0 >= 0xE0 && op0 <= 0xE3)) { const rel = s8(b()); return finish(mk({ op: JNAME[op0], jump: true, rel, cond: op0, base: op0 >= 0xE0 ? 3 : 4 })); }
+  if (op0 === 0xEB) { const rel = s8(b()); return finish(mk({ op: 'JMP', jump: true, rel, uncond: true, base: 2, flush: true })); }
+  if (op0 === 0xE9) { const rel = s16(w()); return finish(mk({ op: 'JMP', jump: true, rel, uncond: true, base: 2, flush: true })); }
+  if (op0 === 0xE8) { const rel = s16(w()); return finish(mk({ op: 'CALL', jump: true, rel, uncond: true, base: 3, wr: true, stack: true, flush: true })); }
+  if (op0 === 0xA0 || op0 === 0xA1) { const sz = op0 & 1 ? 16 : 8; const a = w(); return finish(mk({ op: 'MOV', size: sz, d: { k: 'r', n: 0, size: sz }, s: { k: 'm', base: null, index: null, disp: a, size: sz }, base: 2, r: true })); }
+  if (op0 === 0xA2 || op0 === 0xA3) { const sz = op0 & 1 ? 16 : 8; const a = w(); return finish(mk({ op: 'MOV', size: sz, d: { k: 'm', base: null, index: null, disp: a, size: sz }, s: { k: 'r', n: 0, size: sz }, base: 2, wr: true })); }
+  // ALU-groep 00-3F
+  if (op0 < 0x40 && (op0 & 7) < 6) {
+    const k = op0 >> 3, f = op0 & 7, name = ALUN[k], sz = f & 1 ? 16 : 8;
+    if (f < 4) {
+      const mr = modrm(), regO = { k: 'r', n: mr.reg, size: sz }, rmO = rmOp(mr, sz);
+      const toReg = f >= 2, d = toReg ? regO : rmO, s = toReg ? rmO : regO;
+      const mem = rmO.k === 'm'; const store = name !== 'CMP';
+      return finish(mk({ op: name, size: sz, d, s, base: mem ? (toReg ? 3 : 4) : 3, r: mem, wr: mem && !toReg && store, alu: k }));
+    }
+    const v = sz === 16 ? w() : b();
+    return finish(mk({ op: name, size: sz, d: { k: 'r', n: 0, size: sz }, s: { k: 'i', v, size: sz }, base: 4, alu: k }));
+  }
+  if (op0 === 0x80 || op0 === 0x81 || op0 === 0x83) {
+    const sz = op0 === 0x80 ? 8 : 16, mr = modrm(), k = mr.reg, name = ALUN[k], rmO = rmOp(mr, sz);
+    let v; if (op0 === 0x81) v = w(); else if (op0 === 0x83) v = s8(b()) & 0xFFFF; else v = b();
+    const mem = rmO.k === 'm';
+    return finish(mk({ op: name, size: sz, d: rmO, s: { k: 'i', v, size: sz }, base: mem ? 5 : 4, r: mem, wr: mem && name !== 'CMP', alu: k }));
+  }
+  if (op0 === 0x84 || op0 === 0x85) { const sz = op0 & 1 ? 16 : 8, mr = modrm(); const rmO = rmOp(mr, sz); return finish(mk({ op: 'TEST', size: sz, d: rmO, s: { k: 'r', n: mr.reg, size: sz }, base: 3, r: rmO.k === 'm' })); }
+  if (op0 === 0x86 || op0 === 0x87) { const sz = op0 & 1 ? 16 : 8, mr = modrm(); const rmO = rmOp(mr, sz); const mem = rmO.k === 'm'; return finish(mk({ op: 'XCHG', size: sz, d: { k: 'r', n: mr.reg, size: sz }, s: rmO, base: 4, r: mem, wr: mem })); }
+  if (op0 >= 0x88 && op0 <= 0x8B) {
+    const sz = op0 & 1 ? 16 : 8, mr = modrm(), rmO = rmOp(mr, sz), regO = { k: 'r', n: mr.reg, size: sz }; const toReg = op0 >= 0x8A;
+    const mem = rmO.k === 'm';
+    return finish(mk({ op: 'MOV', size: sz, d: toReg ? regO : rmO, s: toReg ? rmO : regO, base: 2, r: mem && toReg, wr: mem && !toReg }));
+  }
+  if (op0 === 0x8C) { const mr = modrm(); const rmO = rmOp(mr, 16); return finish(mk({ op: 'MOV', d: rmO, s: { k: 's', n: mr.reg & 3 }, base: 2, wr: rmO.k === 'm' })); }
+  if (op0 === 0x8E) { const mr = modrm(); const rmO = rmOp(mr, 16); return finish(mk({ op: 'MOV', d: { k: 's', n: mr.reg & 3 }, s: rmO, base: 2, r: rmO.k === 'm' })); }
+  if (op0 === 0x8D) { const mr = modrm(); if (mr.mod === 3) return mk({ op: 'UNKNOWN', len: p, text: 'DB ' + asmHex(op0), bad: true }); return finish(mk({ op: 'LEA', d: { k: 'r', n: mr.reg, size: 16 }, s: rmOp(mr, 16), base: 2, nomem: true })); }
+  if (op0 === 0xC6 || op0 === 0xC7) { const sz = op0 & 1 ? 16 : 8, mr = modrm(); const rmO = rmOp(mr, sz); const v = sz === 16 ? w() : b(); const mem = rmO.k === 'm'; return finish(mk({ op: 'MOV', size: sz, d: rmO, s: { k: 'i', v, size: sz }, base: mem ? 4 : 4, wr: mem })); }
+  if (op0 === 0xA8 || op0 === 0xA9) { const sz = op0 & 1 ? 16 : 8; const v = sz === 16 ? w() : b(); return finish(mk({ op: 'TEST', size: sz, d: { k: 'r', n: 0, size: sz }, s: { k: 'i', v, size: sz }, base: 4 })); }
+  if (op0 >= 0xD0 && op0 <= 0xD3) {
+    const sz = op0 & 1 ? 16 : 8, mr = modrm(), rmO = rmOp(mr, sz), byCL = op0 >= 0xD2; const mem = rmO.k === 'm';
+    return finish(mk({ op: SHFN[mr.reg], size: sz, d: rmO, s: byCL ? { k: 'cl' } : { k: 'one' }, base: mem ? 5 : 2, r: mem, wr: mem, shift: mr.reg, byCL }));
+  }
+  if (op0 === 0xF6 || op0 === 0xF7) {
+    const sz = op0 & 1 ? 16 : 8, mr = modrm(), rmO = rmOp(mr, sz), mem = rmO.k === 'm';
+    const names = ['TEST', 'TEST', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'];
+    if (mr.reg < 2) { const v = sz === 16 ? w() : b(); return finish(mk({ op: 'TEST', size: sz, d: rmO, s: { k: 'i', v, size: sz }, base: 5, r: mem })); }
+    const timing = { 4: sz === 16 ? 118 : 70, 5: sz === 16 ? 128 : 80, 6: sz === 16 ? 144 : 80, 7: sz === 16 ? 165 : 101 };
+    const base = mr.reg >= 4 ? timing[mr.reg] : (mem ? 5 : 3);
+    return finish(mk({ op: names[mr.reg], size: sz, d: rmO, base, r: mem, wr: mem && (mr.reg === 2 || mr.reg === 3), grp3: mr.reg }));
+  }
+  if (op0 === 0xFE || op0 === 0xFF) {
+    const sz = op0 & 1 ? 16 : 8, mr = modrm(); if (mr.reg > 1) return mk({ op: 'UNKNOWN', len: p, text: 'onbekende opcode ' + asmHex(op0), bad: true });
+    const rmO = rmOp(mr, sz), mem = rmO.k === 'm';
+    return finish(mk({ op: mr.reg ? 'DEC' : 'INC', size: sz, d: rmO, base: mem ? 5 : 3, r: mem, wr: mem }));
+  }
+  return mk({ op: 'UNKNOWN', len: p, text: 'DB ' + asmHex(op0), bad: true });
+}
+
+/* ---------- machine ---------- */
+class Machine {
+  constructor() { this.mem = new Uint8Array(1 << 20); this.cfg = { CS: 0x0100, DS: 0x0200, ES: 0x0200, SS: 0x0300, SP: 0x0100 }; this.prog = null; this.reset(); }
+  load(prog, cfg) { this.prog = prog; if (cfg) this.cfg = Object.assign({}, this.cfg, cfg); this.reset(); }
+  reset() {
+    this.R = [0, 0, 0, 0, this.cfg.SP & 0xFFFF, 0, 0, 0];
+    this.S = [this.cfg.ES, this.cfg.CS, this.cfg.SS, this.cfg.DS];
+    this.IP = 0; this.flags = 0; this.clock = 0; this.count = 0; this.halted = false; this.fault = '';
+    this.mem.fill(0);
+    if (this.prog) {
+      const cs = (this.S[1] << 4) & 0xFFFFF; this.prog.code.forEach((v, i) => { this.mem[(cs + i) & 0xFFFFF] = v; });
+      const ds = (this.S[3] << 4) & 0xFFFFF; this.prog.data.forEach((v, i) => { this.mem[(ds + i) & 0xFFFFF] = v; });
+    }
+    this.codeEnd = this.prog ? this.prog.code.length : 0;
+    this.queue = []; this.fetchPtr = 0; this.biu = { busy: 0, kind: null, discard: false, addr: null, bytes: 0, t: 0, info: '' };
+    this.eu = { phase: 'FETCH', ins: null, bytes: [], stage: '', left: 0, stall: '', buses: 0, busesDone: 0, eaLeft: 0, baseLeft: 0, startedAt: 0 };
+    this.addr = null; this.lastAlu = null; this.changed = {}; this.writes = {}; this.reads = {}; this.log = []; this.lastIns = null; this.instrStart = 0; this.lastCommit = null;
+    this.stats = { stalls: 0, flushes: 0, fetches: 0 };
+    this.version = (this.version || 0) + 1;
+  }
+  phys(seg, off) { return (((seg & 0xFFFF) << 4) + (off & 0xFFFF)) & 0xFFFFF; }
+  rd8(seg, off) { const a = this.phys(seg, off); this.reads[a] = this.clock; return this.mem[a]; }
+  wr8(seg, off, v) { const a = this.phys(seg, off); this.mem[a] = v & 255; this.writes[a] = this.clock; }
+  rd16(seg, off) { return this.rd8(seg, off) | (this.rd8(seg, off + 1) << 8); }
+  wr16(seg, off, v) { this.wr8(seg, off, v & 255); this.wr8(seg, off + 1, (v >> 8) & 255); }
+  getR(n, sz) { return sz === 16 ? this.R[n] : (n < 4 ? this.R[n] & 255 : (this.R[n - 4] >> 8) & 255); }
+  setR(n, sz, v) { if (sz === 16) this.R[n] = v & 0xFFFF; else if (n < 4) this.R[n] = (this.R[n] & 0xFF00) | (v & 255); else this.R[n - 4] = (this.R[n - 4] & 0x00FF) | ((v & 255) << 8); }
+  flag(f) { return (this.flags & f) ? 1 : 0; }
+  setFlag(f, v) { if (v) this.flags |= f; else this.flags &= ~f; }
+  parity(v) { let c = 0; for (let i = 0; i < 8; i++) if ((v >> i) & 1) c++; return (c & 1) === 0; }
+  szp(r, sz) { const m = sz === 16 ? 0xFFFF : 0xFF, sg = sz === 16 ? 0x8000 : 0x80; this.setFlag(F.ZF, (r & m) === 0); this.setFlag(F.SF, (r & sg) !== 0); this.setFlag(F.PF, this.parity(r & 255)); }
+  eaOff(o) { return ((o.base ? this.R[R16.indexOf(o.base)] : 0) + (o.index ? this.R[R16.indexOf(o.index)] : 0) + o.disp) & 0xFFFF; }
+  eaSeg(o) { return o.base === 'BP' ? this.S[2] : this.S[3]; }
+  memAddr(o) { return { seg: this.eaSeg(o), segName: o.base === 'BP' ? 'SS' : 'DS', off: this.eaOff(o) }; }
+  readOp(o) {
+    if (o.k === 'r') return this.getR(o.n, o.size);
+    if (o.k === 'i') return o.v & (o.size === 8 ? 255 : 0xFFFF);
+    if (o.k === 's') return this.S[o.n];
+    if (o.k === 'm') { const a = this.memAddr(o); return o.size === 16 ? this.rd16(a.seg, a.off) : this.rd8(a.seg, a.off); }
+    return 0;
+  }
+  writeOp(o, v) {
+    if (o.k === 'r') this.setR(o.n, o.size, v);
+    else if (o.k === 's') this.S[o.n] = v & 0xFFFF;
+    else if (o.k === 'm') { const a = this.memAddr(o); if (o.size === 16) this.wr16(a.seg, a.off, v); else this.wr8(a.seg, a.off, v); }
+  }
+  push(v) { this.R[4] = (this.R[4] - 2) & 0xFFFF; this.wr16(this.S[2], this.R[4], v); }
+  pop() { const v = this.rd16(this.S[2], this.R[4]); this.R[4] = (this.R[4] + 2) & 0xFFFF; return v; }
+  alu(k, a, b, sz) {
+    const m = sz === 16 ? 0xFFFF : 0xFF, sg = sz === 16 ? 0x8000 : 0x80, cf = this.flag(F.CF); let r;
+    if (k === 0 || k === 2) { const c = k === 2 ? cf : 0; r = a + b + c; this.setFlag(F.CF, r > m); r &= m; this.setFlag(F.OF, ((a ^ r) & (b ^ r) & sg) !== 0); this.setFlag(F.AF, ((a ^ b ^ r) & 16) !== 0); }
+    else if (k === 5 || k === 7 || k === 3) { const c = k === 3 ? cf : 0; r = a - b - c; this.setFlag(F.CF, a < b + c); r &= m; this.setFlag(F.OF, ((a ^ b) & (a ^ r) & sg) !== 0); this.setFlag(F.AF, ((a ^ b ^ r) & 16) !== 0); }
+    else { r = k === 1 ? (a | b) : k === 4 ? (a & b) : (a ^ b); this.setFlag(F.CF, false); this.setFlag(F.OF, false); this.setFlag(F.AF, false); }
+    this.szp(r, sz); return r;
+  }
+  cond(c) {
+    const CF = this.flag(F.CF), ZF = this.flag(F.ZF), SF = this.flag(F.SF), OF = this.flag(F.OF), PF = this.flag(F.PF);
+    switch (c & 0xFE) {
+      case 0x70: return OF; case 0x72: return CF; case 0x74: return ZF; case 0x76: return CF || ZF; case 0x78: return SF; case 0x7A: return PF; case 0x7C: return SF !== OF; case 0x7E: return ZF || (SF !== OF);
+    }
+    return 0;
+  }
+  /* semantiek van één instructie; geeft true terug als een sprong werd genomen */
+  execute(ins) {
+    const sz = ins.size, m = sz === 16 ? 0xFFFF : 0xFF, sg = sz === 16 ? 0x8000 : 0x80; let taken = false;
+    const before = { R: this.R.slice(), S: this.S.slice(), IP: this.IP, fl: this.flags };
+    this.lastAlu = null;
+    switch (ins.op) {
+      case 'NOP': break;
+      case 'HLT': this.halted = true; this.fault = 'HLT'; break;
+      case 'MOV': this.writeOp(ins.d, this.readOp(ins.s)); break;
+      case 'XCHG': { const a = this.readOp(ins.d), b = this.readOp(ins.s); this.writeOp(ins.d, b); this.writeOp(ins.s, a); break; }
+      case 'LEA': this.writeOp(ins.d, this.eaOff(ins.s)); break;
+      case 'PUSH': this.push(this.readOp(ins.d)); break;
+      case 'POP': this.writeOp(ins.d, this.pop()); break;
+      case 'PUSHF': this.push(this.flags | 0xF002); break;
+      case 'POPF': this.flags = this.pop() & 0x0FD5 | (this.flags & 0); break;
+      case 'CLC': this.setFlag(F.CF, 0); break; case 'STC': this.setFlag(F.CF, 1); break; case 'CMC': this.setFlag(F.CF, !this.flag(F.CF)); break;
+      case 'CLI': this.setFlag(F.IF, 0); break; case 'STI': this.setFlag(F.IF, 1); break; case 'CLD': this.setFlag(F.DF, 0); break; case 'STD': this.setFlag(F.DF, 1); break;
+      case 'CBW': this.R[0] = (this.R[0] & 0x80) ? (0xFF00 | (this.R[0] & 255)) : (this.R[0] & 255); break;
+      case 'CWD': this.R[2] = (this.R[0] & 0x8000) ? 0xFFFF : 0; break;
+      case 'ADD': case 'OR': case 'ADC': case 'SBB': case 'AND': case 'SUB': case 'XOR': case 'CMP': {
+        const a = this.readOp(ins.d), b = this.readOp(ins.s) & m; const r = this.alu(ins.alu, a, b, sz);
+        this.lastAlu = { op: ins.op, a, b, r, sz };
+        if (ins.op !== 'CMP') this.writeOp(ins.d, r); break;
+      }
+      case 'TEST': { const a = this.readOp(ins.d), b = this.readOp(ins.s); const r = a & b; this.setFlag(F.CF, 0); this.setFlag(F.OF, 0); this.szp(r, sz); this.lastAlu = { op: 'TEST', a, b, r, sz }; break; }
+      case 'INC': case 'DEC': {
+        const a = this.readOp(ins.d), cf = this.flag(F.CF); const r = this.alu(ins.op === 'INC' ? 0 : 5, a, 1, sz); this.setFlag(F.CF, cf);
+        this.lastAlu = { op: ins.op, a, b: 1, r, sz }; this.writeOp(ins.d, r); break;
+      }
+      case 'NOT': this.writeOp(ins.d, ~this.readOp(ins.d) & m); break;
+      case 'NEG': { const a = this.readOp(ins.d); const r = (0 - a) & m; this.setFlag(F.CF, a !== 0); this.setFlag(F.OF, a === sg); this.setFlag(F.AF, ((0 ^ a ^ r) & 16) !== 0); this.szp(r, sz); this.lastAlu = { op: 'NEG', a: 0, b: a, r, sz }; this.writeOp(ins.d, r); break; }
+      case 'MUL': case 'IMUL': {
+        const b = this.readOp(ins.d); const sgn = ins.op === 'IMUL';
+        const A = sz === 16 ? this.R[0] : (this.R[0] & 255), sx = (v, z) => (z === 16 ? s16(v) : s8(v));
+        const p = sgn ? sx(A, sz) * sx(b, sz) : A * b; this.lastAlu = { op: ins.op, a: A, b, r: p, sz, wide: true };
+        let ovf;
+        if (sz === 16) { const u = p >>> 0; this.R[0] = u & 0xFFFF; this.R[2] = (u >>> 16) & 0xFFFF; ovf = sgn ? (p < -32768 || p > 32767) : (this.R[2] !== 0); }
+        else { const u = p & 0xFFFF; this.R[0] = u; ovf = sgn ? (p < -128 || p > 127) : ((u >> 8) !== 0); }
+        this.setFlag(F.CF, ovf); this.setFlag(F.OF, ovf); break;
+      }
+      case 'DIV': case 'IDIV': {
+        const b = this.readOp(ins.d), sgn = ins.op === 'IDIV';
+        let dv = sz === 16 ? ((this.R[2] << 16) | this.R[0]) >>> 0 : this.R[0], dsr = b;
+        if (sgn) { dv = sz === 16 ? ((this.R[2] << 16) | this.R[0]) | 0 : s16(this.R[0]); dsr = sz === 16 ? s16(b) : s8(b); }
+        if (dsr === 0) { this.halted = true; this.fault = 'Delingsfout: delen door 0 (INT 0)'; break; }
+        const q = sgn ? Math.trunc(dv / dsr) : Math.floor(dv / dsr), rem = sgn ? dv - q * dsr : dv - q * dsr;
+        const lim = sgn ? (sz === 16 ? [-32768, 32767] : [-128, 127]) : [0, m];
+        if (q < lim[0] || q > lim[1]) { this.halted = true; this.fault = 'Delingsfout: quotiënt te groot (INT 0)'; break; }
+        this.lastAlu = { op: ins.op, a: dv, b: dsr, r: q, sz, wide: true, rem };
+        if (sz === 16) { this.R[0] = q & 0xFFFF; this.R[2] = rem & 0xFFFF; } else { this.R[0] = ((rem & 255) << 8) | (q & 255); } break;
+      }
+      case 'SHL': case 'SHR': case 'SAR': case 'ROL': case 'ROR': case 'RCL': case 'RCR': {
+        let v = this.readOp(ins.d); const n = ins.byCL ? (this.R[1] & 255) : 1; let cf = this.flag(F.CF), of = this.flag(F.OF); const a0 = v;
+        for (let i = 0; i < n; i++) {
+          const msb = (v & sg) ? 1 : 0, lsb = v & 1;
+          switch (ins.op) {
+            case 'SHL': cf = msb; v = (v << 1) & m; of = ((v & sg) ? 1 : 0) !== cf ? 1 : 0; break;
+            case 'SHR': cf = lsb; of = msb; v = v >> 1; break;
+            case 'SAR': cf = lsb; v = (v >> 1) | (v & sg); of = 0; break;
+            case 'ROL': cf = msb; v = ((v << 1) | msb) & m; of = ((v & sg) ? 1 : 0) !== cf ? 1 : 0; break;
+            case 'ROR': cf = lsb; v = (v >> 1) | (lsb ? sg : 0); of = ((v & sg) ? 1 : 0) !== ((v & (sg >> 1)) ? 1 : 0) ? 1 : 0; break;
+            case 'RCL': { const c = cf; cf = msb; v = ((v << 1) | c) & m; of = ((v & sg) ? 1 : 0) !== cf ? 1 : 0; break; }
+            case 'RCR': { const c = cf; cf = lsb; v = (v >> 1) | (c ? sg : 0); of = ((v & sg) ? 1 : 0) !== ((v & (sg >> 1)) ? 1 : 0) ? 1 : 0; break; }
+          }
+        }
+        if (n > 0) { this.setFlag(F.CF, cf); this.setFlag(F.OF, of); if (ins.op === 'SHL' || ins.op === 'SHR' || ins.op === 'SAR') this.szp(v, sz); this.lastAlu = { op: ins.op, a: a0, b: n, r: v, sz }; }
+        this.writeOp(ins.d, v); break;
+      }
+      case 'JMP': this.IP = (this.IP + ins.rel) & 0xFFFF; taken = true; break;
+      case 'CALL': this.push(this.IP); this.IP = (this.IP + ins.rel) & 0xFFFF; taken = true; break;
+      case 'RET': this.IP = this.pop(); taken = true; break;
+      case 'LOOP': case 'LOOPZ': case 'LOOPNZ': {
+        this.R[1] = (this.R[1] - 1) & 0xFFFF; let go = this.R[1] !== 0;
+        if (ins.op === 'LOOPZ') go = go && this.flag(F.ZF); if (ins.op === 'LOOPNZ') go = go && !this.flag(F.ZF);
+        if (go) { this.IP = (this.IP + ins.rel) & 0xFFFF; taken = true; } break;
+      }
+      case 'JCXZ': if (this.R[1] === 0) { this.IP = (this.IP + ins.rel) & 0xFFFF; taken = true; } break;
+      default:
+        if (ins.cond !== undefined) { let c = this.cond(ins.cond); if (ins.cond & 1) c = !c; if (c) { this.IP = (this.IP + ins.rel) & 0xFFFF; taken = true; } }
+        else { this.halted = true; this.fault = 'Onbekende instructie: ' + ins.text; }
+    }
+    // gewijzigde registers voor de visuele flits
+    const ch = {};
+    R16.forEach((n, i) => { if (this.R[i] !== before.R[i]) ch[n] = true; });
+    SR.forEach((n, i) => { if (this.S[i] !== before.S[i]) ch[n] = true; });
+    if (this.IP !== before.IP) ch.IP = true; if (this.flags !== before.fl) ch.FLAGS = true;
+    this.changed = {}; Object.keys(ch).forEach((k) => { this.changed[k] = this.clock; });
+    return taken;
+  }
+  /* aantal buscycli voor data van deze instructie */
+  busPlan(ins) {
+    const plan = []; let sz = ins.size;
+    const memOpnd = ins.nomem ? null : ([ins.d, ins.s].find((o) => o && o.k === 'm') || null);
+    if (memOpnd) { const a = this.memAddr(memOpnd); const n = (sz === 16 && (a.off & 1)) ? 2 : 1; for (let i = 0; i < (ins.r ? 1 : 0); i++) for (let j = 0; j < n; j++) plan.push({ rw: 'lezen', seg: a.segName, off: a.off, sz }); for (let i = 0; i < (ins.wr ? 1 : 0); i++) for (let j = 0; j < n; j++) plan.push({ rw: 'schrijven', seg: a.segName, off: a.off, sz }); }
+    else if (ins.stack) {
+      if (ins.wr) { const o = (this.R[4] - 2) & 0xFFFF; plan.push({ rw: 'schrijven', seg: 'SS', off: o, sz: 16 }); if (o & 1) plan.push({ rw: 'schrijven', seg: 'SS', off: o, sz: 16 }); }
+      if (ins.r) { const o = this.R[4]; plan.push({ rw: 'lezen', seg: 'SS', off: o, sz: 16 }); if (o & 1) plan.push({ rw: 'lezen', seg: 'SS', off: o, sz: 16 }); }
+    }
+    return plan;
+  }
+  segVal(name) { return this.S[SR.indexOf(name)]; }
+  /* één klokcyclus */
+  tick() {
+    if (this.halted) return false;
+    const biu = this.biu, eu = this.eu;
+    // 1. BIU: bus-cyclus loopt
+    if (biu.busy > 0) {
+      biu.busy--; biu.t = 4 - biu.busy;
+      if (biu.busy === 0) {
+        if (biu.kind === 'code') { if (!biu.discard) { for (let i = 0; i < biu.bytes; i++) this.queue.push({ b: this.mem[this.phys(this.S[1], this.fetchPtr + i)], off: (this.fetchPtr + i) & 0xFFFF }); this.fetchPtr = (this.fetchPtr + biu.bytes) & 0xFFFF; this.stats.fetches++; } biu.discard = false; }
+        biu.kind = null; biu.t = 0;
+      }
+    }
+    // 2. EU
+    const stalls = (why) => { eu.stall = why; this.stats.stalls++; };
+    eu.stall = '';
+    if (eu.phase === 'FETCH') {
+      let avail = this.queue.length, ins = null;
+      try { ins = decode((i) => { if (i >= avail) throw new NeedByte(); return this.queue[i].b; }, this.IP); } catch (e) { if (!(e instanceof NeedByte)) throw e; }
+      if (ins) { eu.bytes = this.queue.splice(0, ins.len).map((q) => q.b); eu.ins = ins; this.instrStart = this.clock; this.IP = (this.IP + ins.len) & 0xFFFF; eu.phase = 'DECODE'; eu.left = 1; eu.insAt = (this.IP - ins.len) & 0xFFFF; }
+      else stalls('wacht op bytes uit de wachtrij');
+    } else if (eu.phase === 'DECODE') {
+      if (--eu.left <= 0) {
+        const ins = eu.ins;
+        if (ins.bad) { this.halted = true; this.fault = 'Onbekende opcode: ' + ins.text; eu.phase = 'HALT'; }
+        else { eu.phase = 'EXECUTE'; eu.stage = 'ea'; eu.eaLeft = ins.ea || 0; eu.plan = this.busPlan(ins); eu.planI = 0; eu.baseLeft = ins.base; if (ins.jump && ins.cond !== undefined && !ins.uncond) { /* basistijd afhankelijk van sprong: later */ } eu.waitBus = false; if (eu.eaLeft === 0) eu.stage = eu.plan.length ? 'bus' : 'calc'; }
+      }
+    } else if (eu.phase === 'EXECUTE') {
+      const ins = eu.ins;
+      if (eu.stage === 'ea') { if (--eu.eaLeft <= 0) eu.stage = eu.plan.length ? 'bus' : 'calc'; }
+      else if (eu.stage === 'bus') {
+        if (eu.planI >= eu.plan.length) eu.stage = 'calc';
+        else if (!eu.waitBus) { eu.waitBus = true; eu.req = eu.plan[eu.planI]; stalls('wacht op de bus (BIU)'); }
+        else stalls('wacht op de bus (BIU)');
+      }
+      if (eu.stage === 'calc') {
+        if (eu.baseLeft > 0) eu.baseLeft--;
+        if (eu.baseLeft <= 0) {
+          const taken = this.execute(ins);
+          if (ins.jump && !ins.uncond && ins.cond !== undefined && taken) { /* sprong genomen: kleiner extra uitvoeringstijd */ }
+          this.count++; this.lastIns = { text: ins.text, bytes: eu.bytes.slice(), at: eu.insAt, taken, clocks: this.clock - this.instrStart + 1, op: ins.op };
+          this.lastCommit = this.clock; this.log.unshift('#' + this.count + ' ' + hex(eu.insAt, 4) + '  ' + ins.text + (taken && ins.jump ? '  (sprong genomen)' : ''));
+          if (this.log.length > 30) this.log.length = 30;
+          if (taken) { // wachtrij leegmaken (control hazard)
+            this.queue.length = 0; this.fetchPtr = this.IP; this.stats.flushes++; if (biu.busy > 0 && biu.kind === 'code') biu.discard = true;
+          }
+          eu.phase = this.halted ? 'HALT' : 'FETCH'; eu.ins = null; eu.stage = '';
+        }
+      }
+    }
+    // 3. BIU: nieuwe bus-cyclus starten (data-aanvraag van de EU gaat voor op prefetch)
+    if (biu.busy === 0 && !this.halted) {
+      if (eu.phase === 'EXECUTE' && eu.stage === 'bus' && eu.waitBus && eu.req) {
+        const r = eu.req; eu.req = null; biu.busy = 4; biu.t = 0; biu.kind = 'data'; biu.bytes = 0;
+        biu.addr = { kind: 'data ' + r.rw, segName: r.seg, seg: this.segVal(r.seg), off: r.off, phys: this.phys(this.segVal(r.seg), r.off) }; this.addr = biu.addr; biu.pendingEU = true;
+      } else if (this.queue.length <= 4) {
+        const odd = this.fetchPtr & 1, n = odd ? 1 : 2;
+        biu.busy = 4; biu.t = 0; biu.kind = 'code'; biu.bytes = n; biu.discard = false;
+        biu.addr = { kind: 'code ophalen', segName: 'CS', seg: this.S[1], off: this.fetchPtr, phys: this.phys(this.S[1], this.fetchPtr), n }; this.addr = biu.addr;
+      }
+    }
+    // data-cyclus afgerond? (busy werd 0 in stap 1 voor een data-aanvraag)
+    if (eu.phase === 'EXECUTE' && eu.stage === 'bus' && eu.waitBus && biu.kind === null && biu.pendingEU && biu.busy === 0 && !eu.req) { eu.planI++; eu.waitBus = false; biu.pendingEU = false; if (eu.planI >= eu.plan.length) eu.stage = 'calc'; }
+    this.clock++;
+    return true;
+  }
+  /* tot de huidige instructie is afgewerkt (of het systeem stopt) */
+  stepInstruction(limit) {
+    const c0 = this.count; let n = 0; limit = limit || 100000;
+    while (!this.halted && this.count === c0 && n++ < limit) this.tick();
+    return this.count !== c0;
+  }
+  stepPhase(limit) {
+    const p0 = this.eu.phase + this.eu.stage + (this.eu.ins ? this.count : -1); let n = 0; limit = limit || 100000;
+    while (!this.halted && n++ < limit) { this.tick(); const p1 = this.eu.phase + this.eu.stage + (this.eu.ins ? this.count : -1); if (p1 !== p0 && this.eu.phase !== 'FETCH' + 'x') break; }
+  }
+  runToHalt(limit) { let n = 0; limit = limit || 2000000; while (!this.halted && n++ < limit) this.tick(); return this.halted; }
+}
+
+const EXAMPLES = {
+  som: { name: 'Som van een rij', src: `; Som van vier woorden uit het datasegment
+.data
+tabel DW 1, 2, 3, 4
+som   DW 0
+.code
+        MOV CX, 4        ; teller
+        MOV SI, 0        ; index (in bytes)
+        MOV AX, 0        ; som
+lus:    ADD AX, [tabel+SI]
+        ADD SI, 2
+        LOOP lus         ; CX-1, spring als CX <> 0
+        MOV [som], AX
+        HLT` },
+  stack: { name: 'Stack en CALL', src: `; PUSH, POP en een subroutine
+.code
+        MOV AX, 5
+        MOV BX, 7
+        PUSH AX
+        PUSH BX
+        CALL optel
+        MOV CX, AX       ; resultaat bewaren
+        POP BX
+        POP AX
+        HLT
+optel:  ADD AX, BX       ; AX = AX + BX
+        RET` },
+  vlag: { name: 'Vlaggen CF en OF', src: `; Overflow met en zonder teken
+.code
+        MOV AL, 200
+        ADD AL, 100      ; 300 past niet in 8 bit: CF = 1
+        MOV AX, 7FFFh
+        ADD AX, 1        ; 32767 + 1: OF = 1 (met teken)
+        MOV AX, 0FFFFh
+        INC AX           ; wordt 0: ZF = 1, CF verandert niet
+        MOV BX, 5
+        CMP BX, 9        ; 5 - 9: SF = 1, CF = 1
+        HLT` },
+  mul: { name: 'Vermenigvuldigen', src: `; 13 x 10 met schuiven: 13*10 = 13*8 + 13*2
+.code
+        MOV AX, 13
+        MOV BX, AX
+        SHL AX, 1        ; x2
+        MOV CX, AX       ; CX = 26
+        SHL AX, 1        ; x4
+        SHL AX, 1        ; x8  (AX = 104)
+        ADD AX, CX       ; 104 + 26 = 130
+        MOV DX, 0
+        MOV BX, 10
+        MUL BX           ; DX:AX = AX x BX
+        HLT` },
+  seg: { name: 'Segmenten en adressen', src: `; Zelfde fysiek adres, andere segment:offset
+.data
+getal DW 1234h
+.code
+        MOV AX, [getal]  ; DS:0000
+        MOV BX, OFFSET getal
+        MOV SI, 2
+        MOV WORD PTR [SI], 0ABCDh  ; DS:0002
+        MOV AX, DS
+        MOV ES, AX
+        MOV DI, 4
+        MOV BYTE PTR [DI], 99      ; DS:0004
+        MOV DX, [BX+2]  ; BX + disp
+        HLT` }
+};
+const RATES = [1, 2, 5, 10, 30, 100, 600];
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  W = 1000; H = 640;
+  state = { src: EXAMPLES.som.src, errs: [], okMsg: '', running: false, rateIdx: 3, adv: false, memSeg: 'DS', memBase: 0, segText: null, rev: 0 };
+  mach = new Machine(); prog = null; flash = {}; prevSnap = null; acc = 0; flushSeen = 0; flushT = 0;
+  componentDidMount() {
+    this.fitC();
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, () => { this.fitC(); this.draw(); });
+    this.assembleSrc(this.state.src);
+    this.last = performance.now(); this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); }
+  fitC() { const c = this.stageRef.current; if (c) this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  assembleSrc(src) {
+    const r = assemble(src);
+    if (r.ok) {
+      this.prog = r; this.mach.load(r); this.flash = {}; this.prevSnap = null;
+      this.setState({ errs: [], okMsg: r.code.length + ' bytes code, ' + r.data.length + ' bytes data geassembleerd', running: false });
+    } else this.setState({ errs: r.errors, okMsg: '', running: false });
+  }
+  segs() { const m = this.mach; return { CS: m.S[1], DS: m.S[3], SS: m.S[2], ES: m.S[0], SP: m.cfg.SP }; }
+  loop = (ts) => {
+    const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+    const m = this.mach;
+    if (this.state.running && !m.halted) {
+      this.acc += dt * RATES[this.state.rateIdx]; let n = 0;
+      while (this.acc >= 1 && n++ < 400 && !m.halted) { m.tick(); this.acc -= 1; }
+      if (m.halted) this.setState({ running: false });
+    } else this.acc = 0;
+    this.track(); this.draw();
+    this._r = (this._r || 0) + dt; if (this._r > 0.12 && (this.state.running || this._dirty)) { this._r = 0; this._dirty = false; this.forceUpdate(); }
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  track() {
+    const m = this.mach, snap = {}, now = performance.now();
+    R16.forEach((n, i) => { snap[n] = m.R[i]; }); SR.forEach((n, i) => { snap[n] = m.S[i]; }); snap.IP = m.IP; snap.FLAGS = m.flags;
+    if (this.prevSnap && this.prevVer === m.version) for (const k in snap) if (snap[k] !== this.prevSnap[k]) this.flash[k] = now;
+    this.prevSnap = snap; this.prevVer = m.version;
+    if (m.stats.flushes !== this.flushSeen) { if (m.stats.flushes > this.flushSeen) this.flushT = now; this.flushSeen = m.stats.flushes; }
+  }
+  doTick() { this.mach.tick(); this._dirty = true; this.forceUpdate(); }
+  doIns() { this.mach.stepInstruction(); this._dirty = true; this.forceUpdate(); }
+
+  // ---------- tekenen ----------
+  rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+  txt(ctx, t, x, y, font, col, al, bl) { ctx.font = font; ctx.fillStyle = col; ctx.textAlign = al || 'left'; ctx.textBaseline = bl || 'middle'; ctx.fillText(t, x, y); }
+  arrow(ctx, pts, col, w) {
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w || 2; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke();
+    const a = pts[pts.length - 2], b = pts[pts.length - 1], an = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - 9 * Math.cos(an - 0.4), b[1] - 9 * Math.sin(an - 0.4)); ctx.lineTo(b[0] - 9 * Math.cos(an + 0.4), b[1] - 9 * Math.sin(an + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  fl(name) { const t = this.flash[name]; if (!t) return 0; const a = 1 - (performance.now() - t) / 900; return a > 0 ? a : 0; }
+  regBox(ctx, x, y, w, h, name, val, opts) {
+    const f = this.fl(name); this.rr(ctx, x, y, w, h, 8);
+    ctx.fillStyle = '#fff'; ctx.fill(); if (f > 0) { ctx.fillStyle = 'rgba(255,205,60,' + (0.75 * f).toFixed(2) + ')'; ctx.fill(); }
+    ctx.strokeStyle = opts && opts.hl ? '#7a5ab8' : '#b9b1a0'; ctx.lineWidth = opts && opts.hl ? 3 : 1.5; ctx.stroke();
+    this.txt(ctx, name, x + 9, y + 14, "700 12px 'IBM Plex Sans',sans-serif", '#6f685c');
+    return f;
+  }
+  draw() {
+    const cv = this.stageRef.current; if (!cv) return;
+    const ctx = cv.getContext('2d'), s = this.dpr || 1, m = this.mach, now = performance.now();
+    ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
+    const MONO = "'IBM Plex Mono',monospace", SANS = "'IBM Plex Sans',sans-serif", INK = '#2a2723', MUT = '#8c8576';
+    const biu = m.biu, eu = m.eu, addr = m.addr, st0 = this.state, adv = st0.adv;
+    // ===== BIU =====
+    this.rr(ctx, 8, 8, 984, 222, 14); ctx.fillStyle = '#f1ecfa'; ctx.fill(); ctx.strokeStyle = '#cdbfe6'; ctx.lineWidth = 1.5; ctx.stroke();
+    this.txt(ctx, 'BIU  (Bus Interface Unit)', 22, 26, "700 14px " + SANS, '#5a428f');
+    const segN = ['CS', 'DS', 'SS', 'ES'], segI = [1, 3, 2, 0];
+    segN.forEach((n, i) => {
+      const x = 22 + i * 92, y = 44, hl = addr && addr.segName === n && biu.busy > 0;
+      this.regBox(ctx, x, y, 84, 44, n, 0, { hl });
+      this.txt(ctx, hex(m.S[segI[i]], 4), x + 42, y + 29, "600 17px " + MONO, INK, 'center');
+    });
+    this.regBox(ctx, 22 + 4 * 92, 44, 84, 44, 'IP', 0, { hl: false });
+    this.txt(ctx, hex(m.IP, 4), 22 + 4 * 92 + 42, 73, "600 17px " + MONO, INK, 'center');
+    // adder
+    const cx = 220, cy = 150;
+    if (addr && biu.busy > 0) {
+      const si = segN.indexOf(addr.segName), sx = 22 + si * 92 + 42;
+      this.arrow(ctx, [[sx, 88], [sx, 112], [cx, 112], [cx, cy - 22]], '#7a5ab8', 2.2);
+      this.txt(ctx, '× 16', (sx + cx) / 2 + 4, 105, "600 11px " + SANS, '#7a5ab8', 'center', 'bottom');
+    }
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 2; ctx.stroke();
+    this.txt(ctx, 'Σ', cx, cy + 1, "700 22px " + SANS, '#5a428f', 'center');
+    this.rr(ctx, 22, cy - 18, 88, 36, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1.5; ctx.stroke();
+    this.txt(ctx, 'offset', 30, cy - 9, "600 10px " + SANS, MUT);
+    this.txt(ctx, addr ? hex(addr.off, 4) : '----', 66, cy + 6, "600 15px " + MONO, INK, 'center');
+    this.arrow(ctx, [[110, cy], [cx - 22, cy]], '#7a5ab8', 2);
+    this.rr(ctx, 262, cy - 26, 270, 52, 9); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 2; ctx.stroke();
+    this.arrow(ctx, [[cx + 22, cy], [262, cy]], '#7a5ab8', 2);
+    this.txt(ctx, 'fysiek adres (20 bit)', 272, cy - 14, "600 10px " + SANS, MUT);
+    this.txt(ctx, addr ? hex(addr.phys, 5) + 'h' : '-----', 272, cy + 8, "700 22px " + MONO, '#5a428f');
+    if (addr) { const sg = hex(addr.seg, 4) + '0 + ' + hex(addr.off, 4); this.txt(ctx, hex(addr.seg, 4) + '0h + ' + hex(addr.off, 4) + 'h', 522, cy + 18, "500 11px " + MONO, MUT, 'right'); }
+    // buscyclus T1..T4
+    if (adv) this.txt(ctx, 'buscyclus', 22, 196, "600 11px " + SANS, MUT);
+    for (let i = 0; i < (st0.adv ? 4 : 0); i++) {
+      const on = biu.busy > 0 && biu.t === i + 1 || (biu.busy > 0 && biu.t === 0 && i === 0);
+      this.rr(ctx, 100 + i * 42, 184, 36, 24, 6); ctx.fillStyle = on ? (biu.kind === 'data' ? '#f2a99b' : '#8e6fd0') : '#fff'; ctx.fill(); ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1.2; ctx.stroke();
+      this.txt(ctx, 'T' + (i + 1), 118 + i * 42, 197, "600 12px " + MONO, on ? '#fff' : MUT, 'center');
+    }
+    const kindTxt = biu.busy > 0 && biu.addr ? (biu.kind === 'data' ? biu.addr.kind + '  (voor de EU, prefetch wacht)' : 'code ophalen (prefetch, ' + biu.bytes + ' byte' + (biu.bytes > 1 ? 's' : '') + ')') : 'bus vrij';
+    this.txt(ctx, kindTxt, adv ? 280 : 22, adv ? 197 : 190, "500 12px " + SANS, biu.kind === 'data' ? '#a23a2b' : '#5a428f');
+    // geheugen rechts
+    const mx = 680, my = 34, mw = 300, mh = 186;
+    this.rr(ctx, mx, my, mw, mh, 10); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1.5; ctx.stroke();
+    this.txt(ctx, 'Geheugen (1 MB)', mx + 12, my + 15, "700 12px " + SANS, '#6f685c');
+    if (addr) {
+      const a0 = (addr.phys & ~7);
+      for (let r = 0; r < (adv ? 4 : 1); r++) {
+        const ra = (a0 + (adv ? r - 1 : 0) * 8) & 0xFFFFF; const y = my + (adv ? 34 : 80) + r * 36;
+        this.txt(ctx, hex(ra, 5), mx + 12, y + 12, "500 11px " + MONO, MUT);
+        for (let c = 0; c < 8; c++) {
+          const a = (ra + c) & 0xFFFFF, x = mx + 66 + c * 28; const here = a === addr.phys || (addr.n === 2 && a === addr.phys + 1) || (addr.kind.indexOf('data') === 0 && m.prog && false);
+          this.rr(ctx, x, y, 26, 24, 4);
+          const rw = m.writes[a] !== undefined && m.clock - m.writes[a] < 30, rd = m.reads[a] !== undefined && m.clock - m.reads[a] < 30;
+          ctx.fillStyle = here ? '#e6dcf7' : rw ? '#ffd9d2' : rd ? '#d6e6ff' : '#faf8f3'; ctx.fill(); ctx.strokeStyle = here ? '#7a5ab8' : '#e0d9ca'; ctx.lineWidth = here ? 2 : 1; ctx.stroke();
+          this.txt(ctx, hex(m.mem[a], 2), x + 13, y + 13, "500 12px " + MONO, INK, 'center');
+        }
+      }
+    } else this.txt(ctx, 'nog geen adres op de bus', mx + mw / 2, my + mh / 2, "500 13px " + SANS, MUT, 'center');
+    // adresbus pijl
+    const busOn = biu.busy > 0;
+    this.arrow(ctx, [[532, cy], [mx, cy]], busOn ? (biu.kind === 'data' ? '#c8443a' : '#7a5ab8') : '#cfc8b8', busOn ? 3 : 2);
+    this.txt(ctx, 'adresbus 20 bit', 606, cy - 8, "600 10px " + SANS, MUT, 'center', 'bottom');
+    this.txt(ctx, 'databus 16 bit', 606, cy + 24, "600 10px " + SANS, MUT, 'center');
+    // ===== wachtrij =====
+    this.rr(ctx, 8, 240, 984, 92, 14); ctx.fillStyle = '#e9f0fa'; ctx.fill(); ctx.strokeStyle = '#bccbe3'; ctx.lineWidth = 1.5; ctx.stroke();
+    this.txt(ctx, 'Instructiewachtrij (6 bytes)', 22, 258, "700 13px " + SANS, '#2f568c');
+    const qx = 230, qy = 270;
+    for (let i = 0; i < 6; i++) {
+      const q = m.queue[i], x = qx + i * 74;
+      this.rr(ctx, x, qy, 66, 46, 7); ctx.fillStyle = q ? '#fff' : '#f3f6fb'; ctx.fill(); ctx.strokeStyle = q ? '#4a78b8' : '#c9d5e8'; ctx.lineWidth = q ? 2 : 1.2; ctx.stroke();
+      if (q) { this.txt(ctx, hex(q.b, 2), x + 33, qy + 21, "700 18px " + MONO, INK, 'center'); this.txt(ctx, 'IP ' + hex(q.off, 4), x + 33, qy + 38, "500 10px " + MONO, MUT, 'center'); }
+    }
+    this.arrow(ctx, [[qx + 6 * 74 + 20, qy + 23], [qx + 6 * 74 - 4, qy + 23]], '#7a5ab8', 2.2);
+    this.txt(ctx, 'van BIU', qx + 6 * 74 + 24, qy + 23, "600 11px " + SANS, '#5a428f');
+    this.arrow(ctx, [[qx - 6, qy + 23], [qx - 30, qy + 23]], '#2f8a4e', 2.2);
+    this.txt(ctx, 'naar EU', qx - 36, qy + 23, "600 11px " + SANS, '#2f8a4e', 'right');
+    this.txt(ctx, m.queue.length + '/6 bytes, vrij: ' + (6 - m.queue.length), 22, 280, "500 12px " + MONO, '#4f4a42');
+    this.txt(ctx, 'BIU haalt op bij ≥ 2 vrij', 22, 298, "500 11px " + SANS, MUT);
+    const fa = now - this.flushT < 1400 ? 1 - (now - this.flushT) / 1400 : 0;
+    if (fa > 0) { this.txt(ctx, 'wachtrij leeggemaakt!', 22, 316, "700 12px " + SANS, 'rgba(200,68,58,' + fa.toFixed(2) + ')'); }
+    // ===== EU =====
+    this.rr(ctx, 8, 342, 984, 290, 14); ctx.fillStyle = '#e9f4ee'; ctx.fill(); ctx.strokeStyle = '#b9d6c4'; ctx.lineWidth = 1.5; ctx.stroke();
+    this.txt(ctx, 'EU  (Execution Unit)', 22, 360, "700 14px " + SANS, '#2a6b45');
+    // fasen
+    const ph = eu.phase === 'HALT' ? 'HALT' : eu.phase;
+    ['FETCH', 'DECODE', 'EXECUTE'].forEach((p, i) => {
+      const on = ph === p, x = 22 + i * 100;
+      this.rr(ctx, x, 374, 92, 28, 7); ctx.fillStyle = on ? '#2f8a4e' : '#fff'; ctx.fill(); ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1.3; ctx.stroke();
+      this.txt(ctx, p === 'FETCH' ? 'OPHALEN' : p === 'DECODE' ? 'DECODEREN' : 'UITVOEREN', x + 46, 389, "700 11px " + SANS, on ? '#fff' : '#5c7a69', 'center');
+    });
+    const ins = eu.ins || (m.lastIns && ph !== 'HALT' ? null : null);
+    this.rr(ctx, 22, 412, 300, 76, 9); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1.3; ctx.stroke();
+    this.txt(ctx, eu.ins ? 'huidige instructie' : (m.halted ? 'gestopt' : 'wacht op een volledige instructie'), 32, 427, "600 10px " + SANS, MUT);
+    if (eu.ins) {
+      this.txt(ctx, eu.ins.text, 32, 451, "700 18px " + MONO, INK);
+      this.txt(ctx, 'bytes: ' + eu.bytes.map((b) => hex(b, 2)).join(' ') + (eu.ins.ea ? '   EA: ' + eu.ins.ea + ' klokcycli' : ''), 32, 474, "500 12px " + MONO, '#4f4a42');
+    } else if (m.lastIns) {
+      this.txt(ctx, 'laatst: ' + m.lastIns.text, 32, 451, "600 14px " + MONO, '#4f4a42');
+      this.txt(ctx, m.lastIns.clocks + ' klokcycli' + (m.lastIns.taken && /^(J|L|C|R)/.test(m.lastIns.op) ? ', sprong genomen' : ''), 32, 474, "500 12px " + MONO, MUT);
+    }
+    if (eu.stall && adv) this.txt(ctx, '⏳ ' + eu.stall, 22, 504, "600 12px " + SANS, '#a23a2b');
+    // ALU
+    this.rr(ctx, 22, 516, 300, 108, 10); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1.3; ctx.stroke();
+    this.txt(ctx, 'ALU  (laatste bewerking)', 32, 531, "700 11px " + SANS, '#2a6b45');
+    const al = m.lastAlu;
+    if (al && !adv) {
+      const sg0 = { ADD: '+', ADC: '+', SUB: '−', SBB: '−', CMP: '−', AND: '&', OR: '|', XOR: '^', TEST: '&', INC: '+', DEC: '−', NEG: '−', MUL: '×', IMUL: '×', DIV: '÷', IDIV: '÷' }[al.op] || al.op;
+      this.txt(ctx, al.op, 32, 560, "700 12px " + SANS, '#2a6b45');
+      this.txt(ctx, al.a + ' ' + sg0 + ' ' + al.b + ' = ' + al.r, 172, 584, "700 20px " + MONO, INK, 'center');
+    } else if (al) {
+      const bits = al.sz === 16 ? 16 : 8, bin = (v) => (((v % (1 << bits)) + (1 << bits)) % (1 << bits)).toString(2).padStart(bits, '0').replace(/(.{4})(?=.)/g, '$1 ');
+      const sg = { ADD: '+', ADC: '+', SUB: '−', SBB: '−', CMP: '−', AND: '&', OR: '|', XOR: '^', TEST: '&', INC: '+', DEC: '−', NEG: '−', MUL: '×', IMUL: '×', DIV: '÷', IDIV: '÷' }[al.op] || al.op;
+      const hx = (v) => hex(v & (al.wide ? 0xFFFFFFFF : (1 << bits) - 1), al.wide && al.sz === 16 ? 8 : bits / 4);
+      this.txt(ctx, bin(al.a), 316, 551, "500 12px " + MONO, INK, 'right');
+      this.txt(ctx, sg + ' ' + (al.wide ? hx(al.b) + 'h' : bin(al.b)), 316, 568, "500 12px " + MONO, INK, 'right');
+      ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(150, 576); ctx.lineTo(316, 576); ctx.stroke();
+      this.txt(ctx, al.wide ? hx(al.r) + 'h' : bin(al.r), 316, 592, "700 12px " + MONO, '#2a6b45', 'right');
+      this.txt(ctx, al.op + (al.rem !== undefined ? '  rest ' + al.rem : ''), 32, 592, "700 12px " + SANS, '#2a6b45');
+      if (!al.wide) this.txt(ctx, al.a + ' ' + sg + ' ' + al.b + ' = ' + al.r + (al.r >= (1 << bits) || al.r < 0 ? '' : ''), 316, 610, "500 11px " + MONO, MUT, 'right');
+    } else this.txt(ctx, 'nog geen rekenbewerking', 32, 570, "500 12px " + SANS, MUT);
+    // registers
+    const order = ['AX', 'BX', 'CX', 'DX', 'SP', 'BP', 'SI', 'DI'];
+    order.forEach((n, i) => {
+      const col = i % 4, row = (i / 4) | 0, x = 345 + col * 161, y = 370 + row * 80, w = 153, h = 72, v = m.R[R16.indexOf(n)];
+      const f = this.regBox(ctx, x, y, w, h, n, v, {});
+      this.txt(ctx, hex(v, 4), x + w / 2, y + 38, "700 24px " + MONO, INK, 'center');
+      if (!adv) {} else if (i < 4) { this.txt(ctx, n[0] + 'H=' + hex(v >> 8, 2) + '  ' + n[0] + 'L=' + hex(v & 255, 2), x + w / 2, y + 60, "500 11px " + MONO, MUT, 'center'); }
+      else if (adv) this.txt(ctx, 'dec ' + v + (v > 32767 ? '  (' + (v - 65536) + ')' : ''), x + w / 2, y + 60, "500 11px " + MONO, MUT, 'center');
+      if (i < 4 && adv) this.txt(ctx, v, x + w - 8, y + 14, "500 11px " + MONO, MUT, 'right');
+    });
+    // vlaggen
+    this.txt(ctx, 'vlaggenregister (FLAGS)', 345, 540, "700 12px " + SANS, '#2a6b45');
+    const fnames = [['OF', F.OF], ['DF', F.DF], ['IF', F.IF], ['TF', F.TF], ['SF', F.SF], ['ZF', F.ZF], ['AF', F.AF], ['PF', F.PF], ['CF', F.CF]];
+    const ff = this.fl('FLAGS');
+    const fl2 = adv ? fnames : fnames.filter((f) => ['OF', 'SF', 'ZF', 'CF'].includes(f[0]));
+    fl2.forEach(([n, bit], i) => {
+      const x = 345 + i * (adv ? 71.5 : 160), on = (m.flags & bit) !== 0;
+      this.rr(ctx, x, 550, adv ? 64 : 150, 54, 8); ctx.fillStyle = on ? '#2f8a4e' : '#fff'; ctx.fill(); ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1.4; ctx.stroke();
+      this.txt(ctx, n, x + (adv ? 32 : 75), 566, "700 13px " + SANS, on ? '#fff' : '#5c7a69', 'center');
+      this.txt(ctx, on ? '1' : '0', x + (adv ? 32 : 75), 588, "700 18px " + MONO, on ? '#fff' : INK, 'center');
+    });
+    this.txt(ctx, 'CF = carry (zonder teken), OF = overflow (met teken), ZF = nul, SF = negatief', 345, 618, "500 11px " + SANS, MUT);
+  }
+
+  // ---------- paneel ----------
+  memBaseAddr() { return this.state.memBase; }
+  render_memory() {
+    const m = this.mach, st = this.state, seg = ({ CS: 1, DS: 3, SS: 2, ES: 0 })[st.memSeg], sv = m.S[seg], rows = [];
+    for (let r = 0; r < (st.adv ? 8 : 4); r++) {
+      const off0 = (st.memBase + r * 8) & 0xFFFF, row = [{ t: hex(off0, 4), style: 'color:#8c8576;font-weight:600' }];
+      for (let c = 0; c < 8; c++) {
+        const a = m.phys(sv, off0 + c), rw = m.writes[a] !== undefined && m.clock - m.writes[a] < 60, rd = m.reads[a] !== undefined && m.clock - m.reads[a] < 60;
+        row.push({ t: hex(m.mem[a], 2), style: rw ? 'background:#ffd9d2;font-weight:600' : rd ? 'background:#d6e6ff' : (m.mem[a] ? '' : 'color:#b3ab9b') });
+      }
+      rows.push(row);
+    }
+    return rows;
+  }
+  renderVals() {
+    const st = this.state, m = this.mach, S = this.segs();
+    const accent = 'oklch(0.5 0.12 300)';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const btnA = 'min-height:36px;font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
+    const btnP = 'min-height:34px;font-size:13px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723';
+    const hasProg = !!this.prog, curOff = m.eu.ins ? m.eu.insAt : m.IP;
+    const listing = (this.prog ? this.prog.listing : []).map((r) => ({
+      style: r.off === curOff && !m.halted ? 'background:#fff3c4;font-weight:600' : '',
+      cells: [{ t: hex(r.off, 4), style: 'color:#8c8576' }, { t: r.bytes.map((b) => hex(b, 2)).join(' '), style: 'color:#6f685c' }, { t: (r.labels.length ? r.labels.join(':') + ': ' : '') + r.text.replace(/^[A-Za-z_]\w*\s*:\s*/, ''), style: 'text-align:left' }]
+    }));
+    const stackTop = S.SP === m.R[4] ? m.cfg.SP : m.cfg.SP, rows = [];
+    const sp = m.R[4], depth = Math.min(8, Math.max(2, Math.ceil(((stackTop - sp) & 0xFFFF) / 2) + 1));
+    for (let i = 0; i < Math.max(depth, 6); i++) {
+      const off = (sp + i * 2) & 0xFFFF, a = m.phys(m.S[2], off), isSP = i === 0, used = ((stackTop - off) & 0xFFFF) > 0 && ((stackTop - off) & 0xFFFF) <= ((stackTop - sp) & 0xFFFF);
+      const w = m.mem[a] | (m.mem[(a + 1) & 0xFFFFF] << 8);
+      rows.push({ style: isSP ? 'background:#fff3c4;font-weight:600' : '', cells: [{ t: isSP ? 'SP →' : '', style: 'color:#7a5ab8' }, { t: hex(m.S[2], 4) + ':' + hex(off, 4), style: '' }, { t: hex(a, 5), style: 'color:#8c8576' }, { t: used || isSP ? hex(w, 4) : '····', style: used ? '' : 'color:#b3ab9b' }] });
+    }
+    const segInputs = [['CS', 'CS'], ['DS', 'DS'], ['SS', 'SS'], ['ES', 'ES'], ['SP', 'SP']].map(([k, n]) => {
+      const txtv = st.segText && st.segText[k] !== undefined ? st.segText[k] : hex(S[k], 4), bad = st.segText && st.segText[k] !== undefined && !/^[0-9a-f]{1,4}$/i.test(st.segText[k]);
+      return { name: n, val: txtv, style: bad ? 'border-color:#c8443a' : '', onInput: (e) => {
+        const v = e.target.value.trim(); const t = Object.assign({}, this.state.segText || {}, { [k]: v });
+        if (/^[0-9a-f]{1,4}$/i.test(v)) { const cfg = Object.assign({}, m.cfg, { [k]: parseInt(v, 16) }); if (this.prog) m.load(this.prog, cfg); else m.cfg = cfg; this.flash = {}; this.prevSnap = null; delete t[k]; this.setState({ segText: Object.keys(t).length ? t : null, running: false }); }
+        else this.setState({ segText: t });
+      } };
+    });
+    const stats = m.count ? m.count + ' instr. · ' + m.clock + ' klokcycli · CPI ' + (m.clock / m.count).toFixed(1).replace('.', ',') : m.clock + ' klokcycli';
+    const segMap = { CS: 1, DS: 3, SS: 2, ES: 0 };
+    return {
+      stageRef: this.stageRef, adv: st.adv, advStyle: chip(st.adv), onAdv: () => this.setState({ adv: !st.adv }), statStr: stats, btnA, btnP,
+      onTick: () => this.doTick(), onIns: () => this.doIns(),
+      onRun: () => { if (m.halted) return; this.setState({ running: !st.running }); },
+      runLabel: st.running ? '⏸ Pauze' : '▶ Start', runStyle: btnA,
+      onReset: () => { m.reset(); this.flash = {}; this.prevSnap = null; this.setState({ running: false }); },
+      rateIdx: st.rateIdx, rateStr: RATES[st.rateIdx] + ' klokcycli/s', onRate: (e) => this.setState({ rateIdx: +e.target.value }),
+      hasFault: !!m.fault && m.fault !== 'HLT', faultMsg: m.fault,
+      src: st.src, onSrc: (e) => { this.setState({ src: e.target.value }); this.assembleSrc(e.target.value); },
+      hasErr: st.errs.length > 0, errs: st.errs, okMsg: st.okMsg,
+      examples: Object.keys(EXAMPLES).map((k) => ({ name: EXAMPLES[k].name, style: btnP + ';padding:0 9px', onClick: () => { this.setState({ src: EXAMPLES[k].src }); this.assembleSrc(EXAMPLES[k].src); } })),
+      listing, segInputs,
+      memTitle: st.memSeg + ' = ' + hex(m.S[segMap[st.memSeg]], 4) + 'h',
+      memSegBtns: ['DS', 'SS', 'CS', 'ES'].map((k) => ({ name: k, style: chip(st.memSeg === k), onClick: () => this.setState({ memSeg: k, memBase: k === 'SS' ? (m.R[4] & 0xFFC0) : 0 }) })),
+      onMemPrev: () => this.setState({ memBase: (st.memBase - 64) & 0xFFFF }), onMemNext: () => this.setState({ memBase: (st.memBase + 64) & 0xFFFF }),
+      memHead: ['+'].concat([0, 1, 2, 3, 4, 5, 6, 7].map((i) => String(i))), memRows: this.render_memory(),
+      stackTitle: 'SS:SP = ' + hex(m.S[2], 4) + ':' + hex(m.R[4], 4), stackRows: rows,
+      logLines: m.log.length ? m.log : ['(nog niets uitgevoerd)'],
+    };
+  }
+}
+</script>
+</body>
+</html>

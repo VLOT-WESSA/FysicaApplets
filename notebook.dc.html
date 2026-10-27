@@ -227,15 +227,15 @@
           <div style="font-size:13px;color:oklch(0.5 0.13 28)">Bestand niet gevonden in notebooks/data/. Voeg het toe met &lsquo;Bestand toevoegen&rsquo;.</div>
         </sc-if>
         <sc-if value="{{ fileIsTable }}" hint-placeholder-val="{{ false }}">
-          <table style="border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12.5px">
+          <sc-raw-table style="border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:12.5px">
             <sc-for list="{{ fileRows }}" as="r" hint-placeholder-count="3">
-              <tr>
+              <sc-raw-tr>
                 <sc-for list="{{ r.cells }}" as="x" hint-placeholder-count="3">
-                  <td style="{{ r.cellStyle }}">{{ x }}</td>
+                  <sc-raw-td style="{{ r.cellStyle }}">{{ x }}</sc-raw-td>
                 </sc-for>
-              </tr>
+              </sc-raw-tr>
             </sc-for>
-          </table>
+          </sc-raw-table>
         </sc-if>
         <sc-if value="{{ fileIsText }}" hint-placeholder-val="{{ false }}">
           <pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#2a2723">{{ fileText }}</pre>

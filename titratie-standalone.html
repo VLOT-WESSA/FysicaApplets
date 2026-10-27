@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zuur-basetitratie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#eceae4;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723}
+  button,select,input{font-family:inherit}
+  .root{height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden}
+  h1{font-size:22px;font-weight:700;margin:0 0 12px;letter-spacing:-.01em}
+  .main{flex:1;display:flex;gap:18px;min-height:0}
+  .stage{flex:1 1 auto;min-width:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center}
+  canvas{width:100%;height:100%;display:block;touch-action:none}
+  .side{flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px}
+  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px}
+  .row .v{font-family:'IBM Plex Mono',monospace;color:#2a2723}
+  select,input[type=number],input[type=text]{width:100%;padding:7px 9px;border:1px solid #ddd6c8;border-radius:8px;background:#fff;font-size:13.5px;color:#2a2723}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#6f685c}
+  .btn{min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;background:#fff;color:#2a2723;cursor:pointer;padding:0 10px}
+  .btn:hover{border-color:#cfc7b6}
+  .btn.p{background:oklch(0.5 0.12 300);border-color:oklch(0.5 0.12 300);color:#fff;font-weight:600}
+  .btn.on{background:#2a2723;border-color:#2a2723;color:#fff;font-weight:600}
+  .btn.warn{background:#fbeeea;border-color:#e3b9ae;color:#8a3b2c;font-weight:600}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  th,td{padding:3px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
+  th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  td:first-child,th:first-child{text-align:left}
+  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .msg{padding:7px 9px;border-radius:8px;font-size:13px;font-weight:600}
+  .ok{background:#e6f2ea;color:#2f7a45}.bad{background:#fbeeea;color:#8a3b2c}.info{background:#f4f1ea;color:#6f685c;font-weight:500}
+  .hidden{display:none !important}
+  @media (max-width:820px){
+    html,body{height:auto}
+    .root{height:auto;min-height:100vh;overflow:visible;padding:12px 14px 22px}
+    .main{flex-direction:column}
+    .side{width:100%;overflow:visible}
+    .stage canvas{height:auto;max-height:80vh}
+  }
+</style>
+</head>
+<body>
+<div class="root">
+  <h1>Zuur-basetitratie</h1>
+  <div class="main">
+    <div class="stage"><canvas id="cv"></canvas></div>
+    <div class="side">
+
+      <div class="card">
+        <div class="hd">Opstelling</div>
+        <div class="grid2">
+          <label class="f">Onbekende concentratie zit in
+            <select id="selUnk">
+              <option value="buret">de buret (titrant)</option>
+              <option value="flask">de erlenmeyer (titer)</option>
+            </select></label>
+          <label class="f">Eenheid concentratie
+            <select id="selUnit">
+              <option value="M">mol/L (molariteit)</option>
+              <option value="N">N (normaliteit)</option>
+            </select></label>
+          <label class="f">Titrant in de buret
+            <select id="selTitrant"></select></label>
+          <label class="f">Titer in de erlenmeyer
+            <select id="selAnalyt"></select></label>
+          <label class="f"><span id="lblC">Concentratie titer</span>
+            <select id="selC">
+              <option value="0.05">0,050</option>
+              <option value="0.1" selected>0,100</option>
+              <option value="0.2">0,200</option>
+            </select></label>
+          <label class="f">Volume titer (pipet)
+            <select id="selV">
+              <option value="10">10,00 mL</option>
+              <option value="20">20,00 mL</option>
+              <option value="25" selected>25,00 mL</option>
+            </select></label>
+        </div>
+        <label class="f">Indicator
+          <select id="selInd"></select></label>
+        <div class="grid2" style="margin-top:2px">
+          <button class="btn" id="btnNew">Nieuwe titratie</button>
+          <button class="btn warn" id="btnUnknown">Nieuwe onbekende</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">Titreren</div>
+        <div class="grid3">
+          <button class="btn" id="btnDrop">1 druppel</button>
+          <button class="btn" id="btnHalf">0,5 mL</button>
+          <button class="btn" id="btnOne">1 mL</button>
+        </div>
+        <button class="btn p" id="btnFlow">Kraan openen</button>
+        <div class="row"><span>Debiet kraan</span><span class="v" id="flowStr">0,5 mL/s</span></div>
+        <input type="range" id="rngFlow" min="0.05" max="2" step="0.05" value="0.5">
+        <div class="grid3" style="margin-top:4px">
+          <button class="btn on" id="tgStir">Roerder</button>
+          <button class="btn on" id="tgPH">pH-meter</button>
+          <button class="btn" id="tgCurve">Curve</button>
+        </div>
+        <div class="row" style="margin-top:4px"><span>Toegevoegd volume</span><span class="v" id="addStr">0,00 mL</span></div>
+        <div class="row"><span>pH in de erlenmeyer</span><span class="v" id="phStr">&mdash;</span></div>
+        <div class="row"><span>Buretstand (lees af in de inzoom)</span><span class="v" id="readStr">&mdash;</span></div>
+        <button class="btn" id="tgRead">Buretstand tonen</button>
+      </div>
+
+      <div class="card">
+        <div class="hd">Metingen</div>
+        <button class="btn p" id="btnRec">Eindpunt noteren</button>
+        <table>
+          <thead><tr><th>#</th><th>begin (mL)</th><th>eind (mL)</th><th>&Delta;V (mL)</th></tr></thead>
+          <tbody id="tblBody"><tr><td colspan="4" style="text-align:left;color:#8c8576;font-family:'IBM Plex Sans',sans-serif">Nog geen metingen</td></tr></tbody>
+        </table>
+        <div class="row"><span>Gemiddeld volume</span><span class="v" id="avgStr">&mdash;</span></div>
+        <button class="btn" id="btnCopy">Tabel kopi&euml;ren</button>
+      </div>
+
+      <div class="card">
+        <div class="hd">Berekening</div>
+        <div style="font-size:13px;color:#4f4a42;line-height:1.5" id="calcHint"></div>
+        <label class="f"><span id="ansLbl">Jouw concentratie van de onbekende (mol/L)</span>
+          <input type="text" id="inpAns" placeholder="bv. 0,1234"></label>
+        <button class="btn p" id="btnCheck">Controleer</button>
+        <div id="ansMsg" class="msg info hidden"></div>
+      </div>
+
+      <div class="note">
+        <div class="mono">n(H&#8323;O&#8314;) = n(OH&#8315;) op het equivalentiepunt</div>
+        <div class="mono">c<sub>a</sub>&middot;V<sub>a</sub>&middot;z<sub>a</sub> = c<sub>b</sub>&middot;V<sub>b</sub>&middot;z<sub>b</sub></div>
+        <div style="margin-top:4px">Pipetteer de titer in de erlenmeyer, voeg een indicator toe en laat de titrant uit de buret lopen tot de indicator blijvend van kleur verandert. Kies bovenaan of de onbekende concentratie in de buret of in de erlenmeyer zit. Titreer de eerste keer snel om het eindpunt te verkennen, en daarna druppelsgewijs. Herhaal tot drie volumes minder dan 0,10 mL verschillen. Kies een indicator waarvan het omslaggebied rond de pH van het equivalentiepunt ligt.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  // ---------- stoffen ----------
+  // type: 'sa' sterk zuur, 'h2so4', 'wa' zwak zuur, 'sb' sterke base, 'wb' zwakke base
+  var ACIDS = {
+    HCl:   { name: 'HCl (zoutzuur)', type: 'sa', z: 1 },
+    H2SO4: { name: 'H₂SO₄ (zwavelzuur)', type: 'h2so4', z: 2, Ka2: 1.2e-2 },
+    CH3COOH: { name: 'CH₃COOH (azijnzuur)', type: 'wa', z: 1, Ka: 1.8e-5 }
+  };
+  var BASES = {
+    NaOH: { name: 'NaOH (natriumhydroxide)', type: 'sb', z: 1 },
+    KOH:  { name: 'KOH (kaliumhydroxide)', type: 'sb', z: 1 },
+    NH3:  { name: 'NH₃ (ammoniak)', type: 'wb', z: 1, KaConj: 5.6e-10 }
+  };
+  var INDS = {
+    fenol: { name: 'Fenolftaleïne (8,2 – 10,0)', lo: 8.2, hi: 10.0, a: [255, 255, 255, 0], b: [214, 40, 150, 0.55] },
+    mo:    { name: 'Methyloranje (3,1 – 4,4)', lo: 3.1, hi: 4.4, a: [214, 48, 49, 0.55], b: [242, 196, 40, 0.5] },
+    mr:    { name: 'Methylrood (4,4 – 6,2)', lo: 4.4, hi: 6.2, a: [214, 40, 60, 0.55], b: [240, 200, 50, 0.5] },
+    btb:   { name: 'Broomthymolblauw (6,0 – 7,6)', lo: 6.0, hi: 7.6, a: [235, 200, 40, 0.5], b: [40, 90, 200, 0.55] }
+  };
+  var Kw = 1e-14;
+
+  var el = function (id) { return document.getElementById(id); };
+  var fmt = function (x, n) { return x.toFixed(n).replace('.', ','); };
+
+  // ---------- toestand ----------
+  var S = {
+    titrant: 'NaOH', analyt: 'HCl', cA: 0.1, V0: 25, ind: 'fenol', unkIn: 'buret', unit: 'M',
+    unknownC: 0, buretStart: 0, added: 0, flowing: false, flow: 0.5,
+    stir: true, showPH: true, showCurve: false, showRead: false,
+    curve: [], runs: [], local: 0, drops: [], swirl: 0
+  };
+  var BUR = 50; // buretinhoud (mL)
+
+  function isAcid(k) { return !!ACIDS[k]; }
+  function sp(k) { return ACIDS[k] || BASES[k]; }
+  function newUnknown() { S.unknownC = Math.round((0.07 + Math.random() * 0.09) * 1000) / 1000; }
+  // gekende en onbekende stof; S.cA is de ingestelde waarde in de gekozen eenheid, S.unknownC staat in mol/L
+  function knownK() { return S.unkIn === 'buret' ? S.analyt : S.titrant; }
+  function unknownK() { return S.unkIn === 'buret' ? S.titrant : S.analyt; }
+  function cKnownM() { return S.unit === 'N' ? S.cA / sp(knownK()).z : S.cA; }
+  function cBurM() { return S.unkIn === 'buret' ? S.unknownC : cKnownM(); }
+  function cFlM() { return S.unkIn === 'buret' ? cKnownM() : S.unknownC; }
+  function fmtC(cM, k) { return S.unit === 'N' ? fmt(cM * sp(k).z, 3) + ' N' : fmt(cM, 3) + ' mol/L'; }
+
+  // ---------- pH via ladingsbalans ----------
+  function pHof(Vb) {
+    var Vt = (S.V0 + Vb) / 1000;
+    var acidK = isAcid(S.analyt) ? S.analyt : S.titrant, baseK = isAcid(S.analyt) ? S.titrant : S.analyt;
+    var nA = isAcid(S.analyt) ? cFlM() * S.V0 / 1000 : cBurM() * Vb / 1000;
+    var nB = isAcid(S.analyt) ? cBurM() * Vb / 1000 : cFlM() * S.V0 / 1000;
+    var Ca = nA / Vt, Cb = nB / Vt, A = ACIDS[acidK], B = BASES[baseK];
+    function f(h) {
+      var pos = h, neg = Kw / h;
+      if (B.type === 'sb') pos += Cb; else pos += Cb * h / (h + B.KaConj);
+      if (A.type === 'sa') neg += Ca;
+      else if (A.type === 'wa') neg += Ca * A.Ka / (A.Ka + h);
+      else { var hs = Ca * h / (h + A.Ka2), so = Ca * A.Ka2 / (h + A.Ka2); neg += hs + 2 * so; }
+      return pos - neg;
+    }
+    var lo = -15, hi = 1;
+    for (var i = 0; i < 80; i++) { var m = (lo + hi) / 2; if (f(Math.pow(10, m)) > 0) hi = m; else lo = m; }
+    return -(lo + hi) / 2;
+  }
+  function eqVolume() { // equivalentievolume (mL)
+    return cFlM() * S.V0 * sp(S.analyt).z / (cBurM() * sp(S.titrant).z);
+  }
+  function indColor(pH) {
+    var I = INDS[S.ind], t = (pH - I.lo) / (I.hi - I.lo); t = Math.max(0, Math.min(1, t));
+    var c = [0, 1, 2, 3].map(function (i) { return I.a[i] + (I.b[i] - I.a[i]) * t; });
+    return c;
+  }
+
+  // ---------- canvas ----------
+  var cv = el('cv'), ctx = cv.getContext('2d');
+  var W = 960, H = 600, scale = 1;
+  function fit() {
+    var r = cv.parentElement.getBoundingClientRect();
+    var k = Math.min((r.width - 16) / W, (r.height - 16) / H); if (!(k > 0)) k = 1;
+    cv.style.width = Math.round(W * k) + 'px'; cv.style.height = Math.round(H * k) + 'px';
+    var dpr = window.devicePixelRatio || 1; scale = k * dpr;
+    cv.width = Math.round(W * scale); cv.height = Math.round(H * scale);
+  }
+  window.addEventListener('resize', fit);
+
+  // buret-geometrie
+  var bx = 250, bTop = 50, b0 = 70, b50 = 400, bw = 22; // y van 0 mL en 50 mL
+  function yOfReading(r) { return b0 + (b50 - b0) * r / BUR; }
+  function reading() { return S.buretStart + S.added; }
+
+  function draw() {
+    ctx.setTransform(scale, 0, 0, scale, 0, 0); ctx.clearRect(0, 0, W, H);
+    // statief
+    ctx.fillStyle = '#8c8576'; ctx.fillRect(150, 30, 8, 545); ctx.fillRect(110, 568, 220, 12);
+    ctx.fillStyle = '#6f685c'; ctx.fillRect(154, 150, bx - 154 - bw / 2, 8); ctx.fillRect(bx - bw / 2 - 6, 142, 6, 24);
+    // buret: vloeistof
+    var rd = reading(), yl = yOfReading(rd);
+    var tit = sp(S.titrant);
+    ctx.fillStyle = 'rgba(190,215,235,0.55)'; ctx.fillRect(bx - bw / 2, yl, bw, b50 + 18 - yl);
+    // meniscus
+    ctx.strokeStyle = 'rgba(70,110,150,0.8)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx - bw / 2, yl - 3); ctx.quadraticCurveTo(bx, yl + 4, bx + bw / 2, yl - 3); ctx.stroke();
+    // buretbuis
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.6; ctx.strokeRect(bx - bw / 2, bTop, bw, b50 + 18 - bTop);
+    ctx.fillStyle = '#4f4a42'; ctx.font = "500 9.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (var m = 0; m <= BUR; m++) {
+      var y = yOfReading(m), L = m % 5 === 0 ? 9 : 5;
+      ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(bx + bw / 2 - L, y); ctx.lineTo(bx + bw / 2, y); ctx.stroke();
+      if (m % 5 === 0) ctx.fillText(String(m), bx - bw / 2 - 4, y);
+    }
+    // kraan en tip
+    var yk = b50 + 18;
+    ctx.fillStyle = '#c9ced4'; ctx.beginPath(); ctx.moveTo(bx - bw / 2, yk); ctx.lineTo(bx + bw / 2, yk); ctx.lineTo(bx + 3, yk + 22); ctx.lineTo(bx - 3, yk + 22); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#6f685c'; ctx.stroke();
+    ctx.fillStyle = S.flowing ? '#7a5ab8' : '#4f4a42'; ctx.save(); ctx.translate(bx, yk + 10); ctx.rotate(S.flowing ? 0 : Math.PI / 2); ctx.fillRect(-16, -3, 32, 6); ctx.restore();
+    ctx.fillStyle = '#c9ced4'; ctx.fillRect(bx - 2, yk + 22, 4, 26);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('titrant: ' + tit.name.split(' ')[0], bx + bw / 2 + 8, 84);
+    ctx.fillText(S.unkIn === 'buret' ? '? ' + (S.unit === 'N' ? 'N' : 'mol/L') : fmtC(cBurM(), S.titrant), bx + bw / 2 + 8, 99);
+    // druppels / straal
+    var tipY = yk + 48, fy = 470;
+    if (S.flowing && S.flow > 0.6) { ctx.strokeStyle = 'rgba(150,190,225,0.8)'; ctx.lineWidth = Math.min(3, S.flow * 1.4); ctx.beginPath(); ctx.moveTo(bx, tipY); ctx.lineTo(bx, fy); ctx.stroke(); }
+    ctx.fillStyle = 'rgba(150,190,225,0.95)';
+    S.drops.forEach(function (d) { ctx.beginPath(); ctx.ellipse(bx, d.y, 2.6, 3.6, 0, 0, 7); ctx.fill(); });
+    // roerplaat
+    ctx.fillStyle = '#4f4a42'; ctx.beginPath(); ctx.roundRect(bx - 75, 552, 150, 18, 4); ctx.fill();
+    ctx.fillStyle = S.stir ? '#2f8a4e' : '#8c8576'; ctx.beginPath(); ctx.arc(bx + 55, 561, 3, 0, 7); ctx.fill();
+    // erlenmeyer
+    var vt = S.V0 + S.added, fill = Math.min(0.85, 0.25 + vt / 160);
+    var neckW = 26, baseW = 120, top = 440, bot = 550, neckBot = 470;
+    function flaskPath() { ctx.beginPath(); ctx.moveTo(bx - neckW / 2, top); ctx.lineTo(bx - neckW / 2, neckBot); ctx.lineTo(bx - baseW / 2, bot - 6); ctx.quadraticCurveTo(bx - baseW / 2, bot, bx - baseW / 2 + 8, bot); ctx.lineTo(bx + baseW / 2 - 8, bot); ctx.quadraticCurveTo(bx + baseW / 2, bot, bx + baseW / 2, bot - 6); ctx.lineTo(bx + neckW / 2, neckBot); ctx.lineTo(bx + neckW / 2, top); }
+    var ph = pHof(S.added), col = indColor(ph);
+    var lyl = bot - (bot - neckBot) * fill;
+    ctx.save(); flaskPath(); ctx.clip();
+    ctx.fillStyle = 'rgba(225,235,242,0.7)'; ctx.fillRect(bx - baseW, lyl, baseW * 2, bot - lyl);
+    ctx.fillStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + col[3] + ')'; ctx.fillRect(bx - baseW, lyl, baseW * 2, bot - lyl);
+    // lokale kleur waar de druppel valt (verdwijnt bij roeren)
+    if (S.local > 0.02) {
+      var lc = indColor(S.localPH);
+      var g = ctx.createRadialGradient(bx, lyl + 6, 2, bx, lyl + 6, 40);
+      g.addColorStop(0, 'rgba(' + lc[0] + ',' + lc[1] + ',' + lc[2] + ',' + (lc[3] * 1.4 * S.local) + ')'); g.addColorStop(1, 'rgba(' + lc[0] + ',' + lc[1] + ',' + lc[2] + ',0)');
+      ctx.fillStyle = g; ctx.fillRect(bx - 60, lyl - 4, 120, 70);
+    }
+    // roervlo
+    ctx.fillStyle = '#f4f1ea'; ctx.save(); ctx.translate(bx, bot - 6); ctx.scale(Math.cos(S.swirl), 1); ctx.fillRect(-12, -2.5, 24, 5); ctx.restore();
+    ctx.restore();
+    flaskPath(); ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left';
+    ctx.fillText('titer: ' + sp(S.analyt).name.split(' ')[0] + ', ' + fmt(S.V0, 2) + ' mL', bx + 68, 512);
+    ctx.fillText(S.unkIn === 'flask' ? '? ' + (S.unit === 'N' ? 'N' : 'mol/L') : fmtC(cFlM(), S.analyt), bx + 68, 527);
+    // pH-meter
+    if (S.showPH) {
+      ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx + 30, 535); ctx.lineTo(bx + 34, 455); ctx.lineTo(bx + 90, 420); ctx.stroke();
+      ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect(bx + 88, 392, 110, 56, 9); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#d8e4d0'; ctx.fillRect(bx + 96, 410, 94, 30);
+      ctx.fillStyle = '#2a2723'; ctx.font = "600 16px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.fillText('pH ' + fmt(ph, 2), bx + 143, 426);
+      ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.fillText('pH-meter', bx + 143, 400);
+    }
+    // inzoom op de meniscus
+    var zx = 20, zy = 40, zw = 100, zh = 300, span = 2; // ±1 mL
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(zx, zy, zw, zh); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(zx, zy, zw, zh);
+    var k = zh / span, c0 = rd - span / 2;
+    var Y = function (r) { return zy + (r - c0) * k; };
+    ctx.save(); ctx.beginPath(); ctx.rect(zx, zy, zw, zh); ctx.clip();
+    ctx.fillStyle = 'rgba(190,215,235,0.55)'; ctx.fillRect(zx + 30, Y(rd), 40, zh);
+    ctx.strokeStyle = 'rgba(40,80,120,0.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(zx + 30, Y(rd) - 9); ctx.quadraticCurveTo(zx + 50, Y(rd) + 9, zx + 70, Y(rd) - 9); ctx.stroke();
+    ctx.strokeStyle = '#2a2723'; ctx.fillStyle = '#2a2723'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (var t = Math.floor(c0 * 10) / 10; t <= c0 + span + 0.1; t = Math.round((t + 0.1) * 10) / 10) {
+      if (t < 0 || t > BUR) continue; var yy = Y(t), whole = Math.abs(t - Math.round(t)) < 1e-6, half = Math.abs(t * 2 - Math.round(t * 2)) < 1e-6;
+      ctx.lineWidth = whole ? 1.6 : 1; ctx.beginPath(); ctx.moveTo(zx + 70, yy); ctx.lineTo(zx + 70 - (whole ? 22 : half ? 15 : 9), yy); ctx.stroke();
+      if (whole) ctx.fillText(String(Math.round(t)), zx + 28, yy);
+    }
+    ctx.restore();
+    ctx.strokeStyle = '#b9b09f'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(zx + zw, zy + zh / 2); ctx.lineTo(bx - bw / 2, yl); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('inzoom buret', zx, zy + zh + 6);
+    ctx.fillText('lees af aan de onderkant', zx, zy + zh + 20); ctx.fillText('van de meniscus', zx, zy + zh + 34);
+    // titratiecurve
+    drawGraph();
+  }
+  function drawGraph() {
+    var gx = 520, gy = 30, gw = 420, gh = 520;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, gy, gw, gh); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    var ox = gx + 40, oy = gy + gh - 34, pw = gw - 56, phh = gh - 70;
+    var vmax = Math.max(10, Math.ceil(Math.max(eqVolume() * 1.8, S.added + 2) / 5) * 5); vmax = Math.min(vmax, 50);
+    var X = function (v) { return ox + v / vmax * pw; }, Y = function (p) { return oy - p / 14 * phh; };
+    ctx.strokeStyle = '#ece6da'; ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    for (var p = 0; p <= 14; p += 2) { ctx.beginPath(); ctx.moveTo(ox, Y(p)); ctx.lineTo(ox + pw, Y(p)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(p), ox - 6, Y(p)); }
+    var step = vmax > 30 ? 10 : 5;
+    for (var v = 0; v <= vmax; v += step) { ctx.beginPath(); ctx.moveTo(X(v), oy); ctx.lineTo(X(v), oy - phh); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(v), X(v), oy + 5); }
+    // omslaggebied indicator
+    var I = INDS[S.ind];
+    ctx.fillStyle = 'rgba(122,90,184,0.09)'; ctx.fillRect(ox, Y(I.hi), pw, Y(I.lo) - Y(I.hi));
+    ctx.fillStyle = '#7a5ab8'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.fillText('omslaggebied indicator', ox + pw - 4, Y(I.hi) - 2);
+    ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(ox, oy - phh); ctx.lineTo(ox, oy); ctx.lineTo(ox + pw, oy); ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Titratiecurve: pH tegen toegevoegd volume', gx + 10, gy + 8);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.fillText('V (mL) →', ox + pw, oy + 18);
+    if (S.showCurve) { // volledige theoretische curve
+      ctx.strokeStyle = 'rgba(122,90,184,0.35)'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.beginPath();
+      for (var i = 0; i <= 300; i++) { var vv = vmax * i / 300, q = pHof(vv); i ? ctx.lineTo(X(vv), Y(q)) : ctx.moveTo(X(vv), Y(q)); }
+      ctx.stroke(); ctx.setLineDash([]);
+      var ve = eqVolume(); if (ve <= vmax) { ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(X(ve), Y(pHof(ve)), 4.5, 0, 7); ctx.fill(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('equivalentiepunt', X(ve) + 8, Y(pHof(ve))); }
+    }
+    if (S.showPH && S.curve.length) {
+      ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.beginPath();
+      S.curve.forEach(function (c, i) { i ? ctx.lineTo(X(c.v), Y(c.p)) : ctx.moveTo(X(c.v), Y(c.p)); }); ctx.stroke();
+      var last = S.curve[S.curve.length - 1]; ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(X(last.v), Y(last.p), 4, 0, 7); ctx.fill();
+    }
+    if (!S.showPH) { ctx.fillStyle = '#8c8576'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('pH-meter staat uit: titreer op de kleuromslag', ox + pw / 2, oy - phh / 2); }
+  }
+
+  // ---------- toevoegen ----------
+  function addVol(dv) {
+    var room = BUR - reading(); if (room <= 0) { S.flowing = false; return; }
+    dv = Math.min(dv, room);
+    var before = S.added; S.added += dv;
+    S.localPH = pHof(Math.min(S.added + 0.4, S.added * 1.04 + 0.4)); // lokaal overmaat titrant
+    S.local = Math.min(1, S.local + 0.6);
+    if (S.curve.length === 0 || S.added - S.curve[S.curve.length - 1].v > 0.01) S.curve.push({ v: S.added, p: pHof(S.added) });
+    if (before === 0 && S.curve.length === 1) S.curve.unshift({ v: 0, p: pHof(0) });
+  }
+  function dropAnim(n) { for (var i = 0; i < n; i++) S.drops.push({ y: b50 + 18 + 48 - i * 14, v: 0 }); }
+
+  // ---------- UI ----------
+  function fillSelect(sel, obj, val) { sel.innerHTML = ''; Object.keys(obj).forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = obj[k].name; if (k === val) o.selected = true; sel.appendChild(o); }); }
+  function refreshSelects() {
+    var titrantIsBase = !isAcid(S.titrant);
+    var tOpts = {}; Object.keys(BASES).forEach(function (k) { tOpts[k] = BASES[k]; }); Object.keys(ACIDS).forEach(function (k) { tOpts[k] = ACIDS[k]; });
+    fillSelect(el('selTitrant'), tOpts, S.titrant);
+    var aOpts = titrantIsBase ? ACIDS : BASES;
+    if (!aOpts[S.analyt]) S.analyt = Object.keys(aOpts)[0];
+    fillSelect(el('selAnalyt'), aOpts, S.analyt);
+    fillSelect(el('selInd'), INDS, S.ind);
+  }
+  // houd het equivalentievolume binnen de buret (8 - 45 mL); anders nieuwe onbekende kiezen
+  function ensureUnknown() {
+    var ve = eqVolume(); if (ve >= 8 && ve <= 45) return;
+    var target = 15 + Math.random() * 20, f = S.unkIn === 'buret' ? ve / target : target / ve;
+    S.unknownC = Math.round(S.unknownC * f * 1000) / 1000;
+  }
+  function resetTitration(keepRuns) {
+    ensureUnknown();
+    S.flowing = false; S.curve = []; S.local = 0; S.drops = [];
+    // de buret wordt bijgevuld tot net onder 0 of verder gebruikt vanaf de vorige stand
+    S.buretStart = Math.round(Math.random() * 0.6 * 100) / 100;
+    S.added = 0; S.curve.push({ v: 0, p: pHof(0) });
+    if (!keepRuns) S.runs = [];
+    el('btnFlow').textContent = 'Kraan openen'; el('btnFlow').classList.add('p'); el('btnFlow').classList.remove('warn');
+    renderTable(); updateText();
+  }
+  function renderTable() {
+    var tb = el('tblBody'); tb.innerHTML = '';
+    if (!S.runs.length) { tb.innerHTML = '<tr><td colspan="4" style="text-align:left;color:#8c8576;font-family:\'IBM Plex Sans\',sans-serif">Nog geen metingen</td></tr>'; el('avgStr').textContent = '—'; return; }
+    S.runs.forEach(function (r, i) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + (i + 1) + '</td><td>' + fmt(r.b, 2) + '</td><td>' + fmt(r.e, 2) + '</td><td>' + fmt(r.e - r.b, 2) + '</td>'; tb.appendChild(tr); });
+    var avg = S.runs.reduce(function (a, r) { return a + (r.e - r.b); }, 0) / S.runs.length;
+    el('avgStr').textContent = fmt(avg, 2) + ' mL';
+  }
+  function updateText() {
+    el('addStr').textContent = fmt(S.added, 2) + ' mL';
+    el('phStr').textContent = S.showPH ? fmt(pHof(S.added), 2) : '—';
+    el('readStr').textContent = S.showRead ? fmt(reading(), 2) + ' mL' : 'verborgen';
+    el('flowStr').textContent = fmt(S.flow, 2) + ' mL/s';
+    var u = unknownK(), where = S.unkIn === 'buret' ? 'in de buret (titrant)' : 'in de erlenmeyer (titer)';
+    el('calcHint').innerHTML = 'Onbekend: ' + sp(u).name + ' ' + where + '. Titrant ' + sp(S.titrant).name.split(' ')[0] + ' (z = ' + sp(S.titrant).z + '), titer ' + sp(S.analyt).name.split(' ')[0] + ' (z = ' + sp(S.analyt).z + ').<br>' +
+      (S.unit === 'N' ? 'Gebruik N<sub>titrant</sub>&middot;V<sub>titrant</sub> = N<sub>titer</sub>&middot;V<sub>titer</sub> (N = z&middot;c).' : 'Gebruik c<sub>a</sub>&middot;V<sub>a</sub>&middot;z<sub>a</sub> = c<sub>b</sub>&middot;V<sub>b</sub>&middot;z<sub>b</sub>.') +
+      ' V<sub>titrant</sub> is het gemiddelde buretvolume.';
+    el('lblC').textContent = S.unkIn === 'buret' ? 'Concentratie titer' : 'Concentratie titrant';
+    el('ansLbl').textContent = 'Jouw concentratie van de onbekende (' + (S.unit === 'N' ? 'N' : 'mol/L') + ')';
+  }
+  function refreshCOptions() {
+    var unit = S.unit === 'N' ? ' N' : ' mol/L';
+    [].forEach.call(el('selC').options, function (o) { o.textContent = fmt(+o.value, 3) + unit; });
+  }
+  function setToggle(btn, on) { btn.classList.toggle('on', on); }
+
+  el('selUnk').addEventListener('change', function (e) { S.unkIn = e.target.value; newUnknown(); resetTitration(false); el('ansMsg').classList.add('hidden'); el('inpAns').value = ''; });
+  el('selUnit').addEventListener('change', function (e) { S.unit = e.target.value; refreshCOptions(); resetTitration(false); el('ansMsg').classList.add('hidden'); });
+  // de onbekende blijft dezelfde bij een andere combinatie (handig om proeven te vergelijken)
+  el('selTitrant').addEventListener('change', function (e) { S.titrant = e.target.value; refreshSelects(); resetTitration(false); el('ansMsg').classList.add('hidden'); });
+  el('selAnalyt').addEventListener('change', function (e) { S.analyt = e.target.value; resetTitration(false); });
+  el('selC').addEventListener('change', function (e) { S.cA = +e.target.value; resetTitration(false); });
+  el('selV').addEventListener('change', function (e) { S.V0 = +e.target.value; resetTitration(false); });
+  el('selInd').addEventListener('change', function (e) { S.ind = e.target.value; });
+  el('btnNew').addEventListener('click', function () { resetTitration(true); });
+  el('btnUnknown').addEventListener('click', function () { newUnknown(); resetTitration(false); el('ansMsg').classList.add('hidden'); el('inpAns').value = ''; });
+  el('btnDrop').addEventListener('click', function () { addVol(0.05); dropAnim(1); updateText(); });
+  el('btnHalf').addEventListener('click', function () { addVol(0.5); dropAnim(4); updateText(); });
+  el('btnOne').addEventListener('click', function () { addVol(1); dropAnim(7); updateText(); });
+  el('btnFlow').addEventListener('click', function () {
+    S.flowing = !S.flowing;
+    el('btnFlow').textContent = S.flowing ? 'Kraan sluiten' : 'Kraan openen';
+    el('btnFlow').classList.toggle('p', !S.flowing); el('btnFlow').classList.toggle('warn', S.flowing);
+  });
+  el('rngFlow').addEventListener('input', function (e) { S.flow = +e.target.value; updateText(); });
+  el('tgStir').addEventListener('click', function () { S.stir = !S.stir; setToggle(el('tgStir'), S.stir); });
+  el('tgPH').addEventListener('click', function () { S.showPH = !S.showPH; setToggle(el('tgPH'), S.showPH); updateText(); });
+  el('tgCurve').addEventListener('click', function () { S.showCurve = !S.showCurve; setToggle(el('tgCurve'), S.showCurve); });
+  el('tgRead').addEventListener('click', function () { S.showRead = !S.showRead; el('tgRead').textContent = S.showRead ? 'Buretstand verbergen' : 'Buretstand tonen'; updateText(); });
+  el('btnRec').addEventListener('click', function () {
+    if (S.added <= 0) return;
+    S.flowing = false; el('btnFlow').textContent = 'Kraan openen'; el('btnFlow').classList.add('p'); el('btnFlow').classList.remove('warn');
+    S.runs.push({ b: S.buretStart, e: Math.round(reading() * 100) / 100 }); renderTable();
+  });
+  el('btnCopy').addEventListener('click', function () {
+    var txt = 'meting\tbegin (mL)\teind (mL)\tdV (mL)\n' + S.runs.map(function (r, i) { return [i + 1, fmt(r.b, 2), fmt(r.e, 2), fmt(r.e - r.b, 2)].join('\t'); }).join('\n');
+    try { navigator.clipboard.writeText(txt); el('btnCopy').textContent = 'Gekopieerd'; setTimeout(function () { el('btnCopy').textContent = 'Tabel kopiëren'; }, 1500); } catch (e) {}
+  });
+  el('btnCheck').addEventListener('click', function () {
+    var v = parseFloat(String(el('inpAns').value).replace(',', '.')), m = el('ansMsg');
+    m.classList.remove('hidden', 'ok', 'bad', 'info');
+    var unitS = S.unit === 'N' ? 'N' : 'mol/L', truth = S.unit === 'N' ? S.unknownC * sp(unknownK()).z : S.unknownC;
+    if (!(v > 0)) { m.classList.add('info'); m.textContent = 'Vul een concentratie in ' + unitS + ' in.'; return; }
+    var err = Math.abs(v - truth) / truth;
+    if (err <= 0.02) { m.classList.add('ok'); m.textContent = 'Juist! De onbekende concentratie is ' + fmt(truth, 3) + ' ' + unitS + ' (afwijking ' + fmt(err * 100, 1) + ' %).'; }
+    else if (err <= 0.06) { m.classList.add('bad'); m.textContent = 'Bijna: je zit ' + fmt(err * 100, 1) + ' % ernaast. Titreer nauwkeuriger of controleer de afronding.'; }
+    else { m.classList.add('bad'); m.textContent = 'Nog niet juist. Controleer je eindpunt, de reactievergelijking (z) en de eenheden.'; }
+  });
+
+  // ---------- lus ----------
+  var last = performance.now();
+  function loop(ts) {
+    var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
+    if (S.flowing) { addVol(S.flow * dt); S.dropAcc = (S.dropAcc || 0) + S.flow * dt / 0.05; while (S.dropAcc >= 1 && S.flow <= 0.6) { S.dropAcc -= 1; dropAnim(1); } if (S.flow > 0.6) S.dropAcc = 0; }
+    S.drops.forEach(function (d) { d.v += 900 * dt; d.y += d.v * dt; }); S.drops = S.drops.filter(function (d) { return d.y < 470; });
+    S.local = Math.max(0, S.local - dt * (S.stir ? 1.6 : 0.25));
+    if (S.stir) S.swirl += dt * 14;
+    try { draw(); } catch (e) { if (!S._errShown) { S._errShown = true; console.error(e); } }
+    S._t = (S._t || 0) + dt; if (S._t > 0.15) { S._t = 0; updateText(); }
+    requestAnimationFrame(loop);
+  }
+
+  newUnknown(); refreshSelects(); refreshCOptions(); fit(); resetTitration(false);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

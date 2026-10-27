@@ -93,7 +93,7 @@
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Kaart invullen vanuit een uitdrukking</div>
-        <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. a·b + !a·c" style="height:38px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#2a2723">
+        <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. A·B + !A·C" style="height:38px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#2a2723">
         <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
           <div style="font-size:13px;color:#b8472f">{{ err }}</div>
         </sc-if>
@@ -116,7 +116,8 @@ class Component extends DCLogic {
   clearAll = () => this.setState({ vals: new Array(1 << this.state.n).fill(0), text: '', err: '' });
   onText = (e) => {
     const text = e.target.value, B = window.BoolCore, n = this.state.n;
-    const names = ['a', 'b', 'c', 'd'].slice(0, n);
+    B.upper = true; // variabelen als hoofdletters (a en A zijn dezelfde)
+    const names = ['A', 'B', 'C', 'D'].slice(0, n);
     if (!text.trim()) { this.setState({ text, err: '' }); return; }
     try {
       const node = B.parse(text), vs = B.vars(node);
@@ -131,7 +132,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const B = window.BoolCore, h = React.createElement, { n, vals, mode } = this.state;
-    const names = ['a', 'b', 'c', 'd'].slice(0, n);
+    const names = ['A', 'B', 'C', 'D'].slice(0, n);
     const pos = mode === 'pos';
     const rb = n >> 1, cb = n - rb, Rg = this.gray(rb), Cg = this.gray(cb), R = Rg.length, C = Cg.length;
     const idxAt = (r, c) => (Rg[r] << cb) | Cg[c];

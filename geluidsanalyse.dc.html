@@ -122,14 +122,14 @@
           <button class="knop" onClick="{{ onAutoF0 }}">Automatisch</button>
         </div>
         <sc-if value="{{ heeftF0 }}" hint-placeholder-val="{{ false }}">
-          <table class="ht" style="margin-top:8px">
-            <thead><tr><th>n</th><th>f (Hz)</th><th>f / f&#8320;</th><th>dB</th></tr></thead>
-            <tbody>
+          <sc-raw-table class="ht" style="margin-top:8px">
+            <sc-raw-thead><sc-raw-tr><sc-raw-th>n</sc-raw-th><sc-raw-th>f (Hz)</sc-raw-th><sc-raw-th>f / f&#8320;</sc-raw-th><sc-raw-th>dB</sc-raw-th></sc-raw-tr></sc-raw-thead>
+            <sc-raw-tbody>
               <sc-for list="{{ harm }}" as="h" hint-placeholder-count="5">
-                <tr><td>{{ h.n }}</td><td>{{ h.f }}</td><td>{{ h.r }}</td><td>{{ h.db }}</td></tr>
+                <sc-raw-tr><sc-raw-td>{{ h.n }}</sc-raw-td><sc-raw-td>{{ h.f }}</sc-raw-td><sc-raw-td>{{ h.r }}</sc-raw-td><sc-raw-td>{{ h.db }}</sc-raw-td></sc-raw-tr>
               </sc-for>
-            </tbody>
-          </table>
+            </sc-raw-tbody>
+          </sc-raw-table>
         </sc-if>
       </div>
 

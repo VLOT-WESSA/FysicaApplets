@@ -184,13 +184,13 @@
       <sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Horizontaal</span>
-            <select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+            <sc-raw-select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
-            </select></div>
+            </sc-raw-select></div>
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Verticaal</span>
-            <select value="{{ gy }}" onChange="{{ onGy }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+            <sc-raw-select value="{{ gy }}" onChange="{{ onGy }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:8px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
-            </select></div>
+            </sc-raw-select></div>
           <div style="font-size:14px;font-weight:500">Trendlijn</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
             <sc-for list="{{ fitItems }}" as="f" hint-placeholder-count="4">

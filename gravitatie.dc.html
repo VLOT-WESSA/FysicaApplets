@@ -142,12 +142,12 @@
         </div>
         <div class="card" style="gap:4px">
           <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Derde wet: T&sup2; / a&sup3;</div>
-          <table class="kt">
-            <tr><th>Planeet</th><th>a (AE)</th><th>T (jaar)</th><th>T&sup2;/a&sup3;</th></tr>
+          <sc-raw-table class="kt">
+            <sc-raw-tr><sc-raw-th>Planeet</sc-raw-th><sc-raw-th>a (AE)</sc-raw-th><sc-raw-th>T (jaar)</sc-raw-th><sc-raw-th>T&sup2;/a&sup3;</sc-raw-th></sc-raw-tr>
             <sc-for list="{{ kepRows }}" as="kr" hint-placeholder-count="9">
-              <tr style="{{ kr.style }}"><td>{{ kr.n }}</td><td>{{ kr.a }}</td><td>{{ kr.T }}</td><td>{{ kr.q }}</td></tr>
+              <sc-raw-tr style="{{ kr.style }}"><sc-raw-td>{{ kr.n }}</sc-raw-td><sc-raw-td>{{ kr.a }}</sc-raw-td><sc-raw-td>{{ kr.T }}</sc-raw-td><sc-raw-td>{{ kr.q }}</sc-raw-td></sc-raw-tr>
             </sc-for>
-          </table>
+          </sc-raw-table>
         </div>
         <div class="note">
           <b>1</b> De baan is een ellips met de zon in een brandpunt. <b>2</b> De voerstraal bestrijkt in gelijke tijden gelijke oppervlakken: elk gekleurd vak duurt T/12 en heeft hetzelfde oppervlak. Daarom gaat de planeet sneller bij het perihelium. <b>3</b> T&sup2;/a&sup3; is voor alle planeten rond de zon gelijk (1 jaar&sup2;/AE&sup3;): de omlooptijd hangt enkel af van a, niet van e.

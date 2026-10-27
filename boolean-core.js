@@ -32,7 +32,7 @@
     const toks = [];
     for (const ch of String(src)) {
       if (/\s/.test(ch)) continue;
-      if (/[a-zA-Z]/.test(ch)) toks.push({ k: 'v', v: ch.toLowerCase() });
+      if (/[a-zA-Z]/.test(ch)) toks.push({ k: 'v', v: B.upper ? ch.toUpperCase() : ch.toLowerCase() });
       else if (ch === '0' || ch === '1') toks.push({ k: 'c', v: +ch });
       else if ('!\u00ac~'.includes(ch)) toks.push({ k: 'not' });
       else if ("'\u2019".includes(ch)) toks.push({ k: 'post' });

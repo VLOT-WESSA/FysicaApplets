@@ -84,14 +84,14 @@
           <button onClick="{{ onKopieer }}" style="font-size:12px;border:1px solid #ddd6c8;border-radius:6px;padding:4px 8px;cursor:pointer;background:#fff;color:#6f685c">{{ kopieerLbl }}</button>
         </div>
         <div style="overflow-y:auto;flex:1">
-          <table class="vt">
-            <thead><tr><th>t (worp)</th><th>N</th><th>vervallen</th></tr></thead>
-            <tbody>
+          <sc-raw-table class="vt">
+            <sc-raw-thead><sc-raw-tr><sc-raw-th>t (worp)</sc-raw-th><sc-raw-th>N</sc-raw-th><sc-raw-th>vervallen</sc-raw-th></sc-raw-tr></sc-raw-thead>
+            <sc-raw-tbody>
               <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
-                <tr><td>{{ r.t }}</td><td>{{ r.n }}</td><td>{{ r.d }}</td></tr>
+                <sc-raw-tr><sc-raw-td>{{ r.t }}</sc-raw-td><sc-raw-td>{{ r.n }}</sc-raw-td><sc-raw-td>{{ r.d }}</sc-raw-td></sc-raw-tr>
               </sc-for>
-            </tbody>
-          </table>
+            </sc-raw-tbody>
+          </sc-raw-table>
         </div>
       </div>
     </div>

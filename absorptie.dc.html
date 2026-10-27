@@ -89,12 +89,12 @@
         <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Metingen ({{ nMeas }})</span>
           <span><button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button>
           <button onClick="{{ onClear }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">Wis</button></span></div>
-        <table class="mt">
-          <tr><th>bron/absorber</th><th>d</th><th>r (cm)</th><th>N /10 s</th></tr>
+        <sc-raw-table class="mt">
+          <sc-raw-tr><sc-raw-th>bron/absorber</sc-raw-th><sc-raw-th>d</sc-raw-th><sc-raw-th>r (cm)</sc-raw-th><sc-raw-th>N /10 s</sc-raw-th></sc-raw-tr>
           <sc-for list="{{ meas }}" as="m" hint-placeholder-count="3">
-            <tr><td>{{ m.s }}</td><td>{{ m.d }}</td><td>{{ m.r }}</td><td>{{ m.n }}</td></tr>
+            <sc-raw-tr><sc-raw-td>{{ m.s }}</sc-raw-td><sc-raw-td>{{ m.d }}</sc-raw-td><sc-raw-td>{{ m.r }}</sc-raw-td><sc-raw-td>{{ m.n }}</sc-raw-td></sc-raw-tr>
           </sc-for>
-        </table>
+        </sc-raw-table>
       </div>
       <div class="note">
         <div class="mono">I = I&#8320;&middot;e<sup>&minus;&mu;&middot;d</sup> &nbsp;&nbsp; d<sub>&frac12;</sub> = ln 2 / &mu;</div>
