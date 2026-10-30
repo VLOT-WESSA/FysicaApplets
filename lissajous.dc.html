@@ -17,14 +17,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -61,7 +60,7 @@
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Amplitudes</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:12px">Amplitudes</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">A<sub>x</sub></span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ axStr }}</span>
@@ -75,7 +74,7 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Frequenties</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:12px">Frequenties</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">f<sub>x</sub></span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ fxStr }}</span>
@@ -93,8 +92,8 @@
           <span style="font-size:14px;font-weight:500">Faseverschil &phi;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ phaseStr }}</span>
         </div>
-        <input type="range" min="0" max="360" step="1" value="{{ phaseVal }}" onInput="{{ onPhase }}" style="width:100%;accent-color:#1f9e8f">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
+        <input type="range" min="0" max="360" step="1" value="{{ phaseVal }}" onInput="{{ onPhase }}" style="width:100%;accent-color:var(--accent)">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
@@ -104,7 +103,7 @@
           <button onClick="{{ onModeFase }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ faseTabBg }};color:{{ faseTabFg }};box-shadow:{{ faseTabSh }}">varieer faseverschil</button>
           <button onClick="{{ onModeRatio }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ ratioTabBg }};color:{{ ratioTabFg }};box-shadow:{{ ratioTabSh }}">varieer verhouding</button>
         </div>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
+        <div style="font-size:11.5px;color:#6f685c;line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
       </div>
 
       <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
@@ -252,7 +251,7 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const g = this.gcd(this.fx, this.fy) || 1;
-    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? '#1f9e8f' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
+    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? 'var(--accent)' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
     const f = seg(st.autoMode === 'fase'), r = seg(st.autoMode === 'verhouding');
     return {
       stageRef: this.stageRef,
@@ -269,13 +268,13 @@ class Component extends DCLogic {
       onAuto: () => this.setState(s => ({ auto: !s.auto })),
       onToggleBol: () => this.setState(s => ({ showBol: !s.showBol })),
       bolLabel: st.showBol !== false ? 'Bewegende bol aan' : 'Bewegende bol uit',
-      bolBg: st.showBol !== false ? '#1f9e8f' : '#fff', bolFg: st.showBol !== false ? '#fff' : '#3a352c',
-      bolBorder: st.showBol !== false ? '#1f9e8f' : '#d9d3c6', bolDot: st.showBol !== false ? '#fff' : '#c3bcad',
+      bolBg: st.showBol !== false ? 'var(--accent)' : '#fff', bolFg: st.showBol !== false ? '#fff' : '#3a352c',
+      bolBorder: st.showBol !== false ? 'var(--accent)' : '#d9d3c6', bolDot: st.showBol !== false ? '#fff' : '#c3bcad',
       onModeFase: () => this.setState({ autoMode: 'fase' }),
       onModeRatio: () => this.setState({ autoMode: 'verhouding' }),
       autoLabel: st.auto ? 'Automatisch aan' : 'Automatisch uit',
-      autoBg: st.auto ? '#1f9e8f' : '#fff', autoFg: st.auto ? '#fff' : '#3a352c',
-      autoBorder: st.auto ? '#1f9e8f' : '#d9d3c6', autoDot: st.auto ? '#fff' : '#c3bcad',
+      autoBg: st.auto ? 'var(--accent)' : '#fff', autoFg: st.auto ? '#fff' : '#3a352c',
+      autoBorder: st.auto ? 'var(--accent)' : '#d9d3c6', autoDot: st.auto ? '#fff' : '#c3bcad',
       faseTabBg: f.bg, faseTabFg: f.fg, faseTabSh: f.sh,
       ratioTabBg: r.bg, ratioTabFg: r.fg, ratioTabSh: r.sh,
     };

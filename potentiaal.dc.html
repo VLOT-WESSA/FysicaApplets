@@ -10,6 +10,8 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:75}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -42,17 +44,17 @@
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
-        <button onClick="{{ onRelease }}" style="min-height:38px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap;border:1px solid oklch(0.55 0.13 75);background:oklch(0.64 0.13 75);color:#fff">{{ releaseLabel }}</button>
+        <button onClick="{{ onRelease }}" style="min-height:38px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap;border:1px solid var(--accent);background:oklch(0.64 0.13 75);color:#fff">{{ releaseLabel }}</button>
         <div style="flex:1 1 200px;min-width:0;font-size:13px;color:#6f685c">Sleep de lading tussen de platen. Bij loslaten werkt enkel de elektrische kracht; de beweging is sterk vertraagd.</div>
       </div>
       <sc-if value="{{ graphOn }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;gap:12px;flex:none">
         <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;color:#8c8576;font-weight:600">E<sub style="font-size:10px">pot</sub> (d)</div>
+          <div style="font-size:12px;letter-spacing:.06em;color:#6f685c;font-weight:600">E<sub style="font-size:10px">pot</sub> (d)</div>
           <canvas ref="{{ gRefE }}" style="width:100%;display:block"></canvas>
         </div>
         <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;color:#8c8576;font-weight:600">V (d)</div>
+          <div style="font-size:12px;letter-spacing:.06em;color:#6f685c;font-weight:600">V (d)</div>
           <canvas ref="{{ gRefV }}" style="width:100%;display:block"></canvas>
         </div>
       </div>
@@ -62,7 +64,7 @@
     <div style="flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Opstelling</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Opstelling</div>
         <div style="display:flex;flex-direction:column;gap:4px">
           <div style="display:flex;justify-content:space-between;font-size:14px"><span>Spanning tussen de platen</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ uStr }}</span></div>
           <input type="range" min="0" max="1000" step="50" value="{{ U }}" onChange="{{ onU }}" style="width:100%;height:32px;accent-color:oklch(0.64 0.13 75);cursor:pointer">
@@ -87,7 +89,7 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Potentiële elektrische energie</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Potentiële elektrische energie</div>
         <div style="font-size:22px;text-align:center;margin-bottom:10px"><i>E</i><sub style="font-size:13px">pot,el</sub> = <i>Q</i> · <i>E</i> · <i>d</i></div>
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
           <div style="display:flex;justify-content:space-between"><span>d (tot negatieve plaat)</span><span style="color:#3a352c">{{ dStr }}</span></div>
@@ -99,13 +101,13 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Potentiaal</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Potentiaal</div>
         <div style="font-size:20px;text-align:center;margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:8px"><i>V</i> =<span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.2"><span style="padding:0 4px 2px"><i>E</i><sub style="font-size:12px">pot,el</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span>= <i>E</i> · <i>d</i></span></div>
         <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600">V = {{ vStr }}</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Spanning en kinetische energie</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Spanning en kinetische energie</div>
         <div style="font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px"><span><i>U</i> = <i>V</i><sub style="font-size:12px">2</sub> − <i>V</i><sub style="font-size:12px">1</sub> = −</span><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;vertical-align:middle"><span style="padding:0 4px 2px">Δ<i>E</i><sub style="font-size:12px">kin</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span></div>
         <sc-if value="{{ released }}" hint-placeholder-val="{{ false }}">
           <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:6px">
@@ -129,7 +131,7 @@
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
             <span style="width:13px;height:13px;border-radius:50%;flex:none;background:#f2d23a;border:1.5px solid #7a6f12"></span>
-            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Potentiaalverschil</span>
+            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Potentiaalverschil</span>
           </div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
             <div style="display:flex;justify-content:space-between"><span>V<sub>A</sub></span><span style="color:#3a352c">{{ vaStr }}</span></div>
@@ -146,7 +148,7 @@
       </sc-if>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Weergave</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Weergave</div>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
           <input type="checkbox" checked="{{ graphOn }}" onChange="{{ toggleGraph }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 75);cursor:pointer">Grafieken
         </label>
@@ -492,7 +494,7 @@ class Component extends DCLogic {
     const bx0 = 718, bw = 38, bg = 12;
     ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(bx0 - 6, y0); ctx.lineTo(bx0 + 3 * bw + 2 * bg + 6, y0); ctx.stroke();
-    ctx.fillStyle = '#8c8576'; ctx.font = "600 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#6f685c'; ctx.font = "600 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
     ctx.fillText('ENERGIE (eV)', bx0 + (3 * bw + 2 * bg) / 2, y0 - 186);
     bars.forEach(([nm, v, col], i) => {
       const x = bx0 + i * (bw + bg), h = v * sc;
@@ -502,7 +504,7 @@ class Component extends DCLogic {
       ctx.fillText(this.fmt(ev, Math.abs(ev) >= 100 || Math.abs(ev) < 1e-9 ? 0 : 1), x + bw / 2, h >= 0 ? y0 - h - 6 : y0 - h + 15);
       ctx.fillStyle = '#6f685c'; ctx.font = "italic 600 13px 'IBM Plex Sans', sans-serif";
       ctx.fillText('E', x + bw / 2 - 6, y0 + 192);
-      ctx.font = "500 10px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+      ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
       ctx.fillText(nm.slice(2), x + bw / 2 - 1, y0 + 196);
     });
   }

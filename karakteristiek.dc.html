@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:75}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8862a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8862a;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -57,7 +56,7 @@
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
       <div class="card">
-        <div style="font-size:12px;color:#8c8576">Component</div>
+        <div style="font-size:12px;color:#6f685c">Component</div>
         <div class="chips">
           <sc-for list="{{ comps }}" as="p" hint-placeholder-count="3">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -68,7 +67,7 @@
           <div class="sl"><input type="range" min="100" max="2200" step="10" value="{{ R }}" onInput="{{ onR }}"></div>
         </sc-if>
         <sc-if value="{{ isLed }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:12px;color:#8c8576;margin-top:4px">Kleur LED (golflengte volgens fabrikant)</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:4px">Kleur LED (golflengte volgens fabrikant)</div>
           <div class="chips">
             <sc-for list="{{ leds }}" as="p" hint-placeholder-count="5">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -86,10 +85,10 @@
           <button class="fine" onClick="{{ onP1 }}">+0,1</button>
         </div>
         <div style="display:flex;gap:8px;margin-top:6px">
-          <button onClick="{{ onRec }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Meting noteren</button>
+          <button onClick="{{ onRec }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">Meting noteren</button>
           <button onClick="{{ onClear }}" style="flex:none;min-height:38px;padding:0 12px;font-size:13px;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff">Wissen</button>
         </div>
-        <div style="font-size:12px;color:#8c8576;margin-top:4px">Grafiek</div>
+        <div style="font-size:12px;color:#6f685c;margin-top:4px">Grafiek</div>
         <div class="chips">
           <sc-for list="{{ plots }}" as="p" hint-placeholder-count="2">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -107,7 +106,7 @@
         </sc-for>
       </div>
       <div class="card" style="gap:4px">
-        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Meettabel ({{ nMeas }})</span>
+        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Meettabel ({{ nMeas }})</span>
           <button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button></div>
         <sc-raw-table class="mt">
           <sc-raw-tr><sc-raw-th>U (V)</sc-raw-th><sc-raw-th>I (mA)</sc-raw-th><sc-raw-th>R (&Omega;)</sc-raw-th></sc-raw-tr>
@@ -214,7 +213,7 @@ class Component extends DCLogic {
     // displays
     this.display(ctx, 60, 400, 'Ampèremeter', I >= 0.0995 ? this.fmt(I, 3) + ' A' : this.fmt(I * 1000, 2) + ' mA');
     this.display(ctx, 220, 400, 'Voltmeter', this.fmt(U, 2) + ' V');
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Voltmeter parallel over de component, ampèremeter in serie.', 30, 490);
     // ----- grafiek -----
     this.drawPlot(ctx, U, I);
@@ -238,7 +237,7 @@ class Component extends DCLogic {
     if (IU) ymax = st.comp === 'led' ? 0.03 : this.nice(Imax);
     else ymax = st.comp === 'R' ? this.nice(st.R * 1.2) : st.comp === 'lamp' ? 70 : 2000;
     const X = u => gx + u / Umax * gw, Y = v => gy + gh - v / ymax * gh;
-    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1; ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1; ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace";
     for (let i = 0; i <= 5; i++) {
       const v = ymax * i / 5, y = Y(v); ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx + gw, y); ctx.stroke();
       ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(IU ? this.fmt(v * 1000, v * 1000 < 10 ? 1 : 0) : this.fmt(v, 0), gx - 5, y);
@@ -267,7 +266,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state; const { U, I } = this.cur();
-    const accent = 'oklch(0.52 0.12 75)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const setU = (v) => this.setState({ Ub: Math.max(0, Math.min(this.Umax(), Math.round(v * 100) / 100)) });
     const rows = [

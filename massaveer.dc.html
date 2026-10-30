@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -59,7 +58,7 @@
         </sc-for>
       </div>
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">{{ resetLabel }}</button>
       </div>
       <div class="card">
@@ -151,11 +150,11 @@ class Component extends DCLogic {
     const drv = st.tab === 'forced' ? 12 * Math.cos(this.phiD) : 0;
     const top = this.topY + drv;
     ctx.fillStyle = '#6f685c'; ctx.fillRect(cx - 70, top - 14, 140, 10);
-    if (st.tab === 'forced') { ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('aandrijving ↕', cx + 78, top - 9); }
+    if (st.tab === 'forced') { ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('aandrijving ↕', cx + 78, top - 9); }
     const my = this.massY(), mh = 26 + 26 * Math.sqrt(st.m);
     // evenwichtslijn
     ctx.setLineDash([4, 4]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 90, this.eqY()); ctx.lineTo(cx + 110, this.eqY()); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('evenwicht', cx + 60, this.eqY() - 2);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('evenwicht', cx + 60, this.eqY() - 2);
     // veer
     const y0 = top - 4, y1 = my - mh / 2, nc = 16, wv = 18 + st.k / 6;
     ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, y0); ctx.lineTo(cx, y0 + 10);
@@ -165,7 +164,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#3a6fb8'; ctx.fillRect(cx - 30, my - mh / 2, 60, mh); ctx.strokeStyle = this.dragging ? '#2a2723' : '#2a4f86'; ctx.lineWidth = 2; ctx.strokeRect(cx - 30, my - mh / 2, 60, mh);
     ctx.fillStyle = '#fff'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(Math.round(st.m * 1000) + ' g', cx, my);
     // liniaal
-    ctx.strokeStyle = '#cfc7b6'; ctx.lineWidth = 1; ctx.fillStyle = '#8c8576'; ctx.font = "500 10px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
+    ctx.strokeStyle = '#cfc7b6'; ctx.lineWidth = 1; ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
     for (let d = -10; d <= 10; d += 2) { const y = this.eqY() + d / 100 * this.ppm * 1.5; ctx.beginPath(); ctx.moveTo(cx - 60, y); ctx.lineTo(cx - 52, y); ctx.stroke(); if (d % 4 === 0) ctx.fillText((d > 0 ? '+' : '') + d + ' cm', cx - 64, y); }
     // terugroepende kracht
     if (st.showF) this.arrow(ctx, cx + 42, my, -st.k * this.x * 120, '#2f8a4e', 'F = −k·u');
@@ -197,7 +196,7 @@ class Component extends DCLogic {
       this.hist.forEach((p, i) => { const X = gx + gw - (this.t - p.t) / 6 * gw, Y = ym + p.x * sc; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke();
       ctx.restore();
       ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Uitwijking u(t)  (omlaag = getekend omlaag)', gx + 8, gy + 6);
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('6 s venster, lijntjes per seconde', gx + gw - 6, gy + gh - 4);
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('6 s venster, lijntjes per seconde', gx + gw - 6, gy + gh - 4);
     }
     if (st.tab === 'forced') {
       const gy = st.showGraph ? 275 : 20, gh = st.showGraph ? 265 : 520;
@@ -205,7 +204,7 @@ class Component extends DCLogic {
       const fmax = 4; let amax = 0; for (let i = 1; i <= 200; i++) amax = Math.max(amax, this.ampTheory(i / 200 * fmax)); amax = Math.min(Math.max(amax, 0.02), 0.5) * 1.1;
       const X = f => gx + 30 + f / fmax * (gw - 45), Y = a => gy + gh - 28 - Math.min(a, amax) / amax * (gh - 60);
       ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(gx + 30, gy + 26); ctx.lineTo(gx + 30, gy + gh - 28); ctx.lineTo(gx + gw - 10, gy + gh - 28); ctx.stroke();
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       for (let f = 0; f <= fmax; f++) ctx.fillText(f + ' Hz', X(f), gy + gh - 24);
       const f0 = this.w0() / (2 * Math.PI);
       ctx.setLineDash([4, 4]); ctx.strokeStyle = '#c8443a'; ctx.beginPath(); ctx.moveTo(X(f0), gy + 26); ctx.lineTo(X(f0), gy + gh - 28); ctx.stroke(); ctx.setLineDash([]);
@@ -214,12 +213,12 @@ class Component extends DCLogic {
       for (let i = 1; i <= 300; i++) { const f = i / 300 * fmax; const p = [X(f), Y(this.ampTheory(f))]; i > 1 ? ctx.lineTo(...p) : ctx.moveTo(...p); } ctx.stroke();
       ctx.fillStyle = '#2a8a95'; ctx.beginPath(); ctx.arc(X(st.fd), Y(this.ampTheory(st.fd)), 6, 0, 7); ctx.fill();
       ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Resonantiekromme: amplitude in functie van fₐ', gx + 8, gy + 6);
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('fₐ →', gx + gw - 8, gy + gh - 30);
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('fₐ →', gx + gw - 8, gy + gh - 30);
     }
   }
   renderVals() {
     const st = this.state; const w0 = this.w0(), f0 = w0 / (2 * Math.PI), T0 = 1 / f0;
-    const accent = 'oklch(0.5 0.12 195)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const forced = st.tab === 'forced';

@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:150}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f8a4e;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f8a4e;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -61,7 +60,7 @@
 
       <sc-if value="{{ isMag }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onDrop }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">Laat vallen</button>
+          <button onClick="{{ onDrop }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">Laat vallen</button>
           <button onClick="{{ onFlip }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Magneet omdraaien</button>
         </div>
         <div class="card">
@@ -71,7 +70,7 @@
           <div class="sl"><input type="range" min="0.05" max="0.30" step="0.01" value="{{ h0 }}" onInput="{{ onH }}"></div>
           <div class="row"><span class="lbl">Magneten op elkaar</span><span class="val">{{ nmStr }}</span></div>
           <div class="sl"><input type="range" min="1" max="2" step="1" value="{{ nm }}" onInput="{{ onNm }}"></div>
-          <div style="font-size:12px;color:#8c8576;margin-top:2px">Aangesloten op de spoel</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:2px">Aangesloten op de spoel</div>
           <div class="chips">
             <sc-for list="{{ meters }}" as="p" hint-placeholder-count="2">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -97,7 +96,7 @@
 
       <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ playLabel }}</button>
+          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         </div>
         <div class="card">
           <div class="row"><span class="lbl">Aantal windingen N</span><span class="val">{{ gNStr }}</span></div>
@@ -108,7 +107,7 @@
           <div class="sl"><input type="range" min="10" max="200" step="5" value="{{ gA }}" onInput="{{ onGA }}"></div>
           <div class="row"><span class="lbl">Toerental f</span><span class="val">{{ gfStr }}</span></div>
           <div class="sl"><input type="range" min="0.2" max="3" step="0.1" value="{{ gf }}" onInput="{{ onGf }}"></div>
-          <div style="font-size:12px;color:#8c8576;margin-top:2px">Aansluiting</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:2px">Aansluiting</div>
           <div class="chips">
             <sc-for list="{{ collectors }}" as="p" hint-placeholder-count="2">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -129,7 +128,7 @@
 
       <sc-if value="{{ isTr }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onSwitch }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ switchLabel }}</button>
+          <button onClick="{{ onSwitch }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ switchLabel }}</button>
         </div>
         <div class="card">
           <div class="row"><span class="lbl">Primaire windingen N<sub>p</sub></span><span class="val">{{ NpStr }}</span></div>
@@ -303,7 +302,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
     let mx = fixedMax || 0; if (!fixedMax) data.forEach(d => { mx = Math.max(mx, Math.abs(d[key])); }); if (mx < 1e-12) mx = 1;
     ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 8, y + 6);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
     ctx.fillText('+' + unit(mx), x + w - 6, y + 6); ctx.textBaseline = 'bottom'; ctx.fillText('−' + unit(mx), x + w - 6, y + h - 4);
     ctx.textAlign = 'left'; ctx.fillText('t →', x + 8, y + h - 4);
     if (data.length < 2) return;
@@ -389,14 +388,14 @@ class Component extends DCLogic {
       ctx.fillStyle = '#2a2723'; ctx.font = "600 15px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const mv = Math.max(-199.9, Math.min(199.9, this.emf * 1000));
       ctx.fillText(Math.abs(this.emf * 1000) > 199.9 ? '  1. ' : this.fmt(mv, 1), mx, myy - 20);
-      ctx.font = "500 10px 'IBM Plex Sans',sans-serif"; ctx.fillText('mV  (200 mV DC)', mx, myy + 6);
+      ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('mV  (200 mV DC)', mx, myy + 6);
       ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(mx, myy + 26, 9, 0, 7); ctx.fill();
     }
     // graphs
     const tw = st.slow ? 0.6 : 3;
     this.graph(ctx, 560, 20, 345, 245, 'Flux N·Φ (mWb)', this.hist, 'p', '#3a6fb8', v => this.fmt(v * 1000, 2), tw, this.tSim);
     this.graph(ctx, 560, 285, 345, 255, 'Inductiespanning ε', this.hist, 'e', '#c8443a', v => this.uStr(v), tw, this.tSim);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(st.slow ? 'Slow motion (×0,12)' : 'Echte tijd', 14, 12);
     if (this.mode === 'idle' && !this.dragging) ctx.fillText('Sleep de magneet', 14, 30);
   }
@@ -422,7 +421,7 @@ class Component extends DCLogic {
     // normal vector (top view inset)
     const ix = 250, iy = 485;
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(ix - 80, iy - 55, 160, 100); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(ix - 80, iy - 55, 160, 100);
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('bovenaanzicht', ix - 74, iy - 51);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('bovenaanzicht', ix - 74, iy - 51);
     // spoel als lijnstuk loodrecht op de normaal n = (cos th, sin th)
     ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 4;
     const nx = Math.cos(th), ny = Math.sin(th);
@@ -453,7 +452,7 @@ class Component extends DCLogic {
     const x0 = 70, y0 = 90, w = 360, h = 300, th = 46;
     ctx.fillStyle = '#9aa0a6';
     ctx.fillRect(x0, y0 + th, th, h - th); ctx.fillRect(x0 + w - th, y0 + th, th, h - th); ctx.fillRect(x0, y0 + h - th, w, th);
-    if (st.yoke) ctx.fillRect(x0, y0, w, th); else { ctx.strokeStyle = '#9aa0a6'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeRect(x0, y0 - 30, w, th); ctx.setLineDash([]); ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('juk verwijderd', x0 + w / 2, y0 - 34); }
+    if (st.yoke) ctx.fillRect(x0, y0, w, th); else { ctx.strokeStyle = '#9aa0a6'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5; ctx.strokeRect(x0, y0 - 30, w, th); ctx.setLineDash([]); ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('juk verwijderd', x0 + w / 2, y0 - 34); }
     // flux arrows circulating in core
     const phi = st.dc ? (st.on ? 1 : 0) : -Math.cos(2 * Math.PI * t) * (st.on ? 1 : 0);
     const amp = Math.abs(phi);
@@ -502,7 +501,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.12 150)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));

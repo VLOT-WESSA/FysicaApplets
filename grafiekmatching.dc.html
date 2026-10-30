@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -49,7 +48,7 @@
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
@@ -216,7 +215,7 @@ class Component extends DCLogic {
     const A = L.ax[key], T = L.tA;
     const X = (t) => x + t / T.hi * w, Y = (v) => y + h - (v - A.lo) / (A.hi - A.lo) * h;
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h);
-    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.lineWidth = 1;
+    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.lineWidth = 1;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) {
       ctx.strokeStyle = Math.abs(v) < 1e-9 ? '#9a927f' : '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
@@ -305,7 +304,7 @@ class Component extends DCLogic {
     if (d.kind === 'h') {
       const A = L.ax.pos; const X = (v) => 30 + (v - A.lo) / (A.hi - A.lo) * 360; const ry = 330;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, ry); ctx.lineTo(400, ry); ctx.stroke();
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
       for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), ry); ctx.lineTo(X(v), ry + 7); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), ry + 10); }
       ctx.textAlign = 'right'; ctx.fillText('x (m)', 400, ry + 28);
       const car = (x, a) => { ctx.globalAlpha = a; ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.roundRect(x - 14, ry - 18, 28, 12, 3); ctx.fill(); ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(x - 8, ry - 4, 4, 0, 7); ctx.arc(x + 8, ry - 4, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1; };
@@ -316,7 +315,7 @@ class Component extends DCLogic {
       const A = L.ax.pos; const Y = (v) => 560 - (v - A.lo) / (A.hi - A.lo) * 490; const bx = 220;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(40, Y(0)); ctx.lineTo(400, Y(0)); ctx.stroke();
       ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(70, Y(A.lo)); ctx.lineTo(70, Y(A.hi)); ctx.stroke();
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
       for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(64, Y(v)); ctx.lineTo(70, Y(v)); ctx.stroke(); ctx.fillText(this.fmt(v, 0), 60, Y(v)); }
       ctx.textAlign = 'left'; ctx.fillText('y (m)', 76, Y(A.hi));
       if (p.h0 > 0) { ctx.fillStyle = '#cdd4dc'; ctx.fillRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.strokeRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); }
@@ -328,7 +327,7 @@ class Component extends DCLogic {
       const ox = 50, oy = 560; const X = (v) => ox + v * sc2, Y = (v) => oy - v * sc2;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, oy); ctx.lineTo(405, oy); ctx.stroke();
       ctx.fillStyle = '#cdd4dc'; ctx.fillRect(20, Y(p.h0), 30, oy - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 1.5; ctx.strokeRect(20, Y(p.h0), 30, oy - Y(p.h0));
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
       for (let v = 0; v <= A.hi + 1e-9 && X(v) < 410; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), oy); ctx.lineTo(X(v), oy + 6); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), oy + 9); }
       ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
       for (let v = A.st; v <= A.hi + 1e-9 && Y(v) > 40; v += A.st) { ctx.fillText(this.fmt(v, 0), 16, Y(v)); }
@@ -360,7 +359,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state, d = this.S[st.sc], p = this.cur();
-    const accent = 'oklch(0.5 0.13 255)';
+    const accent = 'var(--accent)';
     const tab = (on) => 'flex:1;min-height:34px;font-size:13px;font-weight:' + (on ? '600' : '500') + ';border:none;border-radius:9px;padding:6px 10px;cursor:pointer;background:' + (on ? accent : 'transparent') + ';color:' + (on ? '#fff' : '#4f4a42');
     const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const k = this.kin(st.sc, p, this.t);

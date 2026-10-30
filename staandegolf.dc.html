@@ -19,14 +19,13 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -53,16 +52,20 @@
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;align-items:center">
-        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#a39c8d;font-weight:600;margin-right:4px">Componenten (uit bij start)</span>
+        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-right:4px">Componenten (uit bij start)</span>
         <button onClick="{{ onTogInc }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ incBg }};color:{{ incFg }}"><span style="width:22px;height:3px;background:#7fb4ff;border-radius:2px;display:inline-block;opacity:{{ incDot }}"></span>heenlopend</button>
         <button onClick="{{ onTogRef }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ refBg }};color:{{ refFg }}"><span style="width:22px;height:3px;background:#e8964c;border-radius:2px;display:inline-block;opacity:{{ refDot }}"></span>teruglopend</button>
-        <button onClick="{{ onTogRes }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ resBg }};color:{{ resFg }}"><span style="width:22px;height:4px;background:#1f9e8f;border-radius:2px;display:inline-block;opacity:{{ resDot }}"></span>resultaat</button>
+        <button onClick="{{ onTogRes }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid #ddd6c8;border-radius:9px;padding:8px 13px;cursor:pointer;background:{{ resBg }};color:{{ resFg }}"><span style="width:22px;height:4px;background:var(--accent);border-radius:2px;display:inline-block;opacity:{{ resDot }}"></span>resultaat</button>
       </div>
     </div>
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Uiteinde</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:11px">Uiteinde</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onEndFixed }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ fixedBg }};color:{{ fixedFg }}">Vast</button>
           <button onClick="{{ onEndLoose }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ looseBg }};color:{{ looseFg }}">Los</button>
@@ -74,22 +77,17 @@
           <span style="font-size:14px;font-weight:500">Golflengte</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
         </div>
-        <input type="range" min="6" max="24" step="0.5" value="{{ lambdaCm }}" onChange="{{ onLambda }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <input type="range" min="6" max="24" step="0.5" value="{{ lambdaCm }}" onChange="{{ onLambda }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Amplitude</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ ampStr }}</span>
         </div>
-        <input type="range" min="1" max="7" step="0.5" value="{{ ampCm }}" onChange="{{ onAmp }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <input type="range" min="1" max="7" step="0.5" value="{{ ampCm }}" onChange="{{ onAmp }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Snelheid</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ speedStr }}</span>
         </div>
-        <input type="range" min="2" max="30" step="1" value="{{ speedCm }}" onChange="{{ onSpeed }}" style="width:100%;accent-color:#1f9e8f">
-      </div>
-
-      <div style="display:flex;gap:10px">
-        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw</button>
+        <input type="range" min="2" max="30" step="1" value="{{ speedCm }}" onChange="{{ onSpeed }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
       <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px">
@@ -229,7 +227,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const seg = (active) => ({ bg: active ? '#1f9e8f' : '#fff', fg: active ? '#fff' : '#6f685c' });
+    const seg = (active) => ({ bg: active ? 'var(--accent)' : '#fff', fg: active ? '#fff' : '#6f685c' });
     const fx = seg(this.state.end === 'vast');
     const ls = seg(this.state.end === 'los');
     const tog = (on) => ({ bg: on ? '#eef6f4' : '#fff', fg: on ? '#1f7a6e' : '#a39c8d', dot: on ? '1' : '0.3' });

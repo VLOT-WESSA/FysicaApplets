@@ -11,6 +11,8 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:300}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,13 +20,10 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
-  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
-  .sub{font-size:12px;color:#8c8576}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600}
+  .sub{font-size:12px;color:#6f685c}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
   table.tt{border-collapse:collapse;font-size:12px;width:100%}
@@ -62,7 +61,7 @@
           <button onClick="{{ onTick }}" style="{{ btnA }}">&#9654; 1 klokcyclus</button>
           <button onClick="{{ onIns }}" style="{{ btnA }}">&#9197; 1 instructie</button>
           <button onClick="{{ onRun }}" style="{{ runStyle }}">{{ runLabel }}</button>
-          <button onClick="{{ onReset }}" style="{{ btnP }}">&#8634; Opnieuw</button>
+          <button onClick="{{ onReset }}" style="{{ btnP }}">Reset</button>
         </div>
         <div class="row"><span class="sub">Weergave</span><button onClick="{{ onAdv }}" style="{{ advStyle }}">Uitgebreid</button></div>
         <div class="row"><span class="sub">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">{{ rateStr }}</span></div>
@@ -956,12 +955,12 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 2; ctx.stroke();
     this.txt(ctx, 'Σ', cx, cy + 1, "700 22px " + SANS, '#5a428f', 'center');
     this.rr(ctx, 22, cy - 18, 88, 36, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1.5; ctx.stroke();
-    this.txt(ctx, 'offset', 30, cy - 9, "600 10px " + SANS, MUT);
+    this.txt(ctx, 'offset', 30, cy - 9, "600 11px " + SANS, MUT);
     this.txt(ctx, addr ? hex(addr.off, 4) : '----', 66, cy + 6, "600 15px " + MONO, INK, 'center');
     this.arrow(ctx, [[110, cy], [cx - 22, cy]], '#7a5ab8', 2);
     this.rr(ctx, 262, cy - 26, 270, 52, 9); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 2; ctx.stroke();
     this.arrow(ctx, [[cx + 22, cy], [262, cy]], '#7a5ab8', 2);
-    this.txt(ctx, 'fysiek adres (20 bit)', 272, cy - 14, "600 10px " + SANS, MUT);
+    this.txt(ctx, 'fysiek adres (20 bit)', 272, cy - 14, "600 11px " + SANS, MUT);
     this.txt(ctx, addr ? hex(addr.phys, 5) + 'h' : '-----', 272, cy + 8, "700 22px " + MONO, '#5a428f');
     if (addr) { const sg = hex(addr.seg, 4) + '0 + ' + hex(addr.off, 4); this.txt(ctx, hex(addr.seg, 4) + '0h + ' + hex(addr.off, 4) + 'h', 522, cy + 18, "500 11px " + MONO, MUT, 'right'); }
     // buscyclus T1..T4
@@ -994,8 +993,8 @@ class Component extends DCLogic {
     // adresbus pijl
     const busOn = biu.busy > 0;
     this.arrow(ctx, [[532, cy], [mx, cy]], busOn ? (biu.kind === 'data' ? '#c8443a' : '#7a5ab8') : '#cfc8b8', busOn ? 3 : 2);
-    this.txt(ctx, 'adresbus 20 bit', 606, cy - 8, "600 10px " + SANS, MUT, 'center', 'bottom');
-    this.txt(ctx, 'databus 16 bit', 606, cy + 24, "600 10px " + SANS, MUT, 'center');
+    this.txt(ctx, 'adresbus 20 bit', 606, cy - 8, "600 11px " + SANS, MUT, 'center', 'bottom');
+    this.txt(ctx, 'databus 16 bit', 606, cy + 24, "600 11px " + SANS, MUT, 'center');
     // ===== wachtrij =====
     this.rr(ctx, 8, 240, 984, 92, 14); ctx.fillStyle = '#e9f0fa'; ctx.fill(); ctx.strokeStyle = '#bccbe3'; ctx.lineWidth = 1.5; ctx.stroke();
     this.txt(ctx, 'Instructiewachtrij (6 bytes)', 22, 258, "700 13px " + SANS, '#2f568c');
@@ -1003,7 +1002,7 @@ class Component extends DCLogic {
     for (let i = 0; i < 6; i++) {
       const q = m.queue[i], x = qx + i * 74;
       this.rr(ctx, x, qy, 66, 46, 7); ctx.fillStyle = q ? '#fff' : '#f3f6fb'; ctx.fill(); ctx.strokeStyle = q ? '#4a78b8' : '#c9d5e8'; ctx.lineWidth = q ? 2 : 1.2; ctx.stroke();
-      if (q) { this.txt(ctx, hex(q.b, 2), x + 33, qy + 21, "700 18px " + MONO, INK, 'center'); this.txt(ctx, 'IP ' + hex(q.off, 4), x + 33, qy + 38, "500 10px " + MONO, MUT, 'center'); }
+      if (q) { this.txt(ctx, hex(q.b, 2), x + 33, qy + 21, "700 18px " + MONO, INK, 'center'); this.txt(ctx, 'IP ' + hex(q.off, 4), x + 33, qy + 38, "500 11px " + MONO, MUT, 'center'); }
     }
     this.arrow(ctx, [[qx + 6 * 74 + 20, qy + 23], [qx + 6 * 74 - 4, qy + 23]], '#7a5ab8', 2.2);
     this.txt(ctx, 'van BIU', qx + 6 * 74 + 24, qy + 23, "600 11px " + SANS, '#5a428f');
@@ -1025,7 +1024,7 @@ class Component extends DCLogic {
     });
     const ins = eu.ins || (m.lastIns && ph !== 'HALT' ? null : null);
     this.rr(ctx, 22, 412, 300, 76, 9); ctx.fillStyle = '#fff'; ctx.fill(); ctx.strokeStyle = '#8fbba0'; ctx.lineWidth = 1.3; ctx.stroke();
-    this.txt(ctx, eu.ins ? 'huidige instructie' : (m.halted ? 'gestopt' : 'wacht op een volledige instructie'), 32, 427, "600 10px " + SANS, MUT);
+    this.txt(ctx, eu.ins ? 'huidige instructie' : (m.halted ? 'gestopt' : 'wacht op een volledige instructie'), 32, 427, "600 11px " + SANS, MUT);
     if (eu.ins) {
       this.txt(ctx, eu.ins.text, 32, 451, "700 18px " + MONO, INK);
       this.txt(ctx, 'bytes: ' + eu.bytes.map((b) => hex(b, 2)).join(' ') + (eu.ins.ea ? '   EA: ' + eu.ins.ea + ' klokcycli' : ''), 32, 474, "500 12px " + MONO, '#4f4a42');
@@ -1082,10 +1081,10 @@ class Component extends DCLogic {
   render_memory() {
     const m = this.mach, st = this.state, seg = ({ CS: 1, DS: 3, SS: 2, ES: 0 })[st.memSeg], sv = m.S[seg], rows = [];
     for (let r = 0; r < (st.adv ? 8 : 4); r++) {
-      const off0 = (st.memBase + r * 8) & 0xFFFF, row = [{ t: hex(off0, 4), style: 'color:#8c8576;font-weight:600' }];
+      const off0 = (st.memBase + r * 8) & 0xFFFF, row = [{ t: hex(off0, 4), style: 'color:#6f685c;font-weight:600' }];
       for (let c = 0; c < 8; c++) {
         const a = m.phys(sv, off0 + c), rw = m.writes[a] !== undefined && m.clock - m.writes[a] < 60, rd = m.reads[a] !== undefined && m.clock - m.reads[a] < 60;
-        row.push({ t: hex(m.mem[a], 2), style: rw ? 'background:#ffd9d2;font-weight:600' : rd ? 'background:#d6e6ff' : (m.mem[a] ? '' : 'color:#b3ab9b') });
+        row.push({ t: hex(m.mem[a], 2), style: rw ? 'background:#ffd9d2;font-weight:600' : rd ? 'background:#d6e6ff' : (m.mem[a] ? '' : 'color:#6f685c') });
       }
       rows.push(row);
     }
@@ -1093,21 +1092,21 @@ class Component extends DCLogic {
   }
   renderVals() {
     const st = this.state, m = this.mach, S = this.segs();
-    const accent = 'oklch(0.5 0.12 300)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const btnA = 'min-height:36px;font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
     const btnP = 'min-height:34px;font-size:13px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723';
     const hasProg = !!this.prog, curOff = m.eu.ins ? m.eu.insAt : m.IP;
     const listing = (this.prog ? this.prog.listing : []).map((r) => ({
       style: r.off === curOff && !m.halted ? 'background:#fff3c4;font-weight:600' : '',
-      cells: [{ t: hex(r.off, 4), style: 'color:#8c8576' }, { t: r.bytes.map((b) => hex(b, 2)).join(' '), style: 'color:#6f685c' }, { t: (r.labels.length ? r.labels.join(':') + ': ' : '') + r.text.replace(/^[A-Za-z_]\w*\s*:\s*/, ''), style: 'text-align:left' }]
+      cells: [{ t: hex(r.off, 4), style: 'color:#6f685c' }, { t: r.bytes.map((b) => hex(b, 2)).join(' '), style: 'color:#6f685c' }, { t: (r.labels.length ? r.labels.join(':') + ': ' : '') + r.text.replace(/^[A-Za-z_]\w*\s*:\s*/, ''), style: 'text-align:left' }]
     }));
     const stackTop = S.SP === m.R[4] ? m.cfg.SP : m.cfg.SP, rows = [];
     const sp = m.R[4], depth = Math.min(8, Math.max(2, Math.ceil(((stackTop - sp) & 0xFFFF) / 2) + 1));
     for (let i = 0; i < Math.max(depth, 6); i++) {
       const off = (sp + i * 2) & 0xFFFF, a = m.phys(m.S[2], off), isSP = i === 0, used = ((stackTop - off) & 0xFFFF) > 0 && ((stackTop - off) & 0xFFFF) <= ((stackTop - sp) & 0xFFFF);
       const w = m.mem[a] | (m.mem[(a + 1) & 0xFFFFF] << 8);
-      rows.push({ style: isSP ? 'background:#fff3c4;font-weight:600' : '', cells: [{ t: isSP ? 'SP →' : '', style: 'color:#7a5ab8' }, { t: hex(m.S[2], 4) + ':' + hex(off, 4), style: '' }, { t: hex(a, 5), style: 'color:#8c8576' }, { t: used || isSP ? hex(w, 4) : '····', style: used ? '' : 'color:#b3ab9b' }] });
+      rows.push({ style: isSP ? 'background:#fff3c4;font-weight:600' : '', cells: [{ t: isSP ? 'SP →' : '', style: 'color:#7a5ab8' }, { t: hex(m.S[2], 4) + ':' + hex(off, 4), style: '' }, { t: hex(a, 5), style: 'color:#6f685c' }, { t: used || isSP ? hex(w, 4) : '····', style: used ? '' : 'color:#6f685c' }] });
     }
     const segInputs = [['CS', 'CS'], ['DS', 'DS'], ['SS', 'SS'], ['ES', 'ES'], ['SP', 'SP']].map(([k, n]) => {
       const txtv = st.segText && st.segText[k] !== undefined ? st.segText[k] : hex(S[k], 4), bad = st.segText && st.segText[k] !== undefined && !/^[0-9a-f]{1,4}$/i.test(st.segText[k]);

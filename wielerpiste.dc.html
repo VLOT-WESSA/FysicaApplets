@@ -21,14 +21,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -75,25 +74,25 @@
           <span style="font-size:14px;font-weight:500">Hellingshoek piste &theta;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
         </div>
-        <input type="range" min="0" max="50" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:4px">
-        <div style="font-size:11px;color:#b3ab9b;margin-bottom:14px;line-height:1.4">&theta; = 0&deg; is een vlakke weg: een gewone fietser in een bocht.</div>
+        <input type="range" min="0" max="50" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:var(--accent);margin-bottom:4px">
+        <div style="font-size:11px;color:#6f685c;margin-bottom:14px;line-height:1.4">&theta; = 0&deg; is een vlakke weg: een gewone fietser in een bocht.</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Snelheid v</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vStr }}</span>
         </div>
-        <input type="range" min="0" max="100" step="0.5" value="{{ vkmh }}" onInput="{{ onV }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:16px">
+        <input type="range" min="0" max="100" step="0.5" value="{{ vkmh }}" onInput="{{ onV }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Straal van de bocht r</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rStr }}</span>
         </div>
-        <input type="range" min="5" max="60" step="1" value="{{ r }}" onInput="{{ onR }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:16px">
+        <input type="range" min="5" max="60" step="1" value="{{ r }}" onInput="{{ onR }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Massa fietser + fiets m</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ massStr }}</span>
         </div>
-        <input type="range" min="50" max="120" step="1" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:16px">
+        <input type="range" min="50" max="120" step="1" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#2a2723;margin-bottom:12px">
-          <input type="checkbox" checked="{{ neglect }}" onChange="{{ onNeglect }}" style="width:17px;height:17px;accent-color:#2f6f5e;cursor:pointer">Wrijving verwaarlozen
+          <input type="checkbox" checked="{{ neglect }}" onChange="{{ onNeglect }}" style="width:17px;height:17px;accent-color:var(--accent);cursor:pointer">Wrijving verwaarlozen
         </label>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
@@ -295,7 +294,7 @@ class Component extends DCLogic {
     this.arrow(ctx, px, py, (cx - px) * 0.55, (cy - py) * 0.55, '#b8472f', 2.4, null);
     ctx.fillStyle = ok ? '#c9a23f' : '#b8472f';
     ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('bovenaanzicht', cx, cy + 77);
     ctx.restore();
   }
@@ -443,7 +442,7 @@ class Component extends DCLogic {
 
     const vmaxStr = isFinite(P.vmax) ? kmh(P.vmax) : '∞';
     const idealStyle = 'width:100%;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:10px;'
-      + (flat ? 'cursor:not-allowed;background:#d9d3c6;color:#8c8576' : 'cursor:pointer;background:#2f6f5e;color:#fff');
+      + (flat ? 'cursor:not-allowed;background:#d9d3c6;color:#6f685c' : 'cursor:pointer;background:#2f6f5e;color:#fff');
     const upd = () => this.forceUpdate();
     return {
       stageRef: this.stageRef,

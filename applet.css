@@ -1,0 +1,61 @@
+/* applet.css — gedeelde huisstijl voor alle fysica-applets.
+ *
+ * Elke applet zet enkel zijn onderwerpkleur (hue, zoals in index.html):
+ *   <style>:root{--h:195}</style>
+ * Elektriciteit 75 · Elektromagnetisme 150 · Kernfysica 28 · Mechanica 255 ·
+ * Trillingen & golven 195 · Informatica 300
+ *
+ * Let op: canvas kan geen CSS-variabelen lezen; tekenkleuren blijven in de applet zelf.
+ */
+:root {
+  --h: 195;
+  --accent: oklch(0.50 0.12 var(--h));       /* knoppen, sliders, actieve chips */
+  --accent-hover: oklch(0.44 0.12 var(--h));
+  --accent-soft: oklch(0.95 0.03 var(--h));  /* zachte achtergrond voor actieve chips */
+  --topic: oklch(0.64 0.13 var(--h));        /* zelfde stip-kleur als op de index */
+
+  --bg: #eceae4;
+  --card: #fffdf9;
+  --stage: #f0ede8;
+  --line: #e7e1d5;
+  --ink: #2a2723;
+  --ink-2: #4f4a42;
+  --muted: #6f685c;   /* laagste grijs voor tekst (≈5:1 op --card) */
+  --track: #d9d3c6;
+
+  accent-color: var(--accent);
+}
+
+/* Schuifregelaars */
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  height: 6px; border-radius: 6px; background: var(--track); outline: none;
+  accent-color: var(--accent);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent); cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+input[type=range]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent); cursor: pointer;
+}
+input[type=range]::-moz-range-track { height: 6px; border-radius: 6px; background: var(--track); }
+
+/* Sectiekop in het zijpaneel */
+.sec-title {
+  font-size: 12px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* Knoppen in accentkleur */
+.btn-accent { background: var(--accent); color: #fff; border: none; }
+.btn-accent:hover { background: var(--accent-hover); }
+
+/* Zichtbare toetsenbordfocus */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, canvas:focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 2px;
+}
+input[type=range]:focus-visible { outline-offset: 4px; }

@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -62,7 +61,7 @@
 
       <sc-if value="{{ isSup }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ playLabel }}</button>
+          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
           <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">t = 0</button>
         </div>
         <div class="card">
@@ -84,7 +83,7 @@
           <div class="sl"><input type="range" min="0" max="24" step="1" value="{{ p2 }}" onInput="{{ onP2 }}"></div>
         </div>
         <div class="card">
-          <div style="font-size:12px;color:#8c8576">Opgaven uit het labo</div>
+          <div style="font-size:12px;color:#6f685c">Opgaven uit het labo</div>
           <div class="chips">
             <sc-for list="{{ presets }}" as="p" hint-placeholder-count="5">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -108,10 +107,10 @@
 
       <sc-if value="{{ isFou }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onSound }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ soundLabel }}</button>
+          <button onClick="{{ onSound }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ soundLabel }}</button>
         </div>
         <div class="card">
-          <div style="font-size:12px;color:#8c8576">Doelsignaal</div>
+          <div style="font-size:12px;color:#6f685c">Doelsignaal</div>
           <div class="chips">
             <sc-for list="{{ waves }}" as="p" hint-placeholder-count="3">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -194,7 +193,7 @@ class Component extends DCLogic {
     ctx.stroke();
     if (cur != null) { const X = x + cur / tW * w; ctx.strokeStyle = 'rgba(42,39,35,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X, y); ctx.lineTo(X, y + h); ctx.stroke(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X, ym - fn(cur) * k, 5, 0, 7); ctx.fill(); }
     ctx.fillStyle = col; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 8, y + 5);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
     ctx.fillText('t (s) → ' + tW + ' s', x + w - 5, y + h - 3);
   }
   drawSup(ctx) {
@@ -213,7 +212,7 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.moveTo(cx - R - 10, cy); ctx.lineTo(cx + R + 10, cy); ctx.moveTo(cx, cy - R - 10); ctx.lineTo(cx, cy + R + 10); ctx.stroke();
     ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Fasordiagram', 14, 12);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('projectie op de y-as = uitwijking', 14, 30);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('projectie op de y-as = uitwijking', 14, 30);
     const a1 = 2 * Math.PI * st.f1 * t + st.p1 * Math.PI / 12, a2 = 2 * Math.PI * st.f2 * t + st.p2 * Math.PI / 12;
     const v1 = { x: st.A1 * Math.cos(a1) * k, y: -st.A1 * Math.sin(a1) * k }, v2 = { x: st.A2 * Math.cos(a2) * k, y: -st.A2 * Math.sin(a2) * k };
     if (st.showPh) {
@@ -254,7 +253,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#2f8a4e'; ctx.lineWidth = 2.4; ctx.beginPath(); for (let i = 0; i <= 900; i++) { const x = i / 900 * P; const X = x0 + i / 900 * w, Y = ym - this.partial(x) * k; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke();
     ctx.fillStyle = '#2f8a4e'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Som van ' + st.nh + ' harmonische(n)' + (st.showTarget ? '  —  stippellijn: doelsignaal' : ''), x0 + 8, y0 + 6);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('2 perioden', x0 + w - 6, y0 + h - 4);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('2 perioden', x0 + w - 6, y0 + h - 4);
     // bottom: afzonderlijke harmonischen
     const y1 = 335, h1 = 205, ym1 = y1 + h1 / 2, k1 = 75;
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(x0, y1, w, h1); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(x0, y1, w, h1);
@@ -280,7 +279,7 @@ class Component extends DCLogic {
       const b = Math.abs(this.coef(n)); const X = sx + 18 + (n - 1) * bw;
       const hb = b / bmax * (base - top);
       ctx.fillStyle = n <= st.nh ? '#2a8a95' : '#ddd6c8'; ctx.fillRect(X + 2, base - hb, bw - 5, hb);
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       if (n <= 9 || n % 2 === 0) ctx.fillText(n + '', X + bw / 2, base + 4);
     }
     ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(sx + 14, base); ctx.lineTo(sx + sw - 8, base); ctx.stroke();
@@ -304,7 +303,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.12 195)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));

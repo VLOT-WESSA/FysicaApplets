@@ -19,14 +19,13 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -57,26 +56,30 @@
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:0;border-top:2px dashed #b27edc;display:inline-block"></span>golfdal</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>buiklijn &Delta;x = n&lambda;</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:3px;background:#5b9bff;border-radius:2px;display:inline-block"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:10px;height:10px;border-radius:50%;background:#b57edc;display:inline-block"></span>meetpunt (sleepbaar)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:10px;height:10px;border-radius:50%;background:#2a2723;box-shadow:0 0 0 2px #fff,0 0 0 3px #2a2723;display:inline-block"></span>meetpunt (sleepbaar)</div>
       </div>
     </div>
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Golflengte &lambda;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
         </div>
-        <input type="range" min="1.5" max="5" step="0.1" value="{{ lambdaCm }}" onChange="{{ onLambda }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:16px">
+        <input type="range" min="1.5" max="5" step="0.1" value="{{ lambdaCm }}" onInput="{{ onLambda }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Afstand bronnen</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ sepStr }}</span>
         </div>
-        <input type="range" min="3" max="16" step="0.5" value="{{ sepCm }}" onChange="{{ onSep }}" style="width:100%;accent-color:#1f9e8f">
+        <input type="range" min="3" max="16" step="0.5" value="{{ sepCm }}" onInput="{{ onSep }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:11px">Weergave (uit bij start)</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:11px">Weergave (uit bij start)</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onTogFronts }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ frontsBg }};color:{{ frontsFg }}">Golffronten</button>
           <button onClick="{{ onTogLines }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ linesBg }};color:{{ linesFg }}">Lijnen</button>
@@ -85,7 +88,7 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#2a2723;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:12px">Meetpunt</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:12px">Meetpunt</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:#6f685c">weglengteverschil &Delta;x</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500">{{ dsStr }}</span>
@@ -97,13 +100,8 @@
         <div style="font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;background:{{ verdBg }};color:{{ verdFg }};text-align:center">{{ verdict }}</div>
       </div>
 
-      <div style="display:flex;gap:10px">
-        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw</button>
-      </div>
-
       <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.5">Twee bronnen trillen in fase. Sleep het meetpunt: waar &Delta;x = n&lambda; versterken de golven elkaar, bij (n+&frac12;)&lambda; doven ze uit. Zet de lossen golven aan om te zien waarom.</div>
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">Twee bronnen trillen in fase. Sleep het meetpunt: waar &Delta;x = n&lambda; versterken de golven elkaar, bij (n+&frac12;)&lambda; doven ze uit. Zet <b>Golffronten</b> aan om te zien waarom.</div>
       </div>
     </div>
   </div>
@@ -254,11 +252,11 @@ class Component extends DCLogic {
     const flip = this.mp.x > this.W - 150;
     ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = flip ? 'right' : 'left';
     const tx = this.mp.x + (flip ? -14 : 14);
-    ctx.fillStyle = '#877798'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
-    ctx.fillStyle = '#917da7'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
+    ctx.fillStyle = '#2a2723'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
+    ctx.fillStyle = '#4f4a42'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
     ctx.beginPath(); ctx.arc(this.mp.x, this.mp.y, 9, 0, 6.2832);
-    ctx.fillStyle = '#ad73d5'; ctx.fill();
-    ctx.lineWidth = 2.5; ctx.strokeStyle = '#292723'; ctx.stroke();
+    ctx.fillStyle = '#2a2723'; ctx.fill();
+    ctx.lineWidth = 3; ctx.strokeStyle = '#ffffff'; ctx.stroke();
 
     ctx.strokeStyle = 'rgba(40,38,34,0.8)'; ctx.fillStyle = 'rgba(40,38,34,0.85)'; ctx.lineWidth = 1.4;
     const bx = 20, by = this.H - 20;
@@ -269,7 +267,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const seg = (on) => ({ bg: on ? '#1f9e8f' : '#fff', fg: on ? '#fff' : '#6f685c' });
+    const seg = (on) => ({ bg: on ? 'var(--accent)' : '#fff', fg: on ? '#fff' : '#6f685c' });
     const ln = seg(this.state.showLines), sl = seg(this.state.slow), fr = seg(this.state.showFronts);
     const near = this.state._near;
     const verdColors = near === 'con' ? { bg: 'rgba(200,116,29,0.14)', fg: '#a35f17' }

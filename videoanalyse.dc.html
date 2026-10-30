@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.55 0.13 255);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.55 0.13 255);cursor:pointer}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -90,7 +89,7 @@
       </sc-if>
       <sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
-          <button onClick="{{ onPick }}" style="min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 255);color:#fff">{{ pickLabel }}</button>
+          <button onClick="{{ onPick }}" style="min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ pickLabel }}</button>
           <button onClick="{{ onDemo }}" style="min-height:38px;font-size:14px;font-weight:500;border:1px solid #d9d3c6;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Voorbeeldvideo laden (BallDrop)</button>
           <sc-if value="{{ showHevc }}" hint-placeholder-val="{{ true }}">
             <div style="{{ hevcStyle }}"><b>{{ hevcLead }}</b><br>iPhone: kies in Instellingen &rsaquo; Camera &rsaquo; Formaten de optie &ldquo;Meest compatibel&rdquo;.<br>Android: zet in de camera-instellingen onder Geavanceerde opname-opties &ldquo;Video met hoge efficiëntie&rdquo; uit.</div>
@@ -198,7 +197,7 @@
             </sc-for>
           </div>
           <button onClick="{{ onToggleOrigin }}" style="{{ originStyle }}">Door de oorsprong</button>
-          <button onClick="{{ onReport }}" style="min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 255);color:#fff">Verslag afdrukken of als pdf</button>
+          <button onClick="{{ onReport }}" style="min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">Verslag afdrukken of als pdf</button>
           <button onClick="{{ onClearSel }}" style="min-height:34px;border:1px solid #e7e1d5;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#2a2723">{{ selLabel }}</button>
           <sc-if value="{{ hasFit }}" hint-placeholder-val="{{ false }}">
             <div style="background:#f3f0e9;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
@@ -835,11 +834,11 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state, fps = this.fpsNum(), D = this.series();
-    const pill = (on, w) => 'min-height:34px;border-radius:10px;cursor:pointer;font-size:13px;' + (on ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff;font-weight:600' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723');
+    const pill = (on, w) => 'min-height:34px;border-radius:10px;cursor:pointer;font-size:13px;' + (on ? 'border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723');
     const tabNames = ['1  Video', '2  IJking', '3  Meten', '4  Analyse'];
     const tabs = tabNames.map((label, i) => ({
       label, onClick: () => this.setState({ step: i + 1, tool: 'none', note: '' }),
-      style: 'min-height:34px;padding:0 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff' : 'border:1px solid #e7e1d5;background:#fffdf9;color:#4f4a42')
+      style: 'min-height:34px;padding:0 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : 'border:1px solid #e7e1d5;background:#fffdf9;color:#4f4a42')
     }));
     const fpsPresets = [24, 30, 60, 120, 240].map(n => ({ name: String(n), onClick: () => this.onFps({ target: { value: String(n) } }), style: pill(fps === n) }));
     const fitItems = [['none', 'Geen'], ['lin', 'Lineair'], ['quad', 'Kwadratisch'], ['exp', 'Exponentieel']].map(([id, name]) => ({ name, onClick: () => this.setState({ fit: id }), style: pill(s.fit === id) }));
@@ -871,7 +870,7 @@ class Component extends DCLogic {
       hevcStyle: 'border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;' + (s.err ? 'background:#fbeceb;border:1px solid #efc7c3;color:#7a2a24' : 'background:#f3f0e9;border:1px solid #e7e1d5;color:#4f4a42'),
       fileInfo: s.fileInfo, bigWarn: s.big,
       showZoom: s.loaded && s.step < 4, zoomStr: Math.round(s.zoom * 100) + '%',
-      handStyle: 'min-height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:13px;' + (s.hand ? 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723'),
+      handStyle: 'min-height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:13px;' + (s.hand ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : 'border:1px solid #e7e1d5;background:#fff;color:#2a2723'),
       onZoomIn: this.onZoomIn, onZoomOut: this.onZoomOut, onZoomReset: this.onZoomReset, onHand: this.onHand,
       hasStats: st.length > 0, statItems: st, statTitle: 'Statistiek van ' + this.Q[s.gy][0] + (s.sel ? ' in de selectie' : ''),
       tabs, fpsPresets, fitItems, qOptions, rowItems,
@@ -897,9 +896,9 @@ class Component extends DCLogic {
       calL: s.calL, theta: s.theta, thetaStr: String(s.theta).replace('.', ',').replace('-', '−') + '°',
       scaleStr: this.scaleK() ? this.sig(this.scaleK() * 1000) + ' mm/px' : '–',
       ijkBtnLabel: s.tool === 'ijk' ? (s.A ? 'Klik het einde aan…' : 'Klik het begin aan…') : (s.A ? 'Ijkstok opnieuw plaatsen' : 'Plaats ijkstok'),
-      ijkBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'ijk' ? 'border:1px solid #ff9a3c;background:#fff3e6;color:#8a4a10' : 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff'),
+      ijkBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'ijk' ? 'border:1px solid #ff9a3c;background:#fff3e6;color:#8a4a10' : 'border:1px solid var(--accent);background:var(--accent);color:#fff'),
       origBtnLabel: s.tool === 'orig' ? 'Klik de oorsprong aan…' : (s.O ? 'Oorsprong opnieuw plaatsen' : 'Plaats oorsprong'),
-      origBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'orig' ? 'border:1px solid #2f8a4e;background:#e8f5ec;color:#1f5e35' : 'border:1px solid oklch(0.5 0.12 255);background:oklch(0.5 0.12 255);color:#fff'),
+      origBtnStyle: 'min-height:38px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;' + (s.tool === 'orig' ? 'border:1px solid #2f8a4e;background:#e8f5ec;color:#1f5e35' : 'border:1px solid var(--accent);background:var(--accent);color:#fff'),
       stride: s.stride, countStr: Object.keys(s.pts).length + ' punten',
       gx: s.gx, gy: s.gy,
       selLabel: s.sel ? 'Selectie opheffen (alle punten gebruiken)' : 'Geen selectie: alle punten tellen mee',

@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3a6fb8;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -55,32 +54,37 @@
       <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
+      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span><span>gravitatiekracht F<sub>g</sub></span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#d9822b;border-radius:2px;display:inline-block"></span>snelheid v</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span>satelliet en baan</div>
+      </div>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:none">
-        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:none">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
           <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
         </sc-for>
       </div>
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.13 255);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
       </div>
 
       <sc-if value="{{ isSat }}" hint-placeholder-val="{{ true }}">
         <div class="card">
           <div class="row"><span class="lbl">Hoogte h boven het aardoppervlak</span></div>
-          <div class="row"><span style="font-size:12px;color:#8c8576">200 km &ndash; 400 000 km</span><span class="val">{{ hStr }}</span></div>
+          <div class="row"><span style="font-size:12px;color:#6f685c">200 km &ndash; 400 000 km</span><span class="val">{{ hStr }}</span></div>
           <div class="sl"><input type="range" min="0" max="1" step="0.0005" value="{{ hs }}" onInput="{{ onH }}"></div>
           <div class="row"><span class="lbl">Massa satelliet m</span><span class="val">{{ mStr }}</span></div>
           <div class="sl"><input type="range" min="100" max="5000" step="50" value="{{ m }}" onInput="{{ onM }}"></div>
-          <div style="font-size:12px;color:#8c8576;margin-top:2px">Voorbeelden</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:2px">Voorbeelden</div>
           <div class="chips">
             <sc-for list="{{ satPresets }}" as="p" hint-placeholder-count="5">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
             </sc-for>
           </div>
-          <div style="font-size:12px;color:#8c8576;margin-top:4px">Tempo</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:4px">Tempo</div>
           <div class="chips">
             <sc-for list="{{ satSpeeds }}" as="p" hint-placeholder-count="4">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -119,7 +123,7 @@
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
             </sc-for>
           </div>
-          <div style="font-size:12px;color:#8c8576;margin-top:4px">Tempo</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:4px">Tempo</div>
           <div class="chips">
             <sc-for list="{{ kepSpeeds }}" as="p" hint-placeholder-count="3">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -141,7 +145,7 @@
           <div class="row"><span>Oppervlak per vak (T/12)</span><span>{{ areaStr }}</span></div>
         </div>
         <div class="card" style="gap:4px">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Derde wet: T&sup2; / a&sup3;</div>
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Derde wet: T&sup2; / a&sup3;</div>
           <sc-raw-table class="kt">
             <sc-raw-tr><sc-raw-th>Planeet</sc-raw-th><sc-raw-th>a (AE)</sc-raw-th><sc-raw-th>T (jaar)</sc-raw-th><sc-raw-th>T&sup2;/a&sup3;</sc-raw-th></sc-raw-tr>
             <sc-for list="{{ kepRows }}" as="kr" hint-placeholder-count="9">
@@ -156,7 +160,7 @@
 
       <sc-if value="{{ isLag }}" hint-placeholder-val="{{ false }}">
         <div class="card">
-          <div style="font-size:12px;color:#8c8576">Systeem</div>
+          <div style="font-size:12px;color:#6f685c">Systeem</div>
           <div class="chips">
             <sc-for list="{{ lagPresets }}" as="p" hint-placeholder-count="4">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -165,7 +169,7 @@
           <div class="row" style="margin-top:4px"><span class="lbl">Massaverhouding &mu; = m<sub>2</sub>/(m<sub>1</sub>+m<sub>2</sub>)</span></div>
           <div class="row"><span></span><span class="val">{{ muStr }}</span></div>
           <div class="sl"><input type="range" min="0" max="1" step="0.001" value="{{ mus }}" onInput="{{ onMu }}"></div>
-          <div style="font-size:12px;color:#8c8576;margin-top:2px">Testdeeltje loslaten bij</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:2px">Testdeeltje loslaten bij</div>
           <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
             <sc-for list="{{ lagPoints }}" as="p" hint-placeholder-count="5">
               <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -189,6 +193,47 @@
           Het beeld draait mee met de twee hemellichamen. De kleuren tonen de effectieve potentiaal (gravitatie + middelpuntvliedend effect); in de vijf <b>Lagrangepunten</b> heffen de krachten elkaar op en blijft een klein voorwerp op zijn plaats. L1, L2 en L3 zijn onstabiel: een kleine verstoring en het deeltje drijft weg. L4 en L5 zijn stabiel zolang &mu; &lt; 0,0385 (Trojanen bij Jupiter, mogelijke ruimtekolonies bij aarde&ndash;maan). Klik ergens in het veld om daar een deeltje los te laten.
         </div>
       </sc-if>
+
+      <sc-if value="{{ isEsc }}" hint-placeholder-val="{{ false }}">
+        <div class="card">
+          <div style="font-size:12px;color:#6f685c">Hemellichaam</div>
+          <div class="chips">
+            <sc-for list="{{ escBodies }}" as="p" hint-placeholder-count="4">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#6f685c;margin-top:4px">Lanceerrichting</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <sc-for list="{{ escDirs }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div class="row" style="margin-top:6px"><span class="lbl">Lanceersnelheid v<sub>0</sub></span><span class="val">{{ escV0Str }}</span></div>
+          <div class="row"><span style="font-size:12px;color:#6f685c">als fractie van v<sub>2</sub></span><span class="val" style="font-size:12.5px;color:#6f685c">{{ escRatioStr }}</span></div>
+          <div class="sl"><input type="range" min="0" max="1.5" step="0.005" value="{{ escV }}" onInput="{{ onEscV }}"></div>
+          <div class="chips">
+            <sc-for list="{{ escSpeeds }}" as="p" hint-placeholder-count="2">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
+            </sc-for>
+          </div>
+          <div class="row" style="margin-top:6px"><span class="lbl">Massa voorwerp m</span><span class="val">{{ mStr }}</span></div>
+          <div class="sl"><input type="range" min="100" max="5000" step="50" value="{{ m }}" onInput="{{ onM }}"></div>
+        </div>
+        <div class="out">
+          <div class="row"><span>Ontsnappingssnelheid v<sub>2</sub></span><span style="font-weight:600">{{ escV2Str }}</span></div>
+          <div class="row"><span>Eerste kosmische snelheid v<sub>1</sub></span><span>{{ escV1Str }}</span></div>
+          <div class="row"><span>E<sub>kin</sub> bij lancering &frac12;m&middot;v<sub>0</sub>&sup2;</span><span style="color:#d9822b">{{ escEkStr }}</span></div>
+          <div class="row"><span>E<sub>pot</sub> aan oppervlak &minus;G&middot;M&middot;m/R</span><span style="color:#3a6fb8">{{ escEpStr }}</span></div>
+          <div class="row"><span>Totale energie E</span><span style="font-weight:600">{{ escEStr }}</span></div>
+          <div class="row"><span>Hoogste punt boven oppervlak</span><span>{{ escHmaxStr }}</span></div>
+          <div style="{{ escMsgStyle }}">{{ escMsg }}</div>
+        </div>
+        <div class="note">
+          <div class="mono">E = &frac12;m&middot;v&sup2; &minus; G&middot;M&middot;m / r = constant</div>
+          <div class="mono">E &ge; 0 &rArr; v<sub>2</sub> = &radic;(2&middot;G&middot;M / R) = &radic;2&middot;v<sub>1</sub></div>
+          <div style="margin-top:4px">De potentiële energie is nul op oneindige afstand en negatief daarbinnen. Het voorwerp ontsnapt als zijn totale energie <b>niet negatief</b> is: dan blijft er overal kinetische energie over. Is E &lt; 0, dan is er een keerpunt waar E<sub>kin</sub> = 0 (verticaal) of beschrijft het een ellipsbaan (horizontaal). De ontsnappingssnelheid hangt niet af van de massa m van het voorwerp en ook niet van de richting. Voor de aarde is v<sub>2</sub> &asymp; 11,2 km/s (tweede kosmische snelheid).</div>
+        </div>
+      </sc-if>
     </div>
   </div>
 </div>
@@ -202,10 +247,18 @@ class Component extends DCLogic {
     tab: 'sat',
     hs: 0.6, m: 1000, satSpeed: 3600, coRot: false, showV: true, showF: true, showTrail: true,
     as: 0.4, e: 0.4, kepSpeed: 'auto', showSect: true, showKV: true, showKF: false, showAxes: true,
-    mus: 0, dl: 0.01, showPot: true, showTrailL: true
+    mus: 0, dl: 0.01, showPot: true, showTrailL: true,
+    escBody: 'Aarde', escV: 0.9, escDir: 'vert'
   };
   running = true; t = 0; trail = [];
   part = null; ptrail = [];
+  ep = null; etrail = [];
+  bodies = {
+    Aarde: { GM: 3.986e14, R: 6.371e6, c0: '#7fb2e0', c1: '#2f6aa8' },
+    Maan: { GM: 4.905e12, R: 1.737e6, c0: '#d6d2c8', c1: '#8f8a80' },
+    Mars: { GM: 4.283e13, R: 3.390e6, c0: '#e8a07a', c1: '#b5532e' },
+    Jupiter: { GM: 1.267e17, R: 6.991e7, c0: '#ecd3a8', c1: '#b8875a' },
+  };
 
   componentDidMount() {
     this.setupCanvas();
@@ -344,6 +397,36 @@ class Component extends DCLogic {
     this._potKey = key; this._pot = cv; return cv;
   }
 
+  // ---------- ontsnapping ----------
+  // Eenheden: G·M = 1, R = 1, dus v1 = 1, v2 = √2, tijdseenheid √(R³/GM). E per massa in GM/R.
+  escView() { return { cx: 290, cy: 290, k: 36, rOut: 7.6 }; }
+  escLaunch(vs, dir) {
+    const v = (vs === undefined ? this.state.escV : vs) * Math.SQRT2;
+    const d = dir || this.state.escDir;
+    this.ep = d === 'vert' ? { x: 0, y: 1, vx: 0, vy: v, tu: 0, done: '' } : { x: 0, y: 1, vx: v, vy: 0, tu: 0, done: '' };
+    this.etrail = [{ x: 0, y: 1 }];
+  }
+  escEnergy(vs) { const v = vs * Math.SQRT2; return v * v / 2 - 1; }
+  escStep(dt) {
+    const p = this.ep; if (!p || p.done) return;
+    const r0 = Math.hypot(p.x, p.y);
+    const total = dt * 0.9 * Math.pow(Math.max(1, r0), 1.5);   // sneller op grote afstand
+    const n = 40, h = total / n;
+    const f = (s) => { const r = Math.hypot(s.x, s.y), k = 1 / (r * r * r); return { x: s.vx, y: s.vy, vx: -k * s.x, vy: -k * s.y }; };
+    const add = (s, d, q) => ({ x: s.x + d.x * q, y: s.y + d.y * q, vx: s.vx + d.vx * q, vy: s.vy + d.vy * q });
+    const E = this.escEnergy(this.state.escV);
+    for (let i = 0; i < n; i++) {
+      const k1 = f(p), k2 = f(add(p, k1, h / 2)), k3 = f(add(p, k2, h / 2)), k4 = f(add(p, k3, h));
+      p.x += h / 6 * (k1.x + 2 * k2.x + 2 * k3.x + k4.x); p.y += h / 6 * (k1.y + 2 * k2.y + 2 * k3.y + k4.y);
+      p.vx += h / 6 * (k1.vx + 2 * k2.vx + 2 * k3.vx + k4.vx); p.vy += h / 6 * (k1.vy + 2 * k2.vy + 2 * k3.vy + k4.vy);
+      p.tu += h;
+      const r = Math.hypot(p.x, p.y);
+      if (r < 0.999) { p.x /= r; p.y /= r; p.vx = 0; p.vy = 0; p.done = 'land'; break; }
+      if (E >= 0 && r > this.escView().rOut) { p.done = 'esc'; break; }
+    }
+    this.etrail.push({ x: p.x, y: p.y }); if (this.etrail.length > 3000) this.etrail.shift();
+  }
+
   // ---------- loop ----------
   loop = (ts) => {
     const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
@@ -354,6 +437,9 @@ class Component extends DCLogic {
       } else if (st.tab === 'kep') {
         const T = Math.pow(this.aOf(st.as), 1.5);
         this.t += dt * (st.kepSpeed === 'auto' ? T / 10 : 1);
+      } else if (st.tab === 'esc') {
+        if (!this.ep) this.escLaunch();
+        this.escStep(dt);
       } else if (this.part && !this.part.dead) {
         const mu = this.muOf(st.mus); const n = 40, h = dt * 2.2 / n;
         for (let i = 0; i < n; i++) this.stepPart(h, mu);
@@ -371,7 +457,106 @@ class Component extends DCLogic {
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
     if (this.state.tab === 'sat') this.drawSat(ctx);
     else if (this.state.tab === 'kep') this.drawKep(ctx);
+    else if (this.state.tab === 'esc') this.drawEsc(ctx);
     else this.drawLag(ctx);
+  }
+
+  drawEsc(ctx) {
+    const st = this.state, B = this.bodies[st.escBody], V = this.escView();
+    const P = (x, y) => ({ X: V.cx + x * V.k, Y: V.cy - y * V.k });
+    const E = this.escEnergy(st.escV);
+    // sterren
+    ctx.fillStyle = '#d8d2c4';
+    for (let i = 0; i < 60; i++) { const x = (i * 157) % 580, y = (i * 263) % 540 + 8; ctx.fillRect(x, y, 1.5, 1.5); }
+    // afstandscirkels
+    ctx.strokeStyle = 'rgba(185,176,159,0.45)'; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+    ctx.fillStyle = '#b9b09f'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    [2, 4, 6].forEach(r => { ctx.beginPath(); ctx.arc(V.cx, V.cy, r * V.k, 0, 7); ctx.stroke(); ctx.fillText(r + 'R', V.cx + r * V.k * 0.707 + 3, V.cy + r * V.k * 0.707); });
+    ctx.setLineDash([]);
+    // hemellichaam
+    const Rp = V.k;
+    const gr = ctx.createRadialGradient(V.cx - Rp * 0.3, V.cy - Rp * 0.3, Rp * 0.1, V.cx, V.cy, Rp);
+    gr.addColorStop(0, B.c0); gr.addColorStop(1, B.c1);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(V.cx, V.cy, Rp, 0, 7); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(st.escBody, V.cx, V.cy);
+    // spoor
+    const p = this.ep;
+    if (this.etrail.length > 1) {
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, 590, this.H); ctx.clip();
+      ctx.strokeStyle = 'rgba(217,130,43,0.75)'; ctx.lineWidth = 2; ctx.beginPath();
+      this.etrail.forEach((q, i) => { const s = P(q.x, q.y); i ? ctx.lineTo(s.X, s.Y) : ctx.moveTo(s.X, s.Y); }); ctx.stroke();
+      ctx.restore();
+    }
+    let rNow = 1;
+    if (p) {
+      rNow = Math.hypot(p.x, p.y);
+      const s = P(p.x, p.y);
+      const inView = s.X > 6 && s.X < 584 && s.Y > 6 && s.Y < this.H - 6;
+      if (inView) {
+        const v = Math.hypot(p.vx, p.vy);
+        if (v > 0.01 && !p.done) this.arrow(ctx, s.X, s.Y, p.vx / v * (10 + 34 * v), -p.vy / v * (10 + 34 * v), '#d9822b', 2.6, 'v');
+        ctx.fillStyle = p.done === 'land' ? '#c8443a' : '#2a2723'; ctx.beginPath(); ctx.arc(s.X, s.Y, 5, 0, 7); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText('t = ' + this.dur(p.tu * Math.sqrt(B.R * B.R * B.R / B.GM)), 14, 30);
+      ctx.fillText('r = ' + this.fmt(rNow, 2) + ' R', 14, 48);
+      if (!inView && !p.done) { ctx.fillStyle = '#8a3b2c'; ctx.fillText('buiten beeld — keert terug', 14, 66); }
+      if (p.done === 'esc') { ctx.fillStyle = '#2f7a45'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.fillText('Ontsnapt!', 14, 66); }
+      if (p.done === 'land') { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.fillText('Terug op het oppervlak', 14, 66); }
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(st.escDir === 'vert' ? 'Verticale lancering' : 'Horizontale lancering', 14, 12);
+
+    // energiediagram
+    const X0 = 620, Y0 = 60, GW = 270, GH = 420;
+    ctx.fillStyle = '#faf8f3'; ctx.fillRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
+    ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
+    ctx.fillStyle = '#2a2723'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Energie per kg in functie van r', X0, Y0 - 30);
+    const rMax = 7.5, eLo = -1.1, eHi = 1.3;
+    const gx = r => X0 + (r - 1) / (rMax - 1) * GW;
+    const gy = e => Y0 + (eHi - e) / (eHi - eLo) * GH;
+    ctx.strokeStyle = '#e2dccf'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c';
+    for (let r = 1; r <= 7; r++) { const x = gx(r); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + GH); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(r === 1 ? 'R' : r + 'R', x, Y0 + GH + 4); }
+    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(X0, gy(0)); ctx.lineTo(X0 + GW, gy(0)); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#6f685c';
+    ctx.fillText('0', X0 - 3, gy(0));
+    ctx.fillText('−GM/R', X0 - 3, gy(-1));
+    ctx.fillText('+GM/R', X0 - 3, gy(1));
+    // E_pot
+    ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
+    for (let i = 0; i <= 120; i++) { const r = 1 + (rMax - 1) * i / 120; const x = gx(r), y = gy(-1 / r); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+    ctx.fillStyle = '#3a6fb8'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Eₚₒₜ = −GMm/r', gx(2.6), gy(-1 / 2.6) + 14);
+    // E_tot
+    const eCol = E >= 0 ? '#2f8a4e' : '#c8443a';
+    const Ec = Math.max(eLo, Math.min(eHi, E));
+    ctx.strokeStyle = eCol; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X0, gy(Ec)); ctx.lineTo(X0 + GW, gy(Ec)); ctx.stroke();
+    ctx.fillStyle = eCol; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText('E (totaal)', X0 + GW - 4, gy(Ec) - 3);
+    // keerpunt (alleen bij verticale worp is E_kin = 0 daar)
+    if (E < 0) {
+      const rk = -1 / E;
+      if (rk <= rMax && st.escDir === 'vert') {
+        ctx.strokeStyle = eCol; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx(rk), gy(E)); ctx.lineTo(gx(rk), Y0 + GH); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = eCol; ctx.beginPath(); ctx.arc(gx(rk), gy(E), 4, 0, 7); ctx.fill();
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('keerpunt', gx(rk), gy(E) - 16);
+      }
+    }
+    // huidige positie: E_kin = E - E_pot
+    if (p && rNow <= rMax) {
+      const x = gx(rNow), yp = gy(-1 / rNow), ye = gy(Ec);
+      ctx.strokeStyle = '#d9822b'; ctx.lineWidth = 5; ctx.lineCap = 'butt';
+      if (Math.abs(ye - yp) > 1) { ctx.beginPath(); ctx.moveTo(x, yp); ctx.lineTo(x, ye); ctx.stroke(); }
+      ctx.lineCap = 'round';
+      ctx.fillStyle = '#d9822b'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      if (Math.abs(ye - yp) > 14) ctx.fillText('Eₖᵢₙ', x + 7, (yp + ye) / 2);
+      ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(x, yp, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('afstand r tot het middelpunt →', X0 + GW - 170, Y0 + GH + 20);
   }
 
   drawSat(ctx) {
@@ -438,7 +623,7 @@ class Component extends DCLogic {
     const Tmin = 3600, Tmax = 3600 * 1000;
     const gxp = h => X0 + Math.log(h / hmin) / Math.log(hmax / hmin) * GW;
     const gyp = T => Y0 + GH - Math.log(T / Tmin) / Math.log(Tmax / Tmin) * GH;
-    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576';
+    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c';
     [1e6, 1e7, 1e8].forEach(h => { const x = gxp(h); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + GH); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(this.big(h / 1000) + ' km', x, Y0 + GH + 4); });
     [[3600, '1 h'], [36000, '10 h'], [86164, '23,9 h'], [360000, '100 h'], [3600000, '1000 h']].forEach(([T, l]) => { const y = gyp(T); ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X0 + GW, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(l, X0 - 2, y); });
     ctx.strokeStyle = '#c8443a'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X0, gyp(this.TE)); ctx.lineTo(X0 + GW, gyp(this.TE)); ctx.stroke(); ctx.setLineDash([]);
@@ -460,7 +645,7 @@ class Component extends DCLogic {
       ctx.strokeStyle = '#ddd5c6'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
       ctx.beginPath(); ctx.moveTo(ecx - a * k - 10, cy); ctx.lineTo(ecx + a * k + 10, cy); ctx.moveTo(ecx, cy - b * k - 6); ctx.lineTo(ecx, cy + b * k + 6); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = '#b9b09f'; ctx.beginPath(); ctx.arc(ecx - a * e * k, cy, 3, 0, 7); ctx.fill();
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       if (e > 0.05) ctx.fillText('tweede brandpunt', ecx - a * e * k, cy + 6);
       ctx.fillText('a', ecx + a * k / 2, cy + 4);
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('b', ecx + 5, cy - b * k / 2);
@@ -549,11 +734,11 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.13 255)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));
-    const resetAll = () => { this.t = 0; this.trail = []; this.part = null; this.ptrail = []; this.forceUpdate(); };
+    const resetAll = () => { this.t = 0; this.trail = []; this.part = null; this.ptrail = []; this.escLaunch(); this.running = true; this.forceUpdate(); };
     const sv = this.satVals();
     const near = (x, y) => Math.abs(x - y) / y < 0.004;
     const satPresets = [['ISS', 408e3], ['GPS', 20200e3], ['Geostationair', 35786e3], ['Maan', 378000e3]].map(([n, h]) => ({ name: n, style: chip(near(sv.h, h)), onClick: () => { this.setState({ hs: this.sOfH(h) }); this.trail = []; } }));
@@ -581,10 +766,43 @@ class Component extends DCLogic {
       return { n: L.n + ' afstand tot ' + nm[0], v: dist ? (dist > 1e7 ? this.fmt(d1 * dist / 1e6, 0) + ' miljoen km' : this.big(d1 * dist) + ' km') : this.fmt(d1, 3) + ' d' };
     });
     const stable = mu < 0.0385;
+
+    const Bd = this.bodies[st.escBody], u1 = Math.sqrt(Bd.GM / Bd.R);      // v1 in m/s
+    const v0u = st.escV * Math.SQRT2, Eu = this.escEnergy(st.escV), eJ = st.m * Bd.GM / Bd.R;
+    const kms = (v) => this.fmt(v / 1000, 2) + ' km/s';
+    const J = (x) => this.sci(x, 2) + ' J';
+    const relaunch = (o) => { this.setState(o); this.escLaunch(o.escV, o.escDir); this.running = true; };
+    const isV2 = Math.abs(st.escV - 1) < 0.003, isV1 = Math.abs(v0u - 1) < 0.004;
+    let hmax, escMsg, escOk = false;
+    if (Eu >= -1e-9) {
+      hmax = '∞'; escOk = true;
+      escMsg = isV2 ? 'v₀ = v₂: E = 0, het voorwerp ontsnapt net.' : 'E > 0: het voorwerp ontsnapt aan de aantrekking.';
+    } else if (st.escDir === 'vert') {
+      hmax = this.big((-1 / Eu - 1) * Bd.R / 1000) + ' km';
+      escMsg = 'E < 0: het voorwerp bereikt een keerpunt en valt terug.';
+    } else if (v0u < 1 && !isV1) {
+      hmax = '0 km'; escMsg = 'v₀ < v₁: het voorwerp stort neer.';
+    } else if (isV1) {
+      hmax = '0 km'; escMsg = 'v₀ = v₁: cirkelbaan net boven het oppervlak.';
+    } else {
+      hmax = this.big((-1 / Eu - 2) * Bd.R / 1000) + ' km';
+      escMsg = 'v₁ < v₀ < v₂: E < 0, ellipsbaan rond ' + (st.escBody === 'Aarde' ? 'de aarde' : st.escBody === 'Maan' ? 'de maan' : st.escBody) + '.';
+    }
+    const escMsgStyle = 'margin-top:4px;padding:7px 9px;border-radius:8px;font-weight:600;' + (escOk ? 'background:#e6f2ea;color:#2f7a45' : 'background:#f4f1ea;color:#6f685c');
+
     return {
       stageRef: this.stageRef,
-      tabs: [['sat', 'Satelliet'], ['kep', 'Kepler'], ['lag', 'Lagrange']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; this.trail = []; this.running = true; } })),
-      isSat: st.tab === 'sat', isKep: st.tab === 'kep', isLag: st.tab === 'lag',
+      tabs: [['sat', 'Satelliet'], ['kep', 'Kepler'], ['lag', 'Lagrange'], ['esc', 'Ontsnapping']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; this.trail = []; this.running = true; if (k === 'esc') this.escLaunch(); } })),
+      isSat: st.tab === 'sat', isKep: st.tab === 'kep', isLag: st.tab === 'lag', isEsc: st.tab === 'esc',
+      // ontsnapping
+      escBodies: Object.keys(this.bodies).map(n => ({ name: n, style: chip(st.escBody === n), onClick: () => relaunch({ escBody: n }) })),
+      escDirs: [['vert', 'Verticaal'], ['hor', 'Horizontaal']].map(([k, n]) => ({ name: n, style: chip(st.escDir === k), onClick: () => relaunch({ escDir: k }) })),
+      escSpeeds: [['v₁ (cirkelbaan)', Math.SQRT1_2, isV1], ['v₂ (ontsnapping)', 1, isV2]].map(([n, v, on]) => ({ name: n, style: chip(on), onClick: () => relaunch({ escV: v }) })),
+      escV: st.escV, onEscV: (ev) => relaunch({ escV: parseFloat(ev.target.value) }),
+      escV0Str: kms(v0u * u1), escRatioStr: this.fmt(st.escV, 3) + ' × v₂',
+      escV2Str: kms(Math.SQRT2 * u1), escV1Str: kms(u1),
+      escEkStr: J(st.m * Math.pow(v0u * u1, 2) / 2), escEpStr: J(-eJ), escEStr: Math.abs(Eu) < 1e-9 ? '0 J' : J(Eu * eJ),
+      escHmaxStr: hmax, escMsg, escMsgStyle,
       onPlay: () => { this.running = !this.running; this.forceUpdate(); },
       playLabel: this.running ? 'Pauze' : 'Verder',
       onReset: resetAll,

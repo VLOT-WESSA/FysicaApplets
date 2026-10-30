@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:28}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   a{color:#6f685c}
   a:hover{color:#2a2723}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer}
   @media(max-width:760px){html,body{height:auto}.applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}.applet-main{flex-direction:column !important;align-items:stretch !important}.applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}.applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}}
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
@@ -69,7 +68,7 @@
         <div style="position:relative;height:9px;border-radius:5px;margin-top:3px;background:linear-gradient(90deg,#87a9d4 0%,#87a9d4 27%,#5fae7a 31%,#5fae7a 46%,#c9a23f 51%,#d98b3a 61%,#b8311f 83%,#8f1f12 100%)">
           <div style="position:absolute;top:-4px;width:3px;height:17px;border-radius:2px;background:#2a2723;box-shadow:0 0 0 1.5px #fffdf9;left:{{ tempPct }}"></div>
         </div>
-        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#b3ab9b"><span>250 &deg;C</span><span style="color:#3a8a55">600&ndash;780 bedrijf</span><span style="color:#b8311f">1200 schade</span></div>
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6f685c"><span>250 &deg;C</span><span style="color:#3a8a55">600&ndash;780 bedrijf</span><span style="color:#b8311f">1200 schade</span></div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -77,9 +76,9 @@
           <span style="font-size:13.5px;font-weight:600;color:#3a352c">Regelstaven</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ rodStr }}</span>
         </div>
-        <div style="font-size:11.5px;color:#9a927f;margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; k zakt</div>
-        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:#b8472f">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
+        <div style="font-size:11.5px;color:#6f685c;margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; k zakt</div>
+        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:var(--accent)">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -89,7 +88,7 @@
           <option value="laag">Laagverrijkt uranium (3,5% U-235)</option>
           <option value="mox">MOX (uranium + plutonium)</option>
         </select>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Meer splijtbare kernen &rarr; een thermisch neutron veroorzaakt vaker splijting dan invang.</div>
+        <div style="font-size:11.5px;color:#6f685c;margin-top:7px;line-height:1.4">Meer splijtbare kernen &rarr; een thermisch neutron veroorzaakt vaker splijting dan invang.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -99,34 +98,34 @@
           <option value="grafiet">Grafiet</option>
           <option value="zwaar">Zwaar water (D&#8322;O)</option>
         </select>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">Vertraagt snelle neutronen tot thermische. Licht water remt het snelst af, maar vangt ook veel neutronen in: met natuurlijk uranium wordt het nooit kritisch. Grafiet en zwaar water verliezen minder neutronen.</div>
+        <div style="font-size:11.5px;color:#6f685c;margin-top:7px;line-height:1.4">Vertraagt snelle neutronen tot thermische. Licht water remt het snelst af, maar vangt ook veel neutronen in: met natuurlijk uranium wordt het nooit kritisch. Grafiet en zwaar water verliezen minder neutronen.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Thermisch vermogen</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#b3ab9b">laatste 60 s</span>
+          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Thermisch vermogen</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6f685c">laatste 60 s</span>
         </div>
         <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px"><b style="color:#3f6aa3">k&lt;1</b> dooft uit &middot; <b style="color:#3a8a55">k=1</b> constant &middot; <b style="color:#b8472f">k&gt;1</b> loopt op. De letters markeren je ingrepen.</div>
+        <div style="font-size:11.5px;color:#6f685c;line-height:1.45;margin-top:8px"><b style="color:#3f6aa3">k&lt;1</b> dooft uit &middot; <b style="color:#3a8a55">k=1</b> constant &middot; <b style="color:#b8472f">k&gt;1</b> loopt op. De letters markeren je ingrepen.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave</span>
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Weergave</span>
         <button onClick="{{ toggleNeutrons }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ nBorder }};background:{{ nBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>Neutronen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ nState }}</span>
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>Neutronen <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ nState }}</span>
         </button>
         <button onClick="{{ toggleLabels }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ lBorder }};background:{{ lBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f685c"></span>Onderdeellabels <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ lState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f685c"></span>Onderdeellabels <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ lState }}</span>
         </button>
         <button onClick="{{ toggleExtra }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ xBorder }};background:{{ xBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#8a3b2c"></span>Uitbreiding (6e jaar) <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ xState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#8a3b2c"></span>Uitbreiding (6e jaar) <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ xState }}</span>
         </button>
       </div>
 
       <sc-if value="{{ showExtra }}" hint-placeholder-val="{{ false }}">
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
-          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Invloed van je keuzes op k</span>
+          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Invloed van je keuzes op k</span>
           <div style="display:flex;flex-direction:column;gap:6px">
             <sc-for list="{{ kTerms }}" as="term" hint-placeholder-count="4">
               <div style="display:flex;align-items:center;gap:9px">
@@ -139,16 +138,16 @@
               </div>
             </sc-for>
           </div>
-          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Elk getal is de richting en de sterkte waarmee die keuze aan k trekt: plus duwt k omhoog, min omlaag. Het zijn geen factoren om te vermenigvuldigen &mdash; k zelf wordt bovenaan gemeten aan de neutronen in de kern.</div>
+          <div style="font-size:11.5px;color:#6f685c;line-height:1.45">Elk getal is de richting en de sterkte waarmee die keuze aan k trekt: plus duwt k omhoog, min omlaag. Het zijn geen factoren om te vermenigvuldigen &mdash; k zelf wordt bovenaan gemeten aan de neutronen in de kern.</div>
           <div style="height:1px;background:#efe9dd"></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Reactiviteit &rho; = (k&minus;1)/k</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ rhoStr }}</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Tijdconstante &tau;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ tauStr }}</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Verdubbelingstijd</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ doubleStr }}</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Splijtstoftemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ fuelTempStr }}</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Staven, werkelijke stand</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rodPosStr }}</span></div>
-          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">&tau; = &#8467;/(k&minus;1) met effectieve generatietijd &#8467; = 0,085 s (inclusief vertraagde neutronen). Verdubbelingstijd = &tau; &middot; ln 2.</div>
+          <div style="font-size:11.5px;color:#6f685c;line-height:1.45">&tau; = &#8467;/(k&minus;1) met effectieve generatietijd &#8467; = 0,085 s (inclusief vertraagde neutronen). Verdubbelingstijd = &tau; &middot; ln 2.</div>
           <div style="height:1px;background:#efe9dd"></div>
-          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Neutronenbalans</span>
+          <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Neutronenbalans</span>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Snel / thermisch</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ mixStr }}</span></div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <sc-for list="{{ balance }}" as="row" hint-placeholder-count="4">
@@ -159,7 +158,7 @@
               </div>
             </sc-for>
           </div>
-          <div style="font-size:11.5px;color:#9a927f;line-height:1.45">Aandeel van alle neutronen die in de laatste seconden verdwenen. Splijting levert 2 of 3 nieuwe neutronen, de rest is verlies.</div>
+          <div style="font-size:11.5px;color:#6f685c;line-height:1.45">Aandeel van alle neutronen die in de laatste seconden verdwenen. Splijting levert 2 of 3 nieuwe neutronen, de rest is verlies.</div>
         </div>
       </sc-if>
 
@@ -812,7 +811,7 @@ class Component extends DCLogic {
     const Y = (v) => py1 - (py1 - py0) * Math.min(1, v / maxV);
 
     ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1;
-    ctx.fillStyle = '#a39c8d'; ctx.font = '500 9.5px "IBM Plex Mono",monospace';
+    ctx.fillStyle = '#6f685c'; ctx.font = '500 10.5px "IBM Plex Mono",monospace';
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let i = 0; i <= 4; i++) {
       const v = maxV * i / 4, y = Y(v);
@@ -825,7 +824,7 @@ class Component extends DCLogic {
       ctx.fillText('\u2212' + (60 - s), x, py1 + 6);
     }
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillStyle = '#8c8576'; ctx.font = '600 9.5px "IBM Plex Sans",sans-serif';
+    ctx.fillStyle = '#6f685c'; ctx.font = '600 10.5px "IBM Plex Sans",sans-serif';
     ctx.fillText('MW', 6, 6);
     ctx.textAlign = 'right';
     ctx.fillText('tijd (s)', px1, py1 + 6);
@@ -954,7 +953,7 @@ class Component extends DCLogic {
     return {
       stageRef: this.stageRef, chartRef: this.chartRef,
       runLabel: on ? '\u25A0 Reactor stoppen' : '\u25B6 Reactor starten',
-      runBg: on ? '#fff' : '#b8472f', runFg: on ? '#3a352c' : '#fff', runBorder: on ? '#d9d3c6' : '#b8472f',
+      runBg: on ? '#fff' : 'var(--accent)', runFg: on ? '#3a352c' : '#fff', runBorder: on ? '#d9d3c6' : 'var(--accent)',
       onToggleRun: this.toggleRun, onScram: this.scram, onReset: this.reset,
       rodVal: Math.round(st.rod * 100), onRod: this.onRod,
       rodStr: Math.abs(this.rodPos - st.rod) > 0.005

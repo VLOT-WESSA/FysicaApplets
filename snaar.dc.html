@@ -19,14 +19,13 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -55,19 +54,23 @@
     </div>
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Aandrijving</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Aandrijving</div>
         <div style="display:flex;gap:8px;margin-bottom:12px">
           <button onClick="{{ onOsc }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ oscBg }};color:{{ oscFg }}">Oscilleren</button>
           <button onClick="{{ onPuls }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ pulsBg }};color:{{ pulsFg }}">Puls</button>
         </div>
         <sc-if value="{{ isPuls }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ onSendPulse }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:8px;padding:9px;cursor:pointer;background:#1f9e8f;color:#fff">Stuur puls</button>
+          <button onClick="{{ onSendPulse }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:8px;padding:9px;cursor:pointer;background:var(--accent);color:#fff">Stuur puls</button>
         </sc-if>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Uiteinde rechts</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Uiteinde rechts</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onEndVast }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ vastBg }};color:{{ vastFg }}">Vast</button>
           <button onClick="{{ onEndLos }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ losBg }};color:{{ losFg }}">Los</button>
@@ -77,21 +80,17 @@
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ snelheid }}%</span></div>
-        <input type="range" min="10" max="150" step="5" value="{{ snelheid }}" onChange="{{ onSnelheid }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <input type="range" min="10" max="150" step="5" value="{{ snelheid }}" onChange="{{ onSnelheid }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Amplitude</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ amp }} cm</span></div>
-        <input type="range" min="5" max="55" step="1" value="{{ amp }}" onChange="{{ onAmp }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <input type="range" min="5" max="55" step="1" value="{{ amp }}" onChange="{{ onAmp }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Frequentie</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ freq }} Hz</span></div>
-        <input type="range" min="1" max="6" step="0.5" value="{{ freq }}" onChange="{{ onFreq }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <input type="range" min="1" max="6" step="0.5" value="{{ freq }}" onChange="{{ onFreq }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Spanning</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ tension }}%</span></div>
-        <input type="range" min="20" max="100" step="2" value="{{ tension }}" onChange="{{ onTension }}" style="width:100%;accent-color:#1f9e8f;margin-bottom:14px">
+        <input type="range" min="20" max="100" step="2" value="{{ tension }}" onChange="{{ onTension }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Demping</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ damping }}%</span></div>
-        <input type="range" min="0" max="100" step="2" value="{{ damping }}" onChange="{{ onDamping }}" style="width:100%;accent-color:#1f9e8f">
+        <input type="range" min="0" max="100" step="2" value="{{ damping }}" onChange="{{ onDamping }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="display:flex;gap:10px">
-        <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#1f9e8f;color:#fff">{{ playLbl }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
-      </div>
     </div>
   </div>
 </div>
@@ -230,7 +229,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const seg = (a) => ({ bg: a ? '#1f9e8f' : '#fff', fg: a ? '#fff' : '#6f685c' });
+    const seg = (a) => ({ bg: a ? 'var(--accent)' : '#fff', fg: a ? '#fff' : '#6f685c' });
     const o = seg(this.state.mode === 'osc'), p = seg(this.state.mode === 'puls');
     const ev = seg(this.state.end === 'vast'), el = seg(this.state.end === 'los'), eg = seg(this.state.end === 'geen');
     return {

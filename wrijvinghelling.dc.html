@@ -19,14 +19,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2f6f5e;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -71,7 +70,7 @@
       </div>
 
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onRelease }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#2f6f5e;color:#fff">{{ releaseLabel }}</button>
+        <button onClick="{{ onRelease }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ releaseLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
       </div>
 
@@ -80,12 +79,12 @@
           <span style="font-size:14px;font-weight:500">Hellingshoek &theta;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
         </div>
-        <input type="range" min="0" max="60" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:#2f6f5e;margin-bottom:16px">
+        <input type="range" min="0" max="60" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Massa m</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ massStr }}</span>
         </div>
-        <input type="range" min="0.5" max="10" step="0.5" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:#2f6f5e">
+        <input type="range" min="0.5" max="10" step="0.5" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -99,7 +98,7 @@
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c9772f">{{ mukStr }}</span>
         </div>
         <input type="range" min="0" max="1.2" step="0.01" value="{{ muk }}" onInput="{{ onMuk }}" style="width:100%;accent-color:#e0903a">
-        <div style="font-size:11px;color:#b3ab9b;margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
+        <div style="font-size:11px;color:#6f685c;margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
       </div>
 
       <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">

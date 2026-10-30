@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:75}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,10 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #a8761f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #a8761f;cursor:pointer}
-  input[type=range]:disabled{opacity:.4}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -90,15 +88,15 @@
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
         <div style="display:flex;gap:8px">
-          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Meting noteren</button>
+          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:var(--accent);color:#fff">Meting noteren</button>
           <button onClick="{{ onCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ copyLabel }}</button>
           <button onClick="{{ onClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
         </div>
         <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
           <div style="display:grid;grid-template-columns:28px repeat(4,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
-            <span style="color:#8c8576">nr</span><span style="color:#8c8576">d (mm)</span><span style="color:#8c8576">A (cm²)</span><span style="color:#8c8576">&epsilon;<sub>r</sub></span><span style="color:#8c8576">C (pF)</span>
+            <span style="color:#6f685c">nr</span><span style="color:#6f685c">d (mm)</span><span style="color:#6f685c">A (cm²)</span><span style="color:#6f685c">&epsilon;<sub>r</sub></span><span style="color:#6f685c">C (pF)</span>
             <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
-              <span style="color:#8c8576">{{ r.n }}</span><span>{{ r.d }}</span><span>{{ r.A }}</span><span>{{ r.er }}</span><span>{{ r.C }}</span>
+              <span style="color:#6f685c">{{ r.n }}</span><span>{{ r.d }}</span><span>{{ r.A }}</span><span>{{ r.er }}</span><span>{{ r.C }}</span>
             </sc-for>
           </div>
         </sc-if>
@@ -114,13 +112,13 @@
           <button onClick="{{ onDischarge }}" style="{{ dischargeStyle }}">Ontladen (S2)</button>
         </div>
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;color:#8c8576">Capaciteit elco</div>
+          <div style="font-size:12px;color:#6f685c">Capaciteit elco</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcCs }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
-          <div style="font-size:12px;color:#8c8576;margin-top:4px">Weerstand</div>
+          <div style="font-size:12px;color:#6f685c;margin-top:4px">Weerstand</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcRs }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px"><span style="font-size:14px;font-weight:500">Bronspanning</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ rcUStr }}</span></div>
           <div style="height:30px;display:flex;align-items:center"><input type="range" min="1" max="25" step="1" value="{{ rcU }}" onInput="{{ onRcU }}"></div>
-          <div style="font-size:12px;color:#8c8576">Tempo</div>
+          <div style="font-size:12px;color:#6f685c">Tempo</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rcSpeeds }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button></sc-for></div>
         </div>
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
@@ -132,14 +130,14 @@
         </div>
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px">
           <div style="display:flex;gap:8px">
-            <button onClick="{{ onRcRec }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff">Tijdstip noteren</button>
+            <button onClick="{{ onRcRec }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:var(--accent);color:#fff">Tijdstip noteren</button>
             <button onClick="{{ onRcCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ rcCopyLabel }}</button>
             <button onClick="{{ onRcClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
           </div>
           <div style="display:grid;grid-template-columns:28px repeat(3,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
-            <span style="color:#8c8576">nr</span><span style="color:#8c8576">t (s)</span><span style="color:#8c8576">I (&micro;A)</span><span style="color:#8c8576">U<sub>C</sub> (V)</span>
+            <span style="color:#6f685c">nr</span><span style="color:#6f685c">t (s)</span><span style="color:#6f685c">I (&micro;A)</span><span style="color:#6f685c">U<sub>C</sub> (V)</span>
             <sc-for list="{{ rcRows }}" as="r" hint-placeholder-count="0">
-              <span style="color:#8c8576">{{ r.n }}</span><span>{{ r.t }}</span><span>{{ r.i }}</span><span>{{ r.u }}</span>
+              <span style="color:#6f685c">{{ r.n }}</span><span>{{ r.t }}</span><span>{{ r.i }}</span><span>{{ r.u }}</span>
             </sc-for>
           </div>
         </div>
@@ -223,7 +221,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(210, 380, 130, 66, 10); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(this.rcT, 1) + ' s', 275, 420);
     ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText('stopwatch', 275, 391);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(st.rcSw === 'charge' ? 'S1 dicht: de condensator laadt op via R.' : st.rcSw === 'discharge' ? 'S2 dicht: de condensator ontlaadt via R.' : 'Beide schakelaars open.', 40, 470);
     if (st.rcSpeed > 1) ctx.fillText('Tempo ×' + st.rcSpeed, 40, 490);
     // grafieken
@@ -233,7 +231,7 @@ class Component extends DCLogic {
       ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h);
       const ym = y + h / 2; ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, ym); ctx.lineTo(x + w, ym); ctx.stroke();
       ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 8, y + 6);
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.fillText('+' + unit(max), x + w - 6, y + 6); ctx.textBaseline = 'bottom'; ctx.fillText('−' + unit(max), x + w - 6, y + h - 4);
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.fillText('+' + unit(max), x + w - 6, y + 6); ctx.textBaseline = 'bottom'; ctx.fillText('−' + unit(max), x + w - 6, y + h - 4);
       ctx.textAlign = 'left'; ctx.fillText('venster 5τ = ' + this.fmt(5 * tau, 0) + ' s', x + 8, y + h - 4);
       ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); let f = true;
       for (const d of this.rcHist) { if (d.t < t0) continue; const X = x + (d.t - t0) / tw * w, Y = ym - d[key] / max * (h / 2 - 22); f ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y); f = false; }
@@ -417,9 +415,9 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const C = this.C(), Q = this.Q(), U = this.U(), E = U / (st.d * 1e-3);
-    const on = 'flex:1;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:oklch(0.52 0.12 75);color:#fff';
+    const on = 'flex:1;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:var(--accent);color:#fff';
     const off = 'flex:1;font-size:13px;font-weight:500;border:none;border-radius:9px;padding:8px 6px;min-height:34px;cursor:pointer;background:transparent;color:#4f4a42';
-    const acc = 'oklch(0.52 0.12 75)';
+    const acc = 'var(--accent)';
     const chipS = (o) => 'min-height:32px;font-size:12.5px;font-weight:' + (o ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 10px;border:1px solid ' + (o ? acc : '#e7e1d5') + ';background:' + (o ? acc : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
     const tabS = (o) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (o ? '#2a2723' : '#e7e1d5') + ';background:' + (o ? '#2a2723' : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
     const bigS = (o) => 'flex:1;min-height:40px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (o ? acc : '#e7e1d5') + ';background:' + (o ? acc : '#fff') + ';color:' + (o ? '#fff' : '#2a2723');
@@ -438,7 +436,7 @@ class Component extends DCLogic {
       onA: (e) => this.setState({ A: parseFloat(e.target.value) }),
       matItems: this.mats.map((m, i) => ({
         name: m.n, onClick: () => this.setState({ mat: i }),
-        style: 'min-height:34px;font-size:12.5px;font-weight:' + (i === st.mat ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (i === st.mat ? 'oklch(0.52 0.12 75)' : '#e7e1d5') + ';background:' + (i === st.mat ? 'oklch(0.52 0.12 75)' : '#fff') + ';color:' + (i === st.mat ? '#fff' : '#2a2723'),
+        style: 'min-height:34px;font-size:12.5px;font-weight:' + (i === st.mat ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (i === st.mat ? 'var(--accent)' : '#e7e1d5') + ';background:' + (i === st.mat ? 'var(--accent)' : '#fff') + ';color:' + (i === st.mat ? '#fff' : '#2a2723'),
       })),
       CStr: this.si(C, 'F'), QStr: this.si(Q, 'C'),
       UStr: U >= 1000 ? this.fmt(U / 1000, 2) + ' kV' : this.fmt(U, 1) + ' V',

@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a86;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a86;cursor:pointer}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -42,15 +41,15 @@
         <canvas ref="{{ stageRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;font-size:13px;color:#4f4a42">
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>spankracht F<sub>s</sub></div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:3px dashed #93c4a3;display:inline-block"></span>terugroepende kracht F<sub>z</sub>&middot;sin&theta;</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span><span>zwaartekracht F<sub>z</sub></span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span><span>spankracht F<sub>s</sub></span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:3px dashed #93c4a3;display:inline-block"></span><span>terugroepende kracht F<sub>z</sub>&middot;sin&theta;</span></div>
         <div style="display:flex;align-items:center;gap:8px">Sleep de massa om ze uit te wijken en los te laten.</div>
       </div>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.1 195);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
@@ -86,15 +85,15 @@
           <button onClick="{{ onChronoReset }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Nul</button>
         </div>
         <div style="display:flex;gap:8px">
-          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:oklch(0.5 0.1 195);color:#fff">Meting noteren</button>
+          <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:9px;cursor:pointer;background:var(--accent);color:#fff">Meting noteren</button>
           <button onClick="{{ onCopy }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">{{ copyLabel }}</button>
           <button onClick="{{ onClear }}" style="min-height:36px;padding:0 12px;font-size:13.5px;font-weight:500;border:1px solid #e7e1d5;border-radius:9px;cursor:pointer;background:#fff;color:#2a2723">Wis</button>
         </div>
         <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
           <div style="display:grid;grid-template-columns:24px repeat(5,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2a2723">
-            <span style="color:#8c8576">nr</span><span style="color:#8c8576">L (m)</span><span style="color:#8c8576">&theta;&#8320;</span><span style="color:#8c8576">t (s)</span><span style="color:#8c8576">n</span><span style="color:#8c8576">T (s)</span>
+            <span style="color:#6f685c">nr</span><span style="color:#6f685c">L (m)</span><span style="color:#6f685c">&theta;&#8320;</span><span style="color:#6f685c">t (s)</span><span style="color:#6f685c">n</span><span style="color:#6f685c">T (s)</span>
             <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
-              <span style="color:#8c8576">{{ r.nr }}</span><span>{{ r.L }}</span><span>{{ r.th }}</span><span>{{ r.t }}</span><span>{{ r.n }}</span><span>{{ r.T }}</span>
+              <span style="color:#6f685c">{{ r.nr }}</span><span>{{ r.L }}</span><span>{{ r.th }}</span><span>{{ r.t }}</span><span>{{ r.n }}</span><span>{{ r.T }}</span>
             </sc-for>
           </div>
         </sc-if>
@@ -190,7 +189,7 @@ class Component extends DCLogic {
       ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; const mw = ctx.measureText(m).width;
       const lx = x + dx + dx / L * 15 - mw / 2 - 2, ly = y + dy + dy / L * 15;
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(m, lx, ly);
-      if (s) { ctx.font = "600 9.5px 'IBM Plex Sans',sans-serif"; ctx.fillText(s, lx + mw, ly + 4); }
+      if (s) { ctx.font = "600 10.5px 'IBM Plex Sans',sans-serif"; ctx.fillText(s, lx + mw, ly + 4); }
     }
   }
 
@@ -231,7 +230,7 @@ class Component extends DCLogic {
       const k = 80;
       const Ts = Math.cos(this.th) + st.L * this.om * this.om / st.g;
       this.arrow(ctx, bx, by, 0, k, '#2f8a4e', 3, 'F_z');
-      this.arrow(ctx, bx, by, -Math.sin(this.th) * k * Ts, -Math.cos(this.th) * k * Ts, '#2f8a4e', 3, 'F_s');
+      this.arrow(ctx, bx, by, -Math.sin(this.th) * k * Ts, -Math.cos(this.th) * k * Ts, '#3a6fb8', 3, 'F_s');
       const ft = -Math.sin(this.th) * k;
       ctx.save(); ctx.setLineDash([5, 4]);
       this.arrow(ctx, bx, by, ft * Math.cos(this.th), -ft * Math.sin(this.th), '#93c4a3', 2.6, null);
@@ -253,7 +252,7 @@ class Component extends DCLogic {
     const tw = 10, t0 = Math.max(0, this.t - tw);
     const X = (t) => x + (t - t0) / tw * w, Y = (d) => y + h / 2 - d / amp * (h / 2);
     ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'top';
     ctx.fillText('+' + this.fmt(amp / 1.1, 0) + '\u00B0', x + 4, y + 4);
     ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('laatste 10 s', x + w - 4, y + h - 3);
     ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
@@ -303,7 +302,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.1 195)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const T0 = 2 * Math.PI * Math.sqrt(st.L / st.g);
     const Tm = st.b > 0 ? this.measuredT() : this.exactT(this.relTh);

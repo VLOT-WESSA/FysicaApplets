@@ -19,14 +19,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a8a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f8a8a;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -60,22 +59,21 @@
     </div>
 
     <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+      <button onClick="{{ onPlay }}" style="flex:none;min-height:40px;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Randvoorwaarden</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Randvoorwaarden</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
           <button onClick="{{ onBB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bbBorder }};background:{{ bbBg }};color:{{ bbFg }}">buik &ndash; buik</button>
           <button onClick="{{ onNB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nbBorder }};background:{{ nbBg }};color:{{ nbFg }}">knoop &ndash; buik</button>
           <button onClick="{{ onBN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bnBorder }};background:{{ bnBg }};color:{{ bnFg }}">buik &ndash; knoop</button>
           <button onClick="{{ onNN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nnBorder }};background:{{ nnBg }};color:{{ nnFg }}">knoop &ndash; knoop</button>
         </div>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:9px">{{ boundHint }}</div>
+        <div style="font-size:11.5px;color:#6f685c;line-height:1.45;margin-top:9px">{{ boundHint }}</div>
       </div>
 
-      <button onClick="{{ onPlay }}" style="flex:none;min-height:40px;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:#1f8a8a;color:#fff">{{ playLabel }}</button>
-
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Visualisatie</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Visualisatie</div>
         <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
           <button onClick="{{ onTrans }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ transBg }};color:{{ transFg }};box-shadow:{{ transSh }}">Transversaal</button>
           <button onClick="{{ onLong }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ longBg }};color:{{ longFg }};box-shadow:{{ longSh }}">Longitudinaal</button>
@@ -87,17 +85,17 @@
           <span style="font-size:14px;font-weight:500">Harmonische n</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#1f7a7a">{{ harmStr }}</span>
         </div>
-        <input type="range" min="1" max="6" step="1" value="{{ n }}" onInput="{{ onN }}" style="width:100%;accent-color:#1f8a8a;margin-bottom:16px">
+        <input type="range" min="1" max="6" step="1" value="{{ n }}" onInput="{{ onN }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Lengte kolom L</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lenStr }}</span>
         </div>
-        <input type="range" min="0.2" max="2" step="0.05" value="{{ len }}" onInput="{{ onLen }}" style="width:100%;accent-color:#1f8a8a;margin-bottom:16px">
+        <input type="range" min="0.2" max="2" step="0.05" value="{{ len }}" onInput="{{ onLen }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Golfsnelheid v</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vStr }}</span>
         </div>
-        <input type="range" min="100" max="400" step="1" value="{{ v }}" onInput="{{ onV }}" style="width:100%;accent-color:#1f8a8a">
+        <input type="range" min="100" max="400" step="1" value="{{ v }}" onInput="{{ onV }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
       <div style="background:#0e1417;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6e6">
@@ -294,7 +292,7 @@ class Component extends DCLogic {
     const tr = seg(this.state.mode === 'trans'), lo = seg(this.state.mode === 'long');
     const pick = (id, lbl) => {
       const on = b === id;
-      return { bg: on ? '#1f8a8a' : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? '#1f8a8a' : '#ddd6c8' };
+      return { bg: on ? 'var(--accent)' : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? 'var(--accent)' : '#ddd6c8' };
     };
     const bb = pick('bb'), nb = pick('nb'), bn = pick('bn'), nn = pick('nn');
     const endTxt = { bb: 'open \u2013 open', nn: 'gesloten \u2013 gesloten', nb: 'gesloten \u2013 open', bn: 'open \u2013 gesloten' }[b];

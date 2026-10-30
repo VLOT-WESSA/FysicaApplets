@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,10 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
-  input[type=range]:disabled{opacity:.35}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -185,7 +183,7 @@ class Component extends DCLogic {
     const Xp = x => gx + gw / 2 + x / X * gw / 2;
     // schaalverdeling
     const raw = X / 5, e10 = Math.pow(10, Math.floor(Math.log10(raw))), mm = raw / e10; const unit = (mm < 1.5 ? 1 : mm < 3.5 ? 2 : mm < 7.5 ? 5 : 10) * e10;
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = '#ece6da';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = '#ece6da';
     for (let x = -Math.floor(X / unit) * unit; x <= X + 1e-12; x += unit) { const xx = Xp(x); ctx.beginPath(); ctx.moveTo(xx, py); ctx.lineTo(xx, base); ctx.stroke(); ctx.fillText(X > 0.2 ? this.fmt(x * 100, 0) : this.fmt(x * 1000, 0), xx, base + 4); }
     ctx.textAlign = 'right'; ctx.fillText(X > 0.2 ? 'x (cm)' : 'x (mm)', gx + gw, base + 20);
     if (st.showEnv && st.mode === 'dubbel') {
@@ -203,7 +201,7 @@ class Component extends DCLogic {
       const lam = st.lam * 1e-9; const marks = [];
       if (st.mode === 'enkel' || st.mode === 'haar') for (const m of [-3, -2, -1, 1, 2, 3]) { const s = m * lam / (st.a * 1e-6); if (Math.abs(s) < 1) marks.push([st.L * Math.tan(Math.asin(s)), 'min ' + m, '#c8443a']); }
       else { const d = st.mode === 'dubbel' ? st.d * 1e-6 : this.dg(); for (let m = -8; m <= 8; m++) { const s = m * lam / d; if (Math.abs(s) < 1) marks.push([st.L * Math.tan(Math.asin(s)), 'n = ' + m, '#2f8a4e']); } }
-      ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.font = "500 10.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center';
+      ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center';
       for (const [x, l, cl] of marks) { if (Math.abs(x) > X) continue; ctx.strokeStyle = cl; ctx.beginPath(); ctx.moveTo(Xp(x), sy + sh); ctx.lineTo(Xp(x), base); ctx.stroke(); ctx.fillStyle = cl; ctx.textBaseline = 'top'; if (st.mode !== 'dubbel' || Math.abs(+l.split(' ').pop()) <= 3) ctx.fillText(l, Xp(x), sy + sh + 3); }
       ctx.setLineDash([]);
     }
@@ -216,7 +214,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.12 195)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:36px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const lam = st.lam * 1e-9, L = st.L;

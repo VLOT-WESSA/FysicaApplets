@@ -21,14 +21,13 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:28}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer}
   .vt{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:13px}
   .vt td,.vt th{padding:3px 8px;text-align:right;border-bottom:1px solid #eee7da}
   .vt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;position:sticky;top:0;background:#fffdf9}
@@ -60,27 +59,27 @@
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Instellingen</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Instellingen</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Aantal kernen N&#8320;</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ n0 }}</span></div>
-        <input type="range" min="10" max="1000" step="10" value="{{ n0 }}" onChange="{{ onN0 }}" style="width:100%;accent-color:#c4553a;margin-bottom:14px">
+        <input type="range" min="10" max="1000" step="10" value="{{ n0 }}" onChange="{{ onN0 }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="font-size:14px;font-weight:500;margin-bottom:6px">Zijden per dobbelsteen</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onZ6 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z6Bg }};color:{{ z6Fg }}">6</button>
           <button onClick="{{ onZ12 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z12Bg }};color:{{ z12Fg }}">12</button>
           <button onClick="{{ onZ20 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z20Bg }};color:{{ z20Fg }}">20</button>
         </div>
-        <div style="font-size:12px;color:#8c8576;margin-top:10px;line-height:1.4">Een dobbelsteen die de hoogste waarde gooit ({{ zijden }}), is vervallen. Vervalkans per worp: p = 1/{{ zijden }}.</div>
+        <div style="font-size:12px;color:#6f685c;margin-top:10px;line-height:1.4">Een dobbelsteen die de hoogste waarde gooit ({{ zijden }}), is vervallen. Vervalkans per worp: p = 1/{{ zijden }}.</div>
       </div>
 
       <div style="display:flex;gap:10px">
-        <button onClick="{{ onGooi }}" style="flex:1;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:#c4553a;color:#fff">Gooi</button>
+        <button onClick="{{ onGooi }}" style="flex:1;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">Gooi</button>
         <button onClick="{{ onAuto }}" style="flex:1.4;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">{{ autoLbl }}</button>
       </div>
-      <button onClick="{{ onReset }}" style="font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:9px;cursor:pointer;background:#fff;color:#2a2723">Opnieuw beginnen</button>
+      <button onClick="{{ onReset }}" style="font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:9px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:1;min-height:160px;display:flex;flex-direction:column">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Meettabel</span>
+          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Meettabel</span>
           <button onClick="{{ onKopieer }}" style="font-size:12px;border:1px solid #ddd6c8;border-radius:6px;padding:4px 8px;cursor:pointer;background:#fff;color:#6f685c">{{ kopieerLbl }}</button>
         </div>
         <div style="overflow-y:auto;flex:1">
@@ -254,7 +253,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const seg = a => ({ bg: a ? '#c4553a' : '#fff', fg: a ? '#fff' : '#6f685c' });
+    const seg = a => ({ bg: a ? 'var(--accent)' : '#fff', fg: a ? '#fff' : '#6f685c' });
     const z6 = seg(this.state.zijden === 6), z12 = seg(this.state.zijden === 12), z20 = seg(this.state.zijden === 20);
     const kiesZ = z => { this.setState({ zijden: z }); this.reset(this.state.n0, z); };
     return {

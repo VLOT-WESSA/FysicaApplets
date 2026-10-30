@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:300}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,13 +20,10 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #7a5ab8;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
-  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
-  .sub{font-size:12px;color:#8c8576}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600}
+  .sub{font-size:12px;color:#6f685c}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
   table.tt{border-collapse:collapse;font-size:12.5px;width:100%}
@@ -601,7 +600,7 @@ class Component extends DCLogic {
     for (const c of this.comps) this.drawComp(ctx, c);
     if (this.band) { const b = this.band; ctx.fillStyle = 'rgba(122,90,184,0.08)'; ctx.strokeStyle = '#7a5ab8'; ctx.lineWidth = 1 / v.s; ctx.setLineDash([5 / v.s, 4 / v.s]); ctx.fillRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.setLineDash([]); }
     ctx.restore();
-    if (!this.comps.length) { ctx.fillStyle = '#8c8576'; ctx.font = "500 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Voeg onderdelen toe met de knoppen rechts, of kies een voorbeeld.', this.W / 2, eh / 2); }
+    if (!this.comps.length) { ctx.fillStyle = '#6f685c'; ctx.font = "500 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Voeg onderdelen toe met de knoppen rechts, of kies een voorbeeld.', this.W / 2, eh / 2); }
     if (st.showDiag) this.drawDiag(ctx);
   }
   pinDot(ctx, p, v) { ctx.fillStyle = v ? '#2f8a4e' : '#fff'; ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(p.x, p.y, 4.5, 0, 7); ctx.fill(); ctx.stroke(); }
@@ -669,15 +668,15 @@ class Component extends DCLogic {
     if (t === 'XOR' || t === 'XNOR') { ctx.beginPath(); ctx.moveTo(x + 4, y); ctx.quadraticCurveTo(x + 18, y + h / 2, x + 4, y + h); ctx.stroke(); }
     if (neg) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + bw + 1, y + h / 2, 5, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x + bw + 6, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke(); }
     // naam van de poort onder het symbool
-    ctx.fillStyle = '#8c8576'; ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t, x + w / 2, y + h + 2);
+    ctx.fillStyle = '#6f685c'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t, x + w / 2, y + h + 2);
   }
   drawDiag(ctx) {
     const y0 = this.H - this.DIAG, x0 = 120, w = this.W - x0 - 14;
     ctx.fillStyle = '#fffdf9'; ctx.fillRect(4, y0 - 4, this.W - 8, this.DIAG); ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(4, y0 - 4, this.W - 8, this.DIAG);
     const sig = this.signals();
-    if (!sig.length) { ctx.fillStyle = '#8c8576'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Tijdsdiagram: plaats ingangen, een klok of uitgangen.', 14, y0 + this.DIAG / 2 - 4); return; }
+    if (!sig.length) { ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Tijdsdiagram: plaats ingangen, een klok of uitgangen.', 14, y0 + this.DIAG / 2 - 4); return; }
     const rh = Math.min(26, (this.DIAG - 22) / sig.length), n = 250;
-    ctx.fillStyle = '#8c8576'; ctx.font = "600 10px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('tijdsdiagram (laatste 10 s) →', this.W - 14, y0 - 1);
+    ctx.fillStyle = '#6f685c'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('tijdsdiagram (laatste 10 s) →', this.W - 14, y0 - 1);
     sig.forEach((g, r) => {
       const yb = y0 + 12 + r * rh + rh - 4, yt = yb - rh + 8;
       ctx.fillStyle = '#4f4a42'; ctx.font = "600 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(g.name, x0 - 8, (yb + yt) / 2);
@@ -721,7 +720,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.12 300)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const addS = 'min-height:34px;font-size:12.5px;font-weight:600;border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
     const plain = 'min-height:34px;font-size:13px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723';

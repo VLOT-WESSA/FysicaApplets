@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <script src="nuclide-data.js"></script>
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:28}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -59,7 +61,7 @@
           <div ref="{{ tipRef }}" style="position:absolute;display:none;pointer-events:none;z-index:5;background:#2a2723;color:#f7f4ee;border-radius:9px;padding:9px 12px;font-size:12px;line-height:1.45;box-shadow:0 4px 16px rgba(0,0,0,.28);min-width:128px"></div>
         </div>
       </div>
-      <div style="font-size:11px;color:#b3ab9b;font-family:'IBM Plex Mono',monospace;flex:none">{{ countStr }} &middot; sleep om te verschuiven, scroll om te zoomen</div>
+      <div style="font-size:11px;color:#6f685c;font-family:'IBM Plex Mono',monospace;flex:none">{{ countStr }} &middot; sleep om te verschuiven, scroll om te zoomen</div>
     </div>
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
@@ -85,7 +87,7 @@
             <span style="width:42px;height:42px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:{{ selTextColor }};background:{{ selModeColor }}">{{ selSym }}</span>
             <div>
               <div style="font-size:17px;font-weight:700;line-height:1.1">{{ selName }}</div>
-              <div style="font-size:12px;color:#8c8576;font-family:'IBM Plex Mono',monospace">Z={{ selZ }} &middot; N={{ selN }} &middot; A={{ selA }}</div>
+              <div style="font-size:12px;color:#6f685c;font-family:'IBM Plex Mono',monospace">Z={{ selZ }} &middot; N={{ selN }} &middot; A={{ selA }}</div>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:7px">
@@ -97,7 +99,7 @@
               <span>Halveringstijd</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ selHl }}</span>
             </div>
           </div>
-          <p style="margin:10px 0 0;font-size:12px;color:#9a927f;line-height:1.5">{{ selNote }}</p>
+          <p style="margin:10px 0 0;font-size:12px;color:#6f685c;line-height:1.5">{{ selNote }}</p>
         </div>
       </sc-if>
 

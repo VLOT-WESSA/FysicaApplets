@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -25,7 +27,7 @@
   .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .sub{font-size:12px;color:#8c8576}
+  .sub{font-size:12px;color:#6f685c}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -62,7 +64,7 @@
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
           </sc-for>
         </div>
-        <button onClick="{{ onFire }}" style="margin-top:6px;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 195);color:#fff">{{ fireLabel }}</button>
+        <button onClick="{{ onFire }}" style="margin-top:6px;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ fireLabel }}</button>
         <div class="sub" style="margin-top:4px">Spectrum</div>
         <div class="chips">
           <sc-for list="{{ kinds }}" as="p" hint-placeholder-count="2">
@@ -159,7 +161,7 @@ class Component extends DCLogic {
       ctx.textAlign = 'left'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; if (n <= 5) ctx.fillText(this.fmt(this.En(n), 2) + ' eV', x1 + 6, y);
       if (n === st.pick) { ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(x0 + 8, y, 5, 0, 7); ctx.fill(); }
     }
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.textBaseline = 'middle'; ctx.fillText('0 eV (ionisatie)', x1 + 6, this.ySc(0));
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.textBaseline = 'middle'; ctx.fillText('0 eV (ionisatie)', x1 + 6, this.ySc(0));
     // alle Balmer-pijlen licht, gekozen overgang sterk
     const arrowAt = (ni, nf, x, col, w) => {
       const ya = this.ySc(this.En(ni)), yb = this.ySc(this.En(nf)); const em = st.kind === 'em';
@@ -191,14 +193,14 @@ class Component extends DCLogic {
     };
     const balmer = []; for (let n = 3; n <= 9; n++) balmer.push(this.lam(n, 2));
     bar(sy, sh, balmer, (st.kind === 'em' ? 'Emissiespectrum' : 'Absorptiespectrum') + ' waterstof (zichtbaar deel)', st.kind);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let l = 400; l <= 750; l += 50) ctx.fillText(l + '', X(l), sy + sh + 3);
     [['Hα', 3], ['Hβ', 4], ['Hγ', 5], ['Hδ', 6]].forEach(([n, k]) => { const l = this.lam(k, 2); ctx.fillStyle = '#4f4a42'; ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.fillText(n, X(l), sy + sh + 17); });
     if (L >= lmin && L <= lmax) { ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 2; ctx.strokeRect(X(L) - 5, sy - 3, 10, sh + 6); }
     if (st.comp) {
       const [name, lines] = this.ELEMS[st.comp];
       bar(sy + 140, sh, lines, (st.kind === 'em' ? 'Emissiespectrum ' : 'Absorptiespectrum ') + name, st.kind);
-      ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       for (let l = 400; l <= 750; l += 50) ctx.fillText(l + '', X(l), sy + 140 + sh + 3);
     }
     // --- volledig bereik (log) met reeksen ---
@@ -213,7 +215,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#7a5ab8'; ctx.textAlign = 'center'; ctx.fillText('Lyman', XL(105), fy + fh + 18);
     ctx.fillStyle = '#2a2723'; ctx.fillText('Balmer', XL(480), fy + fh + 18);
     ctx.fillStyle = '#b8862a'; ctx.fillText('Paschen', XL(1300), fy + fh + 18);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace";
     for (const l of [100, 200, 500, 1000, 2000]) ctx.fillText(l + ' nm', XL(l), fy + fh + 3);
     ctx.fillText('UV', XL(200), fy + fh + 32); ctx.fillText('zichtbaar', XL(550), fy + fh + 32); ctx.fillText('IR', XL(1500), fy + fh + 32);
     ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
@@ -221,7 +223,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.5 0.12 195)';
+    const accent = 'var(--accent)';
     const chip = (on, dis) => 'min-height:32px;min-width:38px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:' + (dis ? 'default' : 'pointer') + ';padding:0 9px;opacity:' + (dis ? '0.4' : '1') + ';border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const L = this.lam(st.ni, st.nf), dE = this.En(st.ni) - this.En(st.nf);
     const zone = L < 380 ? 'ultraviolet' : L > 780 ? 'infrarood' : 'zichtbaar';

@@ -67,5 +67,35 @@
 
   function dpr() { return window.devicePixelRatio || 1; }
 
+  /* Toegankelijke naam voor knoppen die alleen een symbool tonen (◀ ▶ − + ↻ …).
+   * De focusstijl zelf staat in applet.css. */
+  var NAMES = {
+    '◀': 'Vorige', '◂': 'Vorige', '‹': 'Vorige', '←': 'Vorige',
+    '▶': 'Volgende', '▸': 'Volgende', '›': 'Volgende', '→': 'Volgende',
+    '−': 'Verklein', '-': 'Verklein', '+': 'Vergroot',
+    '↻': 'Opnieuw', '⟲': 'Opnieuw', '⇆': 'Wissel', '×': 'Sluiten', '✕': 'Sluiten'
+  };
+  function nameButtons(root) {
+    var bs = (root.querySelectorAll ? root : document).querySelectorAll('button:not([aria-label])');
+    for (var i = 0; i < bs.length; i++) {
+      var b = bs[i], t = (b.textContent || '').trim();
+      if (!t || /[A-Za-z0-9À-ɏ]{2}/.test(t)) continue;
+      var n = b.title || NAMES[t];
+      if (n) b.setAttribute('aria-label', n);
+    }
+  }
+  function startNaming() {
+    nameButtons(document);
+    if (window.MutationObserver) {
+      var q = null;
+      new MutationObserver(function () {
+        if (q) return;
+        q = setTimeout(function () { q = null; nameButtons(document); }, 200);
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+  }
+  if (document.body) startNaming();
+  else document.addEventListener('DOMContentLoaded', startNaming);
+
   window.AppletCore = { fitCanvas: fitCanvas, observe: observe, dpr: dpr, MAX_W: MAX_W };
 })();

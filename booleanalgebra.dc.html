@@ -10,6 +10,8 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;min-height:100%}
@@ -30,7 +32,7 @@
   </div>
 
   <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
-    <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Uitdrukking</div>
+    <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Uitdrukking</div>
     <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. A + !A·B" style="height:42px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:#2a2723">
     <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
       <sc-for list="{{ keys }}" as="k" hint-placeholder-count="5">
@@ -41,7 +43,7 @@
         <button onClick="{{ x.onClick }}" style="height:34px;padding:0 12px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;border:1px solid #e0d9ca;background:#f4f1ea;color:#3a352c">{{ x.label }}</button>
       </sc-for>
     </div>
-    <div style="font-size:12.5px;color:#8c8576;line-height:1.5">Variabelen A tot Z (maximaal 5 verschillende; kleine letters mogen ook). NOT: <b style="font-family:'IBM Plex Mono',monospace">!</b> v&oacute;&oacute;r of <b style="font-family:'IBM Plex Mono',monospace">'</b> na een term. OR: <b style="font-family:'IBM Plex Mono',monospace">+</b>. AND: <b style="font-family:'IBM Plex Mono',monospace">&middot;</b>, <b style="font-family:'IBM Plex Mono',monospace">*</b> of weglaten (ab).</div>
+    <div style="font-size:12.5px;color:#6f685c;line-height:1.5">Variabelen A tot Z (maximaal 5 verschillende; kleine letters mogen ook). NOT: <b style="font-family:'IBM Plex Mono',monospace">!</b> v&oacute;&oacute;r of <b style="font-family:'IBM Plex Mono',monospace">'</b> na een term. OR: <b style="font-family:'IBM Plex Mono',monospace">+</b>. AND: <b style="font-family:'IBM Plex Mono',monospace">&middot;</b>, <b style="font-family:'IBM Plex Mono',monospace">*</b> of weglaten (ab).</div>
     <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:13.5px;color:#b8472f">{{ err }}</div>
     </sc-if>
@@ -55,11 +57,11 @@
     </div>
 
     <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Stappen</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:8px">Stappen</div>
       <div style="display:flex;flex-direction:column">
         <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
           <div style="display:grid;grid-template-columns:28px minmax(0,1.2fr) minmax(0,1fr);gap:6px 14px;align-items:center;padding:10px 0;border-top:1px solid #efe9dd">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9a927f">{{ s.n }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c">{{ s.n }}</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:19px;color:#2a2723;overflow-x:auto;padding-top:4px">{{ s.el }}</span>
             <div style="min-width:0">
               <div style="font-size:13px;font-weight:600;color:oklch(0.45 0.13 300)">{{ s.name }}</div>
@@ -71,7 +73,7 @@
     </div>
 
     <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Waarheidstabel</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Waarheidstabel</div>
       <div style="overflow-x:auto">
         <div style="display:grid;grid-template-columns:repeat({{ cols }},minmax(44px,max-content));gap:2px;font-family:'IBM Plex Mono',monospace;font-size:14px;width:max-content">
           <sc-for list="{{ heads }}" as="h" hint-placeholder-count="4">
@@ -85,7 +87,7 @@
     </div>
   </sc-if>
 
-  <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-top:6px">Rekenregels</div>
+  <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-top:6px">Rekenregels</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start">
     <sc-for list="{{ cards }}" as="card" hint-placeholder-count="4">
       <div style="border:1px solid #bdb8ad;border-radius:12px;overflow:hidden;background:#f3f1ec">
@@ -105,7 +107,7 @@
       </div>
     </sc-for>
   </div>
-  <div style="font-size:12.5px;color:#8c8576">Gebruikte regels zijn in de kaarten gemarkeerd. Absorptie in de vorm A + A&middot;B = A is afgeleid uit distributiviteit en identiteit.</div>
+  <div style="font-size:12.5px;color:#6f685c">Gebruikte regels zijn in de kaarten gemarkeerd. Absorptie in de vorm A + A&middot;B = A is afgeleid uit distributiviteit en identiteit.</div>
 
 </div>
 </div>

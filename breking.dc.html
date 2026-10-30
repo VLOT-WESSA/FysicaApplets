@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #2a8a95;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -61,13 +60,13 @@
       <div class="card">
         <div class="row"><span class="lbl">Invalshoek &theta;&#8321;</span><span class="val">{{ thStr }}</span></div>
         <div class="sl"><input type="range" min="0" max="85" step="0.5" value="{{ th }}" onInput="{{ onTh }}"></div>
-        <div style="font-size:12px;color:#8c8576">Middenstof 1 (boven)</div>
+        <div style="font-size:12px;color:#6f685c">Middenstof 1 (boven)</div>
         <div class="chips">
           <sc-for list="{{ m1 }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
           </sc-for>
         </div>
-        <div style="font-size:12px;color:#8c8576;margin-top:4px">Middenstof 2 (onder)</div>
+        <div style="font-size:12px;color:#6f685c;margin-top:4px">Middenstof 2 (onder)</div>
         <div class="chips">
           <sc-for list="{{ m2 }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -228,7 +227,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const st = this.state, n1 = this.n1(), n2 = this.n2();
-    const accent = 'oklch(0.5 0.12 195)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const t1 = st.th * Math.PI / 180, s2 = n1 / n2 * Math.sin(t1), tir = s2 >= 1;

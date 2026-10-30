@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:28}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #c4553a;cursor:pointer}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
@@ -31,7 +30,7 @@
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
   .sl{height:30px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .sub{font-size:12px;color:#8c8576}
+  .sub{font-size:12px;color:#6f685c}
   table.mt{border-collapse:collapse;width:100%;font-size:12px}
   table.mt td,table.mt th{padding:2px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
   table.mt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
@@ -76,7 +75,7 @@
         <div class="row"><span class="lbl">Afstand bron&ndash;teller r</span><span class="val">{{ rStr }}</span></div>
         <div class="sl"><input type="range" min="2" max="30" step="0.5" value="{{ r }}" onInput="{{ onR }}"></div>
         <div style="display:flex;gap:8px;margin-top:4px">
-          <button onClick="{{ onMeasure }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.55 0.13 28);color:#fff">Meet 10 s</button>
+          <button onClick="{{ onMeasure }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">Meet 10 s</button>
           <button onClick="{{ onClick }}" style="{{ clickStyle }}">{{ clickLabel }}</button>
         </div>
       </div>
@@ -86,7 +85,7 @@
         </sc-for>
       </div>
       <div class="card" style="gap:4px">
-        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Metingen ({{ nMeas }})</span>
+        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Metingen ({{ nMeas }})</span>
           <span><button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button>
           <button onClick="{{ onClear }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">Wis</button></span></div>
         <sc-raw-table class="mt">
@@ -182,7 +181,7 @@ class Component extends DCLogic {
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
     const st = this.state, G = this.geo(), col = this.SRC[st.src][1];
     // liniaal
-    ctx.strokeStyle = '#cfc7b6'; ctx.fillStyle = '#8c8576'; ctx.font = "500 10px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = '#cfc7b6'; ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let cm = 0; cm <= 30; cm++) { const x = G.sx + cm * 22; ctx.beginPath(); ctx.moveTo(x, 236); ctx.lineTo(x, cm % 5 ? 240 : 244); ctx.stroke(); if (cm % 5 === 0) ctx.fillText(cm + ' cm', x, 246); }
     // deeltjes
     ctx.fillStyle = col;
@@ -211,7 +210,7 @@ class Component extends DCLogic {
     const dMax = this.MAT[st.mat][1]; const nMax = Math.max(10, ...pts.map(p => p.n), this.rate() * 10 * 1.2);
     const X = d => gx + 40 + d / dMax * (gw - 60), Y = n => gy + gh - 26 - n / nMax * (gh - 50);
     ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(gx + 40, gy + 16); ctx.lineTo(gx + 40, gy + gh - 26); ctx.lineTo(gx + gw - 16, gy + gh - 26); ctx.stroke();
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let i = 0; i <= 5; i++) { const d = dMax * i / 5; ctx.fillText(this.fmt(d, dMax < 2 ? 2 : 0), X(d), gy + gh - 22); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let i = 0; i <= 4; i++) { const n = nMax * i / 4; ctx.fillText(Math.round(n), gx + 36, Y(n)); }
     // theoretische kromme
@@ -221,11 +220,11 @@ class Component extends DCLogic {
     ctx.fillStyle = '#c4553a'; for (const p of pts) { ctx.beginPath(); ctx.arc(X(p.d), Y(p.n), 4.5, 0, 7); ctx.fill(); }
     ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Telresultaat N (per 10 s) tegen dikte d (mm) — ' + this.SRC[st.src][0] + ', ' + this.MAT[st.mat][0].toLowerCase() + ', r = ' + this.fmt(st.r, 1) + ' cm', gx + 48, gy + 4);
-    ctx.fillStyle = '#8c8576'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('stippellijn: verwachte waarde', gx + gw - 12, gy + 4);
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('stippellijn: verwachte waarde', gx + gw - 12, gy + 4);
   }
   renderVals() {
     const st = this.state;
-    const accent = 'oklch(0.55 0.13 28)';
+    const accent = 'var(--accent)';
     const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const mu = this.muOf(st.src, st.mat);
     const T = st.src === 'none' ? 1 : this.trans(st.src, st.mat, st.d);

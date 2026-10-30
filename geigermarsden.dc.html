@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:28}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,9 +20,6 @@
   a{color:#6f685c}
   a:hover{color:#2a2723}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #b8472f;cursor:pointer}
   @media(max-width:760px){html,body{height:auto}.applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}.applet-main{flex-direction:column !important;align-items:stretch !important}.applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}.applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}}
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
@@ -53,7 +52,7 @@
     <div style="flex:none;width:352px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:2px">Tellingen</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:2px">Tellingen</div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Alfadeeltjes op het scherm</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2a2723">{{ totalStr }}</span></div>
         <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Afbuiging kleiner dan 10&deg;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ smallStr }}</span></div>
@@ -69,7 +68,7 @@
           <button onClick="{{ onRutherford }}" style="flex:1;padding:9px 8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:{{ rBg }};color:{{ rFg }}">Kernmodel</button>
           <button onClick="{{ onThomson }}" style="flex:1;padding:9px 8px;font-size:13px;font-weight:600;cursor:pointer;border:none;border-left:1px solid #d9d3c6;background:{{ tBg }};color:{{ tFg }}">Plumpudding</button>
         </div>
-        <div style="font-size:11.5px;color:#9a927f;margin-top:7px;line-height:1.4">{{ modelText }}</div>
+        <div style="font-size:11.5px;color:#6f685c;margin-top:7px;line-height:1.4">{{ modelText }}</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
@@ -77,8 +76,8 @@
           <span style="font-size:13.5px;font-weight:600;color:#3a352c">Microscoop</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2f8a4f">&theta; = {{ microStr }}</span>
         </div>
-        <input type="range" min="0" max="180" step="1" value="{{ microVal }}" onInput="{{ onMicro }}" style="width:100%;accent-color:#b8472f">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>90&deg;</span><span>180&deg;</span></div>
+        <input type="range" min="0" max="180" step="1" value="{{ microVal }}" onInput="{{ onMicro }}" style="width:100%;accent-color:var(--accent)">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>90&deg;</span><span>180&deg;</span></div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
@@ -96,21 +95,21 @@
             <span style="font-size:13.5px;font-weight:600;color:#3a352c">Energie alfadeeltjes</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ energyStr }}</span>
           </div>
-          <input type="range" min="4" max="8" step="0.1" value="{{ energyVal }}" onInput="{{ onEnergy }}" style="width:100%;accent-color:#b8472f">
-          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#b3ab9b;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>4,0 MeV</span><span>8,0 MeV</span></div>
+          <input type="range" min="4" max="8" step="0.1" value="{{ energyVal }}" onInput="{{ onEnergy }}" style="width:100%;accent-color:var(--accent)">
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>4,0 MeV</span><span>8,0 MeV</span></div>
         </div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Verdeling van de afbuighoek</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:8px">Verdeling van de afbuighoek</div>
         <canvas ref="{{ chartRef }}" style="width:100%;height:auto;display:block"></canvas>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45;margin-top:8px">Staven: gemeten aantal per 10&deg; (logaritmische schaal). Stippen: voorspelling van het kernmodel.</div>
+        <div style="font-size:11.5px;color:#6f685c;line-height:1.45;margin-top:8px">Staven: gemeten aantal per 10&deg; (logaritmische schaal). Stippen: voorspelling van het kernmodel.</div>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:2px">Theorie</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:2px">Theorie</div>
         <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723;line-height:1.7">tan(&theta;/2) = d / (2b)<br>d = k &middot; Q<sub>&alpha;</sub> &middot; Q<sub>kern</sub> / E<sub>k</sub></div>
-        <div style="font-size:11.5px;color:#9a927f;line-height:1.45">b is de afstand waarop het alfadeeltje de kern zou missen zonder afstoting, d de kleinste afstand bij een frontale botsing. Q<sub>&alpha;</sub> = 2e, Q<sub>kern</sub> = Ze.</div>
+        <div style="font-size:11.5px;color:#6f685c;line-height:1.45">b is de afstand waarop het alfadeeltje de kern zou missen zonder afstoting, d de kleinste afstand bij een frontale botsing. Q<sub>&alpha;</sub> = 2e, Q<sub>kern</sub> = Ze.</div>
         <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Kleinste afstand d</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ dStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Straal van de kern</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ rStr }}</span></div>
@@ -118,12 +117,12 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#a39c8d">Weergave</span>
+        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Weergave</span>
         <button onClick="{{ togglePaths }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ pBorder }};background:{{ pBg }};color:#3a352c">
-          <span style="width:11px;height:3px;border-radius:2px;flex:none;background:#d9542f"></span>Banen tonen <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ pState }}</span>
+          <span style="width:11px;height:3px;border-radius:2px;flex:none;background:#d9542f"></span>Banen tonen <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ pState }}</span>
         </button>
         <button onClick="{{ toggleZoom }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ zBorder }};background:{{ zBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#b8472f"></span>Uitvergroting rond de kern <span style="margin-left:auto;font-size:12px;color:#9a927f">{{ zState }}</span>
+          <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#b8472f"></span>Uitvergroting rond de kern <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ zState }}</span>
         </button>
       </div>
 
@@ -394,7 +393,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#3a352c'; ctx.font = "600 12.5px 'IBM Plex Sans', sans-serif";
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText(th ? 'Uitvergroting: \u00E9\u00E9n atoom (plumpudding)' : 'Uitvergroting rond \u00E9\u00E9n kern', I.x0 + 14, I.y0 + 18);
-    ctx.fillStyle = '#9a927f'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
     ctx.fillText(th ? 'beeld \u2248 3 \u00B7 10\u2075 fm' : 'beeld ' + Math.round(2 * V) + ' fm', I.x1 - 14, I.y0 + 18);
 
     const cx = I.px + I.ps / 2 + 1, cy = I.py + I.ps / 2, sc = I.ps / (2 * V);
@@ -476,7 +475,7 @@ class Component extends DCLogic {
     const bw = (px1 - px0) / 18;
 
     ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1;
-    ctx.fillStyle = '#a39c8d'; ctx.font = "500 9.5px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = '#6f685c'; ctx.font = "500 10.5px 'IBM Plex Mono', monospace";
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let e = 0; e <= dec; e++) {
       const y = Y(Math.pow(10, e));
@@ -535,7 +534,7 @@ class Component extends DCLogic {
     return {
       stageRef: this.stageRef, chartRef: this.chartRef,
       runLabel: st.running ? '\u25A0 Bron sluiten' : '\u25B6 Bron openen',
-      runBg: st.running ? '#fff' : '#b8472f', runFg: st.running ? '#3a352c' : '#fff', runBorder: st.running ? '#d9d3c6' : '#b8472f',
+      runBg: st.running ? '#fff' : 'var(--accent)', runFg: st.running ? '#3a352c' : '#fff', runBorder: st.running ? '#d9d3c6' : 'var(--accent)',
       onToggleRun: () => this.setState(s => ({ running: !s.running })),
       onReset: () => { this.resetStats(); this.forceUpdate(); },
       onSlow: () => this.setState({ fast: false }), onFast: () => this.setState({ fast: true }),
@@ -545,7 +544,7 @@ class Component extends DCLogic {
       smallStr: this.cnt(small), midStr: this.cnt(mid), backStr: this.cnt(back),
       micStr: this.mic.toLocaleString('nl-NL'),
       onRutherford: () => this.change({ model: 'rutherford' }), onThomson: () => this.change({ model: 'thomson' }),
-      rBg: rf ? '#b8472f' : '#fff', rFg: rf ? '#fff' : '#3a352c', tBg: rf ? '#fff' : '#b8472f', tFg: rf ? '#3a352c' : '#fff',
+      rBg: rf ? 'var(--accent)' : '#fff', rFg: rf ? '#fff' : '#3a352c', tBg: rf ? '#fff' : 'var(--accent)', tFg: rf ? '#3a352c' : '#fff',
       modelText: rf
         ? 'Rutherford (1911): alle positieve lading en bijna alle massa zitten in een piepkleine kern. Wie er dicht langs gaat, wordt sterk afgebogen.'
         : 'Thomson (1904): de positieve lading is over het hele atoom verspreid, met de elektronen erin. Het veld is overal zwak, dus elk alfadeeltje gaat bijna rechtdoor.',

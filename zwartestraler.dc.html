@@ -20,6 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}input[type=range]{width:100%;margin:0}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -28,11 +30,8 @@
   .zoombtn{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid #cfd5dd;background:rgba(255,253,249,.92);color:#2a2723;border-radius:7px;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.18)}
   .zoombtn:hover{background:#fff}
   .preset{font-family:inherit;font-size:13px;font-weight:500;padding:7px 0;border:1px solid #ddd6c8;background:#fff;border-radius:8px;cursor:pointer;color:#3a352c}
-  .preset:hover{border-color:#1f9e8f;color:#1f9e8f}
+  .preset:hover{border-color:var(--accent);color:var(--accent)}
   canvas{display:block}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none;margin:0}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -73,7 +72,7 @@
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:12px;color:#8c8576">waargenomen kleur</span>
+            <span style="font-size:12px;color:#6f685c">waargenomen kleur</span>
             <span style="width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 50% 42%, {{ starColor }} 0%, {{ starColor }} 38%, rgba(0,0,0,0) 72%);opacity:{{ starOp }};box-shadow:0 0 22px 4px {{ starColor }}"></span>
           </div>
         </div>
@@ -95,12 +94,12 @@
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;gap:24px;flex-wrap:wrap;flex:none;align-items:center">
-        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#a39c8d;font-weight:600">Weergave (uit bij start)</span>
+        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Weergave (uit bij start)</span>
         <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
-          <input type="checkbox" checked="{{ showIntensity }}" onChange="{{ onIntensity }}" style="width:17px;height:17px;accent-color:#1f9e8f;cursor:pointer">Intensiteit
+          <input type="checkbox" checked="{{ showIntensity }}" onChange="{{ onIntensity }}" style="width:17px;height:17px;accent-color:var(--accent);cursor:pointer">Intensiteit
         </label>
         <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
-          <input type="checkbox" checked="{{ showRainbow }}" onChange="{{ onRainbow }}" style="width:17px;height:17px;accent-color:#1f9e8f;cursor:pointer">Regenboog
+          <input type="checkbox" checked="{{ showRainbow }}" onChange="{{ onRainbow }}" style="width:17px;height:17px;accent-color:var(--accent);cursor:pointer">Regenboog
         </label>
       </div>
     </div>
@@ -109,7 +108,7 @@
     <div style="flex:none;width:308px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:2px">Zwarte straler</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:2px">Zwarte straler</div>
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">
           <span style="font-size:30px;font-weight:700;font-family:'IBM Plex Mono',monospace;letter-spacing:-.01em">{{ tempStr }}</span>
           <span style="width:14px;height:14px;border-radius:50%;background:{{ starColor }};box-shadow:0 0 8px {{ starColor }}"></span>
@@ -117,23 +116,23 @@
         <div style="margin-bottom:16px">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
             <span style="font-size:13px;font-weight:500;color:#3a352c">Temperatuur</span>
-            <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#a39c8d">200 &ndash; 11000 K</span>
+            <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#6f685c">200 &ndash; 11000 K</span>
           </div>
           <input type="range" min="200" max="11000" step="10" value="{{ tempNum }}" onChange="{{ onTemp }}">
         </div>
-        <span style="font-size:11px;color:#a39c8d;display:block;margin-bottom:7px">Voorinstellingen</span>
+        <span style="font-size:11px;color:#6f685c;display:block;margin-bottom:7px">Voorinstellingen</span>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
           <button class="preset" onClick="{{ onSirius }}">Sirius A &middot; 9940 K</button>
           <button class="preset" onClick="{{ onZon }}">Zon &middot; 5800 K</button>
           <button class="preset" onClick="{{ onGloei }}">Gloeilamp &middot; 3000 K</button>
           <button class="preset" onClick="{{ onAarde }}">Aarde &middot; 300 K</button>
-          <button class="preset" onClick="{{ onReset }}" style="grid-column:1 / -1;border-color:#1f9e8f;color:#1f9e8f;font-weight:600">&#x21bb; Standaard</button>
+          <button class="preset" onClick="{{ onReset }}" style="grid-column:1 / -1;border-color:var(--accent);color:#1f9e8f;font-weight:600">&#x21bb; Standaard</button>
         </div>
-        <p style="margin:12px 0 0;font-size:12px;color:#a39c8d;line-height:1.4">Gebruik de schuifregelaar of een voorinstelling om de temperatuur te kiezen.</p>
+        <p style="margin:12px 0 0;font-size:12px;color:#6f685c;line-height:1.4">Gebruik de schuifregelaar of een voorinstelling om de temperatuur te kiezen.</p>
       </div>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:10px">Metingen</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Metingen</div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
           <span style="color:#6f685c">Piekgolflengte (Wien)</span><span style="font-family:'IBM Plex Mono',monospace">{{ peakLamStr }}</span>
         </div>
@@ -347,7 +346,7 @@ class Component extends DCLogic {
         ctx.textAlign = xpk < W - 120 ? 'left' : 'right'; ctx.textBaseline = 'bottom';
         ctx.fillText('piek ' + lp.toFixed(lp < 1 ? 3 : 2) + ' \u00B5m', xpk + (xpk < W - 120 ? 7 : -7), ypk - 6);
       }
-      ctx.font = "500 10px 'IBM Plex Sans', sans-serif"; ctx.textBaseline = 'top';
+      ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.textBaseline = 'top';
       const regs = [
         { x: px(0.2), c: '#6f45c2', t: 'UV' },
         { x: px(0.58), c: '#4f4a42', t: 'zichtbaar' },

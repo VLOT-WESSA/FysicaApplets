@@ -18,7 +18,7 @@
   canvas{width:100%;height:100%;display:block;touch-action:none}
   .side{flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px}
   .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
-  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600}
+  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600}
   .row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px}
   .row .v{font-family:'IBM Plex Mono',monospace;color:#2a2723}
   select,input[type=number],input[type=text]{width:100%;padding:7px 9px;border:1px solid #ddd6c8;border-radius:8px;background:#fff;font-size:13.5px;color:#2a2723}
@@ -122,7 +122,7 @@
         <button class="btn p" id="btnRec">Eindpunt noteren</button>
         <table>
           <thead><tr><th>#</th><th>begin (mL)</th><th>eind (mL)</th><th>&Delta;V (mL)</th></tr></thead>
-          <tbody id="tblBody"><tr><td colspan="4" style="text-align:left;color:#8c8576;font-family:'IBM Plex Sans',sans-serif">Nog geen metingen</td></tr></tbody>
+          <tbody id="tblBody"><tr><td colspan="4" style="text-align:left;color:#6f685c;font-family:'IBM Plex Sans',sans-serif">Nog geen metingen</td></tr></tbody>
         </table>
         <div class="row"><span>Gemiddeld volume</span><span class="v" id="avgStr">&mdash;</span></div>
         <button class="btn" id="btnCopy">Tabel kopi&euml;ren</button>
@@ -330,7 +330,7 @@
     var ox = gx + 40, oy = gy + gh - 34, pw = gw - 56, phh = gh - 70;
     var vmax = Math.max(10, Math.ceil(Math.max(eqVolume() * 1.8, S.added + 2) / 5) * 5); vmax = Math.min(vmax, 50);
     var X = function (v) { return ox + v / vmax * pw; }, Y = function (p) { return oy - p / 14 * phh; };
-    ctx.strokeStyle = '#ece6da'; ctx.fillStyle = '#8c8576'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
+    ctx.strokeStyle = '#ece6da'; ctx.fillStyle = '#6f685c'; ctx.font = "500 10.5px 'IBM Plex Mono',monospace";
     for (var p = 0; p <= 14; p += 2) { ctx.beginPath(); ctx.moveTo(ox, Y(p)); ctx.lineTo(ox + pw, Y(p)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(p), ox - 6, Y(p)); }
     var step = vmax > 30 ? 10 : 5;
     for (var v = 0; v <= vmax; v += step) { ctx.beginPath(); ctx.moveTo(X(v), oy); ctx.lineTo(X(v), oy - phh); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(v), X(v), oy + 5); }
@@ -352,7 +352,7 @@
       S.curve.forEach(function (c, i) { i ? ctx.lineTo(X(c.v), Y(c.p)) : ctx.moveTo(X(c.v), Y(c.p)); }); ctx.stroke();
       var last = S.curve[S.curve.length - 1]; ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(X(last.v), Y(last.p), 4, 0, 7); ctx.fill();
     }
-    if (!S.showPH) { ctx.fillStyle = '#8c8576'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('pH-meter staat uit: titreer op de kleuromslag', ox + pw / 2, oy - phh / 2); }
+    if (!S.showPH) { ctx.fillStyle = '#6f685c'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('pH-meter staat uit: titreer op de kleuromslag', ox + pw / 2, oy - phh / 2); }
   }
 
   // ---------- toevoegen ----------
@@ -396,7 +396,7 @@
   }
   function renderTable() {
     var tb = el('tblBody'); tb.innerHTML = '';
-    if (!S.runs.length) { tb.innerHTML = '<tr><td colspan="4" style="text-align:left;color:#8c8576;font-family:\'IBM Plex Sans\',sans-serif">Nog geen metingen</td></tr>'; el('avgStr').textContent = '—'; return; }
+    if (!S.runs.length) { tb.innerHTML = '<tr><td colspan="4" style="text-align:left;color:#6f685c;font-family:\'IBM Plex Sans\',sans-serif">Nog geen metingen</td></tr>'; el('avgStr').textContent = '—'; return; }
     S.runs.forEach(function (r, i) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + (i + 1) + '</td><td>' + fmt(r.b, 2) + '</td><td>' + fmt(r.e, 2) + '</td><td>' + fmt(r.e - r.b, 2) + '</td>'; tb.appendChild(tr); });
     var avg = S.runs.reduce(function (a, r) { return a + (r.e - r.b); }, 0) / S.runs.length;
     el('avgStr').textContent = fmt(avg, 2) + ' mL';

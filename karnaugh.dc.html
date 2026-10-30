@@ -10,6 +10,8 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;min-height:100%}
@@ -31,7 +33,7 @@
 
   <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Variabelen</span>
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Variabelen</span>
       <div style="display:flex;gap:4px">
         <sc-for list="{{ nBtns }}" as="b" hint-placeholder-count="3">
           <button onClick="{{ b.onClick }}" style="min-width:44px;height:34px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
@@ -39,7 +41,7 @@
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Vorm</span>
+      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Vorm</span>
       <div style="display:flex;gap:4px">
         <sc-for list="{{ modeBtns }}" as="b" hint-placeholder-count="2">
           <button onClick="{{ b.onClick }}" style="height:34px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
@@ -52,7 +54,7 @@
   <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
 
     <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px;flex:0 0 auto;max-width:100%;overflow-x:auto">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Klik op een cel: 0, 1 of X (don't care)</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Klik op een cel: 0, 1 of X (don't care)</div>
       <div style="display:grid;grid-template-columns:60px repeat({{ C }},78px);width:max-content">
         <sc-for list="{{ items }}" as="it" hint-placeholder-count="12">
           <sc-if value="{{ it.isLabel }}" hint-placeholder-val="{{ true }}">
@@ -68,7 +70,7 @@
           </sc-if>
         </sc-for>
       </div>
-      <div style="font-size:12px;color:#8c8576;line-height:1.5">De buitenste rijen en kolommen sluiten op elkaar aan: groepen mogen over de rand heen lopen.</div>
+      <div style="font-size:12px;color:#6f685c;line-height:1.5">De buitenste rijen en kolommen sluiten op elkaar aan: groepen mogen over de rand heen lopen.</div>
     </div>
 
     <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:14px">
@@ -80,24 +82,24 @@
 
       <sc-if value="{{ hasGroups }}" hint-placeholder-val="{{ false }}">
         <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:8px">Groepen</div>
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:8px">Groepen</div>
           <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
             <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #efe9dd">
               <span style="width:16px;height:16px;border-radius:5px;flex:none;border:2.5px solid {{ g.col }}"></span>
               <span style="font-family:'IBM Plex Mono',monospace;font-size:17px;color:#2a2723;padding-top:3px">{{ g.el }}</span>
-              <span style="margin-left:auto;font-size:12.5px;color:#8c8576;white-space:nowrap">{{ g.size }}</span>
+              <span style="margin-left:auto;font-size:12.5px;color:#6f685c;white-space:nowrap">{{ g.size }}</span>
             </div>
           </sc-for>
         </div>
       </sc-if>
 
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600">Kaart invullen vanuit een uitdrukking</div>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Kaart invullen vanuit een uitdrukking</div>
         <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. A·B + !A·C" style="height:38px;border-radius:9px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:#2a2723">
         <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
           <div style="font-size:13px;color:#b8472f">{{ err }}</div>
         </sc-if>
-        <div style="font-size:12px;color:#8c8576;line-height:1.5">NOT: ! of '. OR: +. AND: &middot;, * of weglaten.</div>
+        <div style="font-size:12px;color:#6f685c;line-height:1.5">NOT: ! of '. OR: +. AND: &middot;, * of weglaten.</div>
       </div>
     </div>
   </div>

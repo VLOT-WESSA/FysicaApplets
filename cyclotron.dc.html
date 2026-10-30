@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:150}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -18,10 +20,6 @@
   button{font-family:inherit}
   a{color:#6f685c}
   a:hover{color:#2a2723}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3f8a52;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #3f8a52;cursor:pointer}
-  input[type=range]:disabled{opacity:.4}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -51,7 +49,7 @@
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onStart }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:oklch(0.5 0.12 150);color:#fff">{{ startLabel }}</button>
+        <button onClick="{{ onStart }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ startLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
@@ -298,7 +296,7 @@ class Component extends DCLogic {
     const Tc = 1 / this.fc();
     const tmax = Math.max(this.t, 8 * Tc) * 1.05;
     const X = (t) => x + t / tmax * w, Y = (e) => y + h - e / ymax * h;
-    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#8c8576'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     const step = this.nice(ymax / 4);
     for (let v = 0; v <= ymax + 1e-9; v += step) {
       ctx.strokeStyle = '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
@@ -324,7 +322,7 @@ class Component extends DCLogic {
     const v = Math.sqrt(2 * this.Ek / p.m);
     const r = p.m * v / (p.q * st.B);
     const Emax = Math.pow(p.q * st.B * this.R, 2) / (2 * p.m);
-    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (on ? 'oklch(0.5 0.12 150)' : '#e7e1d5') + ';background:' + (on ? 'oklch(0.5 0.12 150)' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 4px;border:1px solid ' + (on ? 'var(--accent)' : '#e7e1d5') + ';background:' + (on ? 'var(--accent)' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const reset = (patch) => this.setState(patch, () => { this.resetSim(); if (this.state.tuned) this.setState({ f: Math.round(this.fc() / 1e4) / 100 }); });
     return {
       stageRef: this.stageRef,

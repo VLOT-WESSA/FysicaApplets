@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
@@ -33,7 +35,7 @@
   .md pre code{background:none;padding:0}
   .md blockquote{margin:.6em 0;padding:2px 14px;background:#f6f2e9;border-radius:8px;color:#4a453d}
   .md hr{border:0;border-top:1px solid #e7e1d5;margin:1em 0}
-  .md a{color:oklch(0.5 0.13 300)}
+  .md a{color:var(--accent)}
   .md .alert{padding:12px 16px;margin:.6em 0;border:1px solid transparent;border-radius:10px}
   .md .alert>*:first-child{margin-top:0}.md .alert>*:last-child{margin-bottom:0}
   .md .alert-info,.md .alert-success{background:#e6f0f7;border-color:#c9dde9;color:#1f4b63}
@@ -79,7 +81,7 @@
       <button onClick="{{ goStart }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Start</button>
       <input value="{{ nbName }}" onInput="{{ onName }}" spellcheck="false" style="width:210px;min-height:34px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">
       <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c">.ipynb</span>
-      <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid oklch(0.5 0.13 300);border-radius:8px;background:oklch(0.5 0.13 300);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
+      <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
       <div style="width:1px;height:24px;background:#e7e1d5;margin:0 4px"></div>
       <button onClick="{{ pickData }}" title="Voeg een .csv-, .txt- of .json-bestand toe voor je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestand toevoegen</button>
       <button onClick="{{ toggleToc }}" title="Toon de inhoud van de notebook" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Inhoud</button>
@@ -122,7 +124,7 @@
           <div style="display:flex;flex-direction:column;gap:18px">
             <sc-for list="{{ groepen }}" as="g" hint-placeholder-count="0">
               <div>
-                <h3 style="font-size:14px;font-weight:600;margin:0 0 8px;color:oklch(0.5 0.13 300)">{{ g.titel }}</h3>
+                <h3 style="font-size:14px;font-weight:600;margin:0 0 8px;color:var(--accent)">{{ g.titel }}</h3>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
                   <sc-for list="{{ g.items }}" as="o" hint-placeholder-count="0">
                     <button onClick="{{ o.onClick }}" style="text-align:left;padding:14px 16px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:12px;cursor:pointer;font-family:inherit;color:#2a2723;font-size:14px;font-weight:500">{{ o.label }}</button>
@@ -318,8 +320,10 @@ class Component extends DCLogic {
     this.loadOpgaven();
     setTimeout(() => this.ensurePy().catch(() => {}), 400);
   }
-  componentDidUpdate(_, prev) {
-    if (this.state.nb !== prev.nb && this.state.nb) {
+  // de runtime geeft geen vorige state mee: onthoud zelf de laatst bewaarde notebook
+  componentDidUpdate() {
+    if (this.state.nb !== this._lastNb && this.state.nb) {
+      this._lastNb = this.state.nb;
       clearTimeout(this._sv);
       this._sv = setTimeout(() => this.autosave(), 700);
     }
@@ -509,7 +513,7 @@ class Component extends DCLogic {
   newCell(type, source, outputs, count) {
     return { id: this.uid(), type, source: source || '', outputs: outputs || [], count: count || null, editing: false, running: false, queued: false };
   }
-  tabStyle(on) { return "min-height:32px;padding:0 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;border:1px solid " + (on ? "oklch(0.5 0.13 300);background:oklch(0.5 0.13 300);color:#fff" : "#e7e1d5;background:#fff;color:#2a2723"); }
+  tabStyle(on) { return "min-height:32px;padding:0 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;border:1px solid " + (on ? "var(--accent);background:var(--accent);color:#fff" : "#e7e1d5;background:#fff;color:#2a2723"); }
   toc(nb) {
     const out = [];
     nb.cells.forEach(c => {
@@ -689,7 +693,7 @@ class Component extends DCLogic {
   setHtml(el, h) { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } }
 
   renderVals() {
-    const st = this.state, nb = st.nb, acc = 'oklch(0.5 0.13 300)';
+    const st = this.state, nb = st.nb, acc = 'var(--accent)';
     const sess = st.session;
     const statusMap = { idle: 'Python: nog niet geladen', laden: 'Python wordt geladen…', gereed: 'Python gereed', fout: 'Python niet beschikbaar' };
     const statusText = st.busy ? 'Bezig met uitvoeren…' : statusMap[st.py];
@@ -704,7 +708,7 @@ class Component extends DCLogic {
         id: c.id, source: c.source, isMd: !code, collapsed: coll, collapseLabel: coll ? 'Uitklappen' : 'Inklappen',
         summary: (String(c.source).split('\n').find(x => x.trim()) || '(leeg)').trim() + (String(c.source).trim().split('\n').length > 1 ? ' …' : ''),
         onCollapse: () => this.patch(c.id, { collapsed: !c.collapsed }),
-        wrapStyle: 'display:flex;flex-direction:column;gap:0;border-radius:6px;box-shadow:' + (st.dropAt === i ? '0 -3px 0 oklch(0.5 0.13 300)' : 'none'),
+        wrapStyle: 'display:flex;flex-direction:column;gap:0;border-radius:6px;box-shadow:' + (st.dropAt === i ? '0 -3px 0 var(--accent)' : 'none'),
         onDragStart: e => { this._drag = i; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'cel'); } catch (x) {} },
         onDragEnd: () => { this._drag = null; this.setState({ dropAt: null }); },
         onDragOver: e => { if (this._drag != null) { e.preventDefault(); e.stopPropagation(); if (st.dropAt !== i) this.setState({ dropAt: i }); } },
@@ -771,7 +775,7 @@ class Component extends DCLogic {
         const rows = lines.slice(0, 200).map((l, i) => ({ cells: l.split(sep), cellStyle: 'padding:3px 10px;border:1px solid #e7e1d5;text-align:right;white-space:nowrap;' + (i === 0 ? 'background:#f3f0e8;font-weight:600;' : '') }));
         const nl = txt ? txt.split(/\r?\n/).length : 0;
         return {
-          fileTabs: st.ftabs.map(n => ({ name: n, pick: () => this.setState({ fsel: n }), style: "min-height:32px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;border:1px solid " + (n === sel ? 'oklch(0.5 0.13 300);background:oklch(0.5 0.13 300);color:#fff' : '#e7e1d5;background:#fff;color:#2a2723') })),
+          fileTabs: st.ftabs.map(n => ({ name: n, pick: () => this.setState({ fsel: n }), style: "min-height:32px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;border:1px solid " + (n === sel ? 'var(--accent);background:var(--accent);color:#fff' : '#e7e1d5;background:#fff;color:#2a2723') })),
           fileMissing: !!e && !e.ok, fileIsTable: isTab, fileRows: rows, fileIsText: !!e && e.ok && !isTab, fileText: txt,
           fileInfo: e && e.ok ? nl + ' regels · ' + txt.length + ' tekens' + (isTab && lines.length > 200 ? ' · eerste 200 rijen getoond' : '') : ''
         };

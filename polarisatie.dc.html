@@ -19,14 +19,13 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="applet.css">
+<style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   body{background:#eceae4}
   button{font-family:inherit}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#d9d3c6;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #1f9e8f;cursor:pointer}
 
   @media (max-width:760px){
     /* mobile-stack */
@@ -54,12 +53,12 @@
       </div>
       <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;display:flex;align-items:center;gap:18px">
         <div style="flex:1">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8c8576;font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ malusStr }}</div>
         </div>
         <div style="flex:0 0 180px">
           <div style="height:12px;border-radius:6px;background:#efeadf;overflow:hidden">
-            <div style="height:100%;background:#1f9e8f;border-radius:6px;transition:width .15s;width:{{ finalPct }}"></div>
+            <div style="height:100%;background:var(--accent);border-radius:6px;transition:width .15s;width:{{ finalPct }}"></div>
           </div>
           <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#1f7a6e;font-weight:600;margin-top:5px">{{ finalPct }}</div>
         </div>
@@ -82,7 +81,7 @@
             <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p.angStr }}</span>
           </div>
-          <input type="range" min="0" max="180" step="1" value="{{ p.ang }}" onChange="{{ p.onAngle }}" disabled="{{ p.dis }}" style="width:100%;accent-color:#1f9e8f;opacity:{{ p.op }}">
+          <input type="range" min="0" max="180" step="1" value="{{ p.ang }}" onChange="{{ p.onAngle }}" disabled="{{ p.dis }}" style="width:100%;accent-color:var(--accent);opacity:{{ p.op }}">
         </div>
       </sc-for>
 
@@ -198,7 +197,7 @@ class Component extends DCLogic {
         const cx = Math.min(gapMid[s], this.W - 36);
         this.drawIndicator(ctx, cx, g.indY, g.indR, st.polAng[s], st.seg[s]);
       }
-      ctx.font = "500 10px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
+      ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
       ctx.fillText('trillingsrichting', this.W / 2, g.indY + g.indR + 18);
     }
   }
@@ -300,7 +299,7 @@ class Component extends DCLogic {
       title: 'Polarisator ' + (i + 1),
       on: p.on, ang: p.ang,
       angStr: p.on ? p.ang + '\u00B0' : 'uit',
-      bg: p.on ? '#1f9e8f' : '#e7e1d5',
+      bg: p.on ? 'var(--accent)' : '#e7e1d5',
       fg: p.on ? '#fff' : '#8c8576',
       lbl: p.on ? 'Aan' : 'Uit',
       op: p.on ? '1' : '0.4',
