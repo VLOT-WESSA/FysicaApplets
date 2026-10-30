@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breking en totale reflectie · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/breking.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -22,8 +23,8 @@
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
   .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
   .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
@@ -37,7 +38,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -97,7 +98,7 @@ class Component extends DCLogic {
   stageRef = React.createRef();
   W = 920; H = 560; Y0 = 280; OX = 460;
   MATS = [['Lucht', 1.0], ['Water', 1.33], ['Glas', 1.5], ['Diamant', 2.42]];
-  state = { tab: 'ray', th: 40, n1: 0, n2: 2, showAng: true, showRefl: true, showReflH: false, showWl: true };
+  state = { tab: 'ray', th: 40, n1: 0, n2: 2, showAng: false, showRefl: false, showReflH: false, showWl: false };
   t = 0;
 
   componentDidMount() {
@@ -145,7 +146,7 @@ class Component extends DCLogic {
   }
   arcLabel(ctx, from, to, r, col, txt) { // hoeken t.o.v. de normaal, canvas-radialen
     ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(this.OX, this.Y0, r, Math.min(from, to), Math.max(from, to)); ctx.stroke();
-    const m = (from + to) / 2; ctx.fillStyle = col; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const m = (from + to) / 2; ctx.fillStyle = col; ctx.font = "600 13.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(txt, this.OX + (r + 22) * Math.cos(m), this.Y0 + (r + 22) * Math.sin(m));
   }
   draw() {
@@ -159,7 +160,7 @@ class Component extends DCLogic {
     const st = this.state, n1 = this.n1(), n2 = this.n2(), t1 = st.th * Math.PI / 180, O = this.OX, Y = this.Y0, L = 250;
     // normaal
     ctx.setLineDash([6, 5]); ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(O, Y - 240); ctx.lineTo(O, Y + 240); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('normaal', O + 5, Y - 238);
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('normaal', O + 5, Y - 238);
     const sx = O - L * Math.sin(t1), sy = Y - L * Math.cos(t1);
     const R = this.fresnel(t1, n1, n2); const s2 = n1 / n2 * Math.sin(t1); const tir = s2 >= 1;
     // laser
@@ -178,9 +179,9 @@ class Component extends DCLogic {
     if (n1 > n2) { // grenshoek tonen
       const tc = Math.asin(n2 / n1); ctx.setLineDash([2, 4]); ctx.strokeStyle = 'rgba(138,59,44,0.5)'; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.moveTo(O, Y); ctx.lineTo(O - 200 * Math.sin(tc), Y - 200 * Math.cos(tc)); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('grenshoek', O - 200 * Math.sin(tc) - 4, Y - 200 * Math.cos(tc));
+      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('grenshoek', O - 200 * Math.sin(tc) - 4, Y - 200 * Math.cos(tc));
     }
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('Sleep in het bovenste deel om de laser te draaien', this.W - 14, 12);
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('Sleep in het bovenste deel om de laser te draaien', this.W - 14, 12);
   }
   drawHuy(ctx) {
     const st = this.state, n1 = this.n1(), n2 = this.n2(), Y = this.Y0;
@@ -220,14 +221,14 @@ class Component extends DCLogic {
     const arrow = (x, y, dx, dy, col) => { ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 10 * Math.cos(a - 0.4), y + dy - 10 * Math.sin(a - 0.4)); ctx.lineTo(x + dx - 10 * Math.cos(a + 0.4), y + dy - 10 * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill(); };
     arrow(O - 200 * k1[0], Y - 200 * k1[1], 90 * k1[0], 90 * k1[1], '#2a2723');
     if (!tir) arrow(O + 80 * Math.sin(t2), Y + 80 * Math.cos(t2), 90 * Math.sin(t2), 90 * Math.cos(t2), '#2a2723');
-    ctx.fillStyle = '#3a4757'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#3a4757'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
     ctx.fillText('blauw: golffronten  ·  rood: Huygens-golfjes vanuit het grensvlak', this.W - 14, 12);
     if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Totale reflectie: de golfjes vormen geen gebroken front', O, Y + 40); }
   }
   renderVals() {
     const st = this.state, n1 = this.n1(), n2 = this.n2();
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const t1 = st.th * Math.PI / 180, s2 = n1 / n2 * Math.sin(t1), tir = s2 >= 1;
     const R = this.fresnel(t1, n1, n2);

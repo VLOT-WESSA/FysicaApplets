@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weerstand van een draad · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/weerstanddraad.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:75}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -49,23 +50,23 @@
 
     <!-- LEFT -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:none;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 22px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:18px;height:108px">
+      <div style="flex:none;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:10px 22px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:18px;height:108px">
         <div style="display:flex;align-items:center;gap:10px;line-height:1">
-          <span style="font-weight:700;color:#1f9e8f;font-size:{{ rSize }}">R</span>
+          <span style="font-weight:700;color:#177368;font-size:{{ rSize }}">R</span>
           <span style="font-size:30px;color:var(--muted);font-weight:400">=</span>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;line-height:1">
           <div style="display:flex;align-items:baseline;gap:8px;padding:0 14px 7px">
-            <span style="font-weight:700;color:#d98a2b;font-size:{{ rhoSize }}">&rho;</span>
+            <span style="font-weight:700;color:#935c1a;font-size:{{ rhoSize }}">&rho;</span>
             <span style="color:var(--muted);font-size:22px;font-weight:400">&middot;</span>
             <span style="font-weight:700;color:#3b73c4;font-size:{{ lSize }}">L</span>
           </div>
           <div style="height:3px;width:100%;background:#3a352c;border-radius:2px"></div>
-          <div style="padding:7px 14px 0"><span style="font-weight:700;color:#2f9e6b;font-size:{{ aSize }}">A</span></div>
+          <div style="padding:7px 14px 0"><span style="font-weight:700;color:#237750;font-size:{{ aSize }}">A</span></div>
         </div>
         <div style="margin-left:14px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--muted);line-height:1.7">
           <div>{{ calcStr }}</div>
-          <div style="font-size:22px;font-weight:600;color:#1f9e8f">R = {{ rStr }} &Omega;</div>
+          <div style="font-size:22px;font-weight:600;color:#177368">R = {{ rStr }} &Omega;</div>
         </div>
       </div>
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:10px;box-shadow:var(--shadow)">
@@ -76,34 +77,34 @@
     <!-- RIGHT -->
     <div style="flex:none;width:316px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#d98a2b"></span>
           <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Soortelijke weerstand &rho;</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ rhoStr }} &Omega;&middot;cm</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);margin-left:auto">{{ rhoStr }} &Omega;&middot;cm</span>
         </div>
         <input type="range" min="0.01" max="1" step="0.01" value="{{ rho }}" onChange="{{ onRho }}" style="width:100%;accent-color:#d98a2b">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3b73c4"></span>
           <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Lengte L</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ lStr }} cm</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);margin-left:auto">{{ lStr }} cm</span>
         </div>
         <input type="range" min="0.1" max="20" step="0.1" value="{{ length }}" onChange="{{ onL }}" style="width:100%;accent-color:#3b73c4">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#2f9e6b"></span>
           <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Doorsnede A</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c;margin-left:auto">{{ aStr }} cm&sup2;</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink);margin-left:auto">{{ aStr }} cm&sup2;</span>
         </div>
         <input type="range" min="0.01" max="15" step="0.01" value="{{ area }}" onChange="{{ onA }}" style="width:100%;accent-color:#2f9e6b">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Weergave</div>
         <div style="display:flex;flex-direction:column;gap:9px">
           <div style="display:flex;align-items:center;justify-content:space-between">
@@ -127,9 +128,9 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:7px">Driftsnelheid</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#3a352c;margin-bottom:6px">v_d = I / (n&middot;A&middot;e)</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--ink);margin-bottom:6px">v_d = I / (n&middot;A&middot;e)</div>
         <div style="font-size:12px;color:var(--muted);line-height:1.5">De groene elektronen driften traag (orde mm/s) tegengesteld aan de stroomzin. Bij een dunnere draad (kleinere A) is de driftsnelheid bij dezelfde stroom gr&oacute;ter &mdash; let op hoe ze sneller bewegen als je A verkleint.</div>
       </div>
 
@@ -258,12 +259,12 @@ class Component extends DCLogic {
       const ax = (x + wireW + this.W - 16) / 2, ay = cy;
       ctx.fillStyle = '#b5771b';
       ctx.beginPath(); ctx.moveTo(ax + 11, ay); ctx.lineTo(ax - 7, ay - 8); ctx.lineTo(ax - 7, ay + 8); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#9d793f'; ctx.font = "700 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+      ctx.fillStyle = '#9d793f'; ctx.font = "700 13px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
       ctx.fillText('I', ax, ay - 14);
     }
 
     // dimension labels
-    ctx.font = "500 12px 'IBM Plex Mono', monospace";
+    ctx.font = "500 13px 'IBM Plex Mono', monospace";
     ctx.fillStyle = '#545c65'; ctx.textAlign = 'center';
     const ly = y + wireH + 22;
     ctx.strokeStyle = '#8994a3'; ctx.lineWidth = 1.4;
@@ -302,15 +303,15 @@ class Component extends DCLogic {
       onA: (e) => this.set('area', e),
       toggleElec: () => this.setState({ showElec: !this.state.showElec }),
       elecLabel: elec ? 'Aan' : 'Uit',
-      elecBg: elec ? '#2f6fb0' : '#f4f1ea', elecFg: elec ? '#fff' : '#8c8576',
+      elecBg: elec ? '#2f6fb0' : '#f4f1ea', elecFg: elec ? '#fff' : '#4f5b69',
       elecBorder: elec ? '#2f6fb0' : '#e7e1d5', elecDot: elec ? '#bcd8f2' : '#c3bcad',
       toggleAtoms: () => this.setState({ showAtoms: !this.state.showAtoms }),
       atomsLabel: atoms ? 'Aan' : 'Uit',
-      atomsBg: atoms ? '#2b5c96' : '#f4f1ea', atomsFg: atoms ? '#fff' : '#8c8576',
+      atomsBg: atoms ? '#2b5c96' : '#f4f1ea', atomsFg: atoms ? '#fff' : '#4f5b69',
       atomsBorder: atoms ? '#2b5c96' : '#e7e1d5', atomsDot: atoms ? '#bcd8f2' : '#c3bcad',
       toggleArrow: () => this.setState({ showArrow: !this.state.showArrow }),
       arrowLabel: arr ? 'Aan' : 'Uit',
-      arrowBg: arr ? '#d98a2b' : '#f4f1ea', arrowFg: arr ? '#fff' : '#8c8576',
+      arrowBg: arr ? '#975a23' : '#f4f1ea', arrowFg: arr ? '#fff' : '#4f5b69',
       arrowBorder: arr ? '#d98a2b' : '#e7e1d5', arrowDot: arr ? '#f2d6ad' : '#c3bcad',
     };
   }

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De looping · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/looping.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -22,8 +23,8 @@
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
   .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
   .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
@@ -37,7 +38,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -92,7 +93,7 @@
 class Component extends DCLogic {
   stageRef = React.createRef();
   W = 920; H = 560; g = 9.81; slope = 40 * Math.PI / 180;
-  state = { h: 3, R: 1, m: 1, showF: true, showV: true, showEn: true, slow: true };
+  state = { h: 3, R: 1, m: 1, showF: false, showV: false, showEn: false, slow: true };
   running = false; s = 0; v = 0; phase = 'ramp'; free = null; trail = []; topV = null; topN = null; fell = false; done = false;
 
   componentDidMount() {
@@ -151,7 +152,7 @@ class Component extends DCLogic {
     const L = Math.hypot(dx, dy); if (L < 3) return; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
     const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 10 * Math.cos(a - 0.42), y + dy - 10 * Math.sin(a - 0.42)); ctx.lineTo(x + dx - 10 * Math.cos(a + 0.42), y + dy - 10 * Math.sin(a + 0.42)); ctx.closePath(); ctx.fill();
-    ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14);
+    ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14);
   }
   draw() {
     const c = this.stageRef.current; if (!c) return;
@@ -167,7 +168,7 @@ class Component extends DCLogic {
     // h_min-lijn
     ctx.setLineDash([5, 4]); ctx.strokeStyle = '#c8443a'; ctx.lineWidth = 1.2; const yh = P(0, 2.5 * R).Y;
     ctx.beginPath(); ctx.moveTo(10, yh); ctx.lineTo(670, yh); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#c8443a'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('hₘᵢₙ = 2,5·R', 670, yh - 2);
+    ctx.fillStyle = '#c8443a'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('hₘᵢₙ = 2,5·R', 670, yh - 2);
     // baan
     ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath();
     for (let s = 0; s <= L + 2 * Math.PI * R + 3.3; s += 0.02) { const p = this.pos(s); const q = P(p.x, p.y); s ? ctx.lineTo(q.X, q.Y) : ctx.moveTo(q.X, q.Y); }
@@ -176,7 +177,7 @@ class Component extends DCLogic {
     // starthoogte
     const s0 = P(-L * Math.cos(this.slope), st.h);
     ctx.strokeStyle = '#5f6b79'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(s0.X, s0.Y); ctx.lineTo(s0.X, gy); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#3a4757'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('h = ' + this.fmt(st.h, 2) + ' m', s0.X + 6, gy - 6);
+    ctx.fillStyle = '#3a4757'; ctx.font = "600 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('h = ' + this.fmt(st.h, 2) + ' m', s0.X + 6, gy - 6);
     // spoor
     if (this.trail.length > 1) { ctx.strokeStyle = this.fell ? 'rgba(200,68,58,0.6)' : 'rgba(58,111,184,0.5)'; ctx.lineWidth = 2; ctx.beginPath(); this.trail.forEach((t, i) => { const q = P(t.x, t.y); i ? ctx.lineTo(q.X, q.Y) : ctx.moveTo(q.X, q.Y); }); ctx.stroke(); }
     // karretje
@@ -205,17 +206,17 @@ class Component extends DCLogic {
       const ex = 720, ey = 470, eh = 330, sc = eh / Math.max(E, 1e-6);
       [['Eₖ', Ek, '#d9822b'], ['Eₚ', Ep, '#3a6fb8'], ['Eₜₒₜ', Ek + Ep, '#2a2723']].forEach(([n, val, col], i) => {
         ctx.fillStyle = col; ctx.fillRect(ex + i * 56, ey - val * sc, 40, val * sc);
-        ctx.fillStyle = '#3a4757'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(n, ex + 20 + i * 56, ey + 6);
-        ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(val, 1) + ' J', ex + 20 + i * 56, ey + 24);
+        ctx.fillStyle = '#3a4757'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(n, ex + 20 + i * 56, ey + 6);
+        ctx.font = "500 12.5px 'IBM Plex Mono',monospace"; ctx.fillText(this.fmt(val, 1) + ' J', ex + 20 + i * 56, ey + 24);
       });
       ctx.strokeStyle = '#cfc7b6'; ctx.beginPath(); ctx.moveTo(ex - 8, ey); ctx.lineTo(ex + 160, ey); ctx.stroke();
-      ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('Energie', ex - 8, ey - eh - 10);
+      ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('Energie', ex - 8, ey - eh - 10);
     }
   }
   renderVals() {
     const st = this.state; const g = this.g;
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)');
     const hmin = 2.5 * st.R, vtop2 = 2 * g * (st.h - 2 * st.R);
     const vtop = vtop2 > 0 ? Math.sqrt(vtop2) : null, Ntop = vtop != null ? st.m * vtop2 / st.R - st.m * g : null;
     let p = this.free ? null : this.pos(this.s);

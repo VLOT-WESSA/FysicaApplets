@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I-U-karakteristiek · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/karakteristiek.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:75}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -22,8 +23,8 @@
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
   .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
   .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
   .sl{height:30px;display:flex;align-items:center}
@@ -40,7 +41,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -124,7 +125,7 @@ class Component extends DCLogic {
   stageRef = React.createRef();
   W = 920; H = 560;
   LEDS = [['Rood', 630, '#e0352b'], ['Oranje', 605, '#f07a1a'], ['Geel', 590, '#f2c018'], ['Groen', 525, '#2fae4e'], ['Blauw', 470, '#2f6fe0']];
-  state = { comp: 'lamp', R: 1000, led: 0, Ub: 0, plot: 'IU', showCurve: true, showFit: true, meas: [], copyLbl: 'Kopieer' };
+  state = { comp: 'lamp', R: 1000, led: 0, Ub: 0, plot: 'IU', showCurve: false, showFit: false, meas: [], copyLbl: 'Kopieer' };
 
   componentDidMount() {
     this.setupCanvas();
@@ -189,7 +190,7 @@ class Component extends DCLogic {
     // ampèremeter
     this.meter(ctx, 140, T, 'A');
     // beschermweerstand
-    if (this.Rs()) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2; ctx.fillRect(Rr - 14, 120, 28, 56); ctx.strokeRect(Rr - 14, 120, 28, 56); ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.fillText('330 Ω', Rr + 20, 148); }
+    if (this.Rs()) { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2; ctx.fillRect(Rr - 14, 120, 28, 56); ctx.strokeRect(Rr - 14, 120, 28, 56); ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.fillText('330 Ω', Rr + 20, 148); }
     // component
     const cy = 260, cx = Rr;
     if (st.comp === 'R') { ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2; ctx.fillRect(cx - 14, cy - 30, 28, 60); ctx.strokeRect(cx - 14, cy - 30, 28, 60); }
@@ -212,7 +213,7 @@ class Component extends DCLogic {
     // displays
     this.display(ctx, 60, 400, 'Ampèremeter', I >= 0.0995 ? this.fmt(I, 3) + ' A' : this.fmt(I * 1000, 2) + ' mA');
     this.display(ctx, 220, 400, 'Voltmeter', this.fmt(U, 2) + ' V');
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Voltmeter parallel over de component, ampèremeter in serie.', 30, 490);
     // ----- grafiek -----
     this.drawPlot(ctx, U, I);
@@ -222,7 +223,7 @@ class Component extends DCLogic {
   display(ctx, x, y, title, txt) {
     ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect(x, y, 140, 70, 10); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#d8e4d0'; ctx.fillRect(x + 10, y + 22, 120, 36);
-    ctx.fillStyle = '#3a4757'; ctx.font = "600 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 70, y + 5);
+    ctx.fillStyle = '#3a4757'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(title, x + 70, y + 5);
     ctx.fillStyle = '#1d2a3a'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + 70, y + 41);
   }
   drawPlot(ctx, U, I) {
@@ -236,14 +237,14 @@ class Component extends DCLogic {
     if (IU) ymax = st.comp === 'led' ? 0.03 : this.nice(Imax);
     else ymax = st.comp === 'R' ? this.nice(st.R * 1.2) : st.comp === 'lamp' ? 70 : 2000;
     const X = u => gx + u / Umax * gw, Y = v => gy + gh - v / ymax * gh;
-    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1; ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace";
+    ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 1; ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'IBM Plex Mono',monospace";
     for (let i = 0; i <= 5; i++) {
       const v = ymax * i / 5, y = Y(v); ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx + gw, y); ctx.stroke();
       ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(IU ? this.fmt(v * 1000, v * 1000 < 10 ? 1 : 0) : this.fmt(v, 0), gx - 5, y);
     }
     for (let u = 0; u <= Umax + 1e-9; u += Umax > 6 ? 2 : Umax > 4 ? 1 : 0.5) { const x = X(u); ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x, gy + gh); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(this.fmt(u, Umax > 4 ? 0 : 1), x, gy + gh + 4); }
     ctx.strokeStyle = '#4f5b69'; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gh); ctx.lineTo(gx + gw, gy + gh); ctx.stroke();
-    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText(IU ? 'I (mA)' : 'R = U/I (Ω)', gx - 44, gy - 4);
     ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('U (V)', gx + gw, gy + gh + 20);
     ctx.save(); ctx.beginPath(); ctx.rect(gx, gy, gw, gh); ctx.clip();
@@ -259,14 +260,14 @@ class Component extends DCLogic {
     const vn = IU ? I : (I > 1e-7 ? U / I : NaN);
     if (isFinite(vn)) { ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(U), Y(vn), 7, 0, 7); ctx.stroke(); }
     ctx.restore();
-    if (f) { ctx.fillStyle = '#c8443a'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('trendlijn (I > 2 mA): snijpunt U = ' + this.fmt(f.U0, 2) + ' V', gx + 8, gy + 6); }
+    if (f) { ctx.fillStyle = '#c8443a'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('trendlijn (I > 2 mA): snijpunt U = ' + this.fmt(f.U0, 2) + ' V', gx + 8, gy + 6); }
   }
   nice(x) { const e = Math.pow(10, Math.floor(Math.log10(x))); const m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
 
   renderVals() {
     const st = this.state; const { U, I } = this.cur();
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)');
     const setU = (v) => this.setState({ Ub: Math.max(0, Math.min(this.Umax(), Math.round(v * 100) / 100)) });
     const rows = [
       { n: 'Spanning over component U', v: this.fmt(U, 3) + ' V' },

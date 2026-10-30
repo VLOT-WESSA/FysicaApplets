@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dopplereffect · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/dopplereffect.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -51,7 +52,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;touch-action:none;cursor:grab"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px solid {{ legendFront }};display:inline-block"></span>{{ legendFrontLbl }}</div>
         <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px solid #ff6e6e;display:inline-block"></span>roodverschuiving (achter)</div>
@@ -69,7 +70,7 @@
         <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;gap:6px;background:#f0ece2;border-radius:4px;padding:4px;margin-bottom:16px">
           <button onClick="{{ onModeSound }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ soundTabBg }};color:{{ soundTabFg }};box-shadow:{{ soundTabSh }}">Geluidsgolf</button>
           <button onClick="{{ onModeLight }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ lightTabBg }};color:{{ lightTabFg }};box-shadow:{{ lightTabSh }}">Lichtgolf</button>
@@ -109,7 +110,7 @@
         </sc-if>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Weergave (uit bij start)</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onTogTrail }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ trailBg }};color:{{ trailFg }}">Spoor</button>
@@ -120,7 +121,7 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Waarnemer</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:var(--muted)">uitgezonden f</span>
@@ -399,7 +400,7 @@ class Component extends DCLogic {
     const bx = 22, by = this.H - 22;
     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + this.cPx, by);
     ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + this.cPx, by - 4); ctx.lineTo(bx + this.cPx, by + 4); ctx.stroke();
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
     ctx.fillText(this.isSound() ? 'geluidssnelheid (340 m/s)' : 'lichtsnelheid c', bx, by - 9);
   }
 
@@ -420,7 +421,7 @@ class Component extends DCLogic {
     const veh = this.state.vehicle;
     const vbg = (k) => ({ bg: veh === k ? '#eef6f4' : '#fff', border: veh === k ? 'var(--accent)' : '#ddd6c8' });
     const a = vbg('amb'), ca = vbg('car'), j = vbg('jet');
-    const tab = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? 'var(--accent)' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
+    const tab = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? 'var(--accent)' : '#4f5b69', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
     const ts = tab(sound), tl = tab(!sound);
     return {
       stageRef: this.stageRef,

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lissajous-figuren · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -17,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/lissajous.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -33,7 +34,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -48,7 +49,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#38d9c4;border-radius:2px;display:inline-block"></span>Lissajous-figuur</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>x-trilling (boven)</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#6f9bd8;border-radius:2px;display:inline-block"></span>y-trilling (links)</div>
@@ -58,7 +59,7 @@
 
     <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Amplitudes</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">A<sub>x</sub></span>
@@ -72,7 +73,7 @@
         <input type="range" min="0.1" max="1" step="0.01" value="{{ ay }}" onInput="{{ onAy }}" style="width:100%;accent-color:#6f9bd8">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Frequenties</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">f<sub>x</sub></span>
@@ -86,23 +87,23 @@
         <input type="range" min="1" max="6" step="1" value="{{ fy }}" onInput="{{ onFy }}" style="width:100%;accent-color:#6f9bd8">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Faseverschil &phi;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ phaseStr }}</span>
         </div>
         <input type="range" min="0" max="360" step="1" value="{{ phaseVal }}" onInput="{{ onPhase }}" style="width:100%;accent-color:var(--accent)">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
         <button onClick="{{ onToggleBol }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ bolBorder }};background:{{ bolBg }};color:{{ bolFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ bolDot }}"></span>{{ bolLabel }}</button>
         <button onClick="{{ onAuto }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ autoBorder }};background:{{ autoBg }};color:{{ autoFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ autoDot }}"></span>{{ autoLabel }}</button>
         <div style="display:flex;gap:6px;background:#f0ece2;border-radius:4px;padding:4px">
           <button onClick="{{ onModeFase }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ faseTabBg }};color:{{ faseTabFg }};box-shadow:{{ faseTabSh }}">varieer faseverschil</button>
           <button onClick="{{ onModeRatio }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ ratioTabBg }};color:{{ ratioTabFg }};box-shadow:{{ ratioTabSh }}">varieer verhouding</button>
         </div>
-        <div style="font-size:11.5px;color:var(--muted);line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
       </div>
 
       <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
@@ -241,7 +242,7 @@ class Component extends DCLogic {
     }
 
     // labels
-    ctx.fillStyle = '#75808c'; ctx.font = "500 11px 'IBM Plex Mono',monospace";
+    ctx.fillStyle = '#75808c'; ctx.font = "500 12.5px 'IBM Plex Mono',monospace";
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('x(t)', mX0 + 4, pad + 3);
     ctx.save(); ctx.translate(pad + 3, mY0 + 4); ctx.fillText('y(t)', 0, 0); ctx.restore();
@@ -250,7 +251,7 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const g = this.gcd(this.fx, this.fy) || 1;
-    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? 'var(--accent)' : '#8c8576', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
+    const seg = (on) => ({ bg: on ? '#fff' : 'transparent', fg: on ? 'var(--accent)' : '#4f5b69', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none' });
     const f = seg(st.autoMode === 'fase'), r = seg(st.autoMode === 'verhouding');
     return {
       stageRef: this.stageRef,
@@ -267,12 +268,12 @@ class Component extends DCLogic {
       onAuto: () => this.setState(s => ({ auto: !s.auto })),
       onToggleBol: () => this.setState(s => ({ showBol: !s.showBol })),
       bolLabel: st.showBol !== false ? 'Bewegende bol aan' : 'Bewegende bol uit',
-      bolBg: st.showBol !== false ? 'var(--accent)' : '#fff', bolFg: st.showBol !== false ? '#fff' : '#3a352c',
+      bolBg: st.showBol !== false ? 'var(--accent)' : '#fff', bolFg: st.showBol !== false ? '#fff' : 'var(--ink)',
       bolBorder: st.showBol !== false ? 'var(--accent)' : '#d9d3c6', bolDot: st.showBol !== false ? '#fff' : '#c3bcad',
       onModeFase: () => this.setState({ autoMode: 'fase' }),
       onModeRatio: () => this.setState({ autoMode: 'verhouding' }),
       autoLabel: st.auto ? 'Automatisch aan' : 'Automatisch uit',
-      autoBg: st.auto ? 'var(--accent)' : '#fff', autoFg: st.auto ? '#fff' : '#3a352c',
+      autoBg: st.auto ? 'var(--accent)' : '#fff', autoFg: st.auto ? '#fff' : 'var(--ink)',
       autoBorder: st.auto ? 'var(--accent)' : '#d9d3c6', autoDot: st.auto ? '#fff' : '#c3bcad',
       faseTabBg: f.bg, faseTabFg: f.fg, faseTabSh: f.sh,
       ratioTabBg: r.bg, ratioTabFg: r.fg, ratioTabSh: r.sh,

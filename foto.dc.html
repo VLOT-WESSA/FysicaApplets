@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foto-elektrisch effect · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/foto.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -37,7 +38,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -58,27 +59,27 @@
     <!-- CONTROLS -->
     <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Lichtbron <span style="text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500">&middot; uit bij start</span></div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Intensiteit</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ intensity }}%</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ intensity }}%</span>
         </div>
         <input type="range" min="0" max="100" step="1" value="{{ intensity }}" onChange="{{ onIntensity }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Golflengte</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3a352c">{{ wavelength }} nm &middot; {{ regionStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">{{ wavelength }} nm &middot; {{ regionStr }}</span>
         </div>
         <input type="range" min="100" max="850" step="1" value="{{ wavelength }}" onChange="{{ onWavelength }}" style="width:100%;accent-color:var(--accent);margin-bottom:9px">
         <div style="position:relative;height:14px;border-radius:4px;background:linear-gradient(90deg,#2a0640 0%,#7400ff 37.3%,#0040ff 46.7%,#00d5ff 52%,#28ff00 57.3%,#eaff00 64%,#ff9000 66.7%,#ff0000 80%,#7a0000 86.7%,#2a0000 100%)">
-          <div style="position:absolute;top:-4px;width:4px;height:22px;background:#2a2723;border:1.5px solid #fff;border-radius:2px;transform:translateX(-50%);left:{{ markerPct }}"></div>
+          <div style="position:absolute;top:-4px;width:4px;height:22px;background:var(--ink);border:1.5px solid #fff;border-radius:2px;transform:translateX(-50%);left:{{ markerPct }}"></div>
         </div>
-        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:4px">
           <span>UV</span><span>zichtbaar licht</span><span>IR</span>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Doelplaat</div>
         <select value="{{ materialIndex }}" onChange="{{ onMaterial }}" style="width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;font-size:14px;color:var(--ink)">
           <option value="0">Natrium &mdash; 2.28 eV</option>
@@ -89,24 +90,24 @@
         </select>
         <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:13px">
           <span style="color:var(--muted)">Uittree-energie W</span>
-          <span style="font-family:'IBM Plex Mono',monospace;color:#3a352c">{{ workFnStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ workFnStr }}</span>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Schakeling</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Batterijspanning</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ voltageStr }} V</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ voltageStr }} V</span>
         </div>
         <input type="range" min="-8" max="8" step="0.1" value="{{ voltage }}" onChange="{{ onVoltage }}" style="width:100%;accent-color:var(--accent);margin-bottom:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;background:#f4f1ea;border-radius:4px;padding:11px 14px">
           <span style="font-size:13px;color:var(--muted)">Stroom (ammeter)</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:600;color:#1f9e8f">{{ currentStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:600;color:#177368">{{ currentStr }}</span>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Metingen</div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
           <span style="color:var(--muted)">Foton-energie</span><span style="font-family:'IBM Plex Mono',monospace">{{ eStr }}</span>
@@ -119,7 +120,7 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Grafiek <span style="text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500">&middot; uit bij start</span></div>
           <button onClick="{{ onToggleGraph }}" style="font-family:inherit;font-size:12px;border:1px solid var(--rule);background:#fff;border-radius:4px;padding:3px 10px;cursor:pointer;color:var(--muted)">{{ toggleLabel }}</button>
@@ -344,7 +345,7 @@ class Component extends DCLogic {
     this.rr(ctx, g.collectorFace, g.plateTop, 9, g.plateBot - g.plateTop, 2); ctx.fill();
     ctx.restore();
 
-    ctx.font = "500 12px 'IBM Plex Mono', monospace";
+    ctx.font = "500 13px 'IBM Plex Mono', monospace";
     ctx.textAlign = 'center';
     ctx.fillStyle = light ? '#938c7f' : '#505b67';
     ctx.fillText('doel: ' + m.name, g.targetFace - 3, g.plateBot + 22);
@@ -370,7 +371,7 @@ class Component extends DCLogic {
     ctx.font = "700 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = '#d0744d'; ctx.fillText('+', longX + (posRight ? 11 : -11), cy);
     ctx.fillStyle = '#505b67'; ctx.fillText('\u2212', shortX + (posRight ? -11 : 11), cy);
-    ctx.fillStyle = '#474f5a'; ctx.font = "500 12px 'IBM Plex Mono', monospace"; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#474f5a'; ctx.font = "500 13px 'IBM Plex Mono', monospace"; ctx.textBaseline = 'top';
     ctx.fillText('U = ' + U.toFixed(1) + ' V', cx, cy + 16);
     ctx.textBaseline = 'alphabetic';
   }
@@ -401,7 +402,7 @@ class Component extends DCLogic {
 
     ctx.strokeStyle = '#413b30'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.lineTo(W - R, H - B); ctx.stroke();
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#645e50';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#645e50';
 
     const m = this.materials[this.state.materialIndex];
     const KE = this.keMax();
@@ -460,7 +461,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#282622'; ctx.lineWidth = 1.5; ctx.stroke();
   }
   axisTitles(ctx, W, H, B, L, xt, yt) {
-    ctx.font = "500 11px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#938c7f';
+    ctx.font = "500 12.5px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#938c7f';
     ctx.textAlign = 'center'; ctx.fillText(xt, L + (W - L - 12) / 2, H - 6);
     ctx.save(); ctx.translate(12, (H - B) / 2 + 6); ctx.rotate(-Math.PI / 2);
     ctx.fillText(yt, 0, 0); ctx.restore();

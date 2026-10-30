@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -21,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -31,19 +32,17 @@
   .card:hover,.doc:hover{box-shadow:4px 4px 0 var(--ink) !important;transform:translate(-2px,-2px)}
   .card:active,.doc:active{box-shadow:0 0 0 var(--ink) !important;transform:translate(2px,2px)}
   .kicker{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.02em}
-  .search{height:42px;width:300px;max-width:100%;border-radius:4px;border:1px solid var(--ink);box-shadow:var(--shadow);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236f685c' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 13px center;padding:0 12px 0 38px;font-family:inherit;font-size:14px;color:var(--ink)}
+  .search{height:42px;width:300px;max-width:100%;border-radius:4px;border:1px solid var(--ink);box-shadow:var(--shadow);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%234f5b69' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 13px center;padding:0 12px 0 38px;font-family:inherit;font-size:14px;color:var(--ink)}
   .search::placeholder{color:var(--muted)}
+  @media (max-width:640px){.search{width:100%}}
 </style>
 </helmet>
 <div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:28px 28px 48px">
   <div style="max-width:1100px;margin:0 auto">
 
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;margin-bottom:22px">
-      <div>
-        <div class="kicker" style="color:var(--muted);margin-bottom:6px">{{ totalStr }}</div>
-        <h1 style="font-size:40px;font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.05">Natuurkunde simulaties</h1>
-      </div>
-      <input class="search" type="search" value="{{ query }}" onInput="{{ onQuery }}" placeholder="Zoek een simulatie…" aria-label="Zoek een simulatie" autocomplete="off">
+      <h1 style="font-size:40px;font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.05">Natuurkunde simulaties</h1>
+      <input class="search" type="search" value="{{ query }}" onInput="{{ onQuery }}" placeholder="{{ searchPh }}" aria-label="Zoek een simulatie" autocomplete="off">
     </div>
 
     <!-- TABBLADEN -->
@@ -57,17 +56,17 @@
 
     <!-- ROOSTER MET APPLETS -->
     <div>
-      <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 11px;margin-bottom:18px">
         <span style="width:13px;height:13px;border-radius:50%;flex:none;background:{{ topicColor }}"></span>
         <h2 style="font-size:24px;font-weight:700;margin:0">{{ topicName }}</h2>
-        <span class="kicker" style="color:var(--muted)">{{ countStr }}</span>
+        <span class="kicker" style="color:var(--muted);white-space:nowrap">{{ countStr }}</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px">
         <sc-for list="{{ appletItems }}" as="app" hint-placeholder-count="4">
           <a class="card" href="{{ app.href }}" style="--tc:{{ app.tc }};text-decoration:none;color:inherit;text-align:left;display:flex;flex-direction:column;gap:10px;min-height:128px;padding:16px 18px 18px;border-radius:4px;border:1px solid var(--ink);background:var(--card);cursor:{{ app.cursor }};opacity:{{ app.opacity }};box-shadow:var(--shadow)">
             <div style="display:flex;align-items:center;gap:12px">
               <span style="flex:none;width:46px;height:46px;border-radius:4px;border:1px solid {{ app.tagFg }};background:{{ app.soft }};display:flex;align-items:center;justify-content:center">
-                <img src="{{ app.icon }}" alt="" width="34" height="34" style="display:block">
+                <span aria-hidden="true" style="display:block;width:34px;height:34px;background:url({{ app.icon }}) center/contain no-repeat"></span>
               </span>
               <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
                 <span style="font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1.2;overflow-wrap:break-word;hyphens:manual">{{ app.name }}</span>
@@ -84,7 +83,7 @@
     <!-- DOCUMENTEN -->
     <div style="margin-top:44px;padding-top:26px;border-top:1.5px solid var(--ink)">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
-        <span style="width:13px;height:13px;border-radius:50%;flex:none;background:oklch(0.64 0.13 75)"></span>
+        <span style="width:13px;height:13px;border-radius:50%;flex:none;background:var(--ink)"></span>
         <h2 style="font-size:24px;font-weight:700;margin:0">Documenten</h2>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:560px">
@@ -94,7 +93,7 @@
             <span style="font-size:15px;font-weight:600">Practicumtemplate6BCW.docx</span>
             <span style="font-size:12.5px;color:var(--muted)">Sjabloon voor het practicumverslag</span>
           </span>
-          <span style="flex:none;font-size:20px;color:var(--muted);line-height:1">&#8595;</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--muted)"><path d="M9 2.5v9M5 8l4 4 4-4M3 15.5h12"/></svg>
         </a>
         <a href="Voorbeeldgrafiek.xlsx" download class="doc" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:4px;border:1px solid var(--ink);background:var(--card);box-shadow:var(--shadow)">
           <span style="flex:none;width:38px;height:46px;border-radius:5px;background:#1d6f42;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em">XLSX</span>
@@ -102,7 +101,7 @@
             <span style="font-size:15px;font-weight:600">Voorbeeldgrafiek.xlsx</span>
             <span style="font-size:12.5px;color:var(--muted)">Voorbeeld van een grafiek in een rekenblad</span>
           </span>
-          <span style="flex:none;font-size:20px;color:var(--muted);line-height:1">&#8595;</span>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--muted)"><path d="M9 2.5v9M5 8l4 4 4-4M3 15.5h12"/></svg>
         </a>
       </div>
     </div>
@@ -156,7 +155,7 @@ class Component extends DCLogic {
       { id: 'polarisatie', name: 'Polari\u00ADsatie van licht', desc: 'Onderzoek de wet van Malus met instelbare polarisatoren.', ready: true },
       { id: 'snaar', name: 'Golven op een snaar', desc: 'Wek lopende en staande golven op in een snaar.', ready: true },
       { id: 'staandegolf', name: 'Staande golf door reflectie', desc: 'Heen- en teruglopende golf vormen samen een staande golf.', ready: true },
-      { id: 'interferentie', name: 'Inter\u00ADferentie van twee golven', desc: 'Twee coherente bronnen; oranje buiklijnen (versterking) en blauwe knooplijnen (uitdoving).', ready: true },
+      { id: 'interferentie', name: 'Inter\u00ADferentie van twee golven', desc: 'Twee coherente bronnen; oranje buiklijnen (versterking) en groene knooplijnen (uitdoving).', ready: true },
       { id: 'doppler', name: 'Doppler\u00ADeffect', desc: 'Een bewegende bron; golffronten kruipen vooraan op elkaar en vormen bij v ≥ c een schokgolf.', ready: true },
       { id: 'massaveer', name: 'Massa-veer\u00ADsysteem', desc: 'Vrije, gedempte en gedwongen trilling; eigenfrequentie en resonantie.', ready: true },
       { id: 'superpositie', name: 'Samen\u00ADstellen van trillingen', desc: 'Twee trillingen optellen met fasoren, zwevingen en Fouriersynthese van blok-, zaagtand- en driehoeksgolf.', ready: true },
@@ -249,8 +248,10 @@ class Component extends DCLogic {
 
   renderVals() {
     const topic = this.topics.find(t => t.id === this.state.topic) || this.topics[0];
+    const searching = this.state.query.trim() !== '';
     const tabItems = this.topics.map(t => {
-      const active = t.id === topic.id;
+      // tijdens zoeken is geen onderwerp actief: de resultaten komen uit alle onderwerpen
+      const active = !searching && t.id === topic.id;
       return {
         id: t.id, name: t.name,
         dot: active ? '#ffffff' : t.color,
@@ -288,8 +289,8 @@ class Component extends DCLogic {
       tabItems,
       appletItems,
       topicName: q ? 'Zoekresultaten' : topic.name,
-      topicColor: q ? '#6f685c' : topic.color,
-      totalStr: this.topics.reduce((n, t) => n + t.applets.length, 0) + ' simulaties',
+      topicColor: q ? 'var(--ink-2)' : topic.color,
+      searchPh: 'Zoek in ' + this.topics.reduce((n, t) => n + t.applets.length, 0) + ' simulaties',
       countStr: appletItems.length + (appletItems.length === 1 ? ' simulatie' : ' simulaties'),
       emptyDisplay: appletItems.length ? 'none' : 'block',
       query: this.state.query,

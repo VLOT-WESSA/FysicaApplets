@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wrijving op een hellend vlak · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -19,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/wrijvinghelling.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
@@ -35,7 +36,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -50,7 +51,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
@@ -73,7 +74,7 @@
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Hellingshoek &theta;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
@@ -86,7 +87,7 @@
         <input type="range" min="0.5" max="10" step="0.5" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Statische wrijving &mu;&#8347;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ musStr }}</span>
@@ -94,17 +95,17 @@
         <input type="range" min="0" max="1.2" step="0.01" value="{{ mus }}" onInput="{{ onMus }}" style="width:100%;accent-color:#2f8a4e;margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Kinetische wrijving &mu;&#8342;</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c9772f">{{ mukStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#975a23">{{ mukStr }}</span>
         </div>
         <input type="range" min="0" max="1.2" step="0.01" value="{{ muk }}" onInput="{{ onMuk }}" style="width:100%;accent-color:#e0903a">
         <div style="font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
       </div>
 
       <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
             <span style="font-size:14px;font-weight:500">Motorkracht F<sub>m</sub></span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#2f8a4e">{{ fmotorStr }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#297743">{{ fmotorStr }}</span>
           </div>
           <input type="range" min="0" max="120" step="1" value="{{ fmotor }}" onInput="{{ onFmotor }}" style="width:100%;accent-color:#2f8a4e">
         </div>
@@ -116,12 +117,12 @@
           <span style="font-size:14px;font-weight:700">{{ statusLabel }}</span>
         </div>
         <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ motorStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#297743">{{ motorStr }}</span></div>
         </sc-if>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Hellingscomponent F<sub>z</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ drivingStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Max. statische wrijving &mu;&#8347;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ maxStaticStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ normalStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ frictionStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#297743">{{ normalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#297743">{{ frictionStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Versnelling a</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ accelStr }}</span></div>
       </div>
 
@@ -225,7 +226,7 @@ class Component extends DCLogic {
     ctx.closePath(); ctx.fill();
     if (label) {
       const mainF = "600 13px 'Atkinson Hyperlegible',sans-serif";
-      const subF = "600 9px 'Atkinson Hyperlegible',sans-serif";
+      const subF = "600 11px 'Atkinson Hyperlegible',sans-serif";
       ctx.fillStyle = col; ctx.textBaseline = 'middle';
       const lx = ex + (dx / len) * 16, ly = ey + (dy / len) * 16;
       const us = label.indexOf('_');

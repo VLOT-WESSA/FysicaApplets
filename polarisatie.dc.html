@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polarisatie van licht · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/polarisatie.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -51,10 +52,10 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 18px;box-shadow:var(--shadow);flex:none;display:flex;align-items:center;gap:18px">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 18px;box-shadow:var(--shadow);flex:none;display:flex;align-items:center;gap:18px">
         <div style="flex:1">
           <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ malusStr }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ malusStr }}</div>
         </div>
         <div style="flex:0 0 180px">
           <div style="height:12px;border-radius:4px;background:#efeadf;overflow:hidden">
@@ -72,20 +73,20 @@
       </div>
 
       <sc-for list="{{ polCards }}" as="p" hint-placeholder-count="3">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
             <span style="font-family:var(--font-display);font-size:16px;font-weight:700">{{ p.title }}</span>
             <button onClick="{{ p.onToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:4px;padding:5px 14px;cursor:pointer;background:{{ p.bg }};color:{{ p.fg }}">{{ p.lbl }}</button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p.op }}">
             <span style="font-size:13px;color:var(--muted)">Transmissie-as</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p.angStr }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">{{ p.angStr }}</span>
           </div>
           <input type="range" min="0" max="180" step="1" value="{{ p.ang }}" onChange="{{ p.onAngle }}" disabled="{{ p.dis }}" style="width:100%;accent-color:var(--accent);opacity:{{ p.op }}">
         </div>
       </sc-for>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:14px">Trillingsrichting tonen</span>
         <button onClick="{{ onTogInd }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ indBorder }};background:{{ indBg }};color:{{ indFg }}">
           <span style="width:8px;height:8px;border-radius:50%;background:{{ indDot }}"></span>{{ indLabel }}
@@ -175,7 +176,7 @@ class Component extends DCLogic {
     this.rr(ctx, 22, g.beamY - 26, 34, 52, 7); ctx.fill();
     ctx.fillStyle = `rgb(${lightCol})`;
     this.rr(ctx, 50, g.beamY - 17, 9, 34, 3); ctx.fill();
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#505b67'; ctx.textAlign = 'center';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#505b67'; ctx.textAlign = 'center';
     ctx.fillText('bron', 39, g.beamY + 44);
 
     for (let k = 0; k < 3; k++) {
@@ -197,7 +198,7 @@ class Component extends DCLogic {
         const cx = Math.min(gapMid[s], this.W - 36);
         this.drawIndicator(ctx, cx, g.indY, g.indR, st.polAng[s], st.seg[s]);
       }
-      ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
+      ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
       ctx.fillText('trillingsrichting', this.W / 2, g.indY + g.indR + 18);
     }
   }
@@ -300,7 +301,7 @@ class Component extends DCLogic {
       on: p.on, ang: p.ang,
       angStr: p.on ? p.ang + '\u00B0' : 'uit',
       bg: p.on ? 'var(--accent)' : '#e7e1d5',
-      fg: p.on ? '#fff' : '#8c8576',
+      fg: p.on ? '#fff' : '#4f5b69',
       lbl: p.on ? 'Aan' : 'Uit',
       op: p.on ? '1' : '0.4',
       dis: !p.on,
@@ -327,7 +328,7 @@ class Component extends DCLogic {
       polCards,
       onTogInd: () => this.setState({ showInd: !this.state.showInd }),
       indLabel: ind ? 'Aan' : 'Uit',
-      indBg: ind ? '#2f6fb0' : '#f4f1ea', indFg: ind ? '#fff' : '#8c8576',
+      indBg: ind ? '#2f6fb0' : '#f4f1ea', indFg: ind ? '#fff' : '#4f5b69',
       indBorder: ind ? '#2f6fb0' : '#e7e1d5', indDot: ind ? '#bcd8f2' : '#c3bcad',
     };
   }

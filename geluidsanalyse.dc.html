@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geluidsanalyse · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -21,13 +22,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/geluidsanalyse.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
   button{font-family:inherit}
-  .kaart{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow)}
+  .kaart{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow)}
   .kop{font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:8px}
   .knop{flex:1;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:7px 4px;cursor:pointer;background:#fff;color:var(--ink)}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.5}
@@ -44,7 +45,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -437,8 +438,8 @@ class Component extends DCLogic {
     this.tekenOverzicht(ctx); this.tekenGolf(ctx); this.tekenSpectrum(ctx);
   }
   titel(ctx, x, y, t, rechts) {
-    ctx.textAlign = 'left'; ctx.font = "600 12px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#1d2a3a'; ctx.fillText(t, x, y);
-    if (rechts) { ctx.textAlign = 'right'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.fillText(rechts[1], rechts[0], y); }
+    ctx.textAlign = 'left'; ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#1d2a3a'; ctx.fillText(t, x, y);
+    if (rechts) { ctx.textAlign = 'right'; ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.fillText(rechts[1], rechts[0], y); }
   }
   golflijn(ctx, P, a, b) {
     const my = P.y + P.h / 2, amp = P.h / 2 - 4, n = Math.max(1, b - a);
@@ -456,7 +457,7 @@ class Component extends DCLogic {
   }
   tijdas(ctx, P, t0, t1) {
     const L = t1 - t0, stap = this.mooieStap(L / 7), ms = stap < 0.1;
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'center';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'center';
     for (let t = Math.ceil(t0 / stap - 1e-9) * stap; t <= t1 + 1e-9; t += stap) {
       const x = P.x + (t - t0) / L * P.w;
       ctx.fillText(ms ? (t * 1000).toFixed(stap < 0.001 ? 2 : stap < 0.01 ? 1 : 0) : t.toFixed(stap < 1 ? 1 : 0), x, P.y + P.h + 14);
@@ -491,7 +492,7 @@ class Component extends DCLogic {
       if (t === null || t < t0 || t > t1) return;
       const x = P.x + (t - t0) / (t1 - t0) * P.w;
       ctx.strokeStyle = kleur; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
-      ctx.fillStyle = kleur; ctx.textAlign = 'center'; ctx.font = "600 12px 'Atkinson Hyperlegible', sans-serif"; ctx.fillText(lbl, x, P.y + 12);
+      ctx.fillStyle = kleur; ctx.textAlign = 'center'; ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillText(lbl, x, P.y + 12);
     };
     cur(this.curA, '#c4553a', 'A'); cur(this.curB, '#7a4fb0', 'B');
     const sp = this.speelPositie();
@@ -501,7 +502,7 @@ class Component extends DCLogic {
     const P = this.SP, sp = this.spec, fm = this.state.fmax, dbMin = -80;
     const Y = db => P.y + P.h - (Math.max(db, dbMin) - dbMin) / -dbMin * P.h;
     ctx.fillStyle = '#fffdf9'; ctx.fillRect(P.x, P.y, P.w, P.h); ctx.strokeStyle = '#d9d3c6'; ctx.lineWidth = 1; ctx.strokeRect(P.x, P.y, P.w, P.h);
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'right';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'right';
     for (let db = 0; db >= dbMin; db -= 20) { ctx.fillText(db + ' dB', P.x - 6, Y(db) + 4); ctx.strokeStyle = '#eee7da'; ctx.beginPath(); ctx.moveTo(P.x, Y(db)); ctx.lineTo(P.x + P.w, Y(db)); ctx.stroke(); }
     ctx.textAlign = 'center';
     const ticks = this.state.logAs ? [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000] : [];
@@ -513,7 +514,7 @@ class Component extends DCLogic {
     if (this.f0 !== null) {
       ctx.strokeStyle = 'rgba(122,79,176,0.45)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
       for (let n = 1; n * this.f0 <= fm; n++) { const x = this.fNaarX(n * this.f0); ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
-        ctx.fillStyle = '#7a4fb0'; ctx.font = "600 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText(n === 1 ? 'f₀' : n + 'f₀', x, P.y + P.h - 4); }
+        ctx.fillStyle = '#7a4fb0'; ctx.font = "600 12.5px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText(n === 1 ? 'f₀' : n + 'f₀', x, P.y + P.h - 4); }
       ctx.setLineDash([]);
     }
     ctx.strokeStyle = '#1f7fa0'; ctx.lineWidth = 1.3; ctx.beginPath();
@@ -527,7 +528,7 @@ class Component extends DCLogic {
     if (this.piek) {
       const x = this.fNaarX(this.piek.f);
       ctx.strokeStyle = '#c4553a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke();
-      ctx.fillStyle = '#c4553a'; ctx.font = "600 12px 'IBM Plex Mono', monospace"; const r = x > P.x + P.w - 100;
+      ctx.fillStyle = '#c4553a'; ctx.font = "600 13px 'IBM Plex Mono', monospace"; const r = x > P.x + P.w - 100;
       ctx.textAlign = r ? 'right' : 'left'; ctx.fillText(this.piek.f.toFixed(1) + ' Hz', x + (r ? -5 : 5), P.y + 15);
     }
     ctx.restore();
@@ -555,7 +556,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const seg = a => ({ bg: a ? 'var(--accent)' : '#fff', fg: a ? '#fff' : '#2a2723' });
+    const seg = a => ({ bg: a ? 'var(--accent)' : '#fff', fg: a ? '#fff' : 'var(--ink)' });
     const d = n => seg(this.state.duur === n), li = seg(!this.state.logAs), lo = seg(this.state.logAs);
     const sr = this.sr, fmtT = t => t < 1 ? (t * 1000).toFixed(1) + ' ms' : t.toFixed(3) + ' s';
     let selTxt = '';

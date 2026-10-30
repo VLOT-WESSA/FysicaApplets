@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gravitatie &amp; satellieten · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/gravitatie.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -22,8 +23,8 @@
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
   .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
   .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
@@ -32,13 +33,16 @@
   table.kt{border-collapse:collapse;width:100%;font-size:12px}
   table.kt td,table.kt th{padding:3px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
   table.kt th{font-family:var(--font-body);font-weight:600;color:var(--muted);border-bottom:1px solid #e7e1d5}
-  table.kt td:first-child,table.kt th:first-child{text-align:left;font-family:var(--font-body);min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+  table.kt td:first-child,table.kt th:first-child{text-align:left;font-family:var(--font-body)}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
     .applet-main{flex-direction:column !important;align-items:stretch !important}
     .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -50,21 +54,21 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
         <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span><span>gravitatiekracht F<sub>g</sub></span></div>
         <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#d9822b;border-radius:2px;display:inline-block"></span>snelheid v</div>
         <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span>satelliet en baan</div>
       </div>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div style="display:flex;gap:10px;flex:none">
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
+      </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex:none">
         <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
           <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
         </sc-for>
-      </div>
-      <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
 
       <sc-if value="{{ isSat }}" hint-placeholder-val="{{ true }}">
@@ -95,8 +99,8 @@
         <div class="out">
           <div class="row"><span>Baanstraal r = R + h</span><span>{{ rStr }}</span></div>
           <div class="row"><span>Gravitatieveldsterkte g(r)</span><span>{{ gStr }}</span></div>
-          <div class="row"><span>Gravitatiekracht F<sub>g</sub></span><span style="color:#2f8a4e;font-weight:600">{{ FStr }}</span></div>
-          <div class="row"><span>Baansnelheid v</span><span style="color:#d9822b;font-weight:600">{{ vStr }}</span></div>
+          <div class="row"><span>Gravitatiekracht F<sub>g</sub></span><span style="color:#297743;font-weight:600">{{ FStr }}</span></div>
+          <div class="row"><span>Baansnelheid v</span><span style="color:#97591b;font-weight:600">{{ vStr }}</span></div>
           <div class="row"><span>Omlooptijd T</span><span style="font-weight:600">{{ TStr }}</span></div>
           <div class="row"><span>Rotatieperiode aarde</span><span>23 h 56 min</span></div>
           <div style="{{ geoStyle }}">{{ geoMsg }}</div>
@@ -134,9 +138,9 @@
         <div class="out">
           <div class="row"><span>Perihelium r<sub>p</sub> = a(1&minus;e)</span><span>{{ rpStr }}</span></div>
           <div class="row"><span>Aphelium r<sub>a</sub> = a(1+e)</span><span>{{ raStr }}</span></div>
-          <div class="row"><span>Snelheid in perihelium</span><span style="color:#d9822b">{{ vpStr }}</span></div>
-          <div class="row"><span>Snelheid in aphelium</span><span style="color:#d9822b">{{ vaStr }}</span></div>
-          <div class="row"><span>Snelheid nu</span><span style="color:#d9822b;font-weight:600">{{ vNowStr }}</span></div>
+          <div class="row"><span>Snelheid in perihelium</span><span style="color:#97591b">{{ vpStr }}</span></div>
+          <div class="row"><span>Snelheid in aphelium</span><span style="color:#97591b">{{ vaStr }}</span></div>
+          <div class="row"><span>Snelheid nu</span><span style="color:#97591b;font-weight:600">{{ vNowStr }}</span></div>
           <div class="row"><span>Omlooptijd T</span><span style="font-weight:600">{{ TkStr }}</span></div>
           <div class="row"><span>Oppervlak per vak (T/12)</span><span>{{ areaStr }}</span></div>
         </div>
@@ -218,7 +222,7 @@
         <div class="out">
           <div class="row"><span>Ontsnappingssnelheid v<sub>2</sub></span><span style="font-weight:600">{{ escV2Str }}</span></div>
           <div class="row"><span>Eerste kosmische snelheid v<sub>1</sub></span><span>{{ escV1Str }}</span></div>
-          <div class="row"><span>E<sub>kin</sub> bij lancering &frac12;m&middot;v<sub>0</sub>&sup2;</span><span style="color:#d9822b">{{ escEkStr }}</span></div>
+          <div class="row"><span>E<sub>kin</sub> bij lancering &frac12;m&middot;v<sub>0</sub>&sup2;</span><span style="color:#97591b">{{ escEkStr }}</span></div>
           <div class="row"><span>E<sub>pot</sub> aan oppervlak &minus;G&middot;M&middot;m/R</span><span style="color:#3a6fb8">{{ escEpStr }}</span></div>
           <div class="row"><span>Totale energie E</span><span style="font-weight:600">{{ escEStr }}</span></div>
           <div class="row"><span>Hoogste punt boven oppervlak</span><span>{{ escHmaxStr }}</span></div>
@@ -241,12 +245,12 @@ class Component extends DCLogic {
   GM = 3.986e14; RE = 6.371e6; TE = 86164;
   state = {
     tab: 'sat',
-    hs: 0.6, m: 1000, satSpeed: 3600, coRot: false, showV: true, showF: true, showTrail: true,
-    as: 0.4, e: 0.4, kepSpeed: 'auto', showSect: true, showKV: true, showKF: false, showAxes: true,
-    mus: 0, dl: 0.01, showPot: true, showTrailL: true,
+    hs: 0.6, m: 1000, satSpeed: 3600, coRot: false, showV: false, showF: false, showTrail: false,
+    as: 0.4, e: 0.4, kepSpeed: 'auto', showSect: false, showKV: false, showKF: false, showAxes: false,
+    mus: 0, dl: 0.01, showPot: false, showTrailL: false,
     escBody: 'Aarde', escV: 0.9, escDir: 'vert'
   };
-  running = true; t = 0; trail = [];
+  running = false; t = 0; trail = [];   // start gepauzeerd, zoals de andere applets
   part = null; ptrail = [];
   ep = null; etrail = [];
   bodies = {
@@ -466,7 +470,7 @@ class Component extends DCLogic {
     for (let i = 0; i < 60; i++) { const x = (i * 157) % 580, y = (i * 263) % 540 + 8; ctx.fillRect(x, y, 1.5, 1.5); }
     // afstandscirkels
     ctx.strokeStyle = 'rgba(185,176,159,0.45)'; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
-    ctx.fillStyle = '#b9b09f'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#b9b09f'; ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     [2, 4, 6].forEach(r => { ctx.beginPath(); ctx.arc(V.cx, V.cy, r * V.k, 0, 7); ctx.stroke(); ctx.fillText(r + 'R', V.cx + r * V.k * 0.707 + 3, V.cy + r * V.k * 0.707); });
     ctx.setLineDash([]);
     // hemellichaam
@@ -474,7 +478,7 @@ class Component extends DCLogic {
     const gr = ctx.createRadialGradient(V.cx - Rp * 0.3, V.cy - Rp * 0.3, Rp * 0.1, V.cx, V.cy, Rp);
     gr.addColorStop(0, B.c0); gr.addColorStop(1, B.c1);
     ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(V.cx, V.cy, Rp, 0, 7); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(st.escBody, V.cx, V.cy);
     // spoor
     const p = this.ep;
@@ -495,14 +499,14 @@ class Component extends DCLogic {
         ctx.fillStyle = p.done === 'land' ? '#c8443a' : '#2a2723'; ctx.beginPath(); ctx.arc(s.X, s.Y, 5, 0, 7); ctx.fill();
         ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
       }
-      ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       ctx.fillText('t = ' + this.dur(p.tu * Math.sqrt(B.R * B.R * B.R / B.GM)), 14, 30);
       ctx.fillText('r = ' + this.fmt(rNow, 2) + ' R', 14, 48);
       if (!inView && !p.done) { ctx.fillStyle = '#8a3b2c'; ctx.fillText('buiten beeld — keert terug', 14, 66); }
       if (p.done === 'esc') { ctx.fillStyle = '#2f7a45'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.fillText('Ontsnapt!', 14, 66); }
       if (p.done === 'land') { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.fillText('Terug op het oppervlak', 14, 66); }
     }
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(st.escDir === 'vert' ? 'Verticale lancering' : 'Horizontale lancering', 14, 12);
 
     // energiediagram
@@ -514,7 +518,7 @@ class Component extends DCLogic {
     const rMax = 7.5, eLo = -1.1, eHi = 1.3;
     const gx = r => X0 + (r - 1) / (rMax - 1) * GW;
     const gy = e => Y0 + (eHi - e) / (eHi - eLo) * GH;
-    ctx.strokeStyle = '#e2dccf'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69';
+    ctx.strokeStyle = '#e2dccf'; ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69';
     for (let r = 1; r <= 7; r++) { const x = gx(r); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + GH); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(r === 1 ? 'R' : r + 'R', x, Y0 + GH + 4); }
     ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(X0, gy(0)); ctx.lineTo(X0 + GW, gy(0)); ctx.stroke();
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#4f5b69';
@@ -524,7 +528,7 @@ class Component extends DCLogic {
     // E_pot
     ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
     for (let i = 0; i <= 120; i++) { const r = 1 + (rMax - 1) * i / 120; const x = gx(r), y = gy(-1 / r); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
-    ctx.fillStyle = '#3a6fb8'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#3a6fb8'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Eₚₒₜ = −GMm/r', gx(2.6), gy(-1 / 2.6) + 14);
     // E_tot
     const eCol = E >= 0 ? '#2f8a4e' : '#c8443a';
@@ -538,7 +542,7 @@ class Component extends DCLogic {
       if (rk <= rMax && st.escDir === 'vert') {
         ctx.strokeStyle = eCol; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx(rk), gy(E)); ctx.lineTo(gx(rk), Y0 + GH); ctx.stroke(); ctx.setLineDash([]);
         ctx.fillStyle = eCol; ctx.beginPath(); ctx.arc(gx(rk), gy(E), 4, 0, 7); ctx.fill();
-        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.fillText('keerpunt', gx(rk), gy(E) - 16);
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.fillText('keerpunt', gx(rk), gy(E) - 16);
       }
     }
     // huidige positie: E_kin = E - E_pot
@@ -547,11 +551,11 @@ class Component extends DCLogic {
       ctx.strokeStyle = '#d9822b'; ctx.lineWidth = 5; ctx.lineCap = 'butt';
       if (Math.abs(ye - yp) > 1) { ctx.beginPath(); ctx.moveTo(x, yp); ctx.lineTo(x, ye); ctx.stroke(); }
       ctx.lineCap = 'round';
-      ctx.fillStyle = '#d9822b'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#d9822b'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       if (Math.abs(ye - yp) > 14) ctx.fillText('Eₖᵢₙ', x + 7, (yp + ye) / 2);
       ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(x, yp, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
     }
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('afstand r tot het middelpunt →', X0 + GW - 170, Y0 + GH + 20);
   }
 
@@ -579,7 +583,7 @@ class Component extends DCLogic {
     const ga = thE + rot;
     const gx = cx + Rp * Math.cos(ga), gy = cy - Rp * Math.sin(ga);
     ctx.fillStyle = '#c8443a'; ctx.beginPath(); ctx.arc(gx, gy, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#8a3b2c'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     if (Rp > 14) ctx.fillText('grondstation', gx + 8 * Math.cos(ga) + (Math.cos(ga) < 0 ? -64 : 0), gy - 10 * Math.sin(ga));
     // satellite
     const sa = thS + rot;
@@ -606,7 +610,7 @@ class Component extends DCLogic {
       this.arrow(ctx, sx, sy, vx * L, vy * L, '#d9822b', 3, 'v');
     }
     // scale
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(st.coRot ? 'Meedraaiend met de aarde (bovenaanzicht noordpool)' : 'Bovenaanzicht vanaf de noordpool', 14, 12);
     ctx.fillText('t = ' + this.dur(this.t), 14, 30);
     // T(h) graph
@@ -619,14 +623,14 @@ class Component extends DCLogic {
     const Tmin = 3600, Tmax = 3600 * 1000;
     const gxp = h => X0 + Math.log(h / hmin) / Math.log(hmax / hmin) * GW;
     const gyp = T => Y0 + GH - Math.log(T / Tmin) / Math.log(Tmax / Tmin) * GH;
-    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69';
+    ctx.strokeStyle = '#e2dccf'; ctx.lineWidth = 1; ctx.font = "500 13px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69';
     [1e6, 1e7, 1e8].forEach(h => { const x = gxp(h); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + GH); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(this.big(h / 1000) + ' km', x, Y0 + GH + 4); });
     [[3600, '1 h'], [36000, '10 h'], [86164, '23,9 h'], [360000, '100 h'], [3600000, '1000 h']].forEach(([T, l]) => { const y = gyp(T); ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X0 + GW, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(l, X0 - 2, y); });
     ctx.strokeStyle = '#c8443a'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X0, gyp(this.TE)); ctx.lineTo(X0 + GW, gyp(this.TE)); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = '#3a6fb8'; ctx.lineWidth = 2.2; ctx.beginPath();
     for (let i = 0; i <= 100; i++) { const h = hmin * Math.pow(hmax / hmin, i / 100); const x = gxp(h), y = gyp(Tof(h)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
     ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(gxp(sv.h), gyp(sv.T), 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('h (logaritmisch) →', X0 + GW - 100, Y0 + GH + 20);
     ctx.fillStyle = '#c8443a'; ctx.textBaseline = 'bottom'; ctx.fillText('rotatie aarde', X0 + 4, gyp(this.TE) - 2);
   }
@@ -641,7 +645,7 @@ class Component extends DCLogic {
       ctx.strokeStyle = '#ddd5c6'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
       ctx.beginPath(); ctx.moveTo(ecx - a * k - 10, cy); ctx.lineTo(ecx + a * k + 10, cy); ctx.moveTo(ecx, cy - b * k - 6); ctx.lineTo(ecx, cy + b * k + 6); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = '#b9b09f'; ctx.beginPath(); ctx.arc(ecx - a * e * k, cy, 3, 0, 7); ctx.fill();
-      ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       if (e > 0.05) ctx.fillText('tweede brandpunt', ecx - a * e * k, cy + 6);
       ctx.fillText('a', ecx + a * k / 2, cy + 4);
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('b', ecx + 5, cy - b * k / 2);
@@ -663,7 +667,7 @@ class Component extends DCLogic {
     const sg = ctx.createRadialGradient(sunX, cy, 2, sunX, cy, 16); sg.addColorStop(0, '#fff3b0'); sg.addColorStop(1, '#f0a020');
     ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sunX, cy, 13, 0, 7); ctx.fill();
     // labels perihelium/aphelium
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
     const pp = P(a * (1 - e), 0), pa = P(-a * (1 + e), 0);
     ctx.fillStyle = '#1d2a3a'; ctx.beginPath(); ctx.arc(pp.X, pp.Y, 3, 0, 7); ctx.arc(pa.X, pa.Y, 3, 0, 7); ctx.fill();
     ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'left'; ctx.fillText('perihelium', Math.min(pp.X + 6, this.W - 70), pp.Y - 4);
@@ -676,7 +680,7 @@ class Component extends DCLogic {
     if (st.showKV) this.arrow(ctx, pl.X, pl.Y, tx / tl * v * 45, -ty / tl * v * 45, '#d9822b', 3, 'v');
     if (st.showKF) { const f = Math.min(110, 30 / (r * r) * (a < 1 ? 1 : a * a)); this.arrow(ctx, pl.X, pl.Y, -q.x / r * f, q.y / r * f, '#2f8a4e', 3, 'Fg'); }
     ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.arc(pl.X, pl.Y, 8, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('t = ' + this.fmt(this.t, 2) + ' jaar', 14, 12);
     // scale bar 1 AE
     const sb = Math.min(200, k); const lab = k > 400 ? '0,5 AE' : '1 AE'; const len = k > 400 ? k / 2 : k;
@@ -699,14 +703,14 @@ class Component extends DCLogic {
     ctx.fillStyle = '#2f6aa8'; ctx.beginPath(); ctx.arc(b1.X, b1.Y, 15, 0, 7); ctx.fill();
     ctx.fillStyle = '#9a927f'; ctx.beginPath(); ctx.arc(b2.X, b2.Y, 7, 0, 7); ctx.fill();
     const names = this.sysNames(mu);
-    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(names[0], b1.X, b1.Y + 18); ctx.fillText(names[1], b2.X, b2.Y + 11);
     // L points
     Ls.forEach((L, i) => {
       const p = P(L.x, L.y);
       ctx.strokeStyle = i >= 3 && mu < 0.0385 ? '#2f8a4e' : '#c8443a'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(p.X - 6, p.Y - 6); ctx.lineTo(p.X + 6, p.Y + 6); ctx.moveTo(p.X + 6, p.Y - 6); ctx.lineTo(p.X - 6, p.Y + 6); ctx.stroke();
-      ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
+      ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
       ctx.fillText(L.n, p.X, p.Y - 8);
     });
     // particle
@@ -718,7 +722,7 @@ class Component extends DCLogic {
       const p = P(this.part.x, this.part.y);
       ctx.fillStyle = this.part.dead ? '#8c8576' : '#d9822b'; ctx.beginPath(); ctx.arc(p.X, p.Y, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
     }
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Meedraaiend assenstelsel — groen × = stabiel, rood × = onstabiel', 14, 12);
   }
   sysNames(mu) {
@@ -731,18 +735,18 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
-    const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : 'var(--rule)') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)');
+    const tabStyle = (on) => 'min-height:36px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid ' + (on ? 'var(--ink)' : 'var(--rule)') + ';background:' + (on ? 'var(--ink)' : 'var(--card)') + ';color:' + (on ? '#fff' : 'var(--ink-2)');
     const tog = (list) => list.map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) }));
-    const resetAll = () => { this.t = 0; this.trail = []; this.part = null; this.ptrail = []; this.escLaunch(); this.running = true; this.forceUpdate(); };
+    const resetAll = () => { this.t = 0; this.trail = []; this.part = null; this.ptrail = []; this.escLaunch(); this.running = false; this.forceUpdate(); };
     const sv = this.satVals();
     const near = (x, y) => Math.abs(x - y) / y < 0.004;
     const satPresets = [['ISS', 408e3], ['GPS', 20200e3], ['Geostationair', 35786e3], ['Maan', 378000e3]].map(([n, h]) => ({ name: n, style: chip(near(sv.h, h)), onClick: () => { this.setState({ hs: this.sOfH(h) }); this.trail = []; } }));
     const satSpeeds = [[60, '1 min/s'], [600, '10 min/s'], [3600, '1 h/s'], [86400, '1 dag/s']].map(([v, n]) => ({ name: n, style: chip(st.satSpeed === v), onClick: () => this.setState({ satSpeed: v }) }));
     const geoD = (sv.T - this.TE) / this.TE;
     let geoMsg, geoStyle;
-    if (Math.abs(geoD) < 0.01) { geoMsg = 'T = rotatieperiode aarde: de satelliet is geostationair.'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:8px;background:#e6f2ea;color:#2f7a45;font-weight:600'; }
-    else { geoMsg = geoD < 0 ? 'Sneller dan de aarde: schuift naar het oosten t.o.v. de grond.' : 'Trager dan de aarde: blijft achter (naar het westen).'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:8px;background:#f4f1ea;color:#6f685c'; }
+    if (Math.abs(geoD) < 0.01) { geoMsg = 'T = rotatieperiode aarde: de satelliet is geostationair.'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:4px;background:#e6f2ea;color:#297743;font-weight:600'; }
+    else { geoMsg = geoD < 0 ? 'Sneller dan de aarde: schuift naar het oosten t.o.v. de grond.' : 'Trager dan de aarde: blijft achter (naar het westen).'; geoStyle = 'margin-top:4px;padding:7px 9px;border-radius:4px;background:#f4f1ea;color:var(--muted)'; }
 
     const a = this.aOf(st.as), e = st.e, Tk = Math.pow(a, 1.5);
     const near2 = (x, y) => Math.abs(x - y) / y < 0.01;
@@ -800,7 +804,7 @@ class Component extends DCLogic {
       escEkStr: J(st.m * Math.pow(v0u * u1, 2) / 2), escEpStr: J(-eJ), escEStr: Math.abs(Eu) < 1e-9 ? '0 J' : J(Eu * eJ),
       escHmaxStr: hmax, escMsg, escMsgStyle,
       onPlay: () => { this.running = !this.running; this.forceUpdate(); },
-      playLabel: this.running ? 'Pauze' : 'Verder',
+      playLabel: this.running ? 'Pauze' : (this.t === 0 ? 'Start' : 'Verder'),
       onReset: resetAll,
       // sat
       hs: st.hs, m: st.m,
@@ -808,7 +812,7 @@ class Component extends DCLogic {
       onH: (ev) => { this.setState({ hs: parseFloat(ev.target.value) }); this.trail = []; },
       onM: (ev) => this.setState({ m: parseFloat(ev.target.value) }),
       satPresets, satSpeeds,
-      satToggles: tog([['showF', 'Kracht Fɢ'], ['showV', 'Snelheid v'], ['showTrail', 'Spoor'], ['coRot', 'Meedraaien met aarde']]),
+      satToggles: tog([['showF', 'Gravitatiekracht'], ['showV', 'Snelheid v'], ['showTrail', 'Spoor'], ['coRot', 'Meedraaien met aarde']]),
       rStr: this.big(sv.r / 1000) + ' km', gStr: (sv.g >= 0.1 ? this.fmt(sv.g, 2) : this.fmt(sv.g * 1000, 2) + '·10⁻³') + ' N/kg',
       FStr: (st.m * sv.g >= 10 ? this.big(st.m * sv.g) : this.fmt(st.m * sv.g, 2)) + ' N', vStr: this.fmt(sv.v / 1000, 2) + ' km/s', TStr: this.dur(sv.T),
       geoMsg, geoStyle,
@@ -818,7 +822,7 @@ class Component extends DCLogic {
       onA: (ev) => this.setState({ as: parseFloat(ev.target.value) }),
       onE: (ev) => this.setState({ e: parseFloat(ev.target.value) }),
       kepPresets, kepSpeeds,
-      kepToggles: tog([['showSect', 'Perkenwet'], ['showKV', 'Snelheid v'], ['showKF', 'Kracht Fɢ'], ['showAxes', 'Assen ellips']]),
+      kepToggles: tog([['showSect', 'Perkenwet'], ['showKV', 'Snelheid v'], ['showKF', 'Gravitatiekracht'], ['showAxes', 'Assen ellips']]),
       rpStr: this.fmt(a * (1 - e), 3) + ' AE', raStr: this.fmt(a * (1 + e), 3) + ' AE',
       vpStr: this.fmt(vU * Math.sqrt((1 + e) / (a * (1 - e))), 1) + ' km/s', vaStr: this.fmt(vU * Math.sqrt((1 - e) / (a * (1 + e))), 1) + ' km/s',
       vNowStr: this.fmt(vU * Math.sqrt(2 / rNow - 1 / a), 1) + ' km/s',

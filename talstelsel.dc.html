@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talstelsel · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/talstelsel.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
@@ -20,7 +21,7 @@
   a{color:var(--muted);text-decoration:none}
   a:hover{color:var(--ink)}
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:16px 22px 28px">
 <div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
@@ -30,7 +31,7 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Talstelsel</h1>
   </div>
 
-  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 16px;box-shadow:var(--shadow)">
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:10px 16px;box-shadow:var(--shadow)">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Aantal bits</span>
       <div style="display:flex;gap:4px">
@@ -39,7 +40,7 @@
         </sc-for>
       </div>
     </div>
-    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:34px">
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--ink);min-height:34px">
       <input type="checkbox" checked="{{ signed }}" onChange="{{ toggleSigned }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 300);cursor:pointer">Negatieve getallen (2-complement)
     </label>
     <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted)">{{ rangeStr }}</div>
@@ -53,7 +54,7 @@
 
   <sc-if value="{{ isConv }}" hint-placeholder-val="{{ true }}">
   <div style="display:flex;flex-direction:column;gap:14px">
-    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
+    <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
       <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Invoer</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <div style="display:flex;gap:4px">
@@ -91,7 +92,7 @@
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
       <sc-for list="{{ convOut }}" as="o" hint-placeholder-count="3">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
           <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">{{ o.title }}</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:oklch(0.45 0.13 300);margin-top:8px;word-break:break-all">{{ o.value }}</div>
           <div style="font-size:12.5px;color:var(--muted);margin-top:5px;min-height:18px">{{ o.note }}</div>
@@ -103,7 +104,7 @@
 
   <sc-if value="{{ isCalc }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;flex-direction:column;gap:14px">
-    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
+    <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
         <div style="display:flex;gap:4px">
           <sc-for list="{{ calcBaseBtns }}" as="b" hint-placeholder-count="2">
@@ -136,14 +137,14 @@
       </sc-if>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
         <sc-for list="{{ calcOut }}" as="o" hint-placeholder-count="3">
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
             <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">{{ o.title }}</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:{{ o.color }};margin-top:8px;word-break:break-all">{{ o.value }}</div>
             <div style="font-size:12.5px;color:var(--muted);margin-top:5px;min-height:18px">{{ o.note }}</div>
           </div>
         </sc-for>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Uitwerking</div>
         <div style="overflow-x:auto">
           <div style="display:grid;grid-template-columns:max-content max-content;gap:2px 16px;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.7;width:max-content">
@@ -239,7 +240,7 @@ class Component extends DCLogic {
   onB = (e) => this.setState({ bText: e.target.value });
 
   btn(label, on, onClick, extra) {
-    return Object.assign({ label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? this.ACC : '#e0d9ca' }, extra || {});
+    return Object.assign({ label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : 'var(--ink)', border: on ? this.ACC : '#e0d9ca' }, extra || {});
   }
 
   addRows(ua, ub, n) {
@@ -258,7 +259,7 @@ class Component extends DCLogic {
     const rangeStr = signed ? this.fi(lo) + ' \u2264 getal \u2264 ' + hi : '0 \u2264 getal \u2264 ' + hi;
     const bitBtns = [4, 8, 16].map(k => this.btn(String(k), n === k, this.setN(k)));
     const tabBtns = [['conv', 'Omzetter'], ['calc', 'Rekenen']].map(([k, l]) => ({ label: l, onClick: () => this.setState({ tab: k }),
-      bg: tab === k ? '#2a2723' : '#fffdf9', fg: tab === k ? '#fff' : '#6f685c', border: tab === k ? '#2a2723' : '#e7e1d5' }));
+      bg: tab === k ? 'var(--ink)' : 'var(--card)', fg: tab === k ? '#fff' : '#6f685c', border: tab === k ? 'var(--ink)' : '#e7e1d5' }));
 
     // ---- Omzetter
     const v = this.sv(u, n, signed), neg = signed && v < 0;
@@ -316,7 +317,7 @@ class Component extends DCLogic {
         { title: 'Binair', value: this.bin(ru, n, true), note: n + ' bits', color: col },
         { title: 'Hexadecimaal', value: rh, note: (signed && rv < 0) ? '2-complement van ' + this.fi(rv) : '', color: col },
       ];
-      const S = (label, text, o) => steps.push(Object.assign({ label, text, color: '#3a352c', weight: '400', rule: 'none' }, o || {}));
+      const S = (label, text, o) => steps.push(Object.assign({ label, text, color: 'var(--ink)', weight: '400', rule: 'none' }, o || {}));
       const pad = (s, w) => s.padStart(w, ' ');
       if (cb === 'bin') {
         const sA = this.bin(pa.u, n, false), sB = this.bin(pb.u, n, false);

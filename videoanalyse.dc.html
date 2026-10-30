@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Videoanalyse · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/videoanalyse.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -28,7 +29,7 @@
   }
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
-<script src="./applet-core.js"></script>
+<script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -60,18 +61,18 @@
         <canvas ref="{{ graphRef }}" onPointerDown="{{ onGDown }}" onPointerMove="{{ onGMove }}" onPointerUp="{{ onGUp }}" style="width:100%;height:100%;display:block;touch-action:none;cursor:crosshair"></canvas>
       </div>
       <sc-if value="{{ showFrameBar }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:8px 14px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);flex:none">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:8px 14px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);flex:none">
           <button onClick="{{ onPrev }}" style="min-width:40px;min-height:36px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;color:var(--ink)">&#9664;</button>
           <div style="flex:1;min-width:80px;height:32px;display:flex;align-items:center"><input type="range" min="0" max="{{ maxFrame }}" step="1" value="{{ frame }}" onInput="{{ onFrameSlider }}"></div>
           <button onClick="{{ onNext }}" style="min-width:40px;min-height:36px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;color:var(--ink)">&#9654;</button>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;min-width:190px;text-align:right">frame {{ frameStr }} &middot; t = {{ tStr }}</div>
         </div>
       </sc-if>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 18px;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2);line-height:1.45">{{ message }}</div>
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:10px 18px;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2);line-height:1.45">{{ message }}</div>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;flex:none">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;flex:none">
           <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-align:right;line-height:1.3">
             <span>t<br>s</span><span>x<br>m</span><span>y<br>m</span><span>vx<br>m/s</span><span>vy<br>m/s</span>
           </div>
@@ -87,7 +88,7 @@
         </div>
       </sc-if>
       <sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
           <button onClick="{{ onPick }}" style="min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ pickLabel }}</button>
           <button onClick="{{ onDemo }}" style="min-height:38px;font-size:14px;font-weight:500;border:1px solid #d9d3c6;border-radius:4px;cursor:pointer;background:#fff;color:var(--ink)">Voorbeeldvideo laden (BallDrop)</button>
           <sc-if value="{{ showHevc }}" hint-placeholder-val="{{ true }}">
@@ -125,7 +126,7 @@
         </div>
       </sc-if>
       <sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
           <div style="font-size:14px;font-weight:600">1. IJkstok</div>
           <button onClick="{{ onToolIjk }}" style="{{ ijkBtnStyle }}">{{ ijkBtnLabel }}</button>
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Werkelijke lengte</span>
@@ -141,7 +142,7 @@
         </div>
       </sc-if>
       <sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
           <div style="font-size:14px;font-weight:600">Meetpunten</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
             <sc-for list="{{ trackItems }}" as="t" hint-placeholder-count="1">
@@ -180,7 +181,7 @@
         </div>
       </sc-if>
       <sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Horizontaal</span>
             <sc-raw-select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:4px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
@@ -227,7 +228,7 @@ class Component extends DCLogic {
     step: 1, loaded: false, err: false, vw: 0, vh: 0, dur: 0, rot: 0,
     fpsStr: '30', frame: 0, startF: 0, endF: 0, N: 1,
     A: null, B: null, O: null, theta: 0, tool: 'none', calL: '1,00',
-    pts: {}, tracks: [{ name: 'Punt 1', mass: '', pts: {} }], ti: 0, t0: null, showV: false, showA: false, showPath: true, stride: 1, zoom: 1, panX: 0, panY: 0, hand: false, fileInfo: '', big: false,
+    pts: {}, tracks: [{ name: 'Punt 1', mass: '', pts: {} }], ti: 0, t0: null, showV: false, showA: false, showPath: false, stride: 1, zoom: 1, panX: 0, panY: 0, hand: false, fileInfo: '', big: false,
     gx: 't', gy: 'y', fit: 'none', fitOrigin: false, sel: null, copied: false, note: ''
   };
   stageRef = React.createRef(); graphRef = React.createRef();
@@ -719,7 +720,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'), W = this.W, H = this.H, k = this.cdpr || 1;
     ctx.setTransform(k, 0, 0, k, 0, 0); ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#fffdf9'; ctx.fillRect(0, 0, W, H);
-    const P = this.pairs(), mono = "400 12px 'IBM Plex Mono',monospace";
+    const P = this.pairs(), mono = "400 13px 'IBM Plex Mono',monospace";
     if (!P.length) {
       ctx.textAlign = 'center'; ctx.fillStyle = '#4f5b69'; ctx.font = "400 16px 'Atkinson Hyperlegible',sans-serif";
       const needM = ['Ek', 'Ep', 'Em', 'px', 'py', 'p'].some(q => q === s.gx || q === s.gy) && !this.massOf(s.tracks[s.ti]);
@@ -752,7 +753,7 @@ class Component extends DCLogic {
       if (SP.length) {
         const mn = SP.reduce((a, p) => p.y < a.y ? p : a), mx = SP.reduce((a, p) => p.y > a.y ? p : a);
         ctx.lineWidth = 2; ctx.strokeStyle = '#1d2a3a';
-        [mn, mx].forEach((p, i) => { ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 9, 0, 7); ctx.stroke(); ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.fillText(i ? 'max' : 'min', X(p.x), Y(p.y) + (i ? -14 : 22)); });
+        [mn, mx].forEach((p, i) => { ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 9, 0, 7); ctx.stroke(); ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.fillText(i ? 'max' : 'min', X(p.x), Y(p.y) + (i ? -14 : 22)); });
       }
     }
     ctx.restore();
@@ -799,7 +800,7 @@ class Component extends DCLogic {
     const k = this.scaleK(), q = this.Q[s.gx][0] + ' – ' + this.Q[s.gy][0];
     const html = '<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><title>Verslag videoanalyse</title>'
       + '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
-      + '<style>body{font:13px/1.5 "IBM Plex Sans",sans-serif;color:var(--ink);margin:24px auto;max-width:780px;padding:0 16px}h1{font-size:22px;margin:0 0 4px}h2{font-size:15px;margin:22px 0 8px}img{max-width:100%;border:1px solid #d9d3c6}table{border-collapse:collapse;width:100%;font:11px "IBM Plex Mono",monospace}th,td{border-bottom:1px solid #e7e1d5;padding:3px 6px;text-align:right}th{border-bottom:2px solid #2a2723;font-weight:500}small{color:var(--muted)}.meta{color:var(--ink-2)}.f{font:13px "IBM Plex Mono",monospace;background:#f3f0e9;padding:8px 10px;margin:6px 0}.nm{display:flex;gap:40px;margin:14px 0;border-bottom:1px solid #2a2723;padding-bottom:6px}tr{break-inside:avoid}</style></head><body>'
+      + '<style>body{font:13px/1.5 "IBM Plex Sans",sans-serif;color:var(--ink);margin:24px auto;max-width:780px;padding:0 16px}h1{font-size:22px;margin:0 0 4px}h2{font-size:15px;margin:22px 0 8px}img{max-width:100%;border:1px solid #d9d3c6}table{border-collapse:collapse;width:100%;font:11px "IBM Plex Mono",monospace}th,td{border-bottom:1px solid #e7e1d5;padding:3px 6px;text-align:right}th{border-bottom:2px solid #2a2723;font-weight:500}small{color:var(--muted)}.meta{color:var(--ink-2)}.f{font:13px "IBM Plex Mono",monospace;background:#f3f0e9;padding:8px 10px;margin:6px 0}.nm{display:flex;gap:40px;margin:14px 0;border-bottom:1px solid var(--ink);padding-bottom:6px}tr{break-inside:avoid}</style></head><body>'
       + '<h1>Verslag videoanalyse</h1><div class="meta">' + new Date().toLocaleDateString('nl-BE') + ' · ' + esc(this._fname || '') + ' · ' + esc(s.fileInfo) + ' · ' + this.sig(this.fpsNum()) + ' fps · schaal ' + (k ? this.sig(k * 1000) + ' mm/px' : '–') + ' · meetpunt ' + esc(s.tracks[s.ti].name) + (m ? ' (m = ' + this.sig(m) + ' kg)' : '') + '</div>'
       + '<div class="nm"><span>Naam:</span><span>Klas:</span></div>'
       + '<h2>Beeld met meetpunten</h2><img src="' + vimg + '">'
@@ -836,8 +837,11 @@ class Component extends DCLogic {
     const pill = (on, w) => 'min-height:34px;border-radius:4px;cursor:pointer;font-size:13px;' + (on ? 'border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600' : 'border:1px solid var(--rule);background:#fff;color:var(--ink)');
     const tabNames = ['1  Video', '2  IJking', '3  Meten', '4  Analyse'];
     const tabs = tabNames.map((label, i) => ({
-      label, onClick: () => this.setState({ step: i + 1, tool: 'none', note: '' }),
-      style: 'min-height:34px;padding:0 14px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : 'border:1px solid var(--rule);background:#fffdf9;color:var(--ink-2)')
+      // meten en analyseren kan pas na de ijking: anders terug naar stap 2 met uitleg
+      label, onClick: () => (i >= 2 && !this.calibrated())
+        ? this.setState({ step: 2, tool: 'none', note: 'Eerst ijken: leg de ijkstok en de oorsprong vast, daarna kun je meten.' })
+        : this.setState({ step: i + 1, tool: 'none', note: '' }),
+      style: 'min-height:34px;padding:0 14px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : (i >= 2 && !this.calibrated()) ? 'border:1px dashed var(--rule);background:transparent;color:var(--muted)' : 'border:1px solid var(--rule);background:var(--card);color:var(--ink-2)')
     }));
     const fpsPresets = [24, 30, 60, 120, 240].map(n => ({ name: String(n), onClick: () => this.onFps({ target: { value: String(n) } }), style: pill(fps === n) }));
     const fitItems = [['none', 'Geen'], ['lin', 'Lineair'], ['quad', 'Kwadratisch'], ['exp', 'Exponentieel']].map(([id, name]) => ({ name, onClick: () => this.setState({ fit: id }), style: pill(s.fit === id) }));
@@ -850,7 +854,7 @@ class Component extends DCLogic {
     }));
     const msgs = {
       1: s.loaded ? 'Draai het beeld rechtop, vul de opnamesnelheid in en kies met de schuifbalk het stuk dat je wilt analyseren.' : 'Kies een video van de beweging. De video blijft op je eigen toestel en wordt nergens opgeladen.',
-      2: !s.A ? 'Druk op "Plaats ijkstok" en klik het begin van een voorwerp met bekende lengte aan.' : !s.B ? 'Klik nu het einde van de ijkstok aan.' : !s.O ? 'Kies "Plaats oorsprong" en klik het punt aan waar x = 0 en y = 0 moet zijn.' : 'Stel de hoek van de x-as in en versleep de punten voor een nauwkeurige plaatsing.',
+      2: (!s.A && s.note) || (!s.A ? 'Druk op "Plaats ijkstok" en klik het begin van een voorwerp met bekende lengte aan.' : !s.B ? 'Klik nu het einde van de ijkstok aan.' : !s.O ? 'Kies "Plaats oorsprong" en klik het punt aan waar x = 0 en y = 0 moet zijn.' : 'Stel de hoek van de x-as in en versleep de punten voor een nauwkeurige plaatsing.'),
       3: s.note || (!this.calibrated() ? 'Ijk eerst bij stap 2.' : 'Houd de muis ingedrukt op het voorwerp, verfijn met de vergroting en laat los: het beeld springt dan naar het volgende frame. Zoom in met het muiswiel en verschuif met Shift + slepen of de knop Verschuif.'),
       4: 'Kies de grootheden en een trendlijn. Snelheid en versnelling worden berekend uit de naburige meetpunten, dus aan de randen ontbreken ze.'
     };
@@ -866,7 +870,8 @@ class Component extends DCLogic {
       originStyle: pill(s.fitOrigin && s.fit !== 'exp') + (s.fit === 'exp' ? ';opacity:.4' : ''), onToggleOrigin: this.onToggleOrigin, onLeave: this.onLeave,
       onDemo: this.onDemo,
       showHevc: !s.loaded || s.err, hevcLead: s.err ? 'Deze video kan niet worden afgespeeld (waarschijnlijk HEVC).' : 'Let op bij video\'s van een telefoon:',
-      hevcStyle: 'border-radius:4px;padding:10px 12px;font-size:13px;line-height:1.5;' + (s.err ? 'background:#fbeceb;border:1px solid #efc7c3;color:#7a2a24' : 'background:#f3f0e9;border:1px solid var(--rule);color:var(--ink-2)'),
+      // tip als gewone tekst onder een stippellijn (geen kaart in een kaart); een fout blijft een opvallend vak
+      hevcStyle: 'font-size:13px;line-height:1.5;' + (s.err ? 'border-radius:4px;padding:10px 12px;background:#fbeceb;border:1px solid #efc7c3;color:#7a2a24' : 'border-top:1px dashed var(--rule);padding:10px 0 0;color:var(--ink-2)'),
       fileInfo: s.fileInfo, bigWarn: s.big,
       showZoom: s.loaded && s.step < 4, zoomStr: Math.round(s.zoom * 100) + '%',
       handStyle: 'min-height:34px;padding:0 10px;border-radius:4px;cursor:pointer;font-size:13px;' + (s.hand ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : 'border:1px solid var(--rule);background:#fff;color:var(--ink)'),
@@ -883,8 +888,8 @@ class Component extends DCLogic {
       onGx: this.onGx, onGy: this.onGy, onClearSel: this.onClearSel, onCopy: this.onCopy, onCsv: this.onCsv,
       s1: s.step === 1, s2: s.step === 2, s3: s.step === 3, s4: s.step === 4,
       loaded: s.loaded, videoError: s.err, hasRows: s.step >= 3 && D.f.length > 0, hasFit: !!fi,
-      videoWrapStyle: 'position:relative;flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--rule);border-radius:4px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'none' : 'flex'),
-      graphWrapStyle: 'flex:1;min-height:0;background:#fffdf9;border:1px solid var(--rule);border-radius:4px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'flex' : 'none'),
+      videoWrapStyle: 'position:relative;flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'none' : 'flex'),
+      graphWrapStyle: 'flex:1;min-height:0;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);align-items:center;justify-content:center;display:' + (s.step === 4 ? 'flex' : 'none'),
       showFrameBar: s.loaded && s.step < 4,
       maxFrame: s.N - 1, frame: s.frame,
       frameStr: (s.frame + 1) + ' / ' + s.N, tStr: this.sig((s.frame - (s.t0 == null ? s.startF : s.t0)) / fps, 3) + ' s',

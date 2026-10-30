@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booleaanse algebra · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/booleanalgebra.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
@@ -20,7 +21,7 @@
   a{color:var(--muted);text-decoration:none}
   a:hover{color:var(--ink)}
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script><script src="./boolean-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script><script src="./boolean-core.js"></script>
 <script src="boolean-core.js"></script>
 </helmet>
 <div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:16px 22px 28px">
@@ -31,16 +32,16 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Booleaanse algebra</h1>
   </div>
 
-  <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+  <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
     <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Uitdrukking</div>
     <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. A + !A·B" style="height:42px;border-radius:4px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:var(--ink)">
     <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
       <sc-for list="{{ keys }}" as="k" hint-placeholder-count="5">
-        <button onClick="{{ k.onClick }}" style="min-width:40px;height:34px;padding:0 10px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-family:var(--font-display);font-size:16px;font-weight:700;border:1px solid #e0d9ca;background:#fff;color:#3a352c">{{ k.label }}</button>
+        <button onClick="{{ k.onClick }}" style="min-width:40px;height:34px;padding:0 10px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-family:var(--font-display);font-size:16px;font-weight:700;border:1px solid #e0d9ca;background:#fff;color:var(--ink)">{{ k.label }}</button>
       </sc-for>
       <span style="width:1px;height:22px;background:#e0d9ca;margin:0 4px"></span>
       <sc-for list="{{ examples }}" as="x" hint-placeholder-count="4">
-        <button onClick="{{ x.onClick }}" style="height:34px;padding:0 12px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;border:1px solid #e0d9ca;background:#f4f1ea;color:#3a352c">{{ x.label }}</button>
+        <button onClick="{{ x.onClick }}" style="height:34px;padding:0 12px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;border:1px solid #e0d9ca;background:#f4f1ea;color:var(--ink)">{{ x.label }}</button>
       </sc-for>
     </div>
     <div style="font-size:12.5px;color:var(--muted);line-height:1.5">Variabelen A tot Z (maximaal 5 verschillende; kleine letters mogen ook). NOT: <b style="font-family:'IBM Plex Mono',monospace">!</b> v&oacute;&oacute;r of <b style="font-family:'IBM Plex Mono',monospace">'</b> na een term. OR: <b style="font-family:'IBM Plex Mono',monospace">+</b>. AND: <b style="font-family:'IBM Plex Mono',monospace">&middot;</b>, <b style="font-family:'IBM Plex Mono',monospace">*</b> of weglaten (ab).</div>
@@ -56,7 +57,7 @@
       <span style="margin-left:auto;font-size:13px;color:{{ eqColor }};font-weight:500">{{ eqNote }}</span>
     </div>
 
-    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+    <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
       <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:8px">Stappen</div>
       <div style="display:flex;flex-direction:column">
         <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
@@ -72,7 +73,7 @@
       </div>
     </div>
 
-    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+    <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
       <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Waarheidstabel</div>
       <div style="overflow-x:auto">
         <div style="display:grid;grid-template-columns:repeat({{ cols }},minmax(44px,max-content));gap:2px;font-family:'IBM Plex Mono',monospace;font-size:14px;width:max-content">

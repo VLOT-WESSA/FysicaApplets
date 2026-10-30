@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staande golf door reflectie · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/staandegolf.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -51,7 +52,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow);flex:none;align-items:center">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;box-shadow:var(--shadow);flex:none;align-items:center">
         <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-right:4px">Componenten (uit bij start)</span>
         <button onClick="{{ onTogInc }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid var(--rule);border-radius:4px;padding:8px 13px;cursor:pointer;background:{{ incBg }};color:{{ incFg }}"><span style="width:22px;height:3px;background:#7fb4ff;border-radius:2px;display:inline-block;opacity:{{ incDot }}"></span>heenlopend</button>
         <button onClick="{{ onTogRef }}" style="display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;border:1px solid var(--rule);border-radius:4px;padding:8px 13px;cursor:pointer;background:{{ refBg }};color:{{ refFg }}"><span style="width:22px;height:3px;background:#e8964c;border-radius:2px;display:inline-block;opacity:{{ refDot }}"></span>teruglopend</button>
@@ -64,7 +65,7 @@
         <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Uiteinde</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onEndFixed }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ fixedBg }};color:{{ fixedFg }}">Vast</button>
@@ -72,7 +73,7 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Golflengte</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
@@ -218,7 +219,7 @@ class Component extends DCLogic {
       ctx.beginPath(); ctx.moveTo(xL, ay - 80); ctx.lineTo(xL, ay + 80); ctx.stroke();
     }
 
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
     ctx.fillText(this.state.end === 'vast' ? 'vast uiteinde' : 'los uiteinde', xL - 50, ay + 100);
     ctx.strokeStyle = '#b8b9cd'; ctx.fillStyle = '#737c8b'; ctx.lineWidth = 1; ctx.textAlign = 'left';
     ctx.beginPath(); ctx.moveTo(x0, ay + 110); ctx.lineTo(x0 + lambdaPx, ay + 110); ctx.stroke();

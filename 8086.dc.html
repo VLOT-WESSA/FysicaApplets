@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>8086-simulator</title>
+<title>8086-simulator · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/8086.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:300}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
@@ -21,7 +21,7 @@
   a{color:var(--muted)}
   a:hover{color:var(--ink)}
   .row{display:flex;justify-content:space-between;align-items:baseline}
-  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px}
+  .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px}
   .hd{font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600}
   .sub{font-size:12px;color:var(--muted)}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -40,7 +40,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:80vh}
   }
 </style>
-<script src="./applet-core.js"></script>
+<script>window.NO_FONT_FLOOR = true;</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -1093,7 +1093,7 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state, m = this.mach, S = this.segs();
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)');
     const btnA = 'min-height:36px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
     const btnP = 'min-height:34px;font-size:13px;border-radius:4px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink)';
     const hasProg = !!this.prog, curOff = m.eu.ins ? m.eu.insAt : m.IP;

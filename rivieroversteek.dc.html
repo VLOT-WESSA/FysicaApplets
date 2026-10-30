@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onafhankelijkheidsbeginsel · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/rivieroversteek.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -51,7 +52,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#1f9e8f;border-radius:2px;display:inline-block"></span>boot t.o.v. water</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#5b9bff;border-radius:2px;display:inline-block"></span>stroming</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>werkelijke snelheid</div>
@@ -63,7 +64,7 @@
         <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Vaarsnelheid boot</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vbStr }}</span>
@@ -87,7 +88,7 @@
         <input type="range" min="20" max="120" step="5" value="{{ width }}" onChange="{{ onWidth }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
         <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Vectoren (uit bij start)</span>
         <div style="display:flex;align-items:center;justify-content:space-between">
           <span style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:14px;height:3px;background:#1f9e8f;border-radius:2px"></span>boot t.o.v. water</span>
@@ -108,11 +109,11 @@
         <button onClick="{{ onStraight }}" style="width:100%;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:10px;cursor:pointer;background:#fff;color:#1f7a6e;margin-top:2px">&#x21E7; Stuurhoek voor loodrecht oversteken</button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Resultaat</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:var(--muted)">werkelijke snelheid</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#f0a868">{{ vResStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#a05410">{{ vResStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:var(--muted)">overtijd</span>
@@ -219,7 +220,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#3a5a3f'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(0, this.topBank); ctx.lineTo(this.W, this.topBank);
     ctx.moveTo(0, this.botBank); ctx.lineTo(this.W, this.botBank); ctx.stroke();
-    ctx.fillStyle = '#656d7b'; ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#656d7b'; ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     ctx.fillText('overkant', this.W / 2, this.topBank - 8);
     ctx.fillText('vertrekoever', this.W / 2, this.botBank + 18);
 
@@ -276,7 +277,7 @@ class Component extends DCLogic {
     if (this.state.showStroom) this.arrow(ctx, bx, by, vStrX, vStrY, '#4a8df5', 3);
     if (this.state.showRes) this.arrow(ctx, bx, by, vResX, vResY, '#c8741d', 3.5);
 
-    ctx.fillStyle = '#656d7b'; ctx.font = "500 11px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = '#656d7b'; ctx.font = "500 12.5px 'IBM Plex Mono', monospace";
     ctx.save(); ctx.translate(this.W - 14, (this.topBank + this.botBank) / 2); ctx.rotate(Math.PI / 2);
     ctx.textAlign = 'center'; ctx.fillText('breedte ' + this.state.width + ' m', 0, 0); ctx.restore();
   }
@@ -297,7 +298,7 @@ class Component extends DCLogic {
       else if (drift > 0) { verdict = 'drijft stroomafwaarts'; verdBg = 'rgba(74,141,245,0.16)'; verdFg = '#598ada'; }
       else { verdict = 'drijft stroomopwaarts'; verdBg = 'rgba(200,116,29,0.16)'; verdFg = '#bd752e'; }
     } else { verdict = 'boot vaart niet vooruit'; verdBg = 'rgba(40,38,34,0.08)'; verdFg = '#49505a'; }
-    const tg = (on, col) => ({ bg: on ? col : '#f4f1ea', fg: on ? '#fff' : '#8c8576', border: on ? col : '#e7e1d5', dot: on ? '#ffffff' : '#c3bcad', label: on ? 'Aan' : 'Uit' });
+    const tg = (on, col) => ({ bg: on ? col : '#f4f1ea', fg: on ? '#fff' : '#4f5b69', border: on ? col : '#e7e1d5', dot: on ? '#ffffff' : '#c3bcad', label: on ? 'Aan' : 'Uit' });
     const tb = tg(this.state.showBoot, '#1f9e8f'), ts = tg(this.state.showStroom, '#2f6fb0'), tr = tg(this.state.showRes, '#c67b1c'), tp = tg(this.state.showPara, '#938c7f');
     return {
       stageRef: this.stageRef,

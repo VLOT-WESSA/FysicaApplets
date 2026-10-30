@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karnaughkaarten · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/karnaugh.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
@@ -20,7 +21,7 @@
   a{color:var(--muted);text-decoration:none}
   a:hover{color:var(--ink)}
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script><script src="./boolean-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script><script src="./boolean-core.js"></script>
 <script src="boolean-core.js"></script>
 </helmet>
 <div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:16px 22px 28px">
@@ -31,7 +32,7 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Karnaughkaarten</h1>
   </div>
 
-  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 16px;box-shadow:var(--shadow)">
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:10px 16px;box-shadow:var(--shadow)">
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Variabelen</span>
       <div style="display:flex;gap:4px">
@@ -53,7 +54,7 @@
 
   <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
 
-    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;flex:0 0 auto;max-width:100%;overflow-x:auto">
+    <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;flex:0 0 auto;max-width:100%;overflow-x:auto">
       <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Klik op een cel: 0, 1 of X (don't care)</div>
       <div style="display:grid;grid-template-columns:60px repeat({{ C }},78px);width:max-content">
         <sc-for list="{{ items }}" as="it" hint-placeholder-count="12">
@@ -62,7 +63,7 @@
           </sc-if>
           <sc-if value="{{ it.isCell }}" hint-placeholder-val="{{ false }}">
             <div style="position:relative;width:78px;height:78px">
-              <button onClick="{{ it.onClick }}" style="position:absolute;inset:0;width:100%;height:100%;border:1px solid #d9d1bf;background:{{ it.bg }};cursor:pointer;padding:0;font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:{{ it.fg }}">{{ it.val }}<span style="position:absolute;top:4px;left:6px;font-size:10.5px;font-weight:400;color:{{ it.mfg }}">{{ it.idx }}</span></button>
+              <button onClick="{{ it.onClick }}" style="position:absolute;inset:0;width:100%;height:100%;border:1px solid #d9d1bf;background:{{ it.bg }};cursor:pointer;padding:0;font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;color:{{ it.fg }}">{{ it.val }}<span style="position:absolute;top:4px;left:6px;font-size:12px;font-weight:400;color:{{ it.mfg }}">{{ it.idx }}</span></button>
               <sc-for list="{{ it.ov }}" as="o" hint-placeholder-count="1">
                 <div style="position:absolute;pointer-events:none;top:{{ o.t }}px;right:{{ o.r }}px;bottom:{{ o.b }}px;left:{{ o.l }}px;border-style:solid;border-color:{{ o.col }};border-width:{{ o.bt }}px {{ o.br }}px {{ o.bb }}px {{ o.bl }}px;border-radius:{{ o.rad }}"></div>
               </sc-for>
@@ -81,7 +82,7 @@
       </div>
 
       <sc-if value="{{ hasGroups }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
           <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:8px">Groepen</div>
           <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
             <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #efe9dd">
@@ -93,7 +94,7 @@
         </div>
       </sc-if>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Kaart invullen vanuit een uitdrukking</div>
         <input type="text" value="{{ text }}" onInput="{{ onText }}" spellcheck="false" autocomplete="off" placeholder="bv. A·B + !A·C" style="height:38px;border-radius:4px;border:1.5px solid {{ border }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--ink)">
         <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
@@ -130,7 +131,7 @@ class Component extends DCLogic {
       this.setState({ text, err: '', vals });
     } catch (er) { this.setState({ text, err: er.message }); }
   };
-  btn(label, on, onClick) { return { label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : '#3a352c', border: on ? this.ACC : '#e0d9ca' }; }
+  btn(label, on, onClick) { return { label, onClick, bg: on ? this.ACC : '#fff', fg: on ? '#fff' : 'var(--ink)', border: on ? this.ACC : '#e0d9ca' }; }
 
   renderVals() {
     const B = window.BoolCore, h = React.createElement, { n, vals, mode } = this.state;
@@ -176,7 +177,7 @@ class Component extends DCLogic {
             rad: [t && l, t && rt, b && rt, b && l].map(x => x ? '12px' : '0').join(' ') });
         });
         items.push({ isLabel: false, isCell: true, idx: String(i), val: v === 2 ? 'X' : String(v), onClick: this.cycle(i), ov,
-          bg: v === 1 ? 'oklch(0.94 0.04 300)' : v === 2 ? '#f1ede2' : '#fffdf9', fg: v === 1 ? 'oklch(0.4 0.13 300)' : v === 2 ? '#8c8576' : '#b8b2a3', mfg: '#a39b88' });
+          bg: v === 1 ? 'oklch(0.94 0.04 300)' : v === 2 ? '#f1ede2' : 'var(--card)', fg: v === 1 ? 'oklch(0.4 0.13 300)' : v === 2 ? '#4f5b69' : '#b8b2a3', mfg: '#a39b88' });
       }
     }
     const groups = gdata.map(g => ({ col: g.col, el: B.view(B.impNode(g.imp, n, names, pos), h),

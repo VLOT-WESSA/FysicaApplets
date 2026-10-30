@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T16:14:59.814452+00:00",
+  "title": "Design System: Natuurkunde simulaties",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Schriftpapier",
+        "tonalRamp": [
+          "oklch(0.15 0.010 85)",
+          "oklch(0.27 0.013 85)",
+          "oklch(0.39 0.016 85)",
+          "oklch(0.51 0.019 85)",
+          "oklch(0.63 0.018 85)",
+          "oklch(0.75 0.015 85)",
+          "oklch(0.87 0.012 85)",
+          "oklch(0.95 0.010 85)"
+        ]
+      },
+      "paper-grid": {
+        "role": "neutral",
+        "displayName": "Ruitjeslijn",
+        "tonalRamp": [
+          "oklch(0.15 0.012 85)",
+          "oklch(0.27 0.016 85)",
+          "oklch(0.39 0.020 85)",
+          "oklch(0.51 0.024 85)",
+          "oklch(0.63 0.022 85)",
+          "oklch(0.75 0.019 85)",
+          "oklch(0.87 0.015 85)",
+          "oklch(0.95 0.012 85)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Bladwit",
+        "tonalRamp": [
+          "oklch(0.15 0.006 90)",
+          "oklch(0.27 0.008 90)",
+          "oklch(0.39 0.010 90)",
+          "oklch(0.51 0.011 90)",
+          "oklch(0.63 0.011 90)",
+          "oklch(0.75 0.009 90)",
+          "oklch(0.87 0.007 90)",
+          "oklch(0.95 0.006 90)"
+        ]
+      },
+      "stage": {
+        "role": "neutral",
+        "displayName": "Podiumpapier",
+        "tonalRamp": [
+          "oklch(0.15 0.007 88)",
+          "oklch(0.27 0.010 88)",
+          "oklch(0.39 0.012 88)",
+          "oklch(0.51 0.014 88)",
+          "oklch(0.63 0.013 88)",
+          "oklch(0.75 0.011 88)",
+          "oklch(0.87 0.009 88)",
+          "oklch(0.95 0.007 88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Inktblauw",
+        "tonalRamp": [
+          "oklch(0.15 0.020 250)",
+          "oklch(0.27 0.026 250)",
+          "oklch(0.39 0.032 250)",
+          "oklch(0.51 0.038 250)",
+          "oklch(0.63 0.036 250)",
+          "oklch(0.75 0.030 250)",
+          "oklch(0.87 0.024 250)",
+          "oklch(0.95 0.020 250)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Verdunde inkt",
+        "tonalRamp": [
+          "oklch(0.15 0.017 250)",
+          "oklch(0.27 0.023 250)",
+          "oklch(0.39 0.028 250)",
+          "oklch(0.51 0.033 250)",
+          "oklch(0.63 0.031 250)",
+          "oklch(0.75 0.026 250)",
+          "oklch(0.87 0.021 250)",
+          "oklch(0.95 0.017 250)"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Potloodgrijs",
+        "tonalRamp": [
+          "oklch(0.15 0.015 250)",
+          "oklch(0.27 0.019 250)",
+          "oklch(0.39 0.024 250)",
+          "oklch(0.51 0.028 250)",
+          "oklch(0.63 0.027 250)",
+          "oklch(0.75 0.022 250)",
+          "oklch(0.87 0.018 250)",
+          "oklch(0.95 0.015 250)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Kantlijn",
+        "tonalRamp": [
+          "oklch(0.15 0.015 85)",
+          "oklch(0.27 0.019 85)",
+          "oklch(0.39 0.024 85)",
+          "oklch(0.51 0.028 85)",
+          "oklch(0.63 0.027 85)",
+          "oklch(0.75 0.022 85)",
+          "oklch(0.87 0.018 85)",
+          "oklch(0.95 0.015 85)"
+        ]
+      },
+      "slider-track": {
+        "role": "neutral",
+        "displayName": "Spoor",
+        "tonalRamp": [
+          "oklch(0.15 0.015 85)",
+          "oklch(0.27 0.019 85)",
+          "oklch(0.39 0.024 85)",
+          "oklch(0.51 0.028 85)",
+          "oklch(0.63 0.027 85)",
+          "oklch(0.75 0.022 85)",
+          "oklch(0.87 0.018 85)",
+          "oklch(0.95 0.015 85)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Onderwerpaccent",
+        "canonical": "oklch(0.50 0.12 var(--h))",
+        "tonalRamp": [
+          "oklch(0.15 0.059 195)",
+          "oklch(0.27 0.077 195)",
+          "oklch(0.39 0.096 195)",
+          "oklch(0.51 0.114 195)",
+          "oklch(0.63 0.108 195)",
+          "oklch(0.75 0.089 195)",
+          "oklch(0.87 0.071 195)",
+          "oklch(0.95 0.059 195)"
+        ]
+      },
+      "accent-deep": {
+        "role": "primary",
+        "displayName": "Onderwerpaccent, donker",
+        "tonalRamp": [
+          "oklch(0.15 0.059 195)",
+          "oklch(0.27 0.077 195)",
+          "oklch(0.39 0.096 195)",
+          "oklch(0.51 0.114 195)",
+          "oklch(0.63 0.108 195)",
+          "oklch(0.75 0.089 195)",
+          "oklch(0.87 0.071 195)",
+          "oklch(0.95 0.059 195)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Onderwerpaccent, zacht",
+        "tonalRamp": [
+          "oklch(0.15 0.015 195)",
+          "oklch(0.27 0.019 195)",
+          "oklch(0.39 0.024 195)",
+          "oklch(0.51 0.028 195)",
+          "oklch(0.63 0.027 195)",
+          "oklch(0.75 0.022 195)",
+          "oklch(0.87 0.018 195)",
+          "oklch(0.95 0.015 195)"
+        ]
+      },
+      "topic-elektriciteit": {
+        "role": "secondary",
+        "displayName": "Onderwerp elektriciteit",
+        "canonical": "oklch(0.64 0.13 75)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 75)",
+          "oklch(0.27 0.084 75)",
+          "oklch(0.39 0.104 75)",
+          "oklch(0.51 0.123 75)",
+          "oklch(0.63 0.117 75)",
+          "oklch(0.75 0.097 75)",
+          "oklch(0.87 0.077 75)",
+          "oklch(0.95 0.064 75)"
+        ]
+      },
+      "topic-elektromagnetisme": {
+        "role": "secondary",
+        "displayName": "Onderwerp elektromagnetisme",
+        "canonical": "oklch(0.64 0.13 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 150)",
+          "oklch(0.27 0.084 150)",
+          "oklch(0.39 0.104 150)",
+          "oklch(0.51 0.123 150)",
+          "oklch(0.63 0.117 150)",
+          "oklch(0.75 0.097 150)",
+          "oklch(0.87 0.077 150)",
+          "oklch(0.95 0.064 150)"
+        ]
+      },
+      "topic-kernfysica": {
+        "role": "secondary",
+        "displayName": "Onderwerp kernfysica",
+        "canonical": "oklch(0.64 0.13 28)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 28)",
+          "oklch(0.27 0.084 28)",
+          "oklch(0.39 0.104 28)",
+          "oklch(0.51 0.123 28)",
+          "oklch(0.63 0.117 28)",
+          "oklch(0.75 0.097 28)",
+          "oklch(0.87 0.077 28)",
+          "oklch(0.95 0.064 28)"
+        ]
+      },
+      "topic-mechanica": {
+        "role": "secondary",
+        "displayName": "Onderwerp mechanica",
+        "canonical": "oklch(0.64 0.13 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 255)",
+          "oklch(0.27 0.084 255)",
+          "oklch(0.39 0.104 255)",
+          "oklch(0.51 0.123 255)",
+          "oklch(0.63 0.117 255)",
+          "oklch(0.75 0.097 255)",
+          "oklch(0.87 0.077 255)",
+          "oklch(0.95 0.064 255)"
+        ]
+      },
+      "topic-golven": {
+        "role": "secondary",
+        "displayName": "Onderwerp golven",
+        "canonical": "oklch(0.64 0.13 195)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 195)",
+          "oklch(0.27 0.084 195)",
+          "oklch(0.39 0.104 195)",
+          "oklch(0.51 0.123 195)",
+          "oklch(0.63 0.117 195)",
+          "oklch(0.75 0.097 195)",
+          "oklch(0.87 0.077 195)",
+          "oklch(0.95 0.064 195)"
+        ]
+      },
+      "topic-informatica": {
+        "role": "secondary",
+        "displayName": "Onderwerp informatica",
+        "canonical": "oklch(0.64 0.13 300)",
+        "tonalRamp": [
+          "oklch(0.15 0.064 300)",
+          "oklch(0.27 0.084 300)",
+          "oklch(0.39 0.104 300)",
+          "oklch(0.51 0.123 300)",
+          "oklch(0.63 0.117 300)",
+          "oklch(0.75 0.097 300)",
+          "oklch(0.87 0.077 300)",
+          "oklch(0.95 0.064 300)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titel van de overzichtspagina."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Onderwerptitels op de overzichtspagina."
+      },
+      "applet-title": {
+        "displayName": "Applet-titel",
+        "purpose": "Titel bovenaan elke applet."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Namen op appletkaarten en kaarttitels in het zijpaneel."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Beschrijvingen, uitleg en knoptekst."
+      },
+      "body-small": {
+        "displayName": "Body klein",
+        "purpose": "Hulptekst en beschrijvingen op kaarten."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Sectiekoppen en tellers, in mono zonder hoofdletters."
+      },
+      "value": {
+        "displayName": "Waarde",
+        "purpose": "Gemeten en ingestelde waarden met eenheid."
+      }
+    },
+    "shadows": [
+      {
+        "name": "rust",
+        "value": "2px 2px 0 #1d2a3a",
+        "purpose": "Elke kaart, het podium en het zoekveld."
+      },
+      {
+        "name": "opgetild",
+        "value": "4px 4px 0 #1d2a3a",
+        "purpose": "Appletkaart bij aanwijzen, samen met translate(-2px,-2px)."
+      },
+      {
+        "name": "ingedrukt",
+        "value": "0 0 0 #1d2a3a",
+        "purpose": "Appletkaart bij klikken, samen met translate(2px,2px)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "kaart-beweging",
+        "value": "box-shadow .12s, transform .12s",
+        "purpose": "Optillen en indrukken van kaarten."
+      },
+      {
+        "name": "kleur-wissel",
+        "value": "background .12s, color .12s",
+        "purpose": "Tabbladen en knoppen bij wisselen van toestand."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "gestapeld",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primaire knop",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Hoofdactie van een applet, zoals Start of Loslaten; bovenaan het zijpaneel.",
+      "html": "<button class=\"ds-btn-primary\">Start</button>",
+      "css": ".ds-btn-primary{min-height:40px;padding:0 22px;background:oklch(0.50 0.12 195);color:#fff;border:none;border-radius:4px;font:600 14px 'Atkinson Hyperlegible',sans-serif;cursor:pointer;transition:background .12s}.ds-btn-primary:hover{background:oklch(0.44 0.12 195)}.ds-btn-primary:focus-visible{outline:2px solid #1d2a3a;outline-offset:2px}"
+    },
+    {
+      "name": "Secundaire knop",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Reset en nevenacties; altijd naast de primaire knop.",
+      "html": "<button class=\"ds-btn-secondary\">Reset</button>",
+      "css": ".ds-btn-secondary{min-height:40px;padding:0 22px;background:#fff;color:#1d2a3a;border:1px solid #cfc6b3;border-radius:4px;font:500 14px 'Atkinson Hyperlegible',sans-serif;cursor:pointer}.ds-btn-secondary:hover{border-color:#1d2a3a}.ds-btn-secondary:focus-visible{outline:2px solid #1d2a3a;outline-offset:2px}"
+    },
+    {
+      "name": "Segmentknoppen",
+      "kind": "chip",
+      "refersTo": "toggle-on",
+      "description": "Weergave-opties naast elkaar; actief gevuld met het onderwerpaccent.",
+      "html": "<div class=\"ds-seg\"><button class=\"ds-seg-on\" aria-pressed=\"true\">Golffronten</button><button aria-pressed=\"false\">Lijnen</button><button aria-pressed=\"false\">Vertraagd</button></div>",
+      "css": ".ds-seg{display:flex;gap:8px}.ds-seg button{flex:1;padding:9px 6px;border:1px solid #cfc6b3;border-radius:4px;background:#fff;color:#4f5b69;font:500 13px 'Atkinson Hyperlegible',sans-serif;cursor:pointer}.ds-seg button.ds-seg-on{background:oklch(0.50 0.12 195);border-color:oklch(0.50 0.12 195);color:#fff}.ds-seg button:focus-visible{outline:2px solid #1d2a3a;outline-offset:2px}"
+    },
+    {
+      "name": "Kaart met schuifregelaar",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Bouwsteen van het zijpaneel: label, waarde in mono en schuifregelaar.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-row\"><span>Lengte L</span><span class=\"ds-val\">1,00 m</span></div><input class=\"ds-range\" type=\"range\" min=\"0\" max=\"100\" value=\"45\" aria-label=\"Lengte L\"></div>",
+      "css": ".ds-card{background:#fffdf7;border:1px solid #1d2a3a;border-radius:4px;box-shadow:2px 2px 0 #1d2a3a;padding:14px 16px;color:#1d2a3a;font:400 14px 'Atkinson Hyperlegible',sans-serif;display:flex;flex-direction:column;gap:10px;max-width:320px}.ds-row{display:flex;justify-content:space-between}.ds-val{font:500 14px 'IBM Plex Mono',monospace}.ds-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:#d6cdb9}.ds-range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.50 0.12 195);cursor:pointer}.ds-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid oklch(0.50 0.12 195)}.ds-range:focus-visible{outline:2px solid #1d2a3a;outline-offset:4px}"
+    },
+    {
+      "name": "Appletkaart",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Kaart op de overzichtspagina met pictogramtegel; tilt op bij aanwijzen en drukt in bij klikken.",
+      "html": "<a class=\"ds-applet\" href=\"#\"><span class=\"ds-tile\"><svg viewBox=\"0 0 48 48\" width=\"34\" height=\"34\" fill=\"none\" stroke=\"#1d6b6c\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M10 6h28\" stroke-width=\"3.5\"/><path d=\"M24 6l10 28\"/><circle cx=\"35.5\" cy=\"38\" r=\"5\" fill=\"#2a9a98\" stroke=\"none\"/></svg></span><span class=\"ds-name\">De slinger</span><span class=\"ds-desc\">Meet de slingertijd met een chronometer en bepaal g uit T² tegen L.</span></a>",
+      "css": ".ds-applet{display:grid;grid-template-columns:46px 1fr;gap:10px 12px;align-items:center;max-width:280px;padding:16px 18px 18px;background:#fffdf7;border:1px solid #1d2a3a;border-radius:4px;box-shadow:2px 2px 0 #1d2a3a;color:#1d2a3a;text-decoration:none;transition:box-shadow .12s,transform .12s}.ds-applet:hover{box-shadow:4px 4px 0 #1d2a3a;transform:translate(-2px,-2px)}.ds-applet:active{box-shadow:0 0 0 #1d2a3a;transform:translate(2px,2px)}.ds-applet:focus-visible{outline:2px solid #1d2a3a;outline-offset:2px}.ds-tile{width:46px;height:46px;border-radius:4px;border:1px solid oklch(0.48 0.12 195);background:oklch(0.95 0.03 195);display:flex;align-items:center;justify-content:center}.ds-name{font:700 18px/1.2 Fraunces,Georgia,serif}.ds-desc{grid-column:1/-1;font:400 13px/1.45 'Atkinson Hyperlegible',sans-serif;color:#4f5b69}"
+    },
+    {
+      "name": "Onderwerptabbladen",
+      "kind": "nav",
+      "refersTo": "topic-tab",
+      "description": "Navigatie tussen onderwerpen op de overzichtspagina.",
+      "html": "<nav class=\"ds-tabs\"><button><i style=\"background:oklch(0.64 0.13 255)\"></i>Mechanica</button><button class=\"ds-tab-on\" aria-pressed=\"true\"><i></i>Trillingen &amp; golven</button></nav>",
+      "css": ".ds-tabs{display:flex;gap:8px;flex-wrap:wrap}.ds-tabs button{display:flex;align-items:center;gap:9px;padding:9px 15px;border:1px solid #cfc6b3;border-radius:4px;background:#fffdf7;color:#3a4757;font:500 14px 'Atkinson Hyperlegible',sans-serif;cursor:pointer}.ds-tabs button:hover{border-color:#1d2a3a}.ds-tabs i{width:9px;height:9px;border-radius:50%}.ds-tabs .ds-tab-on{background:oklch(0.48 0.12 195);border-color:#1d2a3a;color:#fff}.ds-tabs .ds-tab-on i{background:#fff}.ds-tabs button:focus-visible{outline:2px solid #1d2a3a;outline-offset:2px}"
+    },
+    {
+      "name": "Zoekveld",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Zoekt over alle onderwerpen; rechts in de kop van de overzichtspagina.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"#4f5b69\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"7\" cy=\"7\" r=\"5\"/><path d=\"m11 11 4 4\"/></svg><input type=\"search\" placeholder=\"Zoek een simulatie…\" aria-label=\"Zoek een simulatie\"></label>",
+      "css": ".ds-search{display:flex;align-items:center;gap:10px;height:42px;width:300px;padding:0 12px;background:#fffdf7;border:1px solid #1d2a3a;border-radius:4px;box-shadow:2px 2px 0 #1d2a3a}.ds-search input{flex:1;border:none;background:none;font:400 14px 'Atkinson Hyperlegible',sans-serif;color:#1d2a3a;outline:none}.ds-search input::placeholder{color:#4f5b69}.ds-search:focus-within{outline:2px solid #1d2a3a;outline-offset:2px}"
+    },
+    {
+      "name": "Legenda",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Smalle kaart onder het podium; kleurstaafjes identiek aan de canvaskleuren.",
+      "html": "<div class=\"ds-legend\"><span><i style=\"background:#2f8a4e\"></i>zwaartekracht F<sub>z</sub></span><span><i style=\"background:#3a6fb8\"></i>spankracht F<sub>s</sub></span></div>",
+      "css": ".ds-legend{display:flex;gap:20px;flex-wrap:wrap;padding:11px 18px;background:#fffdf7;border:1px solid #1d2a3a;border-radius:4px;box-shadow:2px 2px 0 #1d2a3a;font:400 13px 'Atkinson Hyperlegible',sans-serif;color:#3a4757}.ds-legend span{display:flex;align-items:center;gap:8px}.ds-legend i{width:18px;height:3px;border-radius:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Het labschrift",
+    "overview": "De site voelt als het schrift dat een leerling meebrengt naar het practicum: lichtgeel ruitjespapier, inktblauwe pen, figuren netjes omkaderd en elk meetresultaat in een vaste letter genoteerd. De simulatie is de figuur in dat schrift. Alles eromheen (kaarten, knoppen, legenda's) is opgebouwd uit dezelfde drie materialen: papier, inkt en één onderwerpkleur.\n\nDe bediening is tastbaar en stevig. Kaarten en knoppen hebben een duidelijke inktrand en een harde, schuine schaduw, zodat ze als echte voorwerpen op het papier liggen. Op de beamer blijft dat leesbaar van achteraan: hoog contrast, een letter die gemaakt is voor leesbaarheid, en geen subtiele grijstinten die op een projector verdwijnen.\n\nDe stijl wijst drie dingen uitdrukkelijk af: de generieke AI/SaaS-look (zachte vage schaduwen, grote afgeronde hoeken, beige zonder karakter, één standaard sans-serif), alles wat kinderachtig of cartoonesk aanvoelt voor leerlingen van 16 tot 18 jaar, en donkere neon- of gamingstijlen.",
+    "keyCharacteristics": [
+      "Ruitjespapier (raster van 16 px) als pagina-achtergrond.",
+      "Inktblauw voor tekst, kaders én schaduw; geen zwart.",
+      "Kleine hoeken (4 px), dunne inktrand, harde schaduw zonder vervaging.",
+      "Fraunces voor titels, Atkinson Hyperlegible voor tekst, IBM Plex Mono voor waarden en labels.",
+      "Eén onderwerpkleur per pagina als accent; fysische kleuren hebben vaste betekenis."
+    ],
+    "rules": [
+      {
+        "name": "De Inkt-is-geen-zwart-regel",
+        "body": "Tekst, kaders en schaduw zijn inktblauw (`ink`), nooit puur zwart of warm grijs.",
+        "section": "colors"
+      },
+      {
+        "name": "De Eén-onderwerp-regel",
+        "body": "Een pagina gebruikt maar één accentkleur: die van het eigen onderwerp. Andere onderwerpkleuren verschijnen alleen op de overzichtspagina.",
+        "section": "colors"
+      },
+      {
+        "name": "De Fysica-kleur-regel",
+        "body": "Kleuren op het canvas die een grootheid voorstellen (kracht, snelheid, veld, stroom, golftop/-dal) hebben vaste betekenis, staan in een legenda met exact dezelfde kleur, en worden nooit vervangen door de accentkleur. Ze vallen bewust buiten de tokens hierboven. Wordt zo'n kleur als tekst gebruikt (bv. \"R = 100 Ω\"), dan in een donkerder versie van dezelfde tint die minstens 4,5:1 haalt.",
+        "section": "colors"
+      },
+      {
+        "name": "De Meetnotitie-regel",
+        "body": "Elk getal met een eenheid staat in IBM Plex Mono; tekst eromheen staat in Atkinson.",
+        "section": "typography"
+      },
+      {
+        "name": "De Geen-hoofdletters-regel",
+        "body": "Labels en sectiekoppen staan in mono met normale kast, niet in brede hoofdletters.",
+        "section": "typography"
+      },
+      {
+        "name": "De Harde-schaduw-regel",
+        "body": "Een schaduw is altijd scherp, schuin naar rechtsonder en in inktblauw. Vervaging (`blur`) is verboden.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** gebruik `ink` (#1d2a3a) voor tekst, kaders en schaduw.",
+      "**Do** geef elke kaart een inktrand van 1 px, hoeken van 4 px en de harde schaduw `2px 2px 0`.",
+      "**Do** zet waarden met eenheid in IBM Plex Mono en titels in Fraunces.",
+      "**Do** leid het accent af van de onderwerptint via `--h` in `applet.css`.",
+      "**Do** houd elke legendakleur identiek aan de kleur op het canvas.",
+      "**Do** houd tekst minstens op `ink-muted` (#4f5b69) voor voldoende contrast op de beamer."
+    ],
+    "donts": [
+      "**Don't** gebruik zachte of vervaagde schaduwen, grote afgeronde hoeken of beige zonder raster: de generieke AI/SaaS-look.",
+      "**Don't** maak de stijl kinderachtig of cartoonesk; het publiek is 16 tot 18 jaar.",
+      "**Don't** gebruik donkere achtergronden met neonkleuren.",
+      "**Don't** zet labels of sectiekoppen in hoofdletters met brede letterspatiëring.",
+      "**Don't** gebruik de accentkleur voor een fysische grootheid op het canvas.",
+      "**Don't** gebruik grijs lichter dan `ink-muted` voor tekst."
+    ]
+  }
+}

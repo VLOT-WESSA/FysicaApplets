@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Millikan &mdash; oliedruppel · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/millikan.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:75}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -53,7 +54,7 @@
       </div>
       <sc-if value="{{ isMain }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
-          <button onClick="{{ spray }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&#128167; Verstuif druppels</button>
+          <button onClick="{{ spray }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:var(--ink)">&#128167; Verstuif druppels</button>
           <button onClick="{{ openScope }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;cursor:{{ scopeCursor }};border:1px solid {{ scopeBorder }};background:{{ scopeBg }};color:{{ scopeFg }}">&#128301; Bekijk door microscoop</button>
           <button onClick="{{ clearDrops }}" style="padding:10px 14px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--rule);background:#f4f1ea;color:var(--muted);margin-left:auto">Leegmaken</button>
         </div>
@@ -71,16 +72,16 @@
             </div>
           </div>
 
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
             <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
               <span style="width:11px;height:11px;border-radius:3px;flex:none;background:var(--accent)"></span>
               <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Spanning U</span>
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;font-weight:600;margin-left:auto">{{ vStr }} V</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);font-weight:600;margin-left:auto">{{ vStr }} V</span>
             </div>
             <input type="range" min="0" max="120" step="0.1" value="{{ voltage }}" onChange="{{ onV }}" style="width:100%;accent-color:var(--accent)">
           </div>
 
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
             <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Bovenste plaat</div>
             <div style="display:flex;gap:7px">
               <button onClick="{{ setTopPlus }}" style="flex:1;padding:9px 6px;border-radius:4px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid {{ posBorder }};background:{{ posBg }};color:{{ posFg }}">positief (+)</button>
@@ -88,7 +89,7 @@
             </div>
           </div>
 
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:14px">Veldlijnen tonen</span>
             <button onClick="{{ toggleField }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:{{ fieldFg }}">
               <span style="width:8px;height:8px;border-radius:50%;background:{{ fieldDot }}"></span>{{ fieldLabel }}
@@ -103,7 +104,7 @@
 
       <sc-if value="{{ isScope }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
             <div style="font-size:13px;font-weight:700;color:#b8472f;text-align:center;margin-bottom:10px;letter-spacing:.02em">Bekende waarden</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:2.0">
               <div style="display:flex;justify-content:space-between"><span>Dichtheid olie (kg/m&sup3;)</span><span style="color:#b8472f;font-weight:600">900</span></div>
@@ -112,14 +113,14 @@
             </div>
           </div>
 
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
             <div style="font-size:13px;font-weight:700;color:#b8472f;text-align:center;margin-bottom:10px;letter-spacing:.02em">Te meten</div>
             <div style="display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted)">
               <span>Straal r (nm)</span><span style="color:{{ rColor }};font-weight:600;font-size:14px">{{ rShown }}</span>
             </div>
           </div>
 
-          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+          <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
             <div style="font-size:13px;font-weight:700;color:#b8472f;text-align:center;margin-bottom:10px;letter-spacing:.02em">Te berekenen</div>
             <div style="display:flex;flex-direction:column;gap:9px">
               <sc-for list="{{ calcRows }}" as="row" hint-placeholder-count="6">
@@ -128,7 +129,7 @@
                     <span>{{ row.label }}</span><span style="color:{{ row.color }};font-weight:600;font-size:13.5px">{{ row.value }}</span>
                   </div>
                   <sc-if value="{{ row.showFormula }}" hint-placeholder-val="{{ false }}">
-                    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#a89f8c;margin-top:3px">{{ row.formula }}</div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#726957;margin-top:3px">{{ row.formula }}</div>
                   </sc-if>
                 </div>
               </sc-for>
@@ -141,10 +142,10 @@
           </div>
 
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button onClick="{{ nextStep }}" style="flex:1;min-width:120px;padding:10px 12px;border-radius:4px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #1f9e8f;background:#1f9e8f;color:#fff">{{ stepLabel }}</button>
+            <button onClick="{{ nextStep }}" style="flex:1;min-width:120px;padding:10px 12px;border-radius:4px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff">{{ stepLabel }}</button>
             <button onClick="{{ resetSteps }}" style="padding:10px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;border:1px solid var(--rule);background:#f4f1ea;color:var(--muted)">Opnieuw</button>
           </div>
-          <button onClick="{{ closeScope }}" style="padding:10px 12px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:#3a352c">&larr; Terug naar apparaat</button>
+          <button onClick="{{ closeScope }}" style="padding:10px 12px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:var(--ink)">&larr; Terug naar apparaat</button>
         </div>
       </sc-if>
 
@@ -384,7 +385,7 @@ class Component extends DCLogic {
     const topPlus = this.state.topPlus;
     ctx.fillStyle = '#75896f'; ctx.fillRect(x0, top - 8, x1 - x0, 9);
     ctx.fillStyle = '#75896f'; ctx.fillRect(x0, bot - 1, x1 - x0, 9);
-    ctx.fillStyle = '#3a4a3a'; ctx.font = "600 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#3a4a3a'; ctx.font = "600 12.5px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
     const marks = 11;
     for (let i = 0; i < marks; i++) {
       const mx = x0 + 14 + i * ((x1 - x0 - 28) / (marks - 1));
@@ -461,7 +462,7 @@ class Component extends DCLogic {
     ctx.lineWidth = 1.4;
     ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
-    ctx.font = "600 12px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
+    ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
     for (let nm = 50; nm <= 680; nm += 25) {
       const off = nm * nmToPx;
       const major = nm % 100 === 0, mid = nm % 50 === 0;
@@ -543,16 +544,16 @@ class Component extends DCLogic {
       setTopMinus: () => this.setState({ topPlus: false }),
       toggleField: this.toggleField,
       fieldLabel: sf ? 'Aan' : 'Uit',
-      fieldBg: sf ? '#2f6fb0' : '#f4f1ea', fieldFg: sf ? '#fff' : '#8c8576',
+      fieldBg: sf ? '#2f6fb0' : '#f4f1ea', fieldFg: sf ? '#fff' : '#4f5b69',
       fieldBorder: sf ? '#2f6fb0' : '#e7e1d5', fieldDot: sf ? '#bcd8f2' : '#c3bcad',
       scopeCursor: canScope ? 'pointer' : 'not-allowed',
-      scopeBg: canScope ? '#fff' : '#f1ede5', scopeFg: canScope ? '#3a352c' : '#b3ab9c',
+      scopeBg: canScope ? '#fff' : '#f1ede5', scopeFg: canScope ? 'var(--ink)' : '#b3ab9c',
       scopeBorder: canScope ? '#1f9e8f' : '#e7e1d5',
-      balBg: fc > 0 ? '#edf7ef' : '#fffdf9', balBorder: fc > 0 ? '#cfe9d6' : '#e7e1d5',
-      balDot: fc > 0 ? '#2f9e6b' : '#d9b94a', balFg: fc > 0 ? '#2f7d4f' : '#3a352c',
+      balBg: fc > 0 ? '#edf7ef' : 'var(--card)', balBorder: fc > 0 ? '#cfe9d6' : '#e7e1d5',
+      balDot: fc > 0 ? '#2f9e6b' : '#d9b94a', balFg: fc > 0 ? '#2f7d4f' : 'var(--ink)',
       balLabel: this.drops.length === 0 ? 'Nog geen druppels' : (fc > 0 ? (fc + (fc === 1 ? ' druppel zweeft' : ' druppels zweven')) : 'Geen druppel in evenwicht'),
-      posBg: this.state.topPlus ? '#b8472f' : '#fffdf9', posFg: this.state.topPlus ? '#fff' : '#6f685c', posBorder: this.state.topPlus ? '#b8472f' : '#e7e1d5',
-      negBg: !this.state.topPlus ? '#2f55a4' : '#fffdf9', negFg: !this.state.topPlus ? '#fff' : '#6f685c', negBorder: !this.state.topPlus ? '#2f55a4' : '#e7e1d5',
+      posBg: this.state.topPlus ? '#b8472f' : 'var(--card)', posFg: this.state.topPlus ? '#fff' : '#6f685c', posBorder: this.state.topPlus ? '#b8472f' : '#e7e1d5',
+      negBg: !this.state.topPlus ? '#2f55a4' : 'var(--card)', negFg: !this.state.topPlus ? '#fff' : '#6f685c', negBorder: !this.state.topPlus ? '#2f55a4' : '#e7e1d5',
       selVStr: U.toFixed(1),
       rShown: step >= 1 ? rNm + '' : '?', rColor: step >= 1 ? '#2f7d4f' : '#b8472f',
       calcRows,

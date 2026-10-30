@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golven op een snaar · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/snaar.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -58,7 +59,7 @@
         <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Aandrijving</div>
         <div style="display:flex;gap:8px;margin-bottom:12px">
           <button onClick="{{ onOsc }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ oscBg }};color:{{ oscFg }}">Oscilleren</button>
@@ -69,7 +70,7 @@
         </sc-if>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Uiteinde rechts</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onEndVast }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ vastBg }};color:{{ vastFg }}">Vast</button>
@@ -78,7 +79,7 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ snelheid }}%</span></div>
         <input type="range" min="10" max="150" step="5" value="{{ snelheid }}" onChange="{{ onSnelheid }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Amplitude</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ amp }} cm</span></div>
@@ -212,7 +213,7 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.arc(this.x1, dyN, 4.5, 0, 6.2832);
     ctx.fillStyle = this.state.end === 'los' ? '#279889' : '#08a38f'; ctx.fill();
 
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#737c8b'; ctx.textAlign = 'center';
     const lbl = this.state.end === 'vast' ? 'vast' : (this.state.end === 'los' ? 'los' : 'geen (absorberend)');
     ctx.fillText(lbl, this.x1 - 4, ay + 80);
   }

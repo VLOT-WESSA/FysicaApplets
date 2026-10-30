@@ -1,0 +1,455 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-10-30T15:33:42.925Z",
+        "reason": "user confirmed: koos richting A (labojournaal) met Fraunces-titels; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-30T15:33:43.953Z",
+        "reason": "user confirmed: koos ruitjespapier #f7f3ea als bewuste labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "ohm.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:33:45.074Z",
+        "reason": "user confirmed: koos ruitjespapier #f7f3ea als bewuste labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "8086.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:32.337Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "absorptie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:33.470Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "basisschakeling.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:34.543Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "booleanalgebra.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:35.575Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "breking.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:36.696Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "cirkelbeweging.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:37.759Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "condensator.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:38.794Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "cyclotron.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:39.908Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "diffractie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:41.001Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "dopplereffect.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:42.346Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "electromotor.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:43.465Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "foto.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:44.630Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "geigermarsden.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:45.693Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "geluidsanalyse.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:46.880Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "grafiekmatching.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:48.446Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "gravitatie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:49.799Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "inductie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:50.774Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "interferentie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:51.794Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "karakteristiek.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:52.810Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "karnaugh.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:53.777Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "kernreactor.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:54.776Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "ladingenvelden.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:55.706Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "lissajous.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:56.680Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "logischepoorten.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:57.685Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "looping.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:58.707Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "lorentzkracht.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:50:59.765Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "luchtkolom.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:00.819Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "magneetvelddraad.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:01.885Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "massaveer.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:03.000Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "millikan.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:04.214Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "notebook.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:05.173Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "nuclidenkaart.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:06.289Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "polarisatie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:07.276Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "potentiaal.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:08.213Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "rivieroversteek.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:09.121Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "slinger.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:09.990Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "snaar.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:10.916Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "spectraallijnen.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:11.827Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "staandegolf.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:12.719Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "superpositie.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:13.682Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "talstelsel.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:14.581Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "verval.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:15.559Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "videoanalyse.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:16.690Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "weerstanddraad.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:17.962Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "wielerpiste.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:18.959Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "wrijvinghelling.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:20.007Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "zwartestraler.dc.html"
+        ],
+        "createdAt": "2026-10-30T15:51:21.157Z",
+        "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      }
+    ]
+  }
+}

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interferentie van twee golven · Natuurkunde simulaties</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="icons/interferentie.svg">
-<link rel="stylesheet" href="applet.css">
+<link rel="stylesheet" href="applet.css?v=4">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
@@ -36,7 +37,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
@@ -49,14 +50,14 @@
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;touch-action:none;cursor:grab"></canvas>
+        <canvas ref="{{ stageRef }}" tabindex="0" aria-label="Interferentiepatroon: pijltjestoetsen verplaatsen het meetpunt" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;touch-action:none;cursor:grab"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px solid #78cdff;display:inline-block"></span>golftop</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px dashed #b27edc;display:inline-block"></span>golfdal</div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>buiklijn &Delta;x = n&lambda;</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#5b9bff;border-radius:2px;display:inline-block"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:#2a2723;box-shadow:0 0 0 2px #fff,0 0 0 3px #2a2723;display:inline-block"></span>meetpunt (sleepbaar)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#2e8b57;border-radius:2px;display:inline-block"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px #fff,0 0 0 3px #2a2723;display:inline-block"></span>meetpunt (sleepbaar)</div>
       </div>
     </div>
 
@@ -65,7 +66,7 @@
         <button onClick="{{ onPlay }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ playLbl }}</button>
         <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Golflengte &lambda;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ lambdaStr }}</span>
@@ -78,8 +79,8 @@
         <input type="range" min="3" max="16" step="0.5" value="{{ sepCm }}" onInput="{{ onSep }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
-        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Weergave (uit bij start)</div>
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Weergave</div>
         <div style="display:flex;gap:8px">
           <button onClick="{{ onTogFronts }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ frontsBg }};color:{{ frontsFg }}">Golffronten</button>
           <button onClick="{{ onTogLines }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ linesBg }};color:{{ linesFg }}">Lijnen</button>
@@ -87,7 +88,7 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;color:var(--ink);box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Meetpunt</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:var(--muted)">weglengteverschil &Delta;x</span>
@@ -129,6 +130,14 @@ class Component extends DCLogic {
     this._down = (e) => { e.preventDefault(); this.dragging = true; this.mp = this.evtPt(e); cv.style.cursor = 'grabbing'; try { cv.setPointerCapture(e.pointerId); } catch (_) {} };
     this._move = (e) => { if (this.dragging) { e.preventDefault(); this.mp = this.evtPt(e); } };
     this._up = (e) => { this.dragging = false; cv.style.cursor = 'grab'; try { cv.releasePointerCapture(e.pointerId); } catch (_) {} };
+    // toetsenbord: pijltjes verschuiven het meetpunt (met Shift in grotere stappen)
+    this._key = (e) => {
+      const d = e.shiftKey ? 20 : 5, k = { ArrowLeft: [-d, 0], ArrowRight: [d, 0], ArrowUp: [0, -d], ArrowDown: [0, d] }[e.key];
+      if (!k) return;
+      e.preventDefault();
+      this.mp = { x: Math.max(0, Math.min(this.W, this.mp.x + k[0])), y: Math.max(0, Math.min(this.H, this.mp.y + k[1])) };
+    };
+    cv.addEventListener('keydown', this._key);
     cv.addEventListener('pointerdown', this._down);
     cv.addEventListener('pointermove', this._move);
     window.addEventListener('pointerup', this._up);
@@ -136,7 +145,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     cancelAnimationFrame(this.raf); if (this._acStop) this._acStop();
     const cv = this.stageRef.current;
-    if (cv) { cv.removeEventListener('pointerdown', this._down); cv.removeEventListener('pointermove', this._move); }
+    if (cv) { cv.removeEventListener('pointerdown', this._down); cv.removeEventListener('pointermove', this._move); cv.removeEventListener('keydown', this._key); }
     window.removeEventListener('pointerup', this._up);
   }
 
@@ -231,13 +240,13 @@ class Component extends DCLogic {
         }
       };
       for (let n = 1; n * lambdaPx < 2 * a - 0.5; n++) drawHyper(n * lambdaPx, '#c8741d', 2);
-      for (let n = 0; (n + 0.5) * lambdaPx < 2 * a - 0.5; n++) drawHyper((n + 0.5) * lambdaPx, '#4a8df5', 2);
+      for (let n = 0; (n + 0.5) * lambdaPx < 2 * a - 0.5; n++) drawHyper((n + 0.5) * lambdaPx, '#2e8b57', 2);
       drawHyper(0, '#c8741d', 2.6);
     }
 
     const r1px = Math.hypot(this.mp.x - s1.x, this.mp.y - s1.y);
     const r2px = Math.hypot(this.mp.x - s2.x, this.mp.y - s2.y);
-    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(168,116,203,0.9)';
+    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(29,42,58,0.55)';   // hulplijnen in inktgrijs, niet in de golfdal-kleur
     ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(this.mp.x, this.mp.y);
     ctx.moveTo(s2.x, s2.y); ctx.lineTo(this.mp.x, this.mp.y); ctx.stroke(); ctx.setLineDash([]);
 
@@ -252,8 +261,8 @@ class Component extends DCLogic {
     const flip = this.mp.x > this.W - 150;
     ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.textAlign = flip ? 'right' : 'left';
     const tx = this.mp.x + (flip ? -14 : 14);
-    ctx.fillStyle = '#1d2a3a'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2) + ' cm', tx, this.mp.y - 9);
-    ctx.fillStyle = '#3a4757'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2) + ' \u03BB', tx, this.mp.y + 8);
+    ctx.fillStyle = '#1d2a3a'; ctx.fillText('\u0394x = ' + dxcm.toFixed(2).replace('.', ',') + ' cm', tx, this.mp.y - 9);
+    ctx.fillStyle = '#3a4757'; ctx.fillText('= ' + (dxcm / this.state.lambdaCm).toFixed(2).replace('.', ',') + ' \u03BB', tx, this.mp.y + 8);
     ctx.beginPath(); ctx.arc(this.mp.x, this.mp.y, 9, 0, 6.2832);
     ctx.fillStyle = '#1d2a3a'; ctx.fill();
     ctx.lineWidth = 3; ctx.strokeStyle = '#ffffff'; ctx.stroke();
@@ -262,8 +271,8 @@ class Component extends DCLogic {
     const bx = 20, by = this.H - 20;
     ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + lambdaPx, by);
     ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + lambdaPx, by - 4); ctx.lineTo(bx + lambdaPx, by + 4); ctx.stroke();
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
-    ctx.fillText('\u03BB = ' + this.state.lambdaCm.toFixed(1) + ' cm', bx, by - 9);
+    ctx.font = "500 12.5px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left';
+    ctx.fillText('\u03BB = ' + this.state.lambdaCm.toFixed(1).replace('.', ',') + ' cm', bx, by - 9);
   }
 
   renderVals() {
@@ -271,16 +280,16 @@ class Component extends DCLogic {
     const ln = seg(this.state.showLines), sl = seg(this.state.slow), fr = seg(this.state.showFronts);
     const near = this.state._near;
     const verdColors = near === 'con' ? { bg: 'rgba(200,116,29,0.14)', fg: '#a35f17' }
-      : near === 'des' ? { bg: 'rgba(58,111,184,0.14)', fg: '#2f5f9e' }
+      : near === 'des' ? { bg: 'rgba(46,139,87,0.14)', fg: '#236b42' }
       : { bg: 'rgba(42,39,35,0.06)', fg: '#4f4a42' };
     return {
       stageRef: this.stageRef,
       lambdaCm: this.state.lambdaCm, sepCm: this.state.sepCm,
-      lambdaStr: this.state.lambdaCm.toFixed(1) + ' cm',
-      sepStr: this.state.sepCm.toFixed(1) + ' cm',
+      lambdaStr: this.state.lambdaCm.toFixed(1).replace('.', ',') + ' cm',
+      sepStr: this.state.sepCm.toFixed(1).replace('.', ',') + ' cm',
       linesBg: ln.bg, linesFg: ln.fg, slowBg: sl.bg, slowFg: sl.fg, frontsBg: fr.bg, frontsFg: fr.fg,
-      dsStr: this.state.ds.toFixed(2) + ' cm',
-      ratioStr: Number(this.state.ratio).toFixed(2),
+      dsStr: this.state.ds.toFixed(2).replace('.', ',') + ' cm',
+      ratioStr: Number(this.state.ratio).toFixed(2).replace('.', ','),
       verdict: this.state.verdict,
       verdBg: verdColors.bg, verdFg: verdColors.fg,
       playLbl: this.state.running ? 'Pauze' : 'Start',
