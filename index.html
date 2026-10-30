@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,29 +19,29 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
+<link rel="stylesheet" href="applet.css">
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:#eceae4}
   button{font-family:inherit}
-  .tab:hover{border-color:#cfc7b6}
-  .card{transition:border-color .12s,box-shadow .12s,transform .12s}
-  .card:hover{border-color:var(--tc) !important;box-shadow:0 4px 12px rgba(0,0,0,.08) !important;transform:translateY(-1px)}
-  .doc:hover{border-color:#cfc7b6 !important;box-shadow:0 4px 12px rgba(0,0,0,.08) !important}
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #2a2723;outline-offset:2px}
-  .search{height:42px;width:300px;max-width:100%;border-radius:10px;border:1px solid #d9d3c6;background:#fffdf9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236f685c' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 13px center;padding:0 12px 0 38px;font-family:inherit;font-size:14px;color:#2a2723}
-  .search::placeholder{color:#6f685c}
+  .tab:hover{border-color:var(--ink)}
+  .card,.doc{transition:box-shadow .12s,transform .12s}
+  .card:hover,.doc:hover{box-shadow:4px 4px 0 var(--ink) !important;transform:translate(-2px,-2px)}
+  .card:active,.doc:active{box-shadow:0 0 0 var(--ink) !important;transform:translate(2px,2px)}
+  .kicker{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.02em}
+  .search{height:42px;width:300px;max-width:100%;border-radius:4px;border:1px solid var(--ink);box-shadow:var(--shadow);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236f685c' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='m11 11 4 4'/%3E%3C/svg%3E") no-repeat 13px center;padding:0 12px 0 38px;font-family:inherit;font-size:14px;color:var(--ink)}
+  .search::placeholder{color:var(--muted)}
 </style>
 </helmet>
-<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:28px 28px 48px">
+<div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:28px 28px 48px">
   <div style="max-width:1100px;margin:0 auto">
 
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;margin-bottom:22px">
       <div>
-        <h1 style="font-size:32px;font-weight:700;margin:0 0 4px;letter-spacing:-.015em">Natuurkunde simulaties</h1>
-        <p style="margin:0;font-size:14px;color:#6f685c;line-height:1.5">Kies een onderwerp en open een simulatie.</p>
+        <div class="kicker" style="color:var(--muted);margin-bottom:6px">{{ totalStr }}</div>
+        <h1 style="font-size:40px;font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.05">Natuurkunde simulaties</h1>
       </div>
       <input class="search" type="search" value="{{ query }}" onInput="{{ onQuery }}" placeholder="Zoek een simulatie…" aria-label="Zoek een simulatie" autocomplete="off">
     </div>
@@ -49,7 +49,7 @@
     <!-- TABBLADEN -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:26px">
       <sc-for list="{{ tabItems }}" as="tab" hint-placeholder-count="6">
-        <button class="tab" aria-pressed="{{ tab.pressed }}" onClick="{{ tab.onClick }}" style="display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;border:1px solid {{ tab.border }};background:{{ tab.bg }};color:{{ tab.fg }};transition:background .12s,color .12s">
+        <button class="tab" aria-pressed="{{ tab.pressed }}" onClick="{{ tab.onClick }}" style="display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;border:1px solid {{ tab.border }};background:{{ tab.bg }};color:{{ tab.fg }};transition:background .12s,color .12s">
           <span style="width:9px;height:9px;border-radius:50%;flex:none;background:{{ tab.dot }}"></span>{{ tab.name }}
         </button>
       </sc-for>
@@ -59,50 +59,50 @@
     <div>
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px">
         <span style="width:13px;height:13px;border-radius:50%;flex:none;background:{{ topicColor }}"></span>
-        <h2 style="font-size:20px;font-weight:600;margin:0">{{ topicName }}</h2>
-        <span style="font-size:13px;color:#6f685c">{{ countStr }}</span>
+        <h2 style="font-size:24px;font-weight:700;margin:0">{{ topicName }}</h2>
+        <span class="kicker" style="color:var(--muted)">{{ countStr }}</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px">
         <sc-for list="{{ appletItems }}" as="app" hint-placeholder-count="4">
-          <a class="card" href="{{ app.href }}" style="--tc:{{ app.tc }};text-decoration:none;color:inherit;text-align:left;display:flex;flex-direction:column;gap:10px;min-height:128px;padding:16px 18px 18px;border-radius:14px;border:1px solid {{ app.border }};background:#fffdf9;cursor:{{ app.cursor }};opacity:{{ app.opacity }};box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <a class="card" href="{{ app.href }}" style="--tc:{{ app.tc }};text-decoration:none;color:inherit;text-align:left;display:flex;flex-direction:column;gap:10px;min-height:128px;padding:16px 18px 18px;border-radius:4px;border:1px solid var(--ink);background:var(--card);cursor:{{ app.cursor }};opacity:{{ app.opacity }};box-shadow:var(--shadow)">
             <div style="display:flex;align-items:center;gap:12px">
-              <span style="flex:none;width:46px;height:46px;border-radius:11px;background:{{ app.soft }};display:flex;align-items:center;justify-content:center">
+              <span style="flex:none;width:46px;height:46px;border-radius:4px;border:1px solid {{ app.tagFg }};background:{{ app.soft }};display:flex;align-items:center;justify-content:center">
                 <img src="{{ app.icon }}" alt="" width="34" height="34" style="display:block">
               </span>
               <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
-                <span style="font-size:16px;font-weight:600;line-height:1.25">{{ app.name }}</span>
-                <span style="font-size:12px;font-weight:500;color:{{ app.tagFg }};display:{{ app.tagDisplay }}">{{ app.topicName }}</span>
+                <span style="font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1.2;overflow-wrap:break-word;hyphens:manual">{{ app.name }}</span>
+                <span style="font-size:12px;font-weight:700;color:{{ app.tagFg }};display:{{ app.tagDisplay }}">{{ app.topicName }}</span>
               </span>
             </div>
-            <span style="font-size:13px;color:#6f685c;line-height:1.45">{{ app.desc }}</span>
+            <span style="font-size:13px;color:var(--muted);line-height:1.45">{{ app.desc }}</span>
           </a>
         </sc-for>
       </div>
-      <p style="display:{{ emptyDisplay }};margin:6px 0 0;font-size:14px;color:#6f685c">Geen simulaties gevonden.</p>
+      <p style="display:{{ emptyDisplay }};margin:6px 0 0;font-size:14px;color:var(--muted)">Geen simulaties gevonden.</p>
     </div>
 
     <!-- DOCUMENTEN -->
-    <div style="margin-top:40px;padding-top:26px;border-top:1px solid #e0dacd">
+    <div style="margin-top:44px;padding-top:26px;border-top:1.5px solid var(--ink)">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
         <span style="width:13px;height:13px;border-radius:50%;flex:none;background:oklch(0.64 0.13 75)"></span>
-        <h2 style="font-size:20px;font-weight:600;margin:0">Documenten</h2>
+        <h2 style="font-size:24px;font-weight:700;margin:0">Documenten</h2>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:560px">
-        <a href="Practicumtemplate6BCW.docx" download class="doc" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:13px;border:1px solid #e7e1d5;background:#fffdf9;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <a href="Practicumtemplate6BCW.docx" download class="doc" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:4px;border:1px solid var(--ink);background:var(--card);box-shadow:var(--shadow)">
           <span style="flex:none;width:38px;height:46px;border-radius:5px;background:#2b579a;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em">DOCX</span>
           <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0">
             <span style="font-size:15px;font-weight:600">Practicumtemplate6BCW.docx</span>
-            <span style="font-size:12.5px;color:#6f685c">Sjabloon voor het practicumverslag</span>
+            <span style="font-size:12.5px;color:var(--muted)">Sjabloon voor het practicumverslag</span>
           </span>
-          <span style="flex:none;font-size:20px;color:#6f685c;line-height:1">&#8595;</span>
+          <span style="flex:none;font-size:20px;color:var(--muted);line-height:1">&#8595;</span>
         </a>
-        <a href="Voorbeeldgrafiek.xlsx" download class="doc" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:13px;border:1px solid #e7e1d5;background:#fffdf9;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <a href="Voorbeeldgrafiek.xlsx" download class="doc" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:4px;border:1px solid var(--ink);background:var(--card);box-shadow:var(--shadow)">
           <span style="flex:none;width:38px;height:46px;border-radius:5px;background:#1d6f42;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em">XLSX</span>
           <span style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0">
             <span style="font-size:15px;font-weight:600">Voorbeeldgrafiek.xlsx</span>
-            <span style="font-size:12.5px;color:#6f685c">Voorbeeld van een grafiek in een rekenblad</span>
+            <span style="font-size:12.5px;color:var(--muted)">Voorbeeld van een grafiek in een rekenblad</span>
           </span>
-          <span style="flex:none;font-size:20px;color:#6f685c;line-height:1">&#8595;</span>
+          <span style="flex:none;font-size:20px;color:var(--muted);line-height:1">&#8595;</span>
         </a>
       </div>
     </div>
@@ -114,64 +114,64 @@
 class Component extends DCLogic {
   topics = [
     { id: 'elektriciteit', name: 'Elektriciteit', color: 'oklch(0.64 0.13 75)', applets: [
-      { id: 'stroomkring', name: 'Basis schakeling', desc: 'Lampen of weerstanden in serie, parallel of gemengd; verplaats ampère- en voltmeter.', ready: true },
+      { id: 'stroomkring', name: 'Basis schake\u00ADling', desc: 'Lampen of weerstanden in serie, parallel of gemengd; verplaats ampère- en voltmeter.', ready: true },
       { id: 'ohm', name: 'Wet van Ohm', desc: 'Onderzoek het verband tussen spanning, stroom en weerstand.', ready: true },
-      { id: 'karakteristiek', name: 'I-U-karakteristiek', desc: 'Meet I(U) van een weerstand, een gloeilamp en LED’s; bepaal de drempelspanning en de constante van Planck.', ready: true },
+      { id: 'karakteristiek', name: 'I-U-karak\u00ADteristiek', desc: 'Meet I(U) van een weerstand, een gloeilamp en LED’s; bepaal de drempelspanning en de constante van Planck.', ready: true },
       { id: 'weerstanddraad', name: 'Weerstand van een draad', desc: 'Variëer lengte, doorsnede en materiaal van een draad.', ready: true },
       { id: 'ladingenvelden', name: 'Ladingen en velden', desc: 'Plaats ladingen, bekijk het elektrische veld en de wet van Coulomb.', ready: true },
-      { id: 'potentiaal', name: 'Potentiële energie en potentiaal', desc: 'Een lading in een homogeen veld: energie, potentiaal en spanning.', ready: true },
-      { id: 'millikan', name: 'Millikan — oliedruppel', desc: 'Balanceer een druppel en ontdek dat lading gekwantiseerd is.', ready: true },
-      { id: 'condensator', name: 'Vlakke condensator', desc: 'Varieer plaatafstand, oppervlak en diëlektricum; laad en ontlaad een elco via R (tijdconstante RC).', ready: true },
+      { id: 'potentiaal', name: 'Poten\u00ADtiële energie en poten\u00ADtiaal', desc: 'Een lading in een homogeen veld: energie, potentiaal en spanning.', ready: true },
+      { id: 'millikan', name: 'Millikan — olie\u00ADdruppel', desc: 'Balanceer een druppel en ontdek dat lading gekwantiseerd is.', ready: true },
+      { id: 'condensator', name: 'Vlakke conden\u00ADsator', desc: 'Varieer plaatafstand, oppervlak en diëlektricum; laad en ontlaad een elco via R (tijdconstante RC).', ready: true },
     ]},
     { id: 'elektromagnetisme', name: 'Elektromagnetisme', color: 'oklch(0.64 0.13 150)', applets: [
-      { id: 'electromotor', name: 'Gelijkstroommotor', desc: 'Een spoel draait in een magneetveld; de commutator keert de stroom om.', ready: true },
-      { id: 'lorentzkracht', name: 'Lorentzkracht', desc: 'Een stroomdraad zwaait uit het veld van een hoefijzermagneet (F = B·I·L).', ready: true },
-      { id: 'magneetvelddraad', name: 'Magneetveld van draad, winding en spoel', desc: 'Veldlijnen rond een stroomdraad, een vlakke spoel en een lange spoel, gepeild met een kompas.', ready: true },
-      { id: 'inductie', name: 'Elektromagnetische inductie', desc: 'Magneet door een spoel (LED’s, wet van Lenz), wisselspanningsgenerator en transformator.', ready: true },
+      { id: 'electromotor', name: 'Gelijk\u00ADstroom\u00ADmotor', desc: 'Een spoel draait in een magneetveld; de commutator keert de stroom om.', ready: true },
+      { id: 'lorentzkracht', name: 'Lorentz\u00ADkracht', desc: 'Een stroomdraad zwaait uit het veld van een hoefijzermagneet (F = B·I·L).', ready: true },
+      { id: 'magneetvelddraad', name: 'Magneet\u00ADveld van draad, winding en spoel', desc: 'Veldlijnen rond een stroomdraad, een vlakke spoel en een lange spoel, gepeild met een kompas.', ready: true },
+      { id: 'inductie', name: 'Elektro\u00ADmagnetische inductie', desc: 'Magneet door een spoel (LED’s, wet van Lenz), wisselspanningsgenerator en transformator.', ready: true },
       { id: 'cyclotron', name: 'Cyclotron', desc: 'Geladen deeltjes spiraleren naar buiten, versneld door een wisselspanning in de spleet.', ready: true },
     ]},
     { id: 'kernfysica', name: 'Kernfysica', color: 'oklch(0.64 0.13 28)', applets: [
-      { id: 'reactor', name: 'Kernsplijtingsreactor', desc: 'Regel de regelstaven van een gasgekoelde reactor en monitor de splijtingen.', ready: true },
-      { id: 'nuclidenkaart', name: 'Nuclidenkaart', desc: 'Verken alle isotopen op de kaart van Z tegen N en hun vervalmodus.', ready: true },
+      { id: 'reactor', name: 'Kern\u00ADsplijtings\u00ADreactor', desc: 'Regel de regelstaven van een gasgekoelde reactor en monitor de splijtingen.', ready: true },
+      { id: 'nuclidenkaart', name: 'Nucliden\u00ADkaart', desc: 'Verken alle isotopen op de kaart van Z tegen N en hun vervalmodus.', ready: true },
       { id: 'geigermarsden', name: 'Proef van Geiger en Marsden', desc: 'Beschiet een goudfolie met alfadeeltjes en ontdek de atoomkern.', ready: true },
       { id: 'absorptie', name: 'Absorptie van straling', desc: 'α, β en γ door papier, aluminium en lood; halveringsdikte en de 1/r²-wet met een geigerteller.', ready: true },
-      { id: 'verval', name: 'Radioactief verval met dobbelstenen', desc: 'Gooi tot 1000 dobbelstenen tegelijk; elke zes is een vervallen kern. Volg N(t) en de halveringstijd.', ready: true },
+      { id: 'verval', name: 'Radio\u00ADactief verval met dobbel\u00ADstenen', desc: 'Gooi tot 1000 dobbelstenen tegelijk; elke zes is een vervallen kern. Volg N(t) en de halveringstijd.', ready: true },
     ]},
     { id: 'mechanica', name: 'Mechanica', color: 'oklch(0.64 0.13 255)', applets: [
       { id: 'rivieroversteek', name: 'Boot steekt rivier over', desc: 'Relatieve snelheid: tel de vaarsnelheid en de stroming vectorieel op.', ready: true },
       { id: 'wrijvinghelling', name: 'Wrijving op een hellend vlak', desc: 'Een blok op een helling; varieer de hoek en de wrijving en zie wanneer het begint te glijden.', ready: true },
-      { id: 'grafiekmatching', name: 'Bewegingen en hun grafieken', desc: 'ERB, EVRB, vrije val, verticale, horizontale en schuine worp met x(t), v(t) en a(t); rico en georiënteerde oppervlakte aflezen.', ready: true },
-      { id: 'cirkelbeweging', name: 'Eenparige cirkelbeweging', desc: 'Snelheid, centripetale versnelling en kracht; de projectie is een harmonische trilling.', ready: true },
-      { id: 'wielerpiste', name: 'Wielerpiste en bocht', desc: 'Op een hellende piste levert de normaalkracht de centripetale kracht; bij 0° wordt het een fietser in een bocht op een vlakke weg.', ready: true },
+      { id: 'grafiekmatching', name: 'Bewe\u00ADgingen en hun grafieken', desc: 'ERB, EVRB, vrije val, verticale, horizontale en schuine worp met x(t), v(t) en a(t); rico en georiënteerde oppervlakte aflezen.', ready: true },
+      { id: 'cirkelbeweging', name: 'Eenparige cirkel\u00ADbeweging', desc: 'Snelheid, centripetale versnelling en kracht; de projectie is een harmonische trilling.', ready: true },
+      { id: 'wielerpiste', name: 'Wieler\u00ADpiste en bocht', desc: 'Op een hellende piste levert de normaalkracht de centripetale kracht; bij 0° wordt het een fietser in een bocht op een vlakke weg.', ready: true },
       { id: 'looping', name: 'De looping', desc: 'Energiebehoud en centripetale kracht: vanaf welke hoogte haalt het karretje de looping?', ready: true },
-      { id: 'gravitatie', name: 'Gravitatie & satellieten', desc: 'Satellietbanen en de geostationaire baan, de wetten van Kepler en de Lagrangepunten.', ready: true },
-      { id: 'videoanalyse', name: 'Videoanalyse', desc: 'Laad een eigen video, ijk de beelden, klik het voorwerp per frame aan en onderzoek tabel, grafieken en trendlijnen.', ready: true },
+      { id: 'gravitatie', name: 'Gravi\u00ADtatie & satel\u00ADlieten', desc: 'Satellietbanen en de geostationaire baan, de wetten van Kepler en de Lagrangepunten.', ready: true },
+      { id: 'videoanalyse', name: 'Video\u00ADanalyse', desc: 'Laad een eigen video, ijk de beelden, klik het voorwerp per frame aan en onderzoek tabel, grafieken en trendlijnen.', ready: true },
     ]},
     { id: 'golven', name: 'Trillingen & golven', color: 'oklch(0.64 0.13 195)', applets: [
       { id: 'foto', name: 'Foto-elektrisch effect', desc: 'Schijn licht op een metaal en maak elektronen los.', ready: true },
       { id: 'zwartestraler', name: 'Zwarte straler — spectrum', desc: 'Verschuif het stralingsspectrum met de temperatuur (Planck & Wien).', ready: true },
       { id: 'breking', name: 'Breking en totale reflectie', desc: 'Wet van Snellius, grenshoek en totale reflectie; het principe van Huygens.', ready: true },
       { id: 'diffractie', name: 'Licht door spleten en rooster', desc: 'Buiging aan een spleet of haar, dubbele spleet en buigingsrooster; meet de golflengte.', ready: true },
-      { id: 'spectraallijnen', name: 'Spectraallijnen en Balmerreeks', desc: 'Energieniveaus van waterstof, emissie- en absorptiespectra en de vingerafdruk van elementen.', ready: true },
-      { id: 'polarisatie', name: 'Polarisatie van licht', desc: 'Onderzoek de wet van Malus met instelbare polarisatoren.', ready: true },
+      { id: 'spectraallijnen', name: 'Spectraal\u00ADlijnen en Balmer\u00ADreeks', desc: 'Energieniveaus van waterstof, emissie- en absorptiespectra en de vingerafdruk van elementen.', ready: true },
+      { id: 'polarisatie', name: 'Polari\u00ADsatie van licht', desc: 'Onderzoek de wet van Malus met instelbare polarisatoren.', ready: true },
       { id: 'snaar', name: 'Golven op een snaar', desc: 'Wek lopende en staande golven op in een snaar.', ready: true },
       { id: 'staandegolf', name: 'Staande golf door reflectie', desc: 'Heen- en teruglopende golf vormen samen een staande golf.', ready: true },
-      { id: 'interferentie', name: 'Interferentie van twee golven', desc: 'Twee coherente bronnen; oranje buiklijnen (versterking) en blauwe knooplijnen (uitdoving).', ready: true },
-      { id: 'doppler', name: 'Dopplereffect', desc: 'Een bewegende bron; golffronten kruipen vooraan op elkaar en vormen bij v ≥ c een schokgolf.', ready: true },
-      { id: 'massaveer', name: 'Massa-veersysteem', desc: 'Vrije, gedempte en gedwongen trilling; eigenfrequentie en resonantie.', ready: true },
-      { id: 'superpositie', name: 'Samenstellen van trillingen', desc: 'Twee trillingen optellen met fasoren, zwevingen en Fouriersynthese van blok-, zaagtand- en driehoeksgolf.', ready: true },
+      { id: 'interferentie', name: 'Inter\u00ADferentie van twee golven', desc: 'Twee coherente bronnen; oranje buiklijnen (versterking) en blauwe knooplijnen (uitdoving).', ready: true },
+      { id: 'doppler', name: 'Doppler\u00ADeffect', desc: 'Een bewegende bron; golffronten kruipen vooraan op elkaar en vormen bij v ≥ c een schokgolf.', ready: true },
+      { id: 'massaveer', name: 'Massa-veer\u00ADsysteem', desc: 'Vrije, gedempte en gedwongen trilling; eigenfrequentie en resonantie.', ready: true },
+      { id: 'superpositie', name: 'Samen\u00ADstellen van trillingen', desc: 'Twee trillingen optellen met fasoren, zwevingen en Fouriersynthese van blok-, zaagtand- en driehoeksgolf.', ready: true },
       { id: 'lissajous', name: 'Lissajous-figuren', desc: 'Stel twee loodrechte trillingen samen; varieer amplitudes, frequenties en faseverschil.', ready: true },
       { id: 'luchtkolom', name: 'Staande golf in een kolom', desc: 'Resonantie in een lucht- of snaarkolom: knopen, buiken en de reeks boventonen.', ready: true },
       { id: 'slinger', name: 'De slinger', desc: 'Meet de slingertijd met een chronometer en bepaal g uit T² tegen L.', ready: true },
-      { id: 'geluidsanalyse', name: 'Geluidsanalyse', desc: 'Neem geluid op met de microfoon; meet periodes in de golfvorm en lees grondtoon en boventonen af in het spectrum.', ready: true },
+      { id: 'geluidsanalyse', name: 'Geluids\u00ADanalyse', desc: 'Neem geluid op met de microfoon; meet periodes in de golfvorm en lees grondtoon en boventonen af in het spectrum.', ready: true },
     ]},
     { id: 'informatica', name: 'Informatica', color: 'oklch(0.64 0.13 300)', applets: [
-      { id: 'talstelsel', name: 'Talstelsel', desc: 'Reken om tussen decimaal, binair en hexadecimaal; werk met 2-complement en eenvoudige bewerkingen.', ready: true },
-      { id: 'booleanalgebra', name: 'Booleaanse algebra', desc: 'Vereenvoudig logische uitdrukkingen stap voor stap met vermelding van de rekenregels.', ready: true },
+      { id: 'talstelsel', name: 'Tal\u00ADstelsel', desc: 'Reken om tussen decimaal, binair en hexadecimaal; werk met 2-complement en eenvoudige bewerkingen.', ready: true },
+      { id: 'booleanalgebra', name: 'Boole\u00ADaanse algebra', desc: 'Vereenvoudig logische uitdrukkingen stap voor stap met vermelding van de rekenregels.', ready: true },
       { id: 'notebook', name: 'Python-notebook', desc: 'Open of maak een .ipynb, voer Python-cellen uit in de browser (numpy, matplotlib) en sla je werk op.', ready: true },
       { id: 'logischepoorten', name: 'Logische poorten en flipflops', desc: 'Bouw een schakeling met AND, OR, NOT, NAND, NOR, XOR, XNOR en RS-, D- en JK-flipflops; waarheidstabel en tijdsdiagram.', ready: true },
       { id: 'cpu8086', name: '8086-simulator', desc: 'Volg stap voor stap hoe een 8086-processor instructies ophaalt en uitvoert: BIU, wachtrij, registers, vlaggen, geheugen en stack.', ready: true },
-      { id: 'karnaugh', name: 'Karnaughkaarten', desc: 'Vul een K-map in en vind de minimale som- of productvorm met gekleurde groepen.', ready: true },
+      { id: 'karnaugh', name: 'Karnaugh\u00ADkaarten', desc: 'Vul een K-map in en vind de minimale som- of productvorm met gekleurde groepen.', ready: true },
     ]},
   ];
 
@@ -245,7 +245,7 @@ class Component extends DCLogic {
 
   dark(c) { return c.replace(/oklch\(0\.64 0\.13/, 'oklch(0.48 0.12'); }
 
-  norm(t) { return t.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, ''); }
+  norm(t) { return t.toLowerCase().normalize('NFD').replace(/\p{Diacritic}|­/gu, ''); }
 
   renderVals() {
     const topic = this.topics.find(t => t.id === this.state.topic) || this.topics[0];
@@ -254,9 +254,9 @@ class Component extends DCLogic {
       return {
         id: t.id, name: t.name,
         dot: active ? '#ffffff' : t.color,
-        bg: active ? this.dark(t.color) : '#fffdf9',
-        fg: active ? '#ffffff' : '#4f4a42',
-        border: active ? this.dark(t.color) : '#e7e1d5',
+        bg: active ? this.dark(t.color) : 'var(--card)',
+        fg: active ? '#ffffff' : 'var(--ink-2)',
+        border: active ? 'var(--ink)' : 'var(--rule)',
         pressed: active ? 'true' : 'false',
         onClick: () => this.selectTopic(t.id),
       };
@@ -273,6 +273,8 @@ class Component extends DCLogic {
       soft: this.soft(t.color),
       icon: 'icons/' + (this.hrefs[a.id] || '').replace('.dc.html', '.svg'),
       topicName: t.name,
+      topicLc: t.name.toLowerCase(),
+      fig: (this.topics.indexOf(t) + 1) + '.' + String(t.applets.indexOf(a) + 1).padStart(2, '0'),
       tagFg: this.dark(t.color),
       tagDisplay: q ? 'block' : 'none',
       cursor: a.ready ? 'pointer' : 'default',
@@ -287,6 +289,7 @@ class Component extends DCLogic {
       appletItems,
       topicName: q ? 'Zoekresultaten' : topic.name,
       topicColor: q ? '#6f685c' : topic.color,
+      totalStr: this.topics.reduce((n, t) => n + t.applets.length, 0) + ' simulaties',
       countStr: appletItems.length + (appletItems.length === 1 ? ' simulatie' : ' simulaties'),
       emptyDisplay: appletItems.length ? 'none' : 'block',
       query: this.state.query,

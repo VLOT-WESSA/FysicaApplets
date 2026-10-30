@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,17 +9,16 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:255}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -30,28 +29,28 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Bewegingen en hun grafieken</h1>
   </div>
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;gap:4px;flex:none;flex-wrap:wrap;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
+      <div style="display:flex;gap:4px;flex:none;flex-wrap:wrap;background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:4px">
         <sc-for list="{{ scenItems }}" as="s" hint-placeholder-count="6">
           <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.name }}</button>
         </sc-for>
       </div>
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
     </div>
-    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+        <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px">
         <sc-for list="{{ sliders }}" as="p" hint-placeholder-count="2">
           <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500">{{ p.label }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ p.valStr }}</span></div>
           <div style="height:32px;display:flex;align-items:center"><input type="range" min="{{ p.min }}" max="{{ p.max }}" step="{{ p.step }}" value="{{ p.val }}" onInput="{{ p.onInput }}"></div>
@@ -70,26 +69,26 @@
           <button onClick="{{ onRa }}" style="{{ raStyle }}">Rico en oppervlakte tonen</button>
         </div>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42">
-        <div style="display:flex;justify-content:space-between"><span>Tijd t</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ tStr }}</span></div>
-        <div style="display:flex;justify-content:space-between"><span>Positie</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ posStr }}</span></div>
-        <div style="display:flex;justify-content:space-between"><span>Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ velStr }}</span></div>
-        <div style="display:flex;justify-content:space-between"><span>Versnelling</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ accStr }}</span></div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)">
+        <div style="display:flex;justify-content:space-between"><span>Tijd t</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">{{ tStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Positie</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ posStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ velStr }}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Versnelling</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ accStr }}</span></div>
       </div>
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.7">
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.7">
         <sc-for list="{{ formulas }}" as="f" hint-placeholder-count="3">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">{{ f.text }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">{{ f.text }}</div>
         </sc-for>
         <div style="margin-top:4px">{{ axisNote }}</div>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:9px;font-size:13px;color:#4f4a42;line-height:1.45">
-        <div style="font-size:14px;font-weight:600;color:#2a2723">Aflezen op de grafieken</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.45">
+        <div style="font-size:14px;font-weight:600;color:var(--ink)">Aflezen op de grafieken</div>
         <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:baseline">
-          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">x(t)</span><span>rico van de raaklijn = snelheid v</span>
-          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">v(t)</span><span>rico van de raaklijn = versnelling a<br>georiënteerde oppervlakte = verplaatsing &Delta;x</span>
-          <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">a(t)</span><span>georiënteerde oppervlakte = snelheidsverandering &Delta;v</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">x(t)</span><span>rico van de raaklijn = snelheid v</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">v(t)</span><span>rico van de raaklijn = versnelling a<br>georiënteerde oppervlakte = verplaatsing &Delta;x</span>
+          <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">a(t)</span><span>georiënteerde oppervlakte = snelheidsverandering &Delta;v</span>
         </div>
-        <div style="font-size:12.5px;color:#6f685c">Oppervlakte boven de t-as telt positief, eronder negatief. Steil stijgend betekent een grote positieve rico, dalend een negatieve.</div>
+        <div style="font-size:12.5px;color:var(--muted)">Oppervlakte boven de t-as telt positief, eronder negatief. Steil stijgend betekent een grote positieve rico, dalend een negatieve.</div>
       </div>
     </div>
   </div>
@@ -195,7 +194,7 @@ class Component extends DCLogic {
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); ctx.setLineDash([]);
     const a = Math.atan2(dy, dx), hl = 9;
     ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - hl * Math.cos(a - 0.45), y + dy - hl * Math.sin(a - 0.45)); ctx.lineTo(x + dx - hl * Math.cos(a + 0.45), y + dy - hl * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill();
-    if (label) { ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14); }
+    if (label) { ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + dx + dx / L * 14, y + dy + dy / L * 14); }
     ctx.restore();
   }
 
@@ -215,7 +214,7 @@ class Component extends DCLogic {
     const A = L.ax[key], T = L.tA;
     const X = (t) => x + t / T.hi * w, Y = (v) => y + h - (v - A.lo) / (A.hi - A.lo) * h;
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(x, y, w, h);
-    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.lineWidth = 1;
+    ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69'; ctx.lineWidth = 1;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) {
       ctx.strokeStyle = Math.abs(v) < 1e-9 ? '#9a927f' : '#ece7dc'; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
@@ -227,9 +226,9 @@ class Component extends DCLogic {
       ctx.fillText(this.fmt(t, T.st < 1 ? 1 : 0), X(t), y + h + 3);
     }
     ctx.strokeStyle = '#9a927f'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.stroke();
-    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(name, x + 6, y + 4);
-    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif";
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif";
     ctx.fillText('t (s)', x + w - 4, y + h - 3);
 
     ctx.save(); ctx.beginPath(); ctx.rect(x, y - 2, w, h + 4); ctx.clip();
@@ -268,7 +267,7 @@ class Component extends DCLogic {
           const m = km[der[ch]], v = km[ch], dT = T.hi * 0.16;
           ctx.strokeStyle = col; ctx.lineWidth = 1.8; ctx.setLineDash([7, 4]);
           ctx.beginPath(); ctx.moveTo(X(tm - dT), Y(v - m * dT)); ctx.lineTo(X(tm + dT), Y(v + m * dT)); ctx.stroke(); ctx.setLineDash([]);
-          ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(X(tm), Y(v), 3.5, 0, 7); ctx.fill();
+          ctx.fillStyle = '#1d2a3a'; ctx.beginPath(); ctx.arc(X(tm), Y(v), 3.5, 0, 7); ctx.fill();
           raLines.push([col, pre(ch) + 'rico = ' + this.fmt(m, 1) + ' ' + u]);
         }
       }
@@ -286,7 +285,7 @@ class Component extends DCLogic {
       raLines.forEach((l, i) => { ctx.fillStyle = l[0]; ctx.fillText(l[1], x + w - 10, y + 8 + i * 15); });
     }
     if (L.d.kind === 'p') {
-      ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+      ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
       const lab = key === 'pos' ? ['x', 'y'] : key === 'vel' ? ['v\u2093', 'v\u1D67'] : ['a\u2093', 'a\u1D67'];
       ctx.fillStyle = '#3a6fb8'; ctx.fillText(lab[0], x + 90, y + 4); ctx.fillStyle = '#c8443a'; ctx.fillText(lab[1], x + 115, y + 4);
     }
@@ -296,7 +295,7 @@ class Component extends DCLogic {
     const { d, p, sc } = L; const k = this.kin(sc, p, this.t);
     const vc = this.state.vec, strobe = this.state.strobe;
     const sdt = d.kind === 'h' ? 1 : 0.5;
-    ctx.fillStyle = '#2a2723'; ctx.font = "600 16px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 16px 'IBM Plex Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('t = ' + this.fmt(this.t, 2) + ' s', 22, 16);
     const ghosts = [];
     if (strobe) for (let t = 0; t <= Math.min(this.t, L.te) + 1e-9; t += sdt) ghosts.push(t);
@@ -304,10 +303,10 @@ class Component extends DCLogic {
     if (d.kind === 'h') {
       const A = L.ax.pos; const X = (v) => 30 + (v - A.lo) / (A.hi - A.lo) * 360; const ry = 330;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, ry); ctx.lineTo(400, ry); ctx.stroke();
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
       for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), ry); ctx.lineTo(X(v), ry + 7); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), ry + 10); }
       ctx.textAlign = 'right'; ctx.fillText('x (m)', 400, ry + 28);
-      const car = (x, a) => { ctx.globalAlpha = a; ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.roundRect(x - 14, ry - 18, 28, 12, 3); ctx.fill(); ctx.fillStyle = '#2a2723'; ctx.beginPath(); ctx.arc(x - 8, ry - 4, 4, 0, 7); ctx.arc(x + 8, ry - 4, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1; };
+      const car = (x, a) => { ctx.globalAlpha = a; ctx.fillStyle = '#3a6fb8'; ctx.beginPath(); ctx.roundRect(x - 14, ry - 18, 28, 12, 3); ctx.fill(); ctx.fillStyle = '#1d2a3a'; ctx.beginPath(); ctx.arc(x - 8, ry - 4, 4, 0, 7); ctx.arc(x + 8, ry - 4, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1; };
       for (const t of ghosts) { const g = this.kin(sc, p, t); ctx.fillStyle = 'rgba(58,111,184,0.5)'; ctx.beginPath(); ctx.arc(X(g.x), ry - 40, 3.5, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(58,111,184,0.25)'; ctx.beginPath(); ctx.moveTo(X(g.x), ry - 36); ctx.lineTo(X(g.x), ry); ctx.stroke(); }
       car(X(k.x), 1);
       if (vc) { this.arrow(ctx, X(k.x), ry - 70, k.vx * 8, 0, '#d9822b', 3, 'v'); this.arrow(ctx, X(k.x), ry - 100, k.ax * 20, 0, '#c8443a', 3, 'a'); }
@@ -315,7 +314,7 @@ class Component extends DCLogic {
       const A = L.ax.pos; const Y = (v) => 560 - (v - A.lo) / (A.hi - A.lo) * 490; const bx = 220;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(40, Y(0)); ctx.lineTo(400, Y(0)); ctx.stroke();
       ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(70, Y(A.lo)); ctx.lineTo(70, Y(A.hi)); ctx.stroke();
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
       for (let v = A.lo; v <= A.hi + 1e-9; v += A.st) { ctx.beginPath(); ctx.moveTo(64, Y(v)); ctx.lineTo(70, Y(v)); ctx.stroke(); ctx.fillText(this.fmt(v, 0), 60, Y(v)); }
       ctx.textAlign = 'left'; ctx.fillText('y (m)', 76, Y(A.hi));
       if (p.h0 > 0) { ctx.fillStyle = '#cdd4dc'; ctx.fillRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.strokeRect(120, Y(p.h0), 86, Y(0) - Y(p.h0)); }
@@ -327,7 +326,7 @@ class Component extends DCLogic {
       const ox = 50, oy = 560; const X = (v) => ox + v * sc2, Y = (v) => oy - v * sc2;
       ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(20, oy); ctx.lineTo(405, oy); ctx.stroke();
       ctx.fillStyle = '#cdd4dc'; ctx.fillRect(20, Y(p.h0), 30, oy - Y(p.h0)); ctx.strokeStyle = '#8d99a6'; ctx.lineWidth = 1.5; ctx.strokeRect(20, Y(p.h0), 30, oy - Y(p.h0));
-      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
       for (let v = 0; v <= A.hi + 1e-9 && X(v) < 410; v += A.st) { ctx.beginPath(); ctx.moveTo(X(v), oy); ctx.lineTo(X(v), oy + 6); ctx.stroke(); ctx.fillText(this.fmt(v, 0), X(v), oy + 9); }
       ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
       for (let v = A.st; v <= A.hi + 1e-9 && Y(v) > 40; v += A.st) { ctx.fillText(this.fmt(v, 0), 16, Y(v)); }
@@ -360,8 +359,8 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state, d = this.S[st.sc], p = this.cur();
     const accent = 'var(--accent)';
-    const tab = (on) => 'flex:1;min-height:34px;font-size:13px;font-weight:' + (on ? '600' : '500') + ';border:none;border-radius:9px;padding:6px 10px;cursor:pointer;background:' + (on ? accent : 'transparent') + ';color:' + (on ? '#fff' : '#4f4a42');
-    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const tab = (on) => 'flex:1;min-height:34px;font-size:13px;font-weight:' + (on ? '600' : '500') + ';border:none;border-radius:4px;padding:6px 10px;cursor:pointer;background:' + (on ? accent : 'transparent') + ';color:' + (on ? '#fff' : '#4f4a42');
+    const chip = (on) => 'min-height:34px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 6px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const k = this.kin(st.sc, p, this.t);
     const dec = (step) => step < 1 ? (step < 0.5 ? 1 : 1) : 0;
     const vecStr = (a, b, u) => d.kind === 'p' ? '(' + this.fmt(a, 1) + ' ; ' + this.fmt(b, 1) + ') ' + u : this.fmt(d.kind === 'h' ? a : b, 1) + ' ' + u;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
@@ -18,25 +18,24 @@
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit;white-space:nowrap}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   textarea:focus,input:focus{outline:none}
   .lnpre{counter-reset:l}
   .ln{display:block;position:relative}
   .ln:before{content:counter(l);counter-increment:l;position:absolute;left:-40px;width:28px;text-align:right;color:#a79f8f;user-select:none}
-  .md{font-size:15px;line-height:1.6;color:#2a2723}
+  .md{font-size:15px;line-height:1.6;color:var(--ink)}
   .md>*:first-child{margin-top:0}.md>*:last-child{margin-bottom:0}
   .md h1{font-size:24px;margin:.6em 0 .4em}.md h2{font-size:20px;margin:.8em 0 .4em}.md h3{font-size:17px;margin:.8em 0 .3em}.md h4{font-size:15px;margin:.8em 0 .3em}
   .md p{margin:.6em 0}.md ul,.md ol{margin:.5em 0;padding-left:1.5em}
   .md code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#f1ede3;padding:1px 5px;border-radius:4px}
-  .md pre{background:#f6f2e9;border:1px solid #e7e1d5;border-radius:8px;padding:10px 12px;overflow:auto;margin:.6em 0}
+  .md pre{background:#f6f2e9;border:1px solid var(--rule);border-radius:4px;padding:10px 12px;overflow:auto;margin:.6em 0}
   .md pre code{background:none;padding:0}
-  .md blockquote{margin:.6em 0;padding:2px 14px;background:#f6f2e9;border-radius:8px;color:#4a453d}
+  .md blockquote{margin:.6em 0;padding:2px 14px;background:#f6f2e9;border-radius:4px;color:#4a453d}
   .md hr{border:0;border-top:1px solid #e7e1d5;margin:1em 0}
   .md a{color:var(--accent)}
-  .md .alert{padding:12px 16px;margin:.6em 0;border:1px solid transparent;border-radius:10px}
+  .md .alert{padding:12px 16px;margin:.6em 0;border:1px solid transparent;border-radius:4px}
   .md .alert>*:first-child{margin-top:0}.md .alert>*:last-child{margin-bottom:0}
   .md .alert-info,.md .alert-success{background:#e6f0f7;border-color:#c9dde9;color:#1f4b63}
   .md .alert-success{background:#e8f3e8;border-color:#cde3cd;color:#2c5a2c}
@@ -44,7 +43,7 @@
   .md .alert-danger{background:#f8e6e4;border-color:#ebc6c2;color:#7d2c27}
   .md font{font-size:inherit}
   .out table{border-collapse:collapse;font-size:13px;font-family:'IBM Plex Mono',monospace}
-  .out th,.out td{border:1px solid #e7e1d5;padding:3px 8px;text-align:right}
+  .out th,.out td{border:1px solid var(--rule);padding:3px 8px;text-align:right}
   .out th{background:#f6f2e9}
   .out img{max-width:100%;height:auto;display:block;background:#fff}
   @media print{
@@ -65,9 +64,9 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a class="np" href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a class="np" href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Python-notebook</h1>
     <div class="np" style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#4a453d">
       <span style="{{ dotStyle }}"></span>
@@ -77,25 +76,25 @@
   <input ref="{{ dataRef }}" type="file" multiple onChange="{{ onData }}" style="display:none">
   <input ref="{{ fileRef }}" type="file" accept=".ipynb,application/json" onChange="{{ onFile }}" style="display:none">
   <sc-if value="{{ hasNb }}" hint-placeholder-val="{{ false }}">
-    <div class="np" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:none;margin-bottom:12px;padding:8px 10px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:12px">
-      <button onClick="{{ goStart }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Start</button>
-      <input value="{{ nbName }}" onInput="{{ onName }}" spellcheck="false" style="width:210px;min-height:34px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c">.ipynb</span>
-      <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
+    <div class="np" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:none;margin-bottom:12px;padding:8px 10px;background:#fffdf9;border:1px solid var(--rule);border-radius:4px">
+      <button onClick="{{ goStart }}" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Start</button>
+      <input value="{{ nbName }}" onInput="{{ onName }}" spellcheck="false" style="width:210px;min-height:34px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted)">.ipynb</span>
+      <button onClick="{{ onSave }}" style="min-height:34px;padding:0 14px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;font-size:13px;font-weight:600">Opslaan</button>
       <div style="width:1px;height:24px;background:#e7e1d5;margin:0 4px"></div>
-      <button onClick="{{ pickData }}" title="Voeg een .csv-, .txt- of .json-bestand toe voor je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestand toevoegen</button>
-      <button onClick="{{ toggleToc }}" title="Toon de inhoud van de notebook" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Inhoud</button>
-      <button onClick="{{ collapseAll }}" title="Klap alle codecellen in" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles inklappen</button>
-      <button onClick="{{ expandAll }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitklappen</button>
-      <button onClick="{{ toggleFiles }}" title="Toon de inhoud van de databestanden naast je code" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestanden</button>
-      <button onClick="{{ runAll }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitvoeren</button>
-      <button onClick="{{ restart }}" title="Wist alle variabelen en de uitvoernummers" style="min-height:34px;padding:0 12px;border:1px solid oklch(0.5 0.13 28);border-radius:8px;background:#fff;color:oklch(0.45 0.13 28);cursor:pointer;font-size:13px;font-weight:600">Kernel herstarten</button>
-      <button onClick="{{ restartRun }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Herstarten en alles uitvoeren</button>
-      <button onClick="{{ clearOut }}" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Uitvoer wissen</button>
-      <button onClick="{{ exportPdf }}" title="Opent het afdrukvenster: kies daar ‘Opslaan als pdf’" style="min-height:34px;padding:0 12px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Exporteer als pdf</button>
+      <button onClick="{{ pickData }}" title="Voeg een .csv-, .txt- of .json-bestand toe voor je code" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestand toevoegen</button>
+      <button onClick="{{ toggleToc }}" title="Toon de inhoud van de notebook" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Inhoud</button>
+      <button onClick="{{ collapseAll }}" title="Klap alle codecellen in" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles inklappen</button>
+      <button onClick="{{ expandAll }}" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitklappen</button>
+      <button onClick="{{ toggleFiles }}" title="Toon de inhoud van de databestanden naast je code" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Bestanden</button>
+      <button onClick="{{ runAll }}" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Alles uitvoeren</button>
+      <button onClick="{{ restart }}" title="Wist alle variabelen en de uitvoernummers" style="min-height:34px;padding:0 12px;border:1px solid oklch(0.5 0.13 28);border-radius:4px;background:#fff;color:oklch(0.45 0.13 28);cursor:pointer;font-size:13px;font-weight:600">Kernel herstarten</button>
+      <button onClick="{{ restartRun }}" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Herstarten en alles uitvoeren</button>
+      <button onClick="{{ clearOut }}" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Uitvoer wissen</button>
+      <button onClick="{{ exportPdf }}" title="Opent het afdrukvenster: kies daar ‘Opslaan als pdf’" style="min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px;font-weight:500">Exporteer als pdf</button>
       <div style="margin-left:auto;display:flex;gap:6px 14px;flex-wrap:wrap;justify-content:flex-end;font-size:13px;color:#4a453d">
         <span style="white-space:nowrap">Shift+Enter: uitvoeren · Ctrl+Enter: uitvoeren en volgende cel</span>
-        <span style="white-space:nowrap;color:#6f685c">{{ saveInfo }}</span>
+        <span style="white-space:nowrap;color:var(--muted)">{{ saveInfo }}</span>
       </div>
     </div>
   </sc-if>
@@ -104,7 +103,7 @@
     <sc-if value="{{ showStart }}" hint-placeholder-val="{{ true }}">
       <div style="max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-bottom:20px">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
-          <button onClick="{{ newNb }}" style="text-align:left;padding:18px 20px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;cursor:pointer;font-family:inherit;color:#2a2723">
+          <button onClick="{{ newNb }}" style="text-align:left;padding:18px 20px;background:#fffdf9;border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:inherit;color:var(--ink)">
             <div style="font-size:16px;font-weight:600;margin-bottom:6px">Lege notebook</div>
             <div style="font-size:14px;color:#4a453d;line-height:1.5">Begin met één lege codecel.</div>
           </button>
@@ -127,7 +126,7 @@
                 <h3 style="font-size:14px;font-weight:600;margin:0 0 8px;color:var(--accent)">{{ g.titel }}</h3>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
                   <sc-for list="{{ g.items }}" as="o" hint-placeholder-count="0">
-                    <button onClick="{{ o.onClick }}" style="text-align:left;padding:14px 16px;background:#fffdf9;border:1px solid #e7e1d5;border-radius:12px;cursor:pointer;font-family:inherit;color:#2a2723;font-size:14px;font-weight:500">{{ o.label }}</button>
+                    <button onClick="{{ o.onClick }}" style="text-align:left;padding:14px 16px;background:#fffdf9;border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-family:inherit;color:var(--ink);font-size:14px;font-weight:500">{{ o.label }}</button>
                   </sc-for>
                 </div>
               </div>
@@ -146,31 +145,31 @@
               </div>
               <div onMouseEnter="{{ c.onEnter }}" onMouseLeave="{{ c.onLeave }}" style="{{ c.cardStyle }}">
                 <sc-if value="{{ c.showTools }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;align-items:center;background:rgba(255,253,249,.96);padding:3px;border:1px solid #e7e1d5;border-radius:10px;z-index:2">
+                  <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;align-items:center;background:rgba(255,253,249,.96);padding:3px;border:1px solid var(--rule);border-radius:4px;z-index:2">
                     <span draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" title="Sleep om te verplaatsen" style="cursor:grab;font-size:15px;color:#9b9384;padding:0 6px;user-select:none">&#8942;&#8942;</span>
-                    <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Bewerk</button>
-                    <button onClick="{{ c.onType }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">Naar code</button>
-                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
-                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
-                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
+                    <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px">Bewerk</button>
+                    <button onClick="{{ c.onType }}" style="min-height:32px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px">Naar code</button>
+                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
+                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
+                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
                   </div>
                 </sc-if>
                 <sc-if value="{{ c.showHeader }}" hint-placeholder-val="{{ true }}">
-                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:11px 11px 0 0">
+                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:4px 11px 0 0">
                   <span draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" title="Sleep om te verplaatsen" style="cursor:grab;font-size:15px;color:#9b9384;padding:0 4px;user-select:none">&#8942;&#8942;</span>
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#4a453d">{{ c.kind }}</span>
                   <sc-if value="{{ c.collapsed }}" hint-placeholder-val="{{ false }}">
-                    <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ c.summary }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ c.summary }}</span>
                   </sc-if>
                   <div style="margin-left:auto;display:flex;gap:4px;flex:none">
-                    <button onClick="{{ c.onCollapse }}" title="Cel in- of uitklappen" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.collapseLabel }}</button>
+                    <button onClick="{{ c.onCollapse }}" title="Cel in- of uitklappen" style="min-height:32px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px">{{ c.collapseLabel }}</button>
                     <sc-if value="{{ c.isMd }}" hint-placeholder-val="{{ false }}">
-                      <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.editLabel }}</button>
+                      <button onClick="{{ c.onToggleEdit }}" style="min-height:32px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px">{{ c.editLabel }}</button>
                     </sc-if>
-                    <button onClick="{{ c.onType }}" title="Celtype wisselen" style="min-height:32px;padding:0 10px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:13px">{{ c.typeLabel }}</button>
-                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
-                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
-                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
+                    <button onClick="{{ c.onType }}" title="Celtype wisselen" style="min-height:32px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:13px">{{ c.typeLabel }}</button>
+                    <button onClick="{{ c.onUp }}" title="Omhoog" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.upOpacity }}">&uarr;</button>
+                    <button onClick="{{ c.onDown }}" title="Omlaag" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px;opacity:{{ c.downOpacity }}">&darr;</button>
+                    <button onClick="{{ c.onDelete }}" title="Cel verwijderen" style="width:32px;min-height:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:16px;color:oklch(0.5 0.13 28)">&times;</button>
                   </div>
                 </div>
                 </sc-if>
@@ -191,8 +190,8 @@
             <div onMouseEnter="{{ c.onGapIn }}" onMouseLeave="{{ c.onGapOut }}" style="position:relative;height:14px">
               <sc-if value="{{ c.showAdd }}" hint-placeholder-val="{{ false }}">
                 <div style="position:absolute;left:0;right:0;top:-6px;display:flex;gap:8px;justify-content:center;z-index:3">
-                  <button onClick="{{ c.onAddCode }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:8px;background:#fffdf9;cursor:pointer;font-size:12px;color:#2a2723">+ Code</button>
-                  <button onClick="{{ c.onAddText }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:8px;background:#fffdf9;cursor:pointer;font-size:12px;color:#2a2723">+ Tekst</button>
+                  <button onClick="{{ c.onAddCode }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:4px;background:#fffdf9;cursor:pointer;font-size:12px;color:var(--ink)">+ Code</button>
+                  <button onClick="{{ c.onAddText }}" style="min-height:26px;padding:0 12px;border:1px solid #cfc8b8;border-radius:4px;background:#fffdf9;cursor:pointer;font-size:12px;color:var(--ink)">+ Tekst</button>
                 </div>
               </sc-if>
             </div>
@@ -202,11 +201,11 @@
     </sc-if>
   </div>
   <sc-if value="{{ showPanel }}" hint-placeholder-val="{{ false }}">
-    <aside class="np" style="flex:0 0 clamp(300px,34%,520px);min-height:0;display:flex;flex-direction:column;background:#fffdf9;border:1px solid #e7e1d5;border-radius:10px;overflow:hidden">
+    <aside class="np" style="flex:0 0 clamp(300px,34%,520px);min-height:0;display:flex;flex-direction:column;background:#fffdf9;border:1px solid var(--rule);border-radius:4px;overflow:hidden">
       <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e7e1d5;font-size:13px;font-weight:600">
         <button onClick="{{ showTocTab }}" style="{{ tabTocStyle }}">Inhoud</button>
         <button onClick="{{ showFilesTab }}" style="{{ tabFilesStyle }}">Bestanden</button>
-        <button onClick="{{ closeFiles }}" title="Sluiten" style="margin-left:auto;min-height:32px;min-width:32px;border:1px solid #e7e1d5;border-radius:8px;background:#fff;cursor:pointer;font-size:15px">&times;</button>
+        <button onClick="{{ closeFiles }}" title="Sluiten" style="margin-left:auto;min-height:32px;min-width:32px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;font-size:15px">&times;</button>
       </div>
       <sc-if value="{{ tabToc }}" hint-placeholder-val="{{ false }}">
         <div style="flex:1;min-height:0;overflow:auto;padding:6px 4px">
@@ -217,7 +216,7 @@
       </sc-if>
       <sc-if value="{{ tabFiles }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ noFiles }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:14px;font-size:13px;line-height:1.5;color:#6f685c">Geen bestanden gevonden. Bestanden die in je code staan (bv. <span style="font-family:'IBM Plex Mono',monospace">open("data.txt")</span>) verschijnen hier, of voeg er een toe.</div>
+        <div style="padding:14px;font-size:13px;line-height:1.5;color:var(--muted)">Geen bestanden gevonden. Bestanden die in je code staan (bv. <span style="font-family:'IBM Plex Mono',monospace">open("data.txt")</span>) verschijnen hier, of voeg er een toe.</div>
       </sc-if>
       <div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid #e7e1d5">
         <sc-for list="{{ fileTabs }}" as="f" hint-placeholder-count="2">
@@ -240,9 +239,9 @@
           </sc-raw-table>
         </sc-if>
         <sc-if value="{{ fileIsText }}" hint-placeholder-val="{{ false }}">
-          <pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#2a2723">{{ fileText }}</pre>
+          <pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--ink)">{{ fileText }}</pre>
         </sc-if>
-        <div style="margin-top:8px;font-size:12px;color:#6f685c;font-family:'IBM Plex Mono',monospace">{{ fileInfo }}</div>
+        <div style="margin-top:8px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace">{{ fileInfo }}</div>
       </div>
       </sc-if>
     </aside>
@@ -513,17 +512,17 @@ class Component extends DCLogic {
   newCell(type, source, outputs, count) {
     return { id: this.uid(), type, source: source || '', outputs: outputs || [], count: count || null, editing: false, running: false, queued: false };
   }
-  tabStyle(on) { return "min-height:32px;padding:0 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;border:1px solid " + (on ? "var(--accent);background:var(--accent);color:#fff" : "#e7e1d5;background:#fff;color:#2a2723"); }
+  tabStyle(on) { return "min-height:32px;padding:0 12px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:500;border:1px solid " + (on ? "var(--accent);background:var(--accent);color:#fff" : "#e7e1d5;background:#fff;color:var(--ink)"); }
   toc(nb) {
     const out = [];
     nb.cells.forEach(c => {
       const go = () => this.scrollToCell(c.id);
       if (c.type === 'markdown') {
         let any = false;
-        String(c.source).split('\n').forEach(l => { const m = l.match(/^(#{1,3})\s+(.+)/); if (m) { any = true; out.push({ label: m[2].replace(/[*_`]/g, ''), go, style: 'display:block;width:100%;text-align:left;min-height:32px;border:0;background:transparent;cursor:pointer;font-size:13.5px;font-family:inherit;color:#2a2723;padding:4px 8px 4px ' + (8 + (m[1].length - 1) * 14) + 'px;font-weight:' + (m[1].length === 1 ? 600 : 500) }); } });
+        String(c.source).split('\n').forEach(l => { const m = l.match(/^(#{1,3})\s+(.+)/); if (m) { any = true; out.push({ label: m[2].replace(/[*_`]/g, ''), go, style: 'display:block;width:100%;text-align:left;min-height:32px;border:0;background:transparent;cursor:pointer;font-size:13.5px;font-family:inherit;color:var(--ink);padding:4px 8px 4px ' + (8 + (m[1].length - 1) * 14) + 'px;font-weight:' + (m[1].length === 1 ? 600 : 500) }); } });
       } else {
         const l = (String(c.source).split('\n').find(x => x.trim()) || '(leeg)').trim();
-        out.push({ label: (c.count ? '[' + c.count + '] ' : '') + l, go, style: "display:block;width:100%;text-align:left;min-height:28px;border:0;background:transparent;cursor:pointer;font-size:12px;font-family:'IBM Plex Mono',monospace;color:#6f685c;padding:3px 8px 3px 22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" });
+        out.push({ label: (c.count ? '[' + c.count + '] ' : '') + l, go, style: "display:block;width:100%;text-align:left;min-height:28px;border:0;background:transparent;cursor:pointer;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--muted);padding:3px 8px 3px 22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" });
       }
     });
     return out;
@@ -644,7 +643,7 @@ class Component extends DCLogic {
   outHtml(outs) {
     const j = x => Array.isArray(x) ? x.join('') : (x || '');
     const ansi = t => String(t).replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
-    const pre = (t, col, bg) => '<pre style="margin:0 0 6px;white-space:pre-wrap;word-break:break-word;font-family:\'JetBrains Mono\',\'IBM Plex Mono\',monospace;font-size:13.5px;line-height:1.5;color:' + col + (bg ? ';background:' + bg + ';padding:8px 10px;border-radius:8px' : '') + '">' + this.esc(ansi(t)) + '</pre>';
+    const pre = (t, col, bg) => '<pre style="margin:0 0 6px;white-space:pre-wrap;word-break:break-word;font-family:\'JetBrains Mono\',\'IBM Plex Mono\',monospace;font-size:13.5px;line-height:1.5;color:' + col + (bg ? ';background:' + bg + ';padding:8px 10px;border-radius:4px' : '') + '">' + this.esc(ansi(t)) + '</pre>';
     return (outs || []).map(o => {
       if (o.output_type === 'stream') return pre(j(o.text), o.name === 'stderr' ? 'oklch(0.45 0.13 28)' : '#2a2723');
       if (o.output_type === 'error') return pre(j(o.traceback).trim() ? j(o.traceback) : (o.ename + ': ' + o.evalue), 'oklch(0.4 0.13 28)', 'oklch(0.96 0.02 28)');
@@ -703,12 +702,12 @@ class Component extends DCLogic {
       const coll = !!c.collapsed && code;
       const showMd = !code && !c.editing, showEditor = (code || c.editing) && !coll;
       const hasOut = code && !coll && c.outputs && c.outputs.length > 0;
-      const FONT = k => k ? "font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:14px;line-height:1.6;font-weight:400" : "font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;line-height:1.55";
+      const FONT = k => k ? "font-family:'JetBrains Mono','IBM Plex Mono',monospace;font-size:14px;line-height:1.6;font-weight:400" : "font-family:var(--font-body);font-size:14.5px;line-height:1.55";
       return {
         id: c.id, source: c.source, isMd: !code, collapsed: coll, collapseLabel: coll ? 'Uitklappen' : 'Inklappen',
         summary: (String(c.source).split('\n').find(x => x.trim()) || '(leeg)').trim() + (String(c.source).trim().split('\n').length > 1 ? ' …' : ''),
         onCollapse: () => this.patch(c.id, { collapsed: !c.collapsed }),
-        wrapStyle: 'display:flex;flex-direction:column;gap:0;border-radius:6px;box-shadow:' + (st.dropAt === i ? '0 -3px 0 var(--accent)' : 'none'),
+        wrapStyle: 'display:flex;flex-direction:column;gap:0;border-radius:4px;box-shadow:' + (st.dropAt === i ? '0 -3px 0 var(--accent)' : 'none'),
         onDragStart: e => { this._drag = i; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'cel'); } catch (x) {} },
         onDragEnd: () => { this._drag = null; this.setState({ dropAt: null }); },
         onDragOver: e => { if (this._drag != null) { e.preventDefault(); e.stopPropagation(); if (st.dropAt !== i) this.setState({ dropAt: i }); } },
@@ -721,9 +720,9 @@ class Component extends DCLogic {
         showHeader: !showMd, showTools: showMd && st.hov === c.id, showAdd: st.gap === c.id,
         onEnter: () => { if (st.hov !== c.id) this.setState({ hov: c.id }); }, onLeave: () => this.setState({ hov: null }),
         onGapIn: () => this.setState({ gap: c.id }), onGapOut: () => this.setState({ gap: null }),
-        cardStyle: showMd ? 'flex:1;min-width:0;position:relative;border-radius:12px;border:1px solid ' + (st.hov === c.id ? '#e7e1d5' : 'transparent') : 'flex:1;min-width:0;position:relative;background:#fffdf9;border-radius:12px;border:1px solid ' + (focus ? 'oklch(0.64 0.13 300)' : '#e7e1d5') + ';box-shadow:' + (focus ? '0 0 0 3px oklch(0.64 0.13 300 / .18)' : 'none'),
+        cardStyle: showMd ? 'flex:1;min-width:0;position:relative;border-radius:4px;border:1px solid ' + (st.hov === c.id ? '#e7e1d5' : 'transparent') : 'flex:1;min-width:0;position:relative;background:#fffdf9;border-radius:4px;border:1px solid ' + (focus ? 'oklch(0.64 0.13 300)' : '#e7e1d5') + ';box-shadow:' + (focus ? '0 0 0 3px oklch(0.64 0.13 300 / .18)' : 'none'),
         preClass: code ? 'lnpre' : '',
-        preStyle: FONT(code) + ';position:relative;margin:0;padding:10px 14px 10px ' + (code ? 52 : 14) + 'px;min-height:42px;white-space:pre-wrap;overflow-wrap:break-word;color:#2a2723;pointer-events:none',
+        preStyle: FONT(code) + ';position:relative;margin:0;padding:10px 14px 10px ' + (code ? 52 : 14) + 'px;min-height:42px;white-space:pre-wrap;overflow-wrap:break-word;color:var(--ink);pointer-events:none',
         taStyle: FONT(code) + ';position:absolute;left:0;top:0;width:100%;height:100%;margin:0;padding:10px 14px 10px ' + (code ? 52 : 14) + 'px;border:0;background:transparent;resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:break-word;color:transparent;caret-color:#2a2723;tab-size:4',
         upOpacity: i === 0 ? 0.35 : 1, downOpacity: i === nb.cells.length - 1 ? 0.35 : 1,
         preRef: el => this.setHtml(el, code ? this.numbered(this.hl(c.source)) : this.esc(c.source) + (c.source.endsWith('\n') ? ' ' : '')),
@@ -772,10 +771,10 @@ class Component extends DCLogic {
         const isTab = e && e.ok && /\.(csv|tsv)$/i.test(sel);
         const sep = /\.tsv$/i.test(sel) ? '\t' : (txt.split('\n')[0].includes(';') && !txt.split('\n')[0].includes(',') ? ';' : ',');
         const lines = isTab ? txt.split(/\r?\n/).filter(l => l.length) : [];
-        const rows = lines.slice(0, 200).map((l, i) => ({ cells: l.split(sep), cellStyle: 'padding:3px 10px;border:1px solid #e7e1d5;text-align:right;white-space:nowrap;' + (i === 0 ? 'background:#f3f0e8;font-weight:600;' : '') }));
+        const rows = lines.slice(0, 200).map((l, i) => ({ cells: l.split(sep), cellStyle: 'padding:3px 10px;border:1px solid var(--rule);text-align:right;white-space:nowrap;' + (i === 0 ? 'background:#f3f0e8;font-weight:600;' : '') }));
         const nl = txt ? txt.split(/\r?\n/).length : 0;
         return {
-          fileTabs: st.ftabs.map(n => ({ name: n, pick: () => this.setState({ fsel: n }), style: "min-height:32px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;border:1px solid " + (n === sel ? 'var(--accent);background:var(--accent);color:#fff' : '#e7e1d5;background:#fff;color:#2a2723') })),
+          fileTabs: st.ftabs.map(n => ({ name: n, pick: () => this.setState({ fsel: n }), style: "min-height:32px;padding:0 10px;border-radius:4px;cursor:pointer;font-size:12.5px;font-family:'IBM Plex Mono',monospace;border:1px solid " + (n === sel ? 'var(--accent);background:var(--accent);color:#fff' : '#e7e1d5;background:#fff;color:var(--ink)') })),
           fileMissing: !!e && !e.ok, fileIsTable: isTab, fileRows: rows, fileIsText: !!e && e.ok && !isTab, fileText: txt,
           fileInfo: e && e.ok ? nl + ' regels · ' + txt.length + ' tekens' + (isTab && lines.length > 200 ? ' · eerste 200 rijen getoond' : '') : ''
         };
@@ -787,7 +786,7 @@ class Component extends DCLogic {
       openFile: () => this.fileRef.current && this.fileRef.current.click(),
       onDragOver: e => { e.preventDefault(); if (!st.dragOver) this.setState({ dragOver: true }); },
       onDrop: e => { e.preventDefault(); this.setState({ dragOver: false }); const f = e.dataTransfer.files[0]; if (f && this.confirmLeave()) this.readFile(f); },
-      dropStyle: 'text-align:left;padding:18px 20px;background:' + (st.dragOver ? '#f3eefa' : '#fffdf9') + ';border:1px ' + (st.dragOver ? 'solid oklch(0.64 0.13 300)' : 'dashed #cfc8b8') + ';border-radius:14px;cursor:pointer;font-family:inherit;color:#2a2723',
+      dropStyle: 'text-align:left;padding:18px 20px;background:' + (st.dragOver ? '#f3eefa' : '#fffdf9') + ';border:1px ' + (st.dragOver ? 'solid oklch(0.64 0.13 300)' : 'dashed #cfc8b8') + ';border-radius:4px;cursor:pointer;font-family:inherit;color:var(--ink)',
       newNb: () => { this.openNb({ cells: [] }, 'naamloos'); this.focusCell(this.state.nb && this.state.nb.cells[0].id); setTimeout(() => { const c = this.state.nb.cells[0]; this.focusCell(c.id); }, 60); },
       goStart: () => { if (this.confirmLeave()) { this.autosave(); this.setState({ nb: null, dirty: false, session: (() => { try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) { return null; } })() }); } },
       hasSession: !!sess, sessionName: sess ? (sess.name || 'naamloos') : '', sessionInfo: sess ? sess.cells.length + ' cellen' : '',

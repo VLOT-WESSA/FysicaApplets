@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,13 +18,12 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -38,54 +37,54 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Polarisatie van licht</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none;display:flex;align-items:center;gap:18px">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 18px;box-shadow:var(--shadow);flex:none;display:flex;align-items:center;gap:18px">
         <div style="flex:1">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
+          <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:5px">Doorgelaten intensiteit</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ malusStr }}</div>
         </div>
         <div style="flex:0 0 180px">
-          <div style="height:12px;border-radius:6px;background:#efeadf;overflow:hidden">
-            <div style="height:100%;background:var(--accent);border-radius:6px;transition:width .15s;width:{{ finalPct }}"></div>
+          <div style="height:12px;border-radius:4px;background:#efeadf;overflow:hidden">
+            <div style="height:100%;background:var(--accent);border-radius:4px;transition:width .15s;width:{{ finalPct }}"></div>
           </div>
           <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#1f7a6e;font-weight:600;margin-top:5px">{{ finalPct }}</div>
         </div>
       </div>
     </div>
 
-    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:10px 14px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.45">De polarisatoren staan <b>uit</b> bij start &mdash; schakel ze didactisch in. Tip: P1 op 0&deg; en P3 op 90&deg; (gekruist, donker), zet dan P2 op 45&deg; ertussen.</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:10px 14px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.45">De polarisatoren staan <b>uit</b> bij start &mdash; schakel ze didactisch in. Tip: P1 op 0&deg; en P3 op 90&deg; (gekruist, donker), zet dan P2 op 45&deg; ertussen.</div>
       </div>
 
       <sc-for list="{{ polCards }}" as="p" hint-placeholder-count="3">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <span style="font-size:15px;font-weight:600">{{ p.title }}</span>
-            <button onClick="{{ p.onToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:5px 14px;cursor:pointer;background:{{ p.bg }};color:{{ p.fg }}">{{ p.lbl }}</button>
+            <span style="font-family:var(--font-display);font-size:16px;font-weight:700">{{ p.title }}</span>
+            <button onClick="{{ p.onToggle }}" style="font-family:inherit;font-size:12px;font-weight:600;border:none;border-radius:4px;padding:5px 14px;cursor:pointer;background:{{ p.bg }};color:{{ p.fg }}">{{ p.lbl }}</button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;opacity:{{ p.op }}">
-            <span style="font-size:13px;color:#6f685c">Transmissie-as</span>
+            <span style="font-size:13px;color:var(--muted)">Transmissie-as</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c">{{ p.angStr }}</span>
           </div>
           <input type="range" min="0" max="180" step="1" value="{{ p.ang }}" onChange="{{ p.onAngle }}" disabled="{{ p.dis }}" style="width:100%;accent-color:var(--accent);opacity:{{ p.op }}">
         </div>
       </sc-for>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:14px">Trillingsrichting tonen</span>
         <button onClick="{{ onTogInd }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ indBorder }};background:{{ indBg }};color:{{ indFg }}">
           <span style="width:8px;height:8px;border-radius:50%;background:{{ indDot }}"></span>{{ indLabel }}
@@ -149,7 +148,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
     const g = this.geo;
     const st = this.computeStages();
     const lightCol = '232,176,40';
@@ -204,7 +203,7 @@ class Component extends DCLogic {
 
   drawPolarizer(ctx, cx, cy, R, p, k) {
     ctx.save();
-    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
     ctx.fillStyle = p.on ? '#253a37' : '#8994a3';
     ctx.fillText('P' + (k + 1) + (p.on ? '  ' + p.ang + '\u00B0' : '  uit'), cx, cy - R - 12);
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832);

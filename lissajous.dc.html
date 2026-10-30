@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,14 +15,13 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -36,31 +35,31 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Lissajous-figuren</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#38d9c4;border-radius:2px;display:inline-block"></span>Lissajous-figuur</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>x-trilling (boven)</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#6f9bd8;border-radius:2px;display:inline-block"></span>y-trilling (links)</div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#6f685c">verhouding <span style="font-family:'IBM Plex Mono',monospace;color:#2a2723;font-weight:600">{{ ratioStr }}</span></div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#38d9c4;border-radius:2px;display:inline-block"></span>Lissajous-figuur</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>x-trilling (boven)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#6f9bd8;border-radius:2px;display:inline-block"></span>y-trilling (links)</div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)">verhouding <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">{{ ratioStr }}</span></div>
       </div>
     </div>
 
-    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:12px">Amplitudes</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Amplitudes</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">A<sub>x</sub></span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ axStr }}</span>
@@ -73,8 +72,8 @@
         <input type="range" min="0.1" max="1" step="0.01" value="{{ ay }}" onInput="{{ onAy }}" style="width:100%;accent-color:#6f9bd8">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:12px">Frequenties</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:12px">Frequenties</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">f<sub>x</sub></span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ fxStr }}</span>
@@ -87,27 +86,27 @@
         <input type="range" min="1" max="6" step="1" value="{{ fy }}" onInput="{{ onFy }}" style="width:100%;accent-color:#6f9bd8">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Faseverschil &phi;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ phaseStr }}</span>
         </div>
         <input type="range" min="0" max="360" step="1" value="{{ phaseVal }}" onInput="{{ onPhase }}" style="width:100%;accent-color:var(--accent)">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0&deg;</span><span>180&deg;</span><span>360&deg;</span></div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
-        <button onClick="{{ onToggleBol }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ bolBorder }};background:{{ bolBg }};color:{{ bolFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ bolDot }}"></span>{{ bolLabel }}</button>
-        <button onClick="{{ onAuto }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ autoBorder }};background:{{ autoBg }};color:{{ autoFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ autoDot }}"></span>{{ autoLabel }}</button>
-        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
-          <button onClick="{{ onModeFase }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ faseTabBg }};color:{{ faseTabFg }};box-shadow:{{ faseTabSh }}">varieer faseverschil</button>
-          <button onClick="{{ onModeRatio }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ ratioTabBg }};color:{{ ratioTabFg }};box-shadow:{{ ratioTabSh }}">varieer verhouding</button>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <button onClick="{{ onToggleBol }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ bolBorder }};background:{{ bolBg }};color:{{ bolFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ bolDot }}"></span>{{ bolLabel }}</button>
+        <button onClick="{{ onAuto }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:10px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ autoBorder }};background:{{ autoBg }};color:{{ autoFg }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ autoDot }}"></span>{{ autoLabel }}</button>
+        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:4px;padding:4px">
+          <button onClick="{{ onModeFase }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ faseTabBg }};color:{{ faseTabFg }};box-shadow:{{ faseTabSh }}">varieer faseverschil</button>
+          <button onClick="{{ onModeRatio }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ ratioTabBg }};color:{{ ratioTabFg }};box-shadow:{{ ratioTabSh }}">varieer verhouding</button>
         </div>
-        <div style="font-size:11.5px;color:#6f685c;line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
+        <div style="font-size:11.5px;color:var(--muted);line-height:1.45">Laat het faseverschil doorlopen (ellips &rarr; lijn &rarr; ellips) of stap automatisch door de frequentieverhoudingen.</div>
       </div>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.55">x = A<sub>x</sub>&middot;sin(f<sub>x</sub>t + &phi;) &nbsp;&middot;&nbsp; y = A<sub>y</sub>&middot;sin(f<sub>y</sub>t). Bij een gehele verhouding f<sub>x</sub>:f<sub>y</sub> ontstaat een gesloten, stilstaande figuur.</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.55">x = A<sub>x</sub>&middot;sin(f<sub>x</sub>t + &phi;) &nbsp;&middot;&nbsp; y = A<sub>y</sub>&middot;sin(f<sub>y</sub>t). Bij een gehele verhouding f<sub>x</sub>:f<sub>y</sub> ontstaat een gesloten, stilstaande figuur.</div>
       </div>
 
     </div>
@@ -156,7 +155,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const W = this.W, H = this.H;
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, W, H);
 
     const pad = 14, Lw = 78, Th = 78, gap = 14;
     const mX0 = pad + Lw + gap, mY0 = pad + Th + gap, mX1 = W - pad, mY1 = H - pad;

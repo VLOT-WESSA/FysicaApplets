@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,14 +17,13 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -38,43 +37,43 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Wrijving op een hellend vlak</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
         <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>motorkracht F<sub>m</sub></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>motorkracht F<sub>m</sub></div>
         </sc-if>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #93c4a3"></span>componenten van g</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:0;border-top:2px dashed #93c4a3"></span>componenten van g</div>
       </div>
     </div>
 
-    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="display:flex;gap:4px;flex:none;background:#f4f1ea;border:1px solid #e7e1d5;border-radius:12px;padding:4px">
+      <div style="display:flex;gap:4px;flex:none;background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:4px">
         <button onClick="{{ onModeBlock }}" style="{{ blockTabStyle }}">Blok glijdt af</button>
         <button onClick="{{ onModeCar }}" style="{{ carTabStyle }}">Auto rijdt omhoog</button>
       </div>
 
       <div style="display:flex;gap:10px;flex:none">
-        <button onClick="{{ onRelease }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ releaseLabel }}</button>
-        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+        <button onClick="{{ onRelease }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">{{ releaseLabel }}</button>
+        <button onClick="{{ onReset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Hellingshoek &theta;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
@@ -87,7 +86,7 @@
         <input type="range" min="0.5" max="10" step="0.5" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Statische wrijving &mu;&#8347;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#8a3b2c">{{ musStr }}</span>
@@ -98,11 +97,11 @@
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c9772f">{{ mukStr }}</span>
         </div>
         <input type="range" min="0" max="1.2" step="0.01" value="{{ muk }}" onInput="{{ onMuk }}" style="width:100%;accent-color:#e0903a">
-        <div style="font-size:11px;color:#6f685c;margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4">Doorgaans is &mu;&#8342; &le; &mu;&#8347;.</div>
       </div>
 
       <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
             <span style="font-size:14px;font-weight:500">Motorkracht F<sub>m</sub></span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#2f8a4e">{{ fmotorStr }}</span>
@@ -111,29 +110,29 @@
         </div>
       </sc-if>
 
-      <div style="background:{{ stCardBg }};border:1px solid {{ stCardBorder }};border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+      <div style="background:{{ stCardBg }};border:1px solid {{ stCardBorder }};border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
           <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
           <span style="font-size:14px;font-weight:700">{{ statusLabel }}</span>
         </div>
         <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ motorStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Motorkracht F<sub>m</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ motorStr }}</span></div>
         </sc-if>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Hellingscomponent F<sub>z</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ drivingStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Max. statische wrijving &mu;&#8347;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ maxStaticStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ normalStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ frictionStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Versnelling a</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ accelStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Hellingscomponent F<sub>z</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ drivingStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Max. statische wrijving &mu;&#8347;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ maxStaticStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ normalStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Wrijvingskracht F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ frictionStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Versnelling a</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ accelStr }}</span></div>
       </div>
 
       <sc-if value="{{ isBlock }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-          <div style="font-size:12px;color:#6f685c;line-height:1.55">Het blok glijdt zodra de hellingscomponent groter wordt dan de maximale statische wrijving: <b>tan&thinsp;&theta; &gt; &mu;&#8347;</b> (hier bij &theta; &gt; {{ slipAngleStr }}).</div>
+        <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
+          <div style="font-size:12px;color:var(--muted);line-height:1.55">Het blok glijdt zodra de hellingscomponent groter wordt dan de maximale statische wrijving: <b>tan&thinsp;&theta; &gt; &mu;&#8347;</b> (hier bij &theta; &gt; {{ slipAngleStr }}).</div>
         </div>
       </sc-if>
       <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
-        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-          <div style="font-size:12px;color:#6f685c;line-height:1.55">De auto rijdt omhoog zodra de motorkracht groter is dan de hellingscomponent plus de maximale statische wrijving: <b>F<sub>m</sub> &gt; F<sub>z</sub>&middot;sin&theta; + &mu;&#8347;&middot;F<sub>N</sub></b>.</div>
+        <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
+          <div style="font-size:12px;color:var(--muted);line-height:1.55">De auto rijdt omhoog zodra de motorkracht groter is dan de hellingscomponent plus de maximale statische wrijving: <b>F<sub>m</sub> &gt; F<sub>z</sub>&middot;sin&theta; + &mu;&#8347;&middot;F<sub>N</sub></b>.</div>
         </div>
       </sc-if>
 
@@ -225,8 +224,8 @@ class Component extends DCLogic {
     ctx.lineTo(ex - hl * Math.cos(a + ha), ey - hl * Math.sin(a + ha));
     ctx.closePath(); ctx.fill();
     if (label) {
-      const mainF = "600 13px 'IBM Plex Sans',sans-serif";
-      const subF = "600 9px 'IBM Plex Sans',sans-serif";
+      const mainF = "600 13px 'Atkinson Hyperlegible',sans-serif";
+      const subF = "600 9px 'Atkinson Hyperlegible',sans-serif";
       ctx.fillStyle = col; ctx.textBaseline = 'middle';
       const lx = ex + (dx / len) * 16, ly = ey + (dy / len) * 16;
       const us = label.indexOf('_');
@@ -260,7 +259,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
 
     const th = this.theta * Math.PI / 180;
     const ux = Math.cos(th), uy = -Math.sin(th);      // up-slope
@@ -284,7 +283,7 @@ class Component extends DCLogic {
     // angle arc + label
     ctx.strokeStyle = '#7a8694'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(P.x, P.y, 42, -th, 0); ctx.stroke();
-    ctx.fillStyle = '#566069'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#566069'; ctx.font = "600 14px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText(Math.round(this.theta) + '\u00B0', P.x + 50, P.y - 20 * Math.sin(th / 2 + 0.1) - 4);
 
     // object on the slope (one side parallel to the incline)
@@ -318,7 +317,7 @@ class Component extends DCLogic {
       ctx.fillStyle = bg; ctx.strokeStyle = '#6f5527'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.rect(-hb, -hb, this.block, this.block); ctx.fill(); ctx.stroke();
       ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(-hb + 4, -hb + 4, this.block - 8, 6);
-      ctx.fillStyle = '#5e481f'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#5e481f'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('m', 0, 1);
     }
     ctx.restore();
@@ -397,8 +396,8 @@ class Component extends DCLogic {
     }
     const slipAngle = Math.atan(this.mus) * 180 / Math.PI;
     const fmt = (x) => x.toFixed(1) + ' N';
-    const tabOn = 'flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:9px;padding:8px 6px;cursor:pointer;background:#2f6f5e;color:#fff';
-    const tabOff = 'flex:1;font-family:inherit;font-size:13px;font-weight:500;border:none;border-radius:9px;padding:8px 6px;cursor:pointer;background:transparent;color:#6f685c';
+    const tabOn = 'flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:4px;padding:8px 6px;cursor:pointer;background:#2f6f5e;color:#fff';
+    const tabOff = 'flex:1;font-family:inherit;font-size:13px;font-weight:500;border:none;border-radius:4px;padding:8px 6px;cursor:pointer;background:transparent;color:var(--muted)';
     return {
       stageRef: this.stageRef,
       theta: this.theta, mass: this.mass, mus: this.mus, muk: this.muk,

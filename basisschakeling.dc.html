@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,13 +18,12 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:75}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -38,10 +37,10 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Basis schakeling</h1>
   </div>
 
@@ -49,51 +48,51 @@
 
     <!-- LEFT: simulation -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:10px;box-shadow:var(--shadow)">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
       <div style="display:flex;gap:12px;flex:none">
-        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#6f685c;font-weight:600">Stroom (totaal)</div>
+        <div style="flex:1;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+          <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Stroom (totaal)</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#c0392b;margin-top:2px">{{ iStr }}</div>
         </div>
-        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#6f685c;font-weight:600">Vervangingsweerstand</div>
+        <div style="flex:1;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+          <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Vervangingsweerstand</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#1f9e8f;margin-top:2px">{{ rTotStr }}</div>
         </div>
-        <div style="flex:1;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-          <div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#6f685c;font-weight:600">Vermogen (totaal)</div>
+        <div style="flex:1;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+          <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Vermogen (totaal)</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#d98a2b;margin-top:2px">{{ pStr }}</div>
         </div>
       </div>
     </div>
 
     <!-- RIGHT: controls -->
-    <div style="flex:none;width:316px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:316px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:15px;font-weight:600">Schakelaar</span>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Schakelaar</span>
         <button onClick="{{ toggleSwitch }}" style="display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ swBorder }};background:{{ swBg }};color:{{ swFg }}">
           <span style="width:9px;height:9px;border-radius:50%;background:{{ swDot }}"></span>{{ swLabel }}
         </button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Lampen</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Lampen</div>
         <div style="display:flex;gap:7px">
           <sc-for list="{{ modeItems }}" as="m" hint-placeholder-count="3">
-            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
+            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
           </sc-for>
         </div>
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin:12px 0 10px">Weerstanden (labo)</div>
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin:12px 0 10px">Weerstanden (labo)</div>
         <div style="display:flex;gap:7px">
           <sc-for list="{{ rModeItems }}" as="m" hint-placeholder-count="3">
-            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
+            <button onClick="{{ m.onClick }}" style="flex:1;padding:9px 6px;border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;line-height:1.25;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</button>
           </sc-for>
         </div>
       </div>
       <sc-if value="{{ isRMode }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
           <sc-for list="{{ rPickers }}" as="rp" hint-placeholder-count="3">
             <div style="display:flex;align-items:center;gap:6px">
               <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;width:26px">{{ rp.name }}</span>
@@ -102,40 +101,40 @@
               </sc-for>
             </div>
           </sc-for>
-          <div style="font-size:12px;color:#6f685c;margin-top:4px">Ampèremeter in serie met</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Ampèremeter in serie met</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ ammOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for></div>
-          <div style="font-size:12px;color:#6f685c;margin-top:2px">Voltmeter parallel over</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Voltmeter parallel over</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ voltOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for></div>
           <div style="display:flex;gap:10px;margin-top:4px">
-            <div style="flex:1;background:#f7d54a;border-radius:10px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:#4f4a42">Ampèremeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ ammStr }}</div></div>
-            <div style="flex:1;background:#f7d54a;border-radius:10px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:#4f4a42">Voltmeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ voltStr }}</div></div>
+            <div style="flex:1;background:#f7d54a;border-radius:4px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:var(--ink-2)">Ampèremeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ ammStr }}</div></div>
+            <div style="flex:1;background:#f7d54a;border-radius:4px;padding:6px 10px;border:1px solid #c9a92c"><div style="font-size:11px;font-weight:600;color:var(--ink-2)">Voltmeter</div><div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;background:#d8e4d0;border-radius:4px;padding:2px 6px;margin-top:3px">{{ voltStr }}</div></div>
           </div>
           <button onClick="{{ toggleAll }}" style="{{ allStyle }}">{{ allLabel }}</button>
         </div>
       </sc-if>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#2f6fb0"></span>
-          <span style="font-size:15px;font-weight:600">Spanning U</span>
+          <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Spanning U</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;margin-left:auto">{{ uStr }} V</span>
         </div>
         <input type="range" min="0" max="12" step="0.1" value="{{ voltage }}" onChange="{{ onU }}" style="width:100%;accent-color:#2f6fb0">
       </div>
 
       <sc-if value="{{ isLampMode }}" hint-placeholder-val="{{ true }}">
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:var(--accent)"></span>
-          <span style="font-size:15px;font-weight:600">Weerstand per lamp R</span>
+          <span style="font-family:var(--font-display);font-size:16px;font-weight:700">Weerstand per lamp R</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#3a352c;margin-left:auto">{{ rStr }} &Omega;</span>
         </div>
         <input type="range" min="20" max="200" step="1" value="{{ resistance }}" onChange="{{ onR }}" style="width:100%;accent-color:var(--accent)">
       </div>
       </sc-if>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:11px">Weergave</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:11px">Weergave</div>
         <div style="display:flex;flex-direction:column;gap:9px">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:14px">Elektronenstroom</span>
@@ -152,8 +151,8 @@
         </div>
       </div>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ hintStr }}</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:13px 16px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">{{ hintStr }}</div>
       </div>
 
     </div>
@@ -191,7 +190,7 @@ class Component extends DCLogic {
     if (hiA) { if (vertical) this.meterSym(ctx, x, y + 52, 'A'); else this.meterSym(ctx, x + 52, y, 'A'); }
     ctx.textBaseline = 'alphabetic';
   }
-  meterSym(ctx, x, y, l) { ctx.fillStyle = '#fff'; ctx.strokeStyle = l === 'A' ? '#c0392b' : '#7a5ab8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 11, 0, 6.2832); ctx.fill(); ctx.stroke(); ctx.fillStyle = ctx.strokeStyle; ctx.font = "700 12px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(l, x, y + 0.5); }
+  meterSym(ctx, x, y, l) { ctx.fillStyle = '#fff'; ctx.strokeStyle = l === 'A' ? '#c0392b' : '#7a5ab8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, 11, 0, 6.2832); ctx.fill(); ctx.stroke(); ctx.fillStyle = ctx.strokeStyle; ctx.font = "700 12px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(l, x, y + 0.5); }
   drawR(ctx) {
     const st = this.state, W = this.W, H = this.H, m = this.rModel();
     const xL = Math.max(150, W * 0.20), xR = W - Math.max(110, W * 0.14);
@@ -222,7 +221,7 @@ class Component extends DCLogic {
       [['R2', x2], ['R3', x3]].forEach(([k, x]) => { this.drawWire(ctx, x, yT, x, yB); this.resistor(ctx, x, ymid - 10, true, k, st.amm === k, st.volt === k, meas(k), k === 'R2'); });
       if (ammTot) this.meterSym(ctx, xL + (xr1 - xL) * 0.3, yB, 'A');
     }
-    if (!st.closed) { ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Kring open \u2014 geen stroom', (xL + xR) / 2, yB + 30); }
+    if (!st.closed) { ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Kring open \u2014 geen stroom', (xL + xR) / 2, yB + 30); }
   }
   stageRef = React.createRef();
   W = 800; H = 460;
@@ -344,7 +343,7 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c) return;
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
     if (this.isR()) { this.drawR(ctx); return; }
     const md = this.model();
     if (this.state.mode === 'parallel') this.drawParallel(ctx, md);
@@ -385,7 +384,7 @@ class Component extends DCLogic {
     this.currentArrow(ctx, (x0 + x1) / 2, y1, -1, 0, md.on);
     // open-circuit note
     if (!this.state.closed) {
-      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
       ctx.fillText('Kring open \u2014 geen stroom', (x0 + x1) / 2, y1 + 26);
     }
   }
@@ -423,7 +422,7 @@ class Component extends DCLogic {
     this.currentArrow(ctx, xA, ymid - (yB - yT) * 0.28, 0, 1, md.on);
     this.currentArrow(ctx, xB, ymid - (yB - yT) * 0.28, 0, 1, md.on);
     if (!this.state.closed) {
-      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+      ctx.fillStyle = '#c0392b'; ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
       ctx.fillText('Kring open \u2014 geen stroom', (xL + xB) / 2, yB + 26);
     }
   }
@@ -440,7 +439,7 @@ class Component extends DCLogic {
   renderVals() {
     const md = this.isR() ? (() => { const m = this.rModel(); return { Itot: m.I.tot, Rtot: m.Rt, Pa: m.P, Pb: 0 }; })() : this.model();
     const st = this.state, rm = this.rModel();
-    const chipS = (on) => 'min-height:30px;font-size:12px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? 'var(--accent)' : '#e7e1d5') + ';background:' + (on ? 'var(--accent)' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chipS = (on) => 'min-height:30px;font-size:12px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? 'var(--accent)' : '#e7e1d5') + ';background:' + (on ? 'var(--accent)' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const rModeItems = [{ id: 'rSerie', label: 'Serie' }, { id: 'rPar', label: 'Parallel' }, { id: 'rMix', label: 'Gemengd' }].map(m => {
       const active = m.id === st.mode;
       return { id: m.id, label: m.label, bg: active ? 'var(--accent)' : '#fffdf9', fg: active ? '#fff' : '#6f685c', border: active ? 'var(--accent)' : '#e7e1d5', onClick: () => this.setState({ mode: m.id }) };
@@ -483,7 +482,7 @@ class Component extends DCLogic {
       isRMode: this.isR(), isLampMode: !this.isR(),
       ammStr: this.fmtI3(rm.I[st.amm] || 0), voltStr: (rm.V[st.volt] || 0).toFixed(2) + ' V',
       toggleAll: () => this.setState({ showAll: !st.showAll }), allLabel: st.showAll ? 'Alle meetwaarden verbergen' : 'Alle meetwaarden tonen',
-      allStyle: 'min-height:32px;font-size:12.5px;border-radius:8px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723',
+      allStyle: 'min-height:32px;font-size:12.5px;border-radius:4px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink)',
       toggleSwitch: () => this.setState({ closed: !this.state.closed }),
       swLabel: on ? 'Gesloten' : 'Open',
       swBg: on ? 'var(--accent)' : '#fbecea', swFg: on ? '#fff' : '#b8472f',

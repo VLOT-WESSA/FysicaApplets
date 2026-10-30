@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,28 +10,27 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:300}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   .row{display:flex;justify-content:space-between;align-items:baseline}
-  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px}
-  .hd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600}
-  .sub{font-size:12px;color:#6f685c}
+  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px}
+  .hd{font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600}
+  .sub{font-size:12px;color:var(--muted)}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
+  .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
   table.tt{border-collapse:collapse;font-size:12px;width:100%}
   table.tt td,table.tt th{padding:1px 4px;text-align:center;font-family:'IBM Plex Mono',monospace}
-  table.tt th{font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  table.tt th{font-weight:600;color:var(--muted);border-bottom:1px solid #e7e1d5}
   .ttwrap{max-height:250px;overflow:auto}
-  textarea.src{width:100%;height:210px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.45;padding:8px 9px;border:1px solid #ddd6c8;border-radius:8px;background:#fff;color:#2a2723;tab-size:4;white-space:pre}
-  input.hx{width:62px;padding:5px 6px;border:1px solid #ddd6c8;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase}
+  textarea.src{width:100%;height:210px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.45;padding:8px 9px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink);tab-size:4;white-space:pre}
+  input.hx{width:62px;padding:5px 6px;border:1px solid var(--rule);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-family:var(--font-mono)}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -42,21 +41,21 @@
 </style>
 <script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">8086-simulator</h1>
     <span class="sub">BIU, instructiewachtrij, EU, registers, vlaggen, geheugen en stack</span>
   </div>
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f7f5f0;border:1px solid #e7e1d5;border-radius:14px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#f7f5f0;border:1px solid var(--ink);border-radius:4px;padding:6px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;outline:none"></canvas>
       </div>
     </div>
-    <div style="flex:none;width:370px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:370px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <div class="card">
-        <div class="row"><span class="hd">Uitvoeren</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c">{{ statStr }}</span></div>
+        <div class="row"><span class="hd">Uitvoeren</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted)">{{ statStr }}</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
           <button onClick="{{ onTick }}" style="{{ btnA }}">&#9654; 1 klokcyclus</button>
           <button onClick="{{ onIns }}" style="{{ btnA }}">&#9197; 1 instructie</button>
@@ -67,7 +66,7 @@
         <div class="row"><span class="sub">Snelheid</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">{{ rateStr }}</span></div>
         <input type="range" min="0" max="6" step="1" value="{{ rateIdx }}" onInput="{{ onRate }}">
         <sc-if value="{{ hasFault }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:12.5px;color:#8a3b2c;background:#fbeeea;border:1px solid #e3b9ae;border-radius:8px;padding:6px 9px">{{ faultMsg }}</div>
+          <div style="font-size:12.5px;color:#8a3b2c;background:#fbeeea;border:1px solid #e3b9ae;border-radius:4px;padding:6px 9px">{{ faultMsg }}</div>
         </sc-if>
       </div>
 
@@ -117,7 +116,7 @@
       </sc-if>
 
       <div class="card">
-        <div class="row"><span class="hd">Geheugen</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6f685c">{{ memTitle }}</span></div>
+        <div class="row"><span class="hd">Geheugen</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">{{ memTitle }}</span></div>
         <sc-if value="{{ adv }}" hint-placeholder-val="{{ false }}"><div class="chips">
           <sc-for list="{{ memSegBtns }}" as="b" hint-placeholder-count="4">
             <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.name }}</button>
@@ -139,7 +138,7 @@
       </div>
 
       <div class="card">
-        <div class="row"><span class="hd">Stack</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6f685c">{{ stackTitle }}</span></div>
+        <div class="row"><span class="hd">Stack</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">{{ stackTitle }}</span></div>
         <div class="ttwrap">
           <sc-raw-table class="tt">
             <sc-raw-tr><sc-raw-th></sc-raw-th><sc-raw-th>SS:offset</sc-raw-th><sc-raw-th>fysiek</sc-raw-th><sc-raw-th>woord</sc-raw-th></sc-raw-tr>
@@ -154,7 +153,7 @@
       <sc-if value="{{ adv }}" hint-placeholder-val="{{ false }}">
       <div class="card">
         <div class="hd">Laatst uitgevoerd</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.55;color:#4f4a42;max-height:130px;overflow:auto">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.55;color:var(--ink-2);max-height:130px;overflow:auto">
           <sc-for list="{{ logLines }}" as="l" hint-placeholder-count="4"><div>{{ l }}</div></sc-for>
         </div>
       </div>
@@ -925,14 +924,14 @@ class Component extends DCLogic {
     const f = this.fl(name); this.rr(ctx, x, y, w, h, 8);
     ctx.fillStyle = '#fff'; ctx.fill(); if (f > 0) { ctx.fillStyle = 'rgba(255,205,60,' + (0.75 * f).toFixed(2) + ')'; ctx.fill(); }
     ctx.strokeStyle = opts && opts.hl ? '#7a5ab8' : '#b9b1a0'; ctx.lineWidth = opts && opts.hl ? 3 : 1.5; ctx.stroke();
-    this.txt(ctx, name, x + 9, y + 14, "700 12px 'IBM Plex Sans',sans-serif", '#6f685c');
+    this.txt(ctx, name, x + 9, y + 14, "700 12px 'Atkinson Hyperlegible',sans-serif", '#6f685c');
     return f;
   }
   draw() {
     const cv = this.stageRef.current; if (!cv) return;
     const ctx = cv.getContext('2d'), s = this.dpr || 1, m = this.mach, now = performance.now();
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
-    const MONO = "'IBM Plex Mono',monospace", SANS = "'IBM Plex Sans',sans-serif", INK = '#2a2723', MUT = '#8c8576';
+    const MONO = "'IBM Plex Mono',monospace", SANS = "'Atkinson Hyperlegible',sans-serif", INK = '#1d2a3a', MUT = '#5f6b79';
     const biu = m.biu, eu = m.eu, addr = m.addr, st0 = this.state, adv = st0.adv;
     // ===== BIU =====
     this.rr(ctx, 8, 8, 984, 222, 14); ctx.fillStyle = '#f1ecfa'; ctx.fill(); ctx.strokeStyle = '#cdbfe6'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -1081,10 +1080,10 @@ class Component extends DCLogic {
   render_memory() {
     const m = this.mach, st = this.state, seg = ({ CS: 1, DS: 3, SS: 2, ES: 0 })[st.memSeg], sv = m.S[seg], rows = [];
     for (let r = 0; r < (st.adv ? 8 : 4); r++) {
-      const off0 = (st.memBase + r * 8) & 0xFFFF, row = [{ t: hex(off0, 4), style: 'color:#6f685c;font-weight:600' }];
+      const off0 = (st.memBase + r * 8) & 0xFFFF, row = [{ t: hex(off0, 4), style: 'color:var(--muted);font-weight:600' }];
       for (let c = 0; c < 8; c++) {
         const a = m.phys(sv, off0 + c), rw = m.writes[a] !== undefined && m.clock - m.writes[a] < 60, rd = m.reads[a] !== undefined && m.clock - m.reads[a] < 60;
-        row.push({ t: hex(m.mem[a], 2), style: rw ? 'background:#ffd9d2;font-weight:600' : rd ? 'background:#d6e6ff' : (m.mem[a] ? '' : 'color:#6f685c') });
+        row.push({ t: hex(m.mem[a], 2), style: rw ? 'background:#ffd9d2;font-weight:600' : rd ? 'background:#d6e6ff' : (m.mem[a] ? '' : 'color:var(--muted)') });
       }
       rows.push(row);
     }
@@ -1093,20 +1092,20 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state, m = this.mach, S = this.segs();
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
-    const btnA = 'min-height:36px;font-size:13px;font-weight:600;border-radius:9px;cursor:pointer;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
-    const btnP = 'min-height:34px;font-size:13px;border-radius:9px;cursor:pointer;border:1px solid #e7e1d5;background:#fff;color:#2a2723';
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const btnA = 'min-height:36px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;border:1px solid #d9cfee;background:#f4f0fb;color:#4a3a78';
+    const btnP = 'min-height:34px;font-size:13px;border-radius:4px;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink)';
     const hasProg = !!this.prog, curOff = m.eu.ins ? m.eu.insAt : m.IP;
     const listing = (this.prog ? this.prog.listing : []).map((r) => ({
       style: r.off === curOff && !m.halted ? 'background:#fff3c4;font-weight:600' : '',
-      cells: [{ t: hex(r.off, 4), style: 'color:#6f685c' }, { t: r.bytes.map((b) => hex(b, 2)).join(' '), style: 'color:#6f685c' }, { t: (r.labels.length ? r.labels.join(':') + ': ' : '') + r.text.replace(/^[A-Za-z_]\w*\s*:\s*/, ''), style: 'text-align:left' }]
+      cells: [{ t: hex(r.off, 4), style: 'color:var(--muted)' }, { t: r.bytes.map((b) => hex(b, 2)).join(' '), style: 'color:var(--muted)' }, { t: (r.labels.length ? r.labels.join(':') + ': ' : '') + r.text.replace(/^[A-Za-z_]\w*\s*:\s*/, ''), style: 'text-align:left' }]
     }));
     const stackTop = S.SP === m.R[4] ? m.cfg.SP : m.cfg.SP, rows = [];
     const sp = m.R[4], depth = Math.min(8, Math.max(2, Math.ceil(((stackTop - sp) & 0xFFFF) / 2) + 1));
     for (let i = 0; i < Math.max(depth, 6); i++) {
       const off = (sp + i * 2) & 0xFFFF, a = m.phys(m.S[2], off), isSP = i === 0, used = ((stackTop - off) & 0xFFFF) > 0 && ((stackTop - off) & 0xFFFF) <= ((stackTop - sp) & 0xFFFF);
       const w = m.mem[a] | (m.mem[(a + 1) & 0xFFFFF] << 8);
-      rows.push({ style: isSP ? 'background:#fff3c4;font-weight:600' : '', cells: [{ t: isSP ? 'SP →' : '', style: 'color:#7a5ab8' }, { t: hex(m.S[2], 4) + ':' + hex(off, 4), style: '' }, { t: hex(a, 5), style: 'color:#6f685c' }, { t: used || isSP ? hex(w, 4) : '····', style: used ? '' : 'color:#6f685c' }] });
+      rows.push({ style: isSP ? 'background:#fff3c4;font-weight:600' : '', cells: [{ t: isSP ? 'SP →' : '', style: 'color:#7a5ab8' }, { t: hex(m.S[2], 4) + ':' + hex(off, 4), style: '' }, { t: hex(a, 5), style: 'color:var(--muted)' }, { t: used || isSP ? hex(w, 4) : '····', style: used ? '' : 'color:var(--muted)' }] });
     }
     const segInputs = [['CS', 'CS'], ['DS', 'DS'], ['SS', 'SS'], ['ES', 'ES'], ['SP', 'SP']].map(([k, n]) => {
       const txtv = st.segText && st.segText[k] !== undefined ? st.segText[k] : hex(S[k], 4), bad = st.segText && st.segText[k] !== undefined && !/^[0-9a-f]{1,4}$/i.test(st.segText[k]);

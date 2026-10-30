@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,20 +9,19 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:300}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;min-height:100%}
-  body{background:#eceae4}
   button,input{font-family:inherit}
-  a{color:#6f685c;text-decoration:none}
-  a:hover{color:#2a2723}
+  a{color:var(--muted);text-decoration:none}
+  a:hover{color:var(--ink)}
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;min-height:100vh;padding:16px 22px 28px">
+<div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:16px 22px 28px">
 <div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
@@ -30,56 +29,56 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Talstelsel</h1>
   </div>
 
-  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+  <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 16px;box-shadow:var(--shadow)">
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Aantal bits</span>
+      <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Aantal bits</span>
       <div style="display:flex;gap:4px">
         <sc-for list="{{ bitBtns }}" as="b" hint-placeholder-count="3">
-          <button onClick="{{ b.onClick }}" style="min-width:48px;height:34px;border-radius:9px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          <button onClick="{{ b.onClick }}" style="min-width:48px;height:34px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
         </sc-for>
       </div>
     </div>
     <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:34px">
       <input type="checkbox" checked="{{ signed }}" onChange="{{ toggleSigned }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 300);cursor:pointer">Negatieve getallen (2-complement)
     </label>
-    <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c">{{ rangeStr }}</div>
+    <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted)">{{ rangeStr }}</div>
   </div>
 
   <div style="display:flex;gap:6px">
     <sc-for list="{{ tabBtns }}" as="t" hint-placeholder-count="2">
-      <button onClick="{{ t.onClick }}" style="height:38px;padding:0 18px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button>
+      <button onClick="{{ t.onClick }}" style="height:38px;padding:0 18px;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button>
     </sc-for>
   </div>
 
   <sc-if value="{{ isConv }}" hint-placeholder-val="{{ true }}">
   <div style="display:flex;flex-direction:column;gap:14px">
-    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Invoer</div>
+    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Invoer</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <div style="display:flex;gap:4px">
           <sc-for list="{{ cBaseBtns }}" as="b" hint-placeholder-count="3">
-            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:4px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
           </sc-for>
         </div>
-        <input type="text" value="{{ cText }}" onInput="{{ onConvInput }}" spellcheck="false" autocomplete="off" style="flex:1;min-width:200px;height:38px;border-radius:9px;border:1.5px solid {{ cBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+        <input type="text" value="{{ cText }}" onInput="{{ onConvInput }}" spellcheck="false" autocomplete="off" style="flex:1;min-width:200px;height:38px;border-radius:4px;border:1.5px solid {{ cBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)">
       </div>
       <sc-if value="{{ cErr }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:13px;color:#b8472f">{{ cErr }}</div>
       </sc-if>
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-top:4px">Bits (klik om te wisselen)</div>
+      <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-top:4px">Bits (klik om te wisselen)</div>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
         <sc-for list="{{ nibbles }}" as="nb" hint-placeholder-count="2">
           <div style="display:flex;gap:4px">
             <sc-for list="{{ nb.cells }}" as="c" hint-placeholder-count="4">
               <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:{{ cellW }}">
                 <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ c.lc }};white-space:nowrap">{{ c.place }}</span>
-                <button onClick="{{ c.onClick }}" style="width:100%;height:40px;border-radius:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.bit }}</button>
+                <button onClick="{{ c.onClick }}" style="width:100%;height:40px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.bit }}</button>
               </div>
             </sc-for>
           </div>
         </sc-for>
       </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6f685c;line-height:1.7;border-top:1px solid #efe9dd;padding-top:10px;overflow-x:auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);line-height:1.7;border-top:1px solid #efe9dd;padding-top:10px;overflow-x:auto">
         <div style="white-space:nowrap">{{ sumStr }}</div>
         <sc-if value="{{ negSteps }}" hint-placeholder-val="{{ false }}">
           <div style="white-space:nowrap">Tegengestelde: {{ negLine1 }}</div>
@@ -91,10 +90,10 @@
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
       <sc-for list="{{ convOut }}" as="o" hint-placeholder-count="3">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:0">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">{{ o.title }}</div>
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
+          <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">{{ o.title }}</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:oklch(0.45 0.13 300);margin-top:8px;word-break:break-all">{{ o.value }}</div>
-          <div style="font-size:12.5px;color:#6f685c;margin-top:5px;min-height:18px">{{ o.note }}</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:5px;min-height:18px">{{ o.note }}</div>
         </div>
       </sc-for>
     </div>
@@ -103,28 +102,28 @@
 
   <sc-if value="{{ isCalc }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;flex-direction:column;gap:14px">
-    <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
+    <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
         <div style="display:flex;gap:4px">
           <sc-for list="{{ calcBaseBtns }}" as="b" hint-placeholder-count="2">
-            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:9px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            <button onClick="{{ b.onClick }}" style="height:36px;padding:0 14px;border-radius:4px;cursor:pointer;font-size:13.5px;font-weight:600;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
           </sc-for>
         </div>
         <div style="display:flex;gap:4px">
           <sc-for list="{{ opBtns }}" as="b" hint-placeholder-count="3">
-            <button onClick="{{ b.onClick }}" style="width:44px;height:36px;border-radius:9px;cursor:pointer;font-size:19px;font-weight:600;line-height:1;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            <button onClick="{{ b.onClick }}" style="width:44px;height:36px;border-radius:4px;cursor:pointer;font-size:19px;font-weight:600;line-height:1;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
           </sc-for>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Getal A</div>
-          <input type="text" value="{{ aText }}" onInput="{{ onA }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:9px;border:1.5px solid {{ aBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+          <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Getal A</div>
+          <input type="text" value="{{ aText }}" onInput="{{ onA }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:4px;border:1.5px solid {{ aBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)">
           <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:{{ aNoteColor }};min-height:18px">{{ aNote }}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Getal B</div>
-          <input type="text" value="{{ bText }}" onInput="{{ onB }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:9px;border:1.5px solid {{ bBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#2a2723">
+          <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Getal B</div>
+          <input type="text" value="{{ bText }}" onInput="{{ onB }}" spellcheck="false" autocomplete="off" style="height:38px;border-radius:4px;border:1.5px solid {{ bBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)">
           <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:{{ bNoteColor }};min-height:18px">{{ bNote }}</div>
         </div>
       </div>
@@ -132,23 +131,23 @@
 
     <sc-if value="{{ hasRes }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ overflow }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fbeae5;border:1px solid #efc2b5;border-radius:12px;padding:11px 14px;font-size:14px;color:#8f3320;line-height:1.5">{{ ovfMsg }}</div>
+        <div style="background:#fbeae5;border:1px solid #efc2b5;border-radius:4px;padding:11px 14px;font-size:14px;color:#8f3320;line-height:1.5">{{ ovfMsg }}</div>
       </sc-if>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
         <sc-for list="{{ calcOut }}" as="o" hint-placeholder-count="3">
-          <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);min-width:0">
-            <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">{{ o.title }}</div>
+          <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);min-width:0">
+            <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">{{ o.title }}</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:{{ o.color }};margin-top:8px;word-break:break-all">{{ o.value }}</div>
-            <div style="font-size:12.5px;color:#6f685c;margin-top:5px;min-height:18px">{{ o.note }}</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-top:5px;min-height:18px">{{ o.note }}</div>
           </div>
         </sc-for>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Uitwerking</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Uitwerking</div>
         <div style="overflow-x:auto">
           <div style="display:grid;grid-template-columns:max-content max-content;gap:2px 16px;font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.7;width:max-content">
             <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
-              <span style="color:#6f685c;font-size:12.5px;white-space:nowrap;align-self:center">{{ s.label }}</span>
+              <span style="color:var(--muted);font-size:12.5px;white-space:nowrap;align-self:center">{{ s.label }}</span>
               <span style="white-space:pre;color:{{ s.color }};font-weight:{{ s.weight }};border-top:{{ s.rule }}">{{ s.text }}</span>
             </sc-for>
           </div>

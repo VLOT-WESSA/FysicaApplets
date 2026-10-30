@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,13 +18,12 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:150}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -38,44 +37,44 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">{{ titleStr }}</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;cursor:grab;touch-action:none"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;cursor:grab;touch-action:none"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center">
-        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #b8472f;background:#b8472f;color:#fff">&#8645; Ompolen stroom</button>
-        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #e7e1d5;background:#f4f1ea;color:#6f685c;margin-left:auto">Reset kompas</button>
+        <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #b8472f;background:#b8472f;color:#fff">&#8645; Ompolen stroom</button>
+        <button onClick="{{ onReset }}" style="padding:10px 14px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--rule);background:#f4f1ea;color:var(--muted);margin-left:auto">Reset kompas</button>
       </div>
     </div>
 
-    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:none">
         <sc-for list="{{ modeTabs }}" as="tb" hint-placeholder-count="3">
           <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
         </sc-for>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:14px;font-weight:600;color:#3a352c">Stroomsterkte</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ ampStr }}</span>
         </div>
-        <div style="font-size:11.5px;color:#6f685c;margin-bottom:9px">Sterkere stroom &rarr; sterker veld &rarr; meer veldlijnen</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-bottom:9px">Sterkere stroom &rarr; sterker veld &rarr; meer veldlijnen</div>
         <input type="range" min="1" max="10" step="0.5" value="{{ amps }}" onInput="{{ onAmps }}" style="width:100%;accent-color:var(--accent)">
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#6f685c;margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>1 A</span><span>10 A</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>1 A</span><span>10 A</span></div>
       </div>
 
       <sc-if value="{{ isCoil }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:5px">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:5px">
           <div style="display:flex;justify-content:space-between"><span style="font-size:14px;font-weight:600">Aantal windingen N</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ NStr }}</span></div>
           <input type="range" min="1" max="{{ Nmax }}" step="1" value="{{ N }}" onInput="{{ onN }}" style="width:100%;accent-color:var(--accent)">
           <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:14px;font-weight:600">Straal R</span><span style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{ RStr }}</span></div>
@@ -90,48 +89,48 @@
             </sc-for>
           </div>
         </div>
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px">
           <sc-for list="{{ coilRows }}" as="r" hint-placeholder-count="4">
-            <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>{{ r.n }}</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ r.v }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>{{ r.n }}</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ r.v }}</span></div>
           </sc-for>
         </div>
       </sc-if>
       <sc-if value="{{ isDraad }}" hint-placeholder-val="{{ true }}">
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
           <span style="width:11px;height:11px;border-radius:50%;flex:none;background:#5fae7a"></span>
           <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Stroomrichting</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ curDirStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Elektronen</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ elecDirStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Veld bij kompas</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ compassStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Stroomrichting</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ curDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Elektronen</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ elecDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Veld bij kompas</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ compassStr }}</span></div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:8px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Weergave (uit bij start)</span>
-        <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ curState }}</span>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted)">Weergave (uit bij start)</span>
+        <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ curState }}</span>
         </button>
-        <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Veldlijnen <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ fieldState }}</span>
+        <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#6f9bd8"></span>Veldlijnen <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ fieldState }}</span>
         </button>
-        <button onClick="{{ toggleElec }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3fa86a"></span>Elektronen <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ elecState }}</span>
+        <button onClick="{{ toggleElec }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3fa86a"></span>Elektronen <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ elecState }}</span>
         </button>
-        <button onClick="{{ toggleCompass }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ compBorder }};background:{{ compBg }};color:#3a352c">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#cf4636"></span>Kompasnaald <span style="margin-left:auto;font-size:12px;color:#6f685c">{{ compState }}</span>
+        <button onClick="{{ toggleCompass }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ compBorder }};background:{{ compBg }};color:#3a352c">
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#cf4636"></span>Kompasnaald <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ compState }}</span>
         </button>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#6f685c">Rechterhandregel</span>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted)">Rechterhandregel</span>
         <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
-          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:4px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:64px;color:#3a352c">Duim</span>
             <span style="width:10px;height:10px;border-radius:3px;background:#e0503a;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">met de stroom mee</span>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:8px;background:#f6f3ec">
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:4px;background:#f6f3ec">
             <span style="font-size:12.5px;font-weight:600;width:64px;color:#3a352c">Vingers</span>
             <span style="width:10px;height:10px;border-radius:3px;background:#6f9bd8;flex:none"></span>
             <span style="font-size:12.5px;color:#4a443a">krullen mee met het veld</span>
@@ -140,8 +139,8 @@
       </div>
       </sc-if>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.5">{{ banner }}</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">{{ banner }}</div>
       </div>
 
     </div>
@@ -216,7 +215,7 @@ class Component extends DCLogic {
   }
   drawCoil(ctx) {
     const st = this.state, V = this.coilView(); const P = (x, y) => ({ X: V.cx + x * V.k, Y: V.cy - y * V.k });
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
     if (st.cAxis) { ctx.setLineDash([5, 5]); ctx.strokeStyle = '#b9b09f'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, V.cy); ctx.lineTo(this.W, V.cy); ctx.stroke(); ctx.setLineDash([]); }
     if (st.cField) {
       for (const L of this.traceLines()) {
@@ -238,7 +237,7 @@ class Component extends DCLogic {
     // polen
     const half = st.mode === 'spoel' ? st.Lc / 2 : 0.5;
     const pr = P(half + 1.6, st.R + 1.2), pl = P(-half - 1.6, st.R + 1.2);
-    ctx.font = "700 18px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = "700 18px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = out ? '#c8443a' : '#3a6fb8'; ctx.fillText(out ? 'N' : 'Z', pr.X, pr.Y);
     ctx.fillStyle = out ? '#3a6fb8' : '#c8443a'; ctx.fillText(out ? 'Z' : 'N', pl.X, pl.Y);
     // kompas
@@ -248,11 +247,11 @@ class Component extends DCLogic {
       ctx.fillStyle = '#cf4636'; ctx.beginPath(); ctx.moveTo(c.X + ux * 18, c.Y + uy * 18); ctx.lineTo(c.X - uy * 5, c.Y + ux * 5); ctx.lineTo(c.X + uy * 5, c.Y - ux * 5); ctx.closePath(); ctx.fill();
       ctx.fillStyle = '#3fa86a'; ctx.beginPath(); ctx.moveTo(c.X - ux * 18, c.Y - uy * 18); ctx.lineTo(c.X - uy * 5, c.Y + ux * 5); ctx.lineTo(c.X + uy * 5, c.Y - ux * 5); ctx.closePath(); ctx.fill();
     }
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Doorsnede door de as — ⊙ stroom naar je toe, ⊗ van je weg', 12, 10);
     ctx.textBaseline = 'bottom'; ctx.fillText('Sleep het kompas', 12, this.H - 10);
     // schaal 1 cm
-    ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(this.W - 14 - V.k, this.H - 14); ctx.lineTo(this.W - 14, this.H - 14); ctx.stroke();
+    ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(this.W - 14 - V.k, this.H - 14); ctx.lineTo(this.W - 14, this.H - 14); ctx.stroke();
     ctx.textAlign = 'right'; ctx.fillText('1 cm', this.W - 14, this.H - 18);
   }
   elecPhase = 0;
@@ -358,7 +357,7 @@ class Component extends DCLogic {
     const light = (this.props && this.props.stageThema) === 'licht';
     const bg = ctx.createLinearGradient(0, 0, 0, this.H);
     if (light) { bg.addColorStop(0, '#f8f6f1'); bg.addColorStop(1, '#f1ede5'); }
-    else { bg.addColorStop(0, '#f0ede8'); bg.addColorStop(1, '#f0ede8'); }
+    else { bg.addColorStop(0, '#fbf8f1'); bg.addColorStop(1, '#fbf8f1'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, this.W, this.H);
 
     const st = this.state;
@@ -401,7 +400,7 @@ class Component extends DCLogic {
       const xo = 0;
       this.arrow3(ctx, { x: xo, y: -54 * d, z: 0 }, { x: xo, y: 54 * d, z: 0 }, '#e0503a', 4.5, 13);
       const lp = this.proj({ x: 0, y: 0, z: 0 });
-      ctx.fillStyle = '#e0503a'; ctx.font = '700 15px "IBM Plex Sans",sans-serif';
+      ctx.fillStyle = '#e0503a'; ctx.font = '700 15px "Atkinson Hyperlegible",sans-serif';
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('I', lp.x + 12, lp.y);
     }
 
@@ -442,8 +441,8 @@ class Component extends DCLogic {
     const topY = this.wireHalf + 20, botY = -this.wireHalf - 20;
     const topP = this.proj({ x: 0, y: topY, z: 0 });
     const botP = this.proj({ x: 0, y: botY, z: 0 });
-    const plus = (P) => { ctx.fillStyle = '#e0503a'; ctx.font = '700 20px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', P.x, P.y); };
-    const minus = (P) => { ctx.fillStyle = '#555d65'; ctx.font = '700 22px "IBM Plex Sans",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u2212', P.x, P.y); };
+    const plus = (P) => { ctx.fillStyle = '#e0503a'; ctx.font = '700 20px "Atkinson Hyperlegible",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', P.x, P.y); };
+    const minus = (P) => { ctx.fillStyle = '#555d65'; ctx.font = '700 22px "Atkinson Hyperlegible",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u2212', P.x, P.y); };
     ctx.fillStyle = '#a6a49e';
     [topP, botP].forEach(P => { ctx.beginPath(); ctx.arc(P.x, P.y, 4, 0, Math.PI * 2); ctx.fill(); });
     if (d === 1) { minus(this.proj({ x: 0, y: topY + 18, z: 0 })); plus(this.proj({ x: 0, y: botY - 18, z: 0 })); }
@@ -470,7 +469,7 @@ class Component extends DCLogic {
     ctx.fillStyle = '#3fa86a'; ctx.beginPath(); ctx.moveTo(S1.x, S1.y); ctx.lineTo(Wp.x, Wp.y); ctx.lineTo(Wm.x, Wm.y); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#e6e3df'; ctx.beginPath(); ctx.arc(C.x, C.y, 3.2, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = 'rgba(40,38,34,0.6)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.fillStyle = light ? '#9a3022' : '#b0746a'; ctx.font = '700 11px "IBM Plex Sans",sans-serif';
+    ctx.fillStyle = light ? '#9a3022' : '#b0746a'; ctx.font = '700 11px "Atkinson Hyperlegible",sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('N', N1.x + (N1.x - C.x) * 0.16, N1.y + (N1.y - C.y) * 0.16);
   }
@@ -482,7 +481,7 @@ class Component extends DCLogic {
     if (st.showField) items.push(['#6492d2', 'veld']);
     if (st.showElec) items.push(['#3fa86a', 'elektronen']);
     if (!items.length) {
-      if (st.showCompass) { ctx.textAlign = 'left'; ctx.fillStyle = light ? '#7f858c' : '#656e78'; ctx.font = '500 11.5px "IBM Plex Sans",sans-serif'; ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14); }
+      if (st.showCompass) { ctx.textAlign = 'left'; ctx.fillStyle = light ? '#7f858c' : '#656e78'; ctx.font = '500 11.5px "Atkinson Hyperlegible",sans-serif'; ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14); }
       return;
     }
     let x = this.W - 14; const y = 18;
@@ -497,7 +496,7 @@ class Component extends DCLogic {
     }
     if (st.showCompass) {
       ctx.textAlign = 'left'; ctx.fillStyle = light ? '#7f858c' : '#656e78';
-      ctx.font = '500 11.5px "IBM Plex Sans",sans-serif';
+      ctx.font = '500 11.5px "Atkinson Hyperlegible",sans-serif';
       ctx.fillText('\u2295 sleep het kompas', 14, this.H - 14);
     }
   }
@@ -551,7 +550,7 @@ class Component extends DCLogic {
     const mu0 = 4 * Math.PI * 1e-7;
     const isCoil = st.mode !== 'draad';
     const tabStyle = (on) => 'min-height:36px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? '#b8472f' : '#e7e1d5') + ';background:' + (on ? '#b8472f' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 8px;border:1px solid ' + (on ? '#b8472f' : '#e7e1d5') + ';background:' + (on ? '#b8472f' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const coilRows = [];
     if (isCoil) {
       const B0 = this.Bat(0, 0), Bc = Math.hypot(B0.x, B0.y), bk = this.Bat(this.comp2.x, this.comp2.y);

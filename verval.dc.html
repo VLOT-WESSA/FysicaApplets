@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,17 +20,16 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:28}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
   .vt{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:13px}
   .vt td,.vt th{padding:3px 8px;text-align:right;border-bottom:1px solid #eee7da}
-  .vt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;position:sticky;top:0;background:#fffdf9}
+  .vt th{font-family:var(--font-body);font-weight:600;color:var(--muted);position:sticky;top:0;background:#fffdf9}
 
   @media (max-width:760px){
     html,body{height:auto}
@@ -42,45 +41,45 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Radioactief verval met dobbelstenen</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
     </div>
 
-    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Instellingen</div>
+    <div style="flex:none;width:320px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Instellingen</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;font-weight:500">Aantal kernen N&#8320;</span><span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ n0 }}</span></div>
         <input type="range" min="10" max="1000" step="10" value="{{ n0 }}" onChange="{{ onN0 }}" style="width:100%;accent-color:var(--accent);margin-bottom:14px">
         <div style="font-size:14px;font-weight:500;margin-bottom:6px">Zijden per dobbelsteen</div>
         <div style="display:flex;gap:8px">
-          <button onClick="{{ onZ6 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z6Bg }};color:{{ z6Fg }}">6</button>
-          <button onClick="{{ onZ12 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z12Bg }};color:{{ z12Fg }}">12</button>
-          <button onClick="{{ onZ20 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid #ddd6c8;border-radius:8px;padding:9px 4px;cursor:pointer;background:{{ z20Bg }};color:{{ z20Fg }}">20</button>
+          <button onClick="{{ onZ6 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ z6Bg }};color:{{ z6Fg }}">6</button>
+          <button onClick="{{ onZ12 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ z12Bg }};color:{{ z12Fg }}">12</button>
+          <button onClick="{{ onZ20 }}" style="flex:1;font-size:13px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px 4px;cursor:pointer;background:{{ z20Bg }};color:{{ z20Fg }}">20</button>
         </div>
-        <div style="font-size:12px;color:#6f685c;margin-top:10px;line-height:1.4">Een dobbelsteen die de hoogste waarde gooit ({{ zijden }}), is vervallen. Vervalkans per worp: p = 1/{{ zijden }}.</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4">Een dobbelsteen die de hoogste waarde gooit ({{ zijden }}), is vervallen. Vervalkans per worp: p = 1/{{ zijden }}.</div>
       </div>
 
       <div style="display:flex;gap:10px">
-        <button onClick="{{ onGooi }}" style="flex:1;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">Gooi</button>
-        <button onClick="{{ onAuto }}" style="flex:1.4;font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:11px;cursor:pointer;background:#fff;color:#2a2723">{{ autoLbl }}</button>
+        <button onClick="{{ onGooi }}" style="flex:1;font-size:14px;font-weight:600;border:none;border-radius:4px;padding:11px;cursor:pointer;background:var(--accent);color:#fff">Gooi</button>
+        <button onClick="{{ onAuto }}" style="flex:1.4;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:11px;cursor:pointer;background:#fff;color:var(--ink)">{{ autoLbl }}</button>
       </div>
-      <button onClick="{{ onReset }}" style="font-size:14px;font-weight:500;border:1px solid #e7e1d5;border-radius:10px;padding:9px;cursor:pointer;background:#fff;color:#2a2723">Reset</button>
+      <button onClick="{{ onReset }}" style="font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;padding:9px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:1;min-height:160px;display:flex;flex-direction:column">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow);flex:1;min-height:160px;display:flex;flex-direction:column">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-          <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Meettabel</span>
-          <button onClick="{{ onKopieer }}" style="font-size:12px;border:1px solid #ddd6c8;border-radius:6px;padding:4px 8px;cursor:pointer;background:#fff;color:#6f685c">{{ kopieerLbl }}</button>
+          <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Meettabel</span>
+          <button onClick="{{ onKopieer }}" style="font-size:12px;border:1px solid var(--rule);border-radius:4px;padding:4px 8px;cursor:pointer;background:#fff;color:var(--muted)">{{ kopieerLbl }}</button>
         </div>
         <div style="overflow-y:auto;flex:1">
           <sc-raw-table class="vt">
@@ -169,14 +168,14 @@ class Component extends DCLogic {
     const c = this.stageRef.current; if (!c || !this.dice) return;
     const ctx = c.getContext('2d'); const s = this.dpr || 1;
     ctx.setTransform(s, 0, 0, s, 0, 0);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
     this.drawDice(ctx, 20, 20, this.W - 40, 300);
     this.drawPlot(ctx, 70, 350, this.W - 100, 170);
   }
 
   drawDice(ctx, x0, y0, w, h) {
     const n = this.dice.length;
-    ctx.font = "600 13px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#6f685c'; ctx.textAlign = 'left';
+    ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'left';
     const N = this.history[this.history.length - 1].n;
     const txt = this.thrown
       ? 'Worp ' + (this.history.length - 1) + ': ' + this.history[this.history.length - 1].d + ' vervallen (rood), ' + N + ' over'
@@ -217,7 +216,7 @@ class Component extends DCLogic {
     const X = t => x0 + t / tmax * w, Y = n => y0 + h - n / n0 * h;
     ctx.fillStyle = '#fffdf9'; ctx.fillRect(x0, y0, w, h);
     ctx.strokeStyle = '#d9d3c6'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, h);
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69';
     ctx.textAlign = 'right';
     for (const f of [0, 0.25, 0.5, 0.75, 1]) {
       const yy = Y(f * n0); ctx.fillText(String(Math.round(f * n0)), x0 - 6, yy + 4);
@@ -229,7 +228,7 @@ class Component extends DCLogic {
     ctx.fillText('t (worp)', x0 + w / 2, y0 + h + 30);
     ctx.save(); ctx.translate(x0 - 44, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('N', 0, 0); ctx.restore();
     // theorie
-    ctx.strokeStyle = '#8c8576'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.beginPath();
+    ctx.strokeStyle = '#5f6b79'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.beginPath();
     for (let t = 0; t <= tmax; t += 0.25) { const yy = Y(n0 * Math.pow(1 - p, t)); if (t === 0) ctx.moveTo(X(t), yy); else ctx.lineTo(X(t), yy); }
     ctx.stroke(); ctx.setLineDash([]);
     // meting
@@ -237,7 +236,7 @@ class Component extends DCLogic {
     for (const r of H) { ctx.beginPath(); ctx.arc(X(r.t), Y(r.n), 3.5, 0, 6.2832); ctx.fill(); }
     // legende
     ctx.textAlign = 'left'; ctx.fillStyle = '#c4553a'; ctx.fillText('● meting', x0 + w - 190, y0 + 16);
-    ctx.fillStyle = '#8c8576'; ctx.fillText('- - N₀·(1 − 1/' + this.zijden + ')ᵗ', x0 + w - 110, y0 + 16);
+    ctx.fillStyle = '#5f6b79'; ctx.fillText('- - N₀·(1 − 1/' + this.zijden + ')ᵗ', x0 + w - 110, y0 + 16);
   }
 
   rr(ctx, x, y, w, h, r) {

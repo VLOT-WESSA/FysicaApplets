@@ -94,6 +94,12 @@
       }).observe(document.body, { childList: true, subtree: true });
     }
   }
+  /* Canvassen tekenen soms vóór de webfonts binnen zijn; een resize laat elke applet
+   * opnieuw tekenen zodra Atkinson Hyperlegible geladen is. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { window.dispatchEvent(new Event('resize')); });
+  }
+
   if (document.body) startNaming();
   else document.addEventListener('DOMContentLoaded', startNaming);
 

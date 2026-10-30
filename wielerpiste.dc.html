@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,14 +19,13 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:255}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -40,42 +39,42 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Wielerpiste en fietser in een bocht</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#2f6fb0;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span>zwaartekracht F<sub>z</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#2f6fb0;border-radius:2px;display:inline-block"></span>normaalkracht F<sub>N</sub></div>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#c9772f;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#c9772f;border-radius:2px;display:inline-block"></span>wrijvingskracht F<sub>W</sub></div>
         </sc-if>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:16px;height:3px;background:#b8472f;border-radius:2px;display:inline-block"></span>centripetale kracht F<sub>c</sub></div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #7fa8d4"></span>componenten van F<sub>N</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:3px;background:#b8472f;border-radius:2px;display:inline-block"></span>centripetale kracht F<sub>c</sub></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:0;border-top:2px dashed #7fa8d4"></span>componenten van F<sub>N</sub></div>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:14px;height:0;border-top:2px dashed #8a6fb0"></span>contactkracht F<sub>N</sub> + F<sub>W</sub></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:0;border-top:2px dashed #8a6fb0"></span>contactkracht F<sub>N</sub> + F<sub>W</sub></div>
         </sc-if>
       </div>
     </div>
 
-    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Hellingshoek piste &theta;</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ thetaStr }}</span>
         </div>
         <input type="range" min="0" max="50" step="1" value="{{ theta }}" onInput="{{ onTheta }}" style="width:100%;accent-color:var(--accent);margin-bottom:4px">
-        <div style="font-size:11px;color:#6f685c;margin-bottom:14px;line-height:1.4">&theta; = 0&deg; is een vlakke weg: een gewone fietser in een bocht.</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.4">&theta; = 0&deg; is een vlakke weg: een gewone fietser in een bocht.</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Snelheid v</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ vStr }}</span>
@@ -91,7 +90,7 @@
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px">{{ massStr }}</span>
         </div>
         <input type="range" min="50" max="120" step="1" value="{{ mass }}" onInput="{{ onMass }}" style="width:100%;accent-color:var(--accent);margin-bottom:16px">
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:#2a2723;margin-bottom:12px">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink);margin-bottom:12px">
           <input type="checkbox" checked="{{ neglect }}" onChange="{{ onNeglect }}" style="width:17px;height:17px;accent-color:var(--accent);cursor:pointer">Wrijving verwaarlozen
         </label>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
@@ -104,30 +103,30 @@
         <button onClick="{{ onIdeal }}" disabled="{{ idealDisabled }}" style="{{ idealStyle }}">{{ idealLabel }}</button>
       </div>
 
-      <div style="background:{{ stCardBg }};border:1px solid {{ stCardBorder }};border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px">
+      <div style="background:{{ stCardBg }};border:1px solid {{ stCardBorder }};border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
           <span style="width:12px;height:12px;border-radius:50%;flex:none;background:{{ statusDot }}"></span>
           <span style="font-size:14px;font-weight:700">{{ statusLabel }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Nodige F<sub>c</sub> = m&middot;v&sup2;/r</span><span style="font-family:'IBM Plex Mono',monospace;color:#b8472f">{{ fcStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Zwaartekracht F<sub>z</sub> = m&middot;g</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ fzStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>&nbsp;&nbsp;horizontaal F<sub>N</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnxStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>&nbsp;&nbsp;verticaal F<sub>N</sub>&middot;cos&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnyStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Nodige F<sub>c</sub> = m&middot;v&sup2;/r</span><span style="font-family:'IBM Plex Mono',monospace;color:#b8472f">{{ fcStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Zwaartekracht F<sub>z</sub> = m&middot;g</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f8a4e">{{ fzStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Normaalkracht F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>&nbsp;&nbsp;horizontaal F<sub>N</sub>&middot;sin&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnxStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>&nbsp;&nbsp;verticaal F<sub>N</sub>&middot;cos&theta;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2f6fb0">{{ fnyStr }}</span></div>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Nodige wrijving F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#c9772f">{{ fwStr }}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Max. wrijving &mu;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ fwMaxStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Nodige wrijving F<sub>W</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#c9772f">{{ fwStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Max. wrijving &mu;&middot;F<sub>N</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ fwMaxStr }}</span></div>
         </sc-if>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Helling fietser t.o.v. verticaal &alpha;</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ alphaStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Ideale snelheid v<sub>0</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ v0Str }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Helling fietser t.o.v. verticaal &alpha;</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ alphaStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Ideale snelheid v<sub>0</sub></span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ v0Str }}</span></div>
         <sc-if value="{{ hasFriction }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#6f685c"><span>Toegelaten snelheden</span><span style="font-family:'IBM Plex Mono',monospace;color:#2a2723">{{ vRangeStr }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Toegelaten snelheden</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ vRangeStr }}</span></div>
         </sc-if>
       </div>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.55">Op een hellende piste staat F<sub>N</sub> loodrecht op de baan. De <b>verticale component F<sub>N</sub>&middot;cos&theta;</b> compenseert F<sub>z</sub>, de <b>horizontale component F<sub>N</sub>&middot;sin&theta;</b> wijst naar het middelpunt en levert de centripetale kracht. Zonder wrijving lukt dat alleen bij <b>tan&thinsp;&theta; = v&sup2;/(g&middot;r)</b>, dus aan de ideale snelheid v<sub>0</sub> = &radic;(g&middot;r&middot;tan&thinsp;&theta;). Rijdt de fietser trager of sneller, dan moet de wrijving het verschil opvangen.</div>
-        <div style="font-size:12px;color:#6f685c;line-height:1.55">Bij <b>&theta; = 0&deg;</b> (vlakke weg) levert alleen de wrijving F<sub>c</sub>; zonder wrijving kan de fietser de bocht niet nemen. De fietser helt zo dat de contactkracht F<sub>N</sub> + F<sub>W</sub> door het zwaartepunt gaat: <b>tan&thinsp;&alpha; = v&sup2;/(g&middot;r)</b>. Aan de ideale snelheid is &alpha; = &theta;: de fietser staat dan loodrecht op de baan.</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.55">Op een hellende piste staat F<sub>N</sub> loodrecht op de baan. De <b>verticale component F<sub>N</sub>&middot;cos&theta;</b> compenseert F<sub>z</sub>, de <b>horizontale component F<sub>N</sub>&middot;sin&theta;</b> wijst naar het middelpunt en levert de centripetale kracht. Zonder wrijving lukt dat alleen bij <b>tan&thinsp;&theta; = v&sup2;/(g&middot;r)</b>, dus aan de ideale snelheid v<sub>0</sub> = &radic;(g&middot;r&middot;tan&thinsp;&theta;). Rijdt de fietser trager of sneller, dan moet de wrijving het verschil opvangen.</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.55">Bij <b>&theta; = 0&deg;</b> (vlakke weg) levert alleen de wrijving F<sub>c</sub>; zonder wrijving kan de fietser de bocht niet nemen. De fietser helt zo dat de contactkracht F<sub>N</sub> + F<sub>W</sub> door het zwaartepunt gaat: <b>tan&thinsp;&alpha; = v&sup2;/(g&middot;r)</b>. Aan de ideale snelheid is &alpha; = &theta;: de fietser staat dan loodrecht op de baan.</div>
       </div>
 
     </div>
@@ -208,8 +207,8 @@ class Component extends DCLogic {
 
   // 'F_N' of 'F_N|·sinθ': hoofdletter, subscript, optioneel achtervoegsel na '|'
   label(ctx, text, x, y, col) {
-    const mainF = "600 13px 'IBM Plex Sans',sans-serif";
-    const subF = "600 9px 'IBM Plex Sans',sans-serif";
+    const mainF = "600 13px 'Atkinson Hyperlegible',sans-serif";
+    const subF = "600 9px 'Atkinson Hyperlegible',sans-serif";
     let main = text, sub = '', tail = '';
     const bar = main.indexOf('|'); if (bar >= 0) { tail = main.slice(bar + 1); main = main.slice(0, bar); }
     const us = main.indexOf('_'); if (us >= 0) { sub = main.slice(us + 1); main = main.slice(0, us); }
@@ -267,9 +266,9 @@ class Component extends DCLogic {
 
   cmMark(ctx, x, y) {
     ctx.save();
-    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 1.5;
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(x, y, 6, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#2a2723';
+    ctx.fillStyle = '#1d2a3a';
     ctx.beginPath(); ctx.moveTo(x, y); ctx.arc(x, y, 6, -Math.PI / 2, 0); ctx.closePath(); ctx.fill();
     ctx.beginPath(); ctx.moveTo(x, y); ctx.arc(x, y, 6, Math.PI / 2, Math.PI); ctx.closePath(); ctx.fill();
     ctx.restore();
@@ -294,7 +293,7 @@ class Component extends DCLogic {
     this.arrow(ctx, px, py, (cx - px) * 0.55, (cy - py) * 0.55, '#b8472f', 2.4, null);
     ctx.fillStyle = ok ? '#c9a23f' : '#b8472f';
     ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('bovenaanzicht', cx, cy + 77);
     ctx.restore();
   }
@@ -304,7 +303,7 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const dpr = this.dpr || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.W, this.H);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, this.W, this.H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
 
     const P = this.physics();
     const th = P.th, s = Math.sin(th), cth = Math.cos(th);
@@ -314,7 +313,7 @@ class Component extends DCLogic {
     ctx.save();
     ctx.strokeStyle = '#9aa4ae'; ctx.lineWidth = 1.5; ctx.setLineDash([8, 6]);
     ctx.beginPath(); ctx.moveTo(axisX, 40); ctx.lineTo(axisX, groundY); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#7a8694'; ctx.font = "500 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#7a8694'; ctx.font = "500 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText('middelpunt', axisX + 8, 50); ctx.fillText('van de bocht', axisX + 8, 65);
     ctx.restore();
 
@@ -338,7 +337,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#a49c8b'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(20, groundY); ctx.lineTo(B.x, groundY); ctx.stroke();
     // hoek
-    ctx.fillStyle = '#566069'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#566069'; ctx.font = "600 14px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     if (this.theta > 0) {
       ctx.strokeStyle = '#7a8694'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(B.x, B.y, 46, -th, 0); ctx.stroke();
@@ -355,8 +354,8 @@ class Component extends DCLogic {
     ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(S.x, S.y + 4); ctx.lineTo(S.x, ry + 6); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(axisX, ry); ctx.lineTo(S.x, ry); ctx.stroke();
     [[axisX, 1], [S.x, -1]].forEach(([x, d]) => { ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x + 8 * d, ry - 4); ctx.lineTo(x + 8 * d, ry + 4); ctx.closePath(); ctx.fillStyle = '#7a8694'; ctx.fill(); });
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect((axisX + S.x) / 2 - 40, ry - 9, 80, 18);
-    ctx.fillStyle = '#566069'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect((axisX + S.x) / 2 - 40, ry - 9, 80, 18);
+    ctx.fillStyle = '#566069'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('r = ' + this.r + ' m', (axisX + S.x) / 2, ry);
     ctx.restore();
 
@@ -370,7 +369,7 @@ class Component extends DCLogic {
     if (a > 0.02) {
       ctx.strokeStyle = '#566069'; ctx.lineWidth = 1.3;
       ctx.beginPath(); ctx.arc(S.x, S.y, 192, -Math.PI / 2 - a, -Math.PI / 2); ctx.stroke();
-      ctx.fillStyle = '#566069'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#566069'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const am = -Math.PI / 2 - a / 2;
       ctx.fillText('α = ' + (a * 180 / Math.PI).toFixed(0) + '°', S.x + 210 * Math.cos(am), S.y + 210 * Math.sin(am) - 4);
     }
@@ -442,7 +441,7 @@ class Component extends DCLogic {
 
     const vmaxStr = isFinite(P.vmax) ? kmh(P.vmax) : '∞';
     const idealStyle = 'width:100%;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;padding:10px;'
-      + (flat ? 'cursor:not-allowed;background:#d9d3c6;color:#6f685c' : 'cursor:pointer;background:#2f6f5e;color:#fff');
+      + (flat ? 'cursor:not-allowed;background:#d9d3c6;color:var(--muted)' : 'cursor:pointer;background:#2f6f5e;color:#fff');
     const upd = () => this.forceUpdate();
     return {
       stageRef: this.stageRef,

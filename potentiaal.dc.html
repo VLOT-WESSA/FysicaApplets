@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,16 +9,15 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:75}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   @media (max-width:760px){
     html,body{height:auto}
     .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
@@ -30,41 +29,41 @@
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
 <script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Potentiële energie en potentiaal</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f7f4ec;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px;touch-action:none;cursor:grab"></canvas>
+      <div style="flex:1;min-height:0;background:#f7f4ec;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;touch-action:none;cursor:grab"></canvas>
       </div>
       <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
-        <button onClick="{{ onRelease }}" style="min-height:38px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap;border:1px solid var(--accent);background:oklch(0.64 0.13 75);color:#fff">{{ releaseLabel }}</button>
-        <div style="flex:1 1 200px;min-width:0;font-size:13px;color:#6f685c">Sleep de lading tussen de platen. Bij loslaten werkt enkel de elektrische kracht; de beweging is sterk vertraagd.</div>
+        <button onClick="{{ onRelease }}" style="min-height:38px;padding:9px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;flex:none;white-space:nowrap;border:1px solid var(--accent);background:oklch(0.64 0.13 75);color:#fff">{{ releaseLabel }}</button>
+        <div style="flex:1 1 200px;min-width:0;font-size:13px;color:var(--muted)">Sleep de lading tussen de platen. Bij loslaten werkt enkel de elektrische kracht; de beweging is sterk vertraagd.</div>
       </div>
       <sc-if value="{{ graphOn }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;gap:12px;flex:none">
-        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;color:#6f685c;font-weight:600">E<sub style="font-size:10px">pot</sub> (d)</div>
+        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600">E<sub style="font-size:10px">pot</sub> (d)</div>
           <canvas ref="{{ gRefE }}" style="width:100%;display:block"></canvas>
         </div>
-        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:12px;letter-spacing:.06em;color:#6f685c;font-weight:600">V (d)</div>
+        <div style="flex:1 1 0;min-width:0;background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:10px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600">V (d)</div>
           <canvas ref="{{ gRefV }}" style="width:100%;display:block"></canvas>
         </div>
       </div>
       </sc-if>
     </div>
 
-    <div style="flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:350px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Opstelling</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Opstelling</div>
         <div style="display:flex;flex-direction:column;gap:4px">
           <div style="display:flex;justify-content:space-between;font-size:14px"><span>Spanning tussen de platen</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ uStr }}</span></div>
           <input type="range" min="0" max="1000" step="50" value="{{ U }}" onChange="{{ onU }}" style="width:100%;height:32px;accent-color:oklch(0.64 0.13 75);cursor:pointer">
@@ -77,78 +76,78 @@
           <div style="font-size:14px">Lading</div>
           <div style="display:flex;gap:6px">
             <sc-for list="{{ qOpts }}" as="o" hint-placeholder-count="2">
-              <button onClick="{{ o.onClick }}" style="flex:1;min-height:36px;padding:6px 4px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid {{ o.border }};background:{{ o.bg }};color:#3a352c">{{ o.name }}</button>
+              <button onClick="{{ o.onClick }}" style="flex:1;min-height:36px;padding:6px 4px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid {{ o.border }};background:{{ o.bg }};color:#3a352c">{{ o.name }}</button>
             </sc-for>
           </div>
         </div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:8px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.9;border-top:1px solid #efe9dd;padding-top:8px">
           <div style="display:flex;justify-content:space-between"><span>Q</span><span style="color:#3a352c">{{ qStr }}</span></div>
           <div style="display:flex;justify-content:space-between"><span style="display:inline-flex;align-items:center;gap:6px">E =<span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25"><span style="padding:0 3px">U</span><span style="align-self:stretch;height:1.5px;background:currentColor"></span><span style="padding:0 3px">afstand</span></span></span><span style="color:#3a352c">{{ eStr }}</span></div>
           <div style="display:flex;justify-content:space-between"><span>F = Q · E</span><span style="color:#3a352c">{{ fStr }}</span></div>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Potentiële elektrische energie</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Potentiële elektrische energie</div>
         <div style="font-size:22px;text-align:center;margin-bottom:10px"><i>E</i><sub style="font-size:13px">pot,el</sub> = <i>Q</i> · <i>E</i> · <i>d</i></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.9">
           <div style="display:flex;justify-content:space-between"><span>d (tot negatieve plaat)</span><span style="color:#3a352c">{{ dStr }}</span></div>
         </div>
-        <div style="margin-top:8px;background:oklch(0.96 0.03 75);border:1px solid oklch(0.88 0.06 75);border-radius:10px;padding:10px 12px">
+        <div style="margin-top:8px;background:oklch(0.96 0.03 75);border:1px solid oklch(0.88 0.06 75);border-radius:4px;padding:10px 12px">
           <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:oklch(0.42 0.1 75)">E<sub style="font-size:11px">pot</sub> = {{ epJ }}</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:oklch(0.42 0.1 75);margin-top:2px">&nbsp; &nbsp; &nbsp; = {{ epEV }}</div>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Potentiaal</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Potentiaal</div>
         <div style="font-size:20px;text-align:center;margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:8px"><i>V</i> =<span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.2"><span style="padding:0 4px 2px"><i>E</i><sub style="font-size:12px">pot,el</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span>= <i>E</i> · <i>d</i></span></div>
-        <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600">V = {{ vStr }}</div>
+        <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600">V = {{ vStr }}</div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Spanning en kinetische energie</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Spanning en kinetische energie</div>
         <div style="font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px"><span><i>U</i> = <i>V</i><sub style="font-size:12px">2</sub> − <i>V</i><sub style="font-size:12px">1</sub> = −</span><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;vertical-align:middle"><span style="padding:0 4px 2px">Δ<i>E</i><sub style="font-size:12px">kin</sub></span><span style="align-self:stretch;height:2px;background:currentColor"></span><span style="padding:2px 4px 0"><i>Q</i></span></span></div>
         <sc-if value="{{ released }}" hint-placeholder-val="{{ false }}">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9;border-top:1px solid #efe9dd;padding-top:6px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.9;border-top:1px solid #efe9dd;padding-top:6px">
             <div style="display:flex;justify-content:space-between"><span>V<sub>1</sub> (vertrekpunt)</span><span style="color:#3a352c">{{ v1Str }}</span></div>
             <div style="display:flex;justify-content:space-between"><span>V<sub>2</sub> (nu)</span><span style="color:#3a352c">{{ v2Str }}</span></div>
             <div style="display:flex;justify-content:space-between"><span>ΔE<sub>kin</sub></span><span style="color:#3a352c">{{ dEkJ }}</span></div>
             <div style="display:flex;justify-content:space-between"><span></span><span style="color:#3a352c">{{ dEkEV }}</span></div>
             <div style="display:flex;justify-content:space-between"><span>snelheid v</span><span style="color:#3a352c">{{ speedStr }}</span></div>
           </div>
-          <div style="margin-top:8px;background:#eef6ef;border:1px solid #cfe5d4;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;color:#2f6e44;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px">
+          <div style="margin-top:8px;background:#eef6ef;border:1px solid #cfe5d4;border-radius:4px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;color:#2f6e44;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px">
             <span>U = −</span><span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1.25;vertical-align:middle"><span style="padding:0 4px 2px">{{ numStr }}</span><span style="align-self:stretch;height:1.5px;background:currentColor"></span><span style="padding:2px 4px 0">{{ denStr }}</span></span><span style="font-size:16px;font-weight:600">= {{ checkStr }}</span>
           </div>
-          <div style="font-size:12.5px;color:#6f685c;line-height:1.5;margin-top:8px">{{ evNote }}</div>
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:8px">{{ evNote }}</div>
         </sc-if>
         <sc-if value="{{ notReleased }}" hint-placeholder-val="{{ true }}">
-          <div style="font-size:13px;color:#6f685c;line-height:1.5">Laat de lading los. Enkel de elektrische kracht verricht arbeid: de potentiële energie die ze verliest, wint ze als kinetische energie.</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.5">Laat de lading los. Enkel de elektrische kracht verricht arbeid: de potentiële energie die ze verliest, wint ze als kinetische energie.</div>
         </sc-if>
       </div>
 
       <sc-if value="{{ probesOn }}" hint-placeholder-val="{{ false }}">
-        <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+        <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
             <span style="width:13px;height:13px;border-radius:50%;flex:none;background:#f2d23a;border:1.5px solid #7a6f12"></span>
-            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Potentiaalverschil</span>
+            <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Potentiaalverschil</span>
           </div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.9">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.9">
             <div style="display:flex;justify-content:space-between"><span>V<sub>A</sub></span><span style="color:#3a352c">{{ vaStr }}</span></div>
             <div style="display:flex;justify-content:space-between"><span>V<sub>B</sub></span><span style="color:#3a352c">{{ vbStr }}</span></div>
           </div>
-          <div style="margin-top:8px;background:#fbf7e6;border:1px solid #ece2af;border-radius:10px;padding:9px 12px">
+          <div style="margin-top:8px;background:#fbf7e6;border:1px solid #ece2af;border-radius:4px;padding:9px 12px">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#6e6410">U = V<sub>B</sub> − V<sub>A</sub> = {{ uabStr }}</div>
           </div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#6f685c;line-height:1.6;margin-top:8px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:8px">
             <div>arbeid elektrische kracht A → B</div>
             <div style="color:#3a352c">W = Q · (V<sub>A</sub> − V<sub>B</sub>) = {{ wStr }}</div>
           </div>
         </div>
       </sc-if>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Weergave</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Weergave</div>
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#3a352c;min-height:24px">
           <input type="checkbox" checked="{{ graphOn }}" onChange="{{ toggleGraph }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 75);cursor:pointer">Grafieken
         </label>
@@ -166,8 +165,8 @@
         </label>
       </div>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:13px 15px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.55"><b style="color:#3a352c">e</b> = 1,60 · 10⁻¹⁹ C. 1 eV = 1,6 · 10⁻¹⁹ J. De negatieve plaat is het referentiepunt: daar is V = 0 V.</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:13px 15px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.55"><b style="color:#3a352c">e</b> = 1,60 · 10⁻¹⁹ C. 1 eV = 1,6 · 10⁻¹⁹ J. De negatieve plaat is het referentiepunt: daar is V = 0 V.</div>
       </div>
     </div>
   </div>
@@ -238,7 +237,7 @@ class Component extends DCLogic {
     const X = d => L + d / D * (W - L - R);
     const Y = v => H - B - (v - lo) / (hi - lo) * (H - B - T);
     ctx.strokeStyle = '#efe9dd'; ctx.lineWidth = 1;
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#6f685c';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69';
     for (let k = 0; k <= 4; k++) {
       const v = lo + (hi - lo) * k / 4, y = Y(v);
       ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(W - R, y); ctx.stroke();
@@ -254,12 +253,12 @@ class Component extends DCLogic {
     const f = mode === 'v' ? (x => U * x / D) : (x => n * U * x / D);
     ctx.fillStyle = mode === 'v' ? 'rgba(111,104,92,0.10)' : (n > 0 ? 'rgba(214,73,47,0.12)' : 'rgba(52,97,176,0.14)');
     ctx.beginPath(); ctx.moveTo(X(0), y0); ctx.lineTo(X(D), Y(f(D))); ctx.lineTo(X(D), y0); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.3;
+    ctx.strokeStyle = '#5f6b79'; ctx.lineWidth = 1.3;
     ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.stroke();
-    ctx.strokeStyle = '#2a2723'; ctx.lineWidth = 1.6;
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.moveTo(L, y0); ctx.lineTo(W - R, y0); ctx.stroke();
-    ctx.fillStyle = '#2a2723'; this.head(ctx, W - R + 2, y0, 0, 6);
-    ctx.fillStyle = '#3a352c'; ctx.font = "500 12px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = '#1d2a3a'; this.head(ctx, W - R + 2, y0, 0, 6);
+    ctx.fillStyle = '#3a352c'; ctx.font = "500 12px 'Atkinson Hyperlegible', sans-serif";
     ctx.textAlign = 'center'; ctx.fillText('d (cm)', (L + W - R) / 2, H - 5);
     ctx.save(); ctx.translate(13, (T + H - B) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(yl, 0, 0); ctx.restore();
     ctx.strokeStyle = acc; ctx.lineWidth = 2.4;
@@ -421,10 +420,10 @@ class Component extends DCLogic {
     // platen
     ctx.fillStyle = '#c9523a'; this.rr(ctx, X0 - 8, yT - 12, X1 - X0 + 16, 12, 3); ctx.fill();
     ctx.fillStyle = '#3e62a8'; this.rr(ctx, X0 - 8, yB, X1 - X0 + 16, 12, 3); ctx.fill();
-    ctx.font = "700 18px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+    ctx.font = "700 18px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'left';
     ctx.fillStyle = '#b8472f'; ctx.fillText('+', X0 - 4, yT - 20);
     ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.fillText('V = ' + this.fV(U), X0 + 14, yT - 20);
-    ctx.font = "700 20px 'IBM Plex Sans', sans-serif"; ctx.fillStyle = '#365087'; ctx.fillText('\u2212', X0 - 4, yB + 34);
+    ctx.font = "700 20px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#365087'; ctx.fillText('\u2212', X0 - 4, yB + 34);
     ctx.font = "600 13px 'IBM Plex Mono', monospace"; ctx.fillText('V = 0 V  (referentie)', X0 + 14, yB + 32);
 
     // meetpunten
@@ -433,7 +432,7 @@ class Component extends DCLogic {
         const y = this.yOf(p.d);
         ctx.beginPath(); ctx.arc(p.x, y, 9, 0, 6.2832); ctx.fillStyle = '#f2d23a'; ctx.fill();
         ctx.strokeStyle = '#7a6f12'; ctx.lineWidth = 2; ctx.stroke();
-        ctx.fillStyle = '#5a520d'; ctx.font = "700 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#5a520d'; ctx.font = "700 11px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(nm, p.x, y + 0.5); ctx.textBaseline = 'alphabetic';
         this.label(ctx, [['V'], [nm, 1], [' = ' + this.fV(this.V(p.d))]], p.x + 15, y - 16, 'left', '#5a520d', '#e2d9a0');
       }
@@ -442,7 +441,7 @@ class Component extends DCLogic {
     // lading + afstand d
     const cx = this.ch.x, cy = this.yOf(this.ch.d), t = this.type;
     const lx = cx > X0 + 90 ? cx - 38 : cx + 38;
-    ctx.strokeStyle = '#6f685c'; ctx.fillStyle = '#6f685c'; ctx.lineWidth = 1.3;
+    ctx.strokeStyle = '#4f5b69'; ctx.fillStyle = '#4f5b69'; ctx.lineWidth = 1.3;
     if (this.ch.d > 0.3) {
       ctx.beginPath(); ctx.moveTo(lx, yB - 2); ctx.lineTo(lx, cy + 3); ctx.stroke();
       this.head(ctx, lx, cy + 1, -Math.PI / 2, 6); this.head(ctx, lx, yB - 1, Math.PI / 2, 6);
@@ -454,23 +453,23 @@ class Component extends DCLogic {
       const ang = t.n > 0 ? Math.PI / 2 : -Math.PI / 2;
       const len = 26 + 50 * Math.min(1, Math.abs(t.n) * this.E / 50000);
       this.arrow(ctx, cx, cy + Math.sin(ang) * 18, ang, len, '#2f8a4f');
-      ctx.fillStyle = '#2f8a4f'; ctx.font = "italic 700 15px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+      ctx.fillStyle = '#2f8a4f'; ctx.font = "italic 700 15px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'left';
       ctx.fillText('F', cx + 9, cy + Math.sin(ang) * (18 + len * 0.6) + 5);
     }
     const g = ctx.createRadialGradient(cx - 5, cy - 6, 3, cx, cy, 17);
     if (t.n > 0) { g.addColorStop(0, '#f08267'); g.addColorStop(1, '#cf3d22'); } else { g.addColorStop(0, '#6f97d8'); g.addColorStop(1, '#2f55a4'); }
     ctx.beginPath(); ctx.arc(cx, cy, 16, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = '#fff'; ctx.font = (t.n === 2 ? "700 14px" : "700 20px") + " 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = '#fff'; ctx.font = (t.n === 2 ? "700 14px" : "700 20px") + " 'Atkinson Hyperlegible', sans-serif";
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t.glyph, cx, cy - 1); ctx.textBaseline = 'alphabetic';
 
     // potentiaalschaal
     const rx = 628;
-    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#5f6b79'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.moveTo(rx, yB); ctx.lineTo(rx, yT); ctx.stroke();
-    ctx.fillStyle = '#3a352c'; ctx.font = "italic 600 14px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#3a352c'; ctx.font = "italic 600 14px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
     ctx.fillText('V', rx, yT - 18);
-    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.fillStyle = '#6f685c';
+    ctx.font = "500 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.fillStyle = '#4f5b69';
     const every = eqSp >= 18 ? 1 : eqSp >= 9 ? 2 : 5;
     const ticks = [0]; for (let k = 1; k <= nEq; k++) ticks.push(k * step); if (U > 0 && ticks[ticks.length - 1] !== U) ticks.push(U);
     ticks.forEach((v, i) => {
@@ -494,7 +493,7 @@ class Component extends DCLogic {
     const bx0 = 718, bw = 38, bg = 12;
     ctx.strokeStyle = '#b9b1a0'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(bx0 - 6, y0); ctx.lineTo(bx0 + 3 * bw + 2 * bg + 6, y0); ctx.stroke();
-    ctx.fillStyle = '#6f685c'; ctx.font = "600 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'center';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "600 11px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'center';
     ctx.fillText('ENERGIE (eV)', bx0 + (3 * bw + 2 * bg) / 2, y0 - 186);
     bars.forEach(([nm, v, col], i) => {
       const x = bx0 + i * (bw + bg), h = v * sc;
@@ -502,9 +501,9 @@ class Component extends DCLogic {
       ctx.fillStyle = '#3a352c'; ctx.font = "600 11px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center';
       const ev = v / this.EC;
       ctx.fillText(this.fmt(ev, Math.abs(ev) >= 100 || Math.abs(ev) < 1e-9 ? 0 : 1), x + bw / 2, h >= 0 ? y0 - h - 6 : y0 - h + 15);
-      ctx.fillStyle = '#6f685c'; ctx.font = "italic 600 13px 'IBM Plex Sans', sans-serif";
+      ctx.fillStyle = '#4f5b69'; ctx.font = "italic 600 13px 'Atkinson Hyperlegible', sans-serif";
       ctx.fillText('E', x + bw / 2 - 6, y0 + 192);
-      ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.textAlign = 'left';
+      ctx.font = "500 11px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'left';
       ctx.fillText(nm.slice(2), x + bw / 2 - 1, y0 + 196);
     });
   }

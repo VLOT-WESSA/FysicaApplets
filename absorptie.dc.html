@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,31 +9,30 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:28}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
-  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
-  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
-  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
+  .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
   .sl{height:30px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .sub{font-size:12px;color:#6f685c}
+  .sub{font-size:12px;color:var(--muted)}
   table.mt{border-collapse:collapse;width:100%;font-size:12px}
   table.mt td,table.mt th{padding:2px 4px;text-align:right;font-family:'IBM Plex Mono',monospace}
-  table.mt th{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:#6f685c;border-bottom:1px solid #e7e1d5}
+  table.mt th{font-family:var(--font-body);font-weight:600;color:var(--muted);border-bottom:1px solid #e7e1d5}
   table.mt td:first-child,table.mt th:first-child{text-align:left}
   @media (max-width:760px){
     html,body{height:auto}
@@ -45,18 +44,18 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Absorptie van straling</h1>
   </div>
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
     </div>
-    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <div class="card">
         <div class="sub">Bron</div>
         <div class="chips">
@@ -75,7 +74,7 @@
         <div class="row"><span class="lbl">Afstand bron&ndash;teller r</span><span class="val">{{ rStr }}</span></div>
         <div class="sl"><input type="range" min="2" max="30" step="0.5" value="{{ r }}" onInput="{{ onR }}"></div>
         <div style="display:flex;gap:8px;margin-top:4px">
-          <button onClick="{{ onMeasure }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">Meet 10 s</button>
+          <button onClick="{{ onMeasure }}" style="flex:1;min-height:38px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">Meet 10 s</button>
           <button onClick="{{ onClick }}" style="{{ clickStyle }}">{{ clickLabel }}</button>
         </div>
       </div>
@@ -85,9 +84,9 @@
         </sc-for>
       </div>
       <div class="card" style="gap:4px">
-        <div class="row"><span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Metingen ({{ nMeas }})</span>
-          <span><button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button>
-          <button onClick="{{ onClear }}" style="min-height:26px;font-size:12px;border:1px solid #e7e1d5;border-radius:7px;background:#fff;cursor:pointer;padding:0 8px">Wis</button></span></div>
+        <div class="row"><span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Metingen ({{ nMeas }})</span>
+          <span><button onClick="{{ onCopy }}" style="min-height:26px;font-size:12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;padding:0 8px">{{ copyLbl }}</button>
+          <button onClick="{{ onClear }}" style="min-height:26px;font-size:12px;border:1px solid var(--rule);border-radius:4px;background:#fff;cursor:pointer;padding:0 8px">Wis</button></span></div>
         <sc-raw-table class="mt">
           <sc-raw-tr><sc-raw-th>bron/absorber</sc-raw-th><sc-raw-th>d</sc-raw-th><sc-raw-th>r (cm)</sc-raw-th><sc-raw-th>N /10 s</sc-raw-th></sc-raw-tr>
           <sc-for list="{{ meas }}" as="m" hint-placeholder-count="3">
@@ -181,36 +180,36 @@ class Component extends DCLogic {
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
     const st = this.state, G = this.geo(), col = this.SRC[st.src][1];
     // liniaal
-    ctx.strokeStyle = '#cfc7b6'; ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = '#cfc7b6'; ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let cm = 0; cm <= 30; cm++) { const x = G.sx + cm * 22; ctx.beginPath(); ctx.moveTo(x, 236); ctx.lineTo(x, cm % 5 ? 240 : 244); ctx.stroke(); if (cm % 5 === 0) ctx.fillText(cm + ' cm', x, 246); }
     // deeltjes
     ctx.fillStyle = col;
     for (const p of this.parts) { ctx.globalAlpha = Math.max(0, 1 - p.life / 2.2); if (st.src === 'g') { ctx.fillRect(p.x - 4, p.y - 1, 8, 2); } else { ctx.beginPath(); ctx.arc(p.x, p.y, st.src === 'a' ? 3.2 : 2, 0, 7); ctx.fill(); } }
     ctx.globalAlpha = 1;
     // bron
-    ctx.fillStyle = '#6f685c'; ctx.fillRect(G.sx - 30, G.y - 28, 48, 56); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(G.sx + 10, G.y, 9, 0, 7); ctx.fill();
-    ctx.fillStyle = '#2a2723'; ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.fillText(this.SRC[st.src][0], G.sx - 30, G.y + 34); ctx.textAlign = 'center';
+    ctx.fillStyle = '#4f5b69'; ctx.fillRect(G.sx - 30, G.y - 28, 48, 56); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(G.sx + 10, G.y, 9, 0, 7); ctx.fill();
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.fillText(this.SRC[st.src][0], G.sx - 30, G.y + 34); ctx.textAlign = 'center';
     // absorber
     if (st.d > 0) {
       const mc = { papier: '#f3ecd9', al: '#c9ced4', pb: '#7d8590' }[st.mat];
-      ctx.fillStyle = mc; ctx.strokeStyle = '#4f4a42'; ctx.lineWidth = 1; ctx.fillRect(G.ax, G.y - 70, G.aw, 140); ctx.strokeRect(G.ax, G.y - 70, G.aw, 140);
-      ctx.fillStyle = '#2a2723'; ctx.textBaseline = 'bottom'; ctx.fillText(this.MAT[st.mat][0] + ' ' + this.fmt(st.d, st.mat === 'papier' ? 2 : 1) + ' mm', G.ax + G.aw / 2, G.y - 74);
+      ctx.fillStyle = mc; ctx.strokeStyle = '#3a4757'; ctx.lineWidth = 1; ctx.fillRect(G.ax, G.y - 70, G.aw, 140); ctx.strokeRect(G.ax, G.y - 70, G.aw, 140);
+      ctx.fillStyle = '#1d2a3a'; ctx.textBaseline = 'bottom'; ctx.fillText(this.MAT[st.mat][0] + ' ' + this.fmt(st.d, st.mat === 'papier' ? 2 : 1) + ' mm', G.ax + G.aw / 2, G.y - 74);
     }
     // GM-buis
-    ctx.fillStyle = '#4f4a42'; ctx.fillRect(G.dx, G.y - 16, 110, 32); ctx.fillStyle = '#e7e1d5'; ctx.fillRect(G.dx, G.y - 12, 6, 24);
+    ctx.fillStyle = '#3a4757'; ctx.fillRect(G.dx, G.y - 16, 110, 32); ctx.fillStyle = '#e7e1d5'; ctx.fillRect(G.dx, G.y - 12, 6, 24);
     if (this.flash > 0) { ctx.fillStyle = 'rgba(255,214,90,' + this.flash + ')'; ctx.beginPath(); ctx.arc(G.dx + 60, G.y, 10, 0, 7); ctx.fill(); }
-    ctx.fillStyle = '#2a2723'; ctx.textBaseline = 'top'; ctx.fillText('Geiger-Müllerteller', G.dx + 55, G.y + 22);
-    ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.roundRect(this.W - 170, 20, 150, 62, 10); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#d8e4d0'; ctx.fillRect(this.W - 160, 42, 130, 32); ctx.fillStyle = '#2a2723'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'middle'; ctx.fillText(this.fmt(this.cps, 1) + ' /s', this.W - 95, 58);
-    ctx.font = "600 11px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText('teltempo (2 s gemiddeld)', this.W - 95, 25);
+    ctx.fillStyle = '#1d2a3a'; ctx.textBaseline = 'top'; ctx.fillText('Geiger-Müllerteller', G.dx + 55, G.y + 22);
+    ctx.fillStyle = '#f7d54a'; ctx.strokeStyle = '#4f5b69'; ctx.beginPath(); ctx.roundRect(this.W - 170, 20, 150, 62, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#d8e4d0'; ctx.fillRect(this.W - 160, 42, 130, 32); ctx.fillStyle = '#1d2a3a'; ctx.font = "600 17px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'middle'; ctx.fillText(this.fmt(this.cps, 1) + ' /s', this.W - 95, 58);
+    ctx.font = "600 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText('teltempo (2 s gemiddeld)', this.W - 95, 25);
     // grafiek metingen: N tegen d voor huidige bron + absorber
     const gx = 70, gy = 300, gw = 820, gh = 230;
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(gx, gy, gw, gh); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(gx, gy, gw, gh);
     const pts = st.meas.filter(m => m.src === st.src && m.mat === st.mat && Math.abs(m.r - st.r) < 1e-9);
     const dMax = this.MAT[st.mat][1]; const nMax = Math.max(10, ...pts.map(p => p.n), this.rate() * 10 * 1.2);
     const X = d => gx + 40 + d / dMax * (gw - 60), Y = n => gy + gh - 26 - n / nMax * (gh - 50);
-    ctx.strokeStyle = '#6f685c'; ctx.beginPath(); ctx.moveTo(gx + 40, gy + 16); ctx.lineTo(gx + 40, gy + gh - 26); ctx.lineTo(gx + gw - 16, gy + gh - 26); ctx.stroke();
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = '#4f5b69'; ctx.beginPath(); ctx.moveTo(gx + 40, gy + 16); ctx.lineTo(gx + 40, gy + gh - 26); ctx.lineTo(gx + gw - 16, gy + gh - 26); ctx.stroke();
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let i = 0; i <= 5; i++) { const d = dMax * i / 5; ctx.fillText(this.fmt(d, dMax < 2 ? 2 : 0), X(d), gy + gh - 22); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let i = 0; i <= 4; i++) { const n = nMax * i / 4; ctx.fillText(Math.round(n), gx + 36, Y(n)); }
     // theoretische kromme
@@ -218,14 +217,14 @@ class Component extends DCLogic {
     for (let i = 0; i <= 200; i++) { const d = dMax * i / 200; const n = (st.src === 'none' ? this.BG : ({ a: 260, b: 380, g: 240 }[st.src] * (5 / st.r) ** 2 * this.airT(st.src, st.r) * this.trans(st.src, st.mat, d) + this.BG)) * 10; i ? ctx.lineTo(X(d), Y(n)) : ctx.moveTo(X(d), Y(n)); }
     ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = '#c4553a'; for (const p of pts) { ctx.beginPath(); ctx.arc(X(p.d), Y(p.n), 4.5, 0, 7); ctx.fill(); }
-    ctx.fillStyle = '#2a2723'; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#1d2a3a'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Telresultaat N (per 10 s) tegen dikte d (mm) — ' + this.SRC[st.src][0] + ', ' + this.MAT[st.mat][0].toLowerCase() + ', r = ' + this.fmt(st.r, 1) + ' cm', gx + 48, gy + 4);
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('stippellijn: verwachte waarde', gx + gw - 12, gy + 4);
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('stippellijn: verwachte waarde', gx + gw - 12, gy + 4);
   }
   renderVals() {
     const st = this.state;
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const mu = this.muOf(st.src, st.mat);
     const T = st.src === 'none' ? 1 : this.trans(st.src, st.mat, st.d);
     const rows = [
@@ -244,7 +243,7 @@ class Component extends DCLogic {
       d: st.d, dMax: MAT[1], dStep: MAT[2], dStr: this.fmt(st.d, st.mat === 'papier' ? 2 : 1) + ' mm', onD: e => this.setState({ d: +e.target.value }),
       r: st.r, rStr: this.fmt(st.r, 1) + ' cm', onR: e => this.setState({ r: +e.target.value }),
       onMeasure: () => this.setState({ meas: st.meas.concat([{ src: st.src, mat: st.mat, d: st.d, r: st.r, n: this.poisson(this.rate() * 10) }]) }),
-      onClick: () => this.setState({ click: !st.click }), clickLabel: st.click ? 'Tikken uit' : 'Tikken aan', clickStyle: 'flex:none;min-height:38px;padding:0 12px;font-size:13px;border-radius:10px;cursor:pointer;border:1px solid #e7e1d5;background:' + (st.click ? '#2a2723' : '#fff') + ';color:' + (st.click ? '#fff' : '#2a2723'),
+      onClick: () => this.setState({ click: !st.click }), clickLabel: st.click ? 'Tikken uit' : 'Tikken aan', clickStyle: 'flex:none;min-height:38px;padding:0 12px;font-size:13px;border-radius:4px;cursor:pointer;border:1px solid var(--rule);background:' + (st.click ? '#2a2723' : '#fff') + ';color:' + (st.click ? '#fff' : '#2a2723'),
       rows,
       nMeas: st.meas.length,
       meas: meas.map(m => ({ s: { a: 'α', b: 'β', g: 'γ', none: 'achtergr.' }[m.src] + ' / ' + this.MAT[m.mat][0].toLowerCase(), d: this.fmt(m.d, m.mat === 'papier' ? 2 : 1), r: this.fmt(m.r, 1), n: m.n })),

@@ -14,17 +14,35 @@
   --accent-soft: oklch(0.95 0.03 var(--h));  /* zachte achtergrond voor actieve chips */
   --topic: oklch(0.64 0.13 var(--h));        /* zelfde stip-kleur als op de index */
 
-  --bg: #eceae4;
-  --card: #fffdf9;
-  --stage: #f0ede8;
-  --line: #e7e1d5;
-  --ink: #2a2723;
-  --ink-2: #4f4a42;
-  --muted: #6f685c;   /* laagste grijs voor tekst (≈5:1 op --card) */
-  --track: #d9d3c6;
+  /* Huisstijl "labojournaal": ruitjespapier, inktblauwe lijnen, harde schaduw */
+  --paper: #f7f3ea;
+  --grid: #e9e2d2;
+  --card: #fffdf7;
+  --stage: #fbf8f1;   /* podium achter het canvas */
+  --ink: #1d2a3a;     /* tekst, kaders en schaduw */
+  --ink-2: #3a4757;
+  --muted: #4f5b69;   /* laagste grijs voor tekst (≈6:1 op --card) */
+  --rule: #cfc6b3;    /* fijne lijnen en knoppen */
+  --track: #d6cdb9;
+  --shadow: 2px 2px 0 var(--ink);
+  --font-body: 'Atkinson Hyperlegible', 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   accent-color: var(--accent);
 }
+
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 16px 16px;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+h1, h2, h3 { font-family: var(--font-display); font-optical-sizing: auto; }
+::selection { background: var(--accent-soft); }
 
 /* Schuifregelaars */
 input[type=range] {
@@ -45,8 +63,8 @@ input[type=range]::-moz-range-track { height: 6px; border-radius: 6px; backgroun
 
 /* Sectiekop in het zijpaneel */
 .sec-title {
-  font-size: 12px; font-weight: 600; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .01em; color: var(--muted);
 }
 
 /* Knoppen in accentkleur */

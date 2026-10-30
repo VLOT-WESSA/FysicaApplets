@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,18 +18,17 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:195}input[type=range]{width:100%;margin:0}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  .zoombtn{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid #cfd5dd;background:rgba(255,253,249,.92);color:#2a2723;border-radius:7px;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .zoombtn{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid #cfd5dd;background:rgba(255,253,249,.92);color:var(--ink);border-radius:4px;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.18)}
   .zoombtn:hover{background:#fff}
-  .preset{font-family:inherit;font-size:13px;font-weight:500;padding:7px 0;border:1px solid #ddd6c8;background:#fff;border-radius:8px;cursor:pointer;color:#3a352c}
+  .preset{font-family:inherit;font-size:13px;font-weight:500;padding:7px 0;border:1px solid var(--rule);background:#fff;border-radius:4px;cursor:pointer;color:#3a352c}
   .preset:hover{border-color:var(--accent);color:var(--accent)}
   canvas{display:block}
 
@@ -44,10 +43,10 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Zwarte straler &mdash; spectrum</h1>
   </div>
 
@@ -55,37 +54,37 @@
 
     <!-- LEFT -->
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column">
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 6px 10px;flex:none">
           <div style="display:flex;gap:20px;align-items:flex-end">
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
               <span style="width:22px;height:22px;border-radius:50%;background:#2b6bff;opacity:{{ bOp }};box-shadow:0 0 10px rgba(43,107,255,{{ bOp }})"></span>
-              <span style="font-size:12px;font-weight:600;color:#6f685c">B</span>
+              <span style="font-size:12px;font-weight:600;color:var(--muted)">B</span>
             </div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
               <span style="width:22px;height:22px;border-radius:50%;background:#1ec85a;opacity:{{ gOp }};box-shadow:0 0 10px rgba(30,200,90,{{ gOp }})"></span>
-              <span style="font-size:12px;font-weight:600;color:#6f685c">G</span>
+              <span style="font-size:12px;font-weight:600;color:var(--muted)">G</span>
             </div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
               <span style="width:22px;height:22px;border-radius:50%;background:#ff3b30;opacity:{{ rOp }};box-shadow:0 0 10px rgba(255,59,48,{{ rOp }})"></span>
-              <span style="font-size:12px;font-weight:600;color:#6f685c">R</span>
+              <span style="font-size:12px;font-weight:600;color:var(--muted)">R</span>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:12px;color:#6f685c">waargenomen kleur</span>
+            <span style="font-size:12px;color:var(--muted)">waargenomen kleur</span>
             <span style="width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 50% 42%, {{ starColor }} 0%, {{ starColor }} 38%, rgba(0,0,0,0) 72%);opacity:{{ starOp }};box-shadow:0 0 22px 4px {{ starColor }}"></span>
           </div>
         </div>
         <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center">
           <div style="position:relative;height:100%;width:100%">
-            <canvas ref="{{ graphRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:10px"></canvas>
+            <canvas ref="{{ graphRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
             <div style="position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:6px;align-items:center">
               <button class="zoombtn" onClick="{{ onYIn }}">+</button>
               <button class="zoombtn" onClick="{{ onYOut }}">&minus;</button>
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6f685c">y</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">y</span>
             </div>
             <div style="position:absolute;bottom:46px;right:12px;display:flex;gap:6px;align-items:center">
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6f685c">x</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">x</span>
               <button class="zoombtn" onClick="{{ onXOut }}">&minus;</button>
               <button class="zoombtn" onClick="{{ onXIn }}">+</button>
             </div>
@@ -93,8 +92,8 @@
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:12px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;gap:24px;flex-wrap:wrap;flex:none;align-items:center">
-        <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600">Weergave (uit bij start)</span>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:12px 18px;box-shadow:var(--shadow);display:flex;gap:24px;flex-wrap:wrap;flex:none;align-items:center">
+        <span style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Weergave (uit bij start)</span>
         <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
           <input type="checkbox" checked="{{ showIntensity }}" onChange="{{ onIntensity }}" style="width:17px;height:17px;accent-color:var(--accent);cursor:pointer">Intensiteit
         </label>
@@ -105,10 +104,10 @@
     </div>
 
     <!-- RIGHT -->
-    <div style="flex:none;width:308px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:308px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:2px">Zwarte straler</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:2px">Zwarte straler</div>
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">
           <span style="font-size:30px;font-weight:700;font-family:'IBM Plex Mono',monospace;letter-spacing:-.01em">{{ tempStr }}</span>
           <span style="width:14px;height:14px;border-radius:50%;background:{{ starColor }};box-shadow:0 0 8px {{ starColor }}"></span>
@@ -116,11 +115,11 @@
         <div style="margin-bottom:16px">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
             <span style="font-size:13px;font-weight:500;color:#3a352c">Temperatuur</span>
-            <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#6f685c">200 &ndash; 11000 K</span>
+            <span style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted)">200 &ndash; 11000 K</span>
           </div>
           <input type="range" min="200" max="11000" step="10" value="{{ tempNum }}" onChange="{{ onTemp }}">
         </div>
-        <span style="font-size:11px;color:#6f685c;display:block;margin-bottom:7px">Voorinstellingen</span>
+        <span style="font-size:11px;color:var(--muted);display:block;margin-bottom:7px">Voorinstellingen</span>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
           <button class="preset" onClick="{{ onSirius }}">Sirius A &middot; 9940 K</button>
           <button class="preset" onClick="{{ onZon }}">Zon &middot; 5800 K</button>
@@ -128,22 +127,22 @@
           <button class="preset" onClick="{{ onAarde }}">Aarde &middot; 300 K</button>
           <button class="preset" onClick="{{ onReset }}" style="grid-column:1 / -1;border-color:var(--accent);color:#1f9e8f;font-weight:600">&#x21bb; Standaard</button>
         </div>
-        <p style="margin:12px 0 0;font-size:12px;color:#6f685c;line-height:1.4">Gebruik de schuifregelaar of een voorinstelling om de temperatuur te kiezen.</p>
+        <p style="margin:12px 0 0;font-size:12px;color:var(--muted);line-height:1.4">Gebruik de schuifregelaar of een voorinstelling om de temperatuur te kiezen.</p>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Metingen</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Metingen</div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
-          <span style="color:#6f685c">Piekgolflengte (Wien)</span><span style="font-family:'IBM Plex Mono',monospace">{{ peakLamStr }}</span>
+          <span style="color:var(--muted)">Piekgolflengte (Wien)</span><span style="font-family:'IBM Plex Mono',monospace">{{ peakLamStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
-          <span style="color:#6f685c">Piekwaarde</span><span style="font-family:'IBM Plex Mono',monospace">{{ peakValStr }}</span>
+          <span style="color:var(--muted)">Piekwaarde</span><span style="font-family:'IBM Plex Mono',monospace">{{ peakValStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f0ece2">
-          <span style="color:#6f685c">Totale intensiteit (&sigma;T&#8308;)</span><span style="font-family:'IBM Plex Mono',monospace">{{ intensityStr }}</span>
+          <span style="color:var(--muted)">Totale intensiteit (&sigma;T&#8308;)</span><span style="font-family:'IBM Plex Mono',monospace">{{ intensityStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0">
-          <span style="color:#6f685c">Venster x &middot; y</span><span style="font-family:'IBM Plex Mono',monospace">{{ windowStr }}</span>
+          <span style="color:var(--muted)">Venster x &middot; y</span><span style="font-family:'IBM Plex Mono',monospace">{{ windowStr }}</span>
         </div>
       </div>
 
@@ -261,7 +260,7 @@ class Component extends DCLogic {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const W = this.GW, H = this.GH;
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f0ede8'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, W, H);
 
     const L = 64, R = 16, T = 18, B = 44;
     const { xMax, yMax } = this.state;
@@ -285,7 +284,7 @@ class Component extends DCLogic {
 
     ctx.font = "500 11px 'IBM Plex Mono', monospace";
     ctx.strokeStyle = 'rgba(42,39,35,.10)'; ctx.lineWidth = 1;
-    ctx.fillStyle = '#6f685c'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     if (this.state.showValues) {
       for (let i = 1; i <= 5; i++) {
         const v = yMax * i / 5, y = py(v);
@@ -296,10 +295,10 @@ class Component extends DCLogic {
       for (let i = 1; i <= 6; i++) {
         const xv = xMax * i / 6, x = px(xv);
         ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, H - B); ctx.stroke();
-        ctx.fillStyle = '#6f685c'; ctx.fillText(this.fmtNum(xv), x, H - B + 7);
+        ctx.fillStyle = '#4f5b69'; ctx.fillText(this.fmtNum(xv), x, H - B + 7);
       }
     }
-    ctx.fillStyle = '#4f4a42'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#3a4757'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.fillText('0', L - 8, py(0));
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('0', L, H - B + 7);
@@ -318,7 +317,7 @@ class Component extends DCLogic {
       ctx.globalAlpha = 1; ctx.restore();
     }
 
-    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#5f6b79'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, H - B); ctx.lineTo(W - R, H - B); ctx.stroke();
 
     ctx.save(); ctx.beginPath(); ctx.rect(L, T - 2, plotW, plotH + 2); ctx.clip();
@@ -346,7 +345,7 @@ class Component extends DCLogic {
         ctx.textAlign = xpk < W - 120 ? 'left' : 'right'; ctx.textBaseline = 'bottom';
         ctx.fillText('piek ' + lp.toFixed(lp < 1 ? 3 : 2) + ' \u00B5m', xpk + (xpk < W - 120 ? 7 : -7), ypk - 6);
       }
-      ctx.font = "500 11px 'IBM Plex Sans', sans-serif"; ctx.textBaseline = 'top';
+      ctx.font = "500 11px 'Atkinson Hyperlegible', sans-serif"; ctx.textBaseline = 'top';
       const regs = [
         { x: px(0.2), c: '#6f45c2', t: 'UV' },
         { x: px(0.58), c: '#4f4a42', t: 'zichtbaar' },
@@ -365,7 +364,7 @@ class Component extends DCLogic {
       }
     }
 
-    ctx.fillStyle = '#4f4a42'; ctx.font = "500 12px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = '#3a4757'; ctx.font = "500 12px 'Atkinson Hyperlegible', sans-serif";
     ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     ctx.fillText('Golflengte (\u00B5m)', L + plotW / 2, H - 4);
     ctx.save(); ctx.translate(15, T + plotH / 2); ctx.rotate(-Math.PI / 2);

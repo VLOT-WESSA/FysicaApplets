@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,14 +17,13 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:195}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
 
   @media (max-width:760px){
@@ -38,49 +37,49 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Staande golf in een kolom</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
 
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f7f4ee;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
-        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:8px"></canvas>
+      <div style="flex:1;min-height:0;background:#f7f4ee;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:11px;height:11px;border-radius:50%;border:2px solid #b8472f;display:inline-block"></span>knoop (node)</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#6f685c"><span style="width:12px;height:12px;background:#1f8a8a;display:inline-block;transform:rotate(45deg)"></span>buik (antinode)</div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:#6f685c">{{ endDesc }}</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:22px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:11px;height:11px;border-radius:50%;border:2px solid #b8472f;display:inline-block"></span>knoop (node)</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:12px;height:12px;background:#1f8a8a;display:inline-block;transform:rotate(45deg)"></span>buik (antinode)</div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)">{{ endDesc }}</div>
       </div>
     </div>
 
-    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
-      <button onClick="{{ onPlay }}" style="flex:none;min-height:40px;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
+    <div style="flex:none;width:330px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <button onClick="{{ onPlay }}" style="flex:none;min-height:40px;font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Randvoorwaarden</div>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Randvoorwaarden</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-          <button onClick="{{ onBB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bbBorder }};background:{{ bbBg }};color:{{ bbFg }}">buik &ndash; buik</button>
-          <button onClick="{{ onNB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nbBorder }};background:{{ nbBg }};color:{{ nbFg }}">knoop &ndash; buik</button>
-          <button onClick="{{ onBN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ bnBorder }};background:{{ bnBg }};color:{{ bnFg }}">buik &ndash; knoop</button>
-          <button onClick="{{ onNN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:9px;cursor:pointer;border:1px solid {{ nnBorder }};background:{{ nnBg }};color:{{ nnFg }}">knoop &ndash; knoop</button>
+          <button onClick="{{ onBB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:4px;cursor:pointer;border:1px solid {{ bbBorder }};background:{{ bbBg }};color:{{ bbFg }}">buik &ndash; buik</button>
+          <button onClick="{{ onNB }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:4px;cursor:pointer;border:1px solid {{ nbBorder }};background:{{ nbBg }};color:{{ nbFg }}">knoop &ndash; buik</button>
+          <button onClick="{{ onBN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:4px;cursor:pointer;border:1px solid {{ bnBorder }};background:{{ bnBg }};color:{{ bnFg }}">buik &ndash; knoop</button>
+          <button onClick="{{ onNN }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 4px;border-radius:4px;cursor:pointer;border:1px solid {{ nnBorder }};background:{{ nnBg }};color:{{ nnFg }}">knoop &ndash; knoop</button>
         </div>
-        <div style="font-size:11.5px;color:#6f685c;line-height:1.45;margin-top:9px">{{ boundHint }}</div>
+        <div style="font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:9px">{{ boundHint }}</div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6f685c;font-weight:600;margin-bottom:10px">Visualisatie</div>
-        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:10px;padding:4px">
-          <button onClick="{{ onTrans }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ transBg }};color:{{ transFg }};box-shadow:{{ transSh }}">Transversaal</button>
-          <button onClick="{{ onLong }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:7px;padding:8px 4px;cursor:pointer;background:{{ longBg }};color:{{ longFg }};box-shadow:{{ longSh }}">Longitudinaal</button>
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Visualisatie</div>
+        <div style="display:flex;gap:6px;background:#f0ece2;border-radius:4px;padding:4px">
+          <button onClick="{{ onTrans }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ transBg }};color:{{ transFg }};box-shadow:{{ transSh }}">Transversaal</button>
+          <button onClick="{{ onLong }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:4px;padding:8px 4px;cursor:pointer;background:{{ longBg }};color:{{ longFg }};box-shadow:{{ longSh }}">Longitudinaal</button>
         </div>
       </div>
 
-      <div style="background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
           <span style="font-size:14px;font-weight:500">Harmonische n</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#1f7a7a">{{ harmStr }}</span>
@@ -98,15 +97,15 @@
         <input type="range" min="100" max="400" step="1" value="{{ v }}" onInput="{{ onV }}" style="width:100%;accent-color:var(--accent)">
       </div>
 
-      <div style="background:#0e1417;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;color:#dfe6e6">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#88989a;font-weight:600;margin-bottom:11px">Resonantie</div>
+      <div style="background:#0e1417;border:1px solid var(--rule);border-radius:4px;padding:14px 16px;color:#dfe6e6">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:#88989a;font-weight:600;margin-bottom:11px">Resonantie</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:#aeb8b8">golflengte &lambda;</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#54d6c4">{{ lambdaStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-family:var(--font-display);font-size:16px;font-weight:700;color:#54d6c4">{{ lambdaStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
           <span style="font-size:13px;color:#aeb8b8">frequentie f</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600">{{ freqStr }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-family:var(--font-display);font-size:16px;font-weight:700">{{ freqStr }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
           <span style="font-size:13px;color:#aeb8b8">knopen &middot; buiken</span>
@@ -115,8 +114,8 @@
         <div style="font-size:12px;color:#7e8f90;line-height:1.5;font-family:'IBM Plex Mono',monospace">{{ formulaStr }}</div>
       </div>
 
-      <div style="background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px">
-        <div style="font-size:12px;color:#6f685c;line-height:1.55">Een staande golf ontstaat alleen bij de toegestane golflengtes die in de kolom passen. Kies een randvoorwaarde en blader met n door de boventonen.</div>
+      <div style="background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px">
+        <div style="font-size:12px;color:var(--muted);line-height:1.55">Een staande golf ontstaat alleen bij de toegestane golflengtes die in de kolom passen. Kies een randvoorwaarde en blader met n door de boventonen.</div>
       </div>
 
     </div>
@@ -269,11 +268,11 @@ class Component extends DCLogic {
     // length dimension
     ctx.strokeStyle = '#9a927f'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
     ctx.beginPath(); ctx.moveTo(x0, yMid + th / 2 + 24); ctx.lineTo(x1, yMid + th / 2 + 24); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#6f685c'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#4f5b69'; ctx.font = "600 12px 'IBM Plex Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('L = ' + this.len.toFixed(2) + ' m', (x0 + x1) / 2, yMid + th / 2 + 30);
 
     // end labels
-    ctx.font = "600 12px 'IBM Plex Sans',sans-serif"; ctx.textBaseline = 'bottom';
+    ctx.font = "600 12px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
     ctx.fillStyle = leftOpen ? '#1f7a7a' : '#8a3b2c'; ctx.textAlign = 'left';
     ctx.fillText(leftOpen ? 'open' : 'gesloten', x0 - 2, yMid - th / 2 - 16);
     ctx.fillStyle = rightOpen ? '#1f7a7a' : '#8a3b2c'; ctx.textAlign = 'right';

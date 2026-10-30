@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,25 +9,24 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="icon-zwartestraler.png">
 <link rel="stylesheet" href="applet.css">
 <style>:root{--h:195}input[type=range]{width:100%}</style>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;height:100%}
-  body{background:#eceae4}
   button{font-family:inherit}
-  a{color:#6f685c}
-  a:hover{color:#2a2723}
+  a{color:var(--muted)}
+  a:hover{color:var(--ink)}
   .row{display:flex;justify-content:space-between;align-items:baseline}
   .lbl{font-size:14px;font-weight:500}
   .val{font-family:'IBM Plex Mono',monospace;font-size:14px}
-  .card{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px}
-  .out{background:#fffdf9;border:1px solid #e7e1d5;border-radius:14px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:7px;font-size:13px;color:#4f4a42}
-  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:#2a2723}
-  .note{background:#f4f1ea;border:1px solid #e7e1d5;border-radius:14px;padding:12px 15px;font-size:12.5px;color:#4f4a42;line-height:1.6}
-  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2723}
+  .card{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+  .out{background:#fffdf9;border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
+  .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
+  .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
   .sl{height:30px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   @media (max-width:760px){
@@ -40,18 +39,18 @@
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js"></script>
 </helmet>
-<div class="applet-root" style="font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#2a2723;background:#eceae4;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#6f685c;text-decoration:none">&larr; Alle simulaties</a>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Breking en totale reflectie</h1>
   </div>
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#f0ede8;border:1px solid #e7e1d5;border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center">
+      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
     </div>
-    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px">
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:none">
         <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2">
           <button onClick="{{ tb.onClick }}" style="{{ tb.style }}">{{ tb.name }}</button>
@@ -60,13 +59,13 @@
       <div class="card">
         <div class="row"><span class="lbl">Invalshoek &theta;&#8321;</span><span class="val">{{ thStr }}</span></div>
         <div class="sl"><input type="range" min="0" max="85" step="0.5" value="{{ th }}" onInput="{{ onTh }}"></div>
-        <div style="font-size:12px;color:#6f685c">Middenstof 1 (boven)</div>
+        <div style="font-size:12px;color:var(--muted)">Middenstof 1 (boven)</div>
         <div class="chips">
           <sc-for list="{{ m1 }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
           </sc-for>
         </div>
-        <div style="font-size:12px;color:#6f685c;margin-top:4px">Middenstof 2 (onder)</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Middenstof 2 (onder)</div>
         <div class="chips">
           <sc-for list="{{ m2 }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
@@ -134,8 +133,8 @@ class Component extends DCLogic {
     const tint = (n) => n <= 1.0 ? '#f6f3ec' : n < 1.4 ? '#d9e9f2' : n < 2 ? '#dfe8e4' : '#e4e1f0';
     ctx.fillStyle = tint(this.n1()); ctx.fillRect(0, 0, this.W, this.Y0);
     ctx.fillStyle = tint(this.n2()); ctx.fillRect(0, this.Y0, this.W, this.H - this.Y0);
-    ctx.strokeStyle = '#8c8576'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, this.Y0); ctx.lineTo(this.W, this.Y0); ctx.stroke();
-    ctx.fillStyle = '#4f4a42'; ctx.font = "600 13px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = '#5f6b79'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, this.Y0); ctx.lineTo(this.W, this.Y0); ctx.stroke();
+    ctx.fillStyle = '#3a4757'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(this.MATS[this.state.n1][0] + '  (n₁ = ' + this.fmt(this.n1(), 2) + ')', 14, 12);
     ctx.textBaseline = 'bottom'; ctx.fillText(this.MATS[this.state.n2][0] + '  (n₂ = ' + this.fmt(this.n2(), 2) + ')', 14, this.H - 12);
   }
@@ -146,7 +145,7 @@ class Component extends DCLogic {
   }
   arcLabel(ctx, from, to, r, col, txt) { // hoeken t.o.v. de normaal, canvas-radialen
     ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(this.OX, this.Y0, r, Math.min(from, to), Math.max(from, to)); ctx.stroke();
-    const m = (from + to) / 2; ctx.fillStyle = col; ctx.font = "600 12.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const m = (from + to) / 2; ctx.fillStyle = col; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(txt, this.OX + (r + 22) * Math.cos(m), this.Y0 + (r + 22) * Math.sin(m));
   }
   draw() {
@@ -159,12 +158,12 @@ class Component extends DCLogic {
   drawRay(ctx) {
     const st = this.state, n1 = this.n1(), n2 = this.n2(), t1 = st.th * Math.PI / 180, O = this.OX, Y = this.Y0, L = 250;
     // normaal
-    ctx.setLineDash([6, 5]); ctx.strokeStyle = '#6f685c'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(O, Y - 240); ctx.lineTo(O, Y + 240); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('normaal', O + 5, Y - 238);
+    ctx.setLineDash([6, 5]); ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(O, Y - 240); ctx.lineTo(O, Y + 240); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('normaal', O + 5, Y - 238);
     const sx = O - L * Math.sin(t1), sy = Y - L * Math.cos(t1);
     const R = this.fresnel(t1, n1, n2); const s2 = n1 / n2 * Math.sin(t1); const tir = s2 >= 1;
     // laser
-    ctx.save(); ctx.translate(sx, sy); ctx.rotate(Math.atan2(Y - sy, O - sx)); ctx.fillStyle = '#4f4a42'; ctx.fillRect(-34, -9, 34, 18); ctx.restore();
+    ctx.save(); ctx.translate(sx, sy); ctx.rotate(Math.atan2(Y - sy, O - sx)); ctx.fillStyle = '#3a4757'; ctx.fillRect(-34, -9, 34, 18); ctx.restore();
     this.ray(ctx, sx, sy, O, Y, 1, 3);
     if (st.showRefl || tir) this.ray(ctx, O, Y, O + L * Math.sin(t1), Y - L * Math.cos(t1), Math.max(0.12, R), 1 + 2 * R);
     let t2 = null;
@@ -175,13 +174,13 @@ class Component extends DCLogic {
       if (st.showRefl || tir) this.arcLabel(ctx, up, up + t1, 78, '#8c8576', 'θᵣ');
       if (t2 != null) this.arcLabel(ctx, dn, dn - t2, 60, '#2a6fb8', 'θ₂');
     }
-    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Totale reflectie', O, Y + 30); }
+    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Totale reflectie', O, Y + 30); }
     if (n1 > n2) { // grenshoek tonen
       const tc = Math.asin(n2 / n1); ctx.setLineDash([2, 4]); ctx.strokeStyle = 'rgba(138,59,44,0.5)'; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.moveTo(O, Y); ctx.lineTo(O - 200 * Math.sin(tc), Y - 200 * Math.cos(tc)); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('grenshoek', O - 200 * Math.sin(tc) - 4, Y - 200 * Math.cos(tc));
+      ctx.fillStyle = '#8a3b2c'; ctx.font = "500 11px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('grenshoek', O - 200 * Math.sin(tc) - 4, Y - 200 * Math.cos(tc));
     }
-    ctx.fillStyle = '#6f685c'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('Sleep in het bovenste deel om de laser te draaien', this.W - 14, 12);
+    ctx.fillStyle = '#4f5b69'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('Sleep in het bovenste deel om de laser te draaien', this.W - 14, 12);
   }
   drawHuy(ctx) {
     const st = this.state, n1 = this.n1(), n2 = this.n2(), Y = this.Y0;
@@ -221,14 +220,14 @@ class Component extends DCLogic {
     const arrow = (x, y, dx, dy, col) => { ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 10 * Math.cos(a - 0.4), y + dy - 10 * Math.sin(a - 0.4)); ctx.lineTo(x + dx - 10 * Math.cos(a + 0.4), y + dy - 10 * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill(); };
     arrow(O - 200 * k1[0], Y - 200 * k1[1], 90 * k1[0], 90 * k1[1], '#2a2723');
     if (!tir) arrow(O + 80 * Math.sin(t2), Y + 80 * Math.cos(t2), 90 * Math.sin(t2), 90 * Math.cos(t2), '#2a2723');
-    ctx.fillStyle = '#4f4a42'; ctx.font = "500 11.5px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#3a4757'; ctx.font = "500 11.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
     ctx.fillText('blauw: golffronten  ·  rood: Huygens-golfjes vanuit het grensvlak', this.W - 14, 12);
-    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'IBM Plex Sans',sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Totale reflectie: de golfjes vormen geen gebroken front', O, Y + 40); }
+    if (tir) { ctx.fillStyle = '#8a3b2c'; ctx.font = "600 14px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.fillText('Totale reflectie: de golfjes vormen geen gebroken front', O, Y + 40); }
   }
   renderVals() {
     const st = this.state, n1 = this.n1(), n2 = this.n2();
     const accent = 'var(--accent)';
-    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:8px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
+    const chip = (on) => 'min-height:32px;font-size:12.5px;font-weight:' + (on ? '600' : '500') + ';border-radius:4px;cursor:pointer;padding:0 9px;border:1px solid ' + (on ? accent : '#e7e1d5') + ';background:' + (on ? accent : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const tabStyle = (on) => 'min-height:38px;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:1px solid ' + (on ? '#2a2723' : '#e7e1d5') + ';background:' + (on ? '#2a2723' : '#fff') + ';color:' + (on ? '#fff' : '#2a2723');
     const t1 = st.th * Math.PI / 180, s2 = n1 / n2 * Math.sin(t1), tir = s2 >= 1;
     const R = this.fresnel(t1, n1, n2);
@@ -253,7 +252,7 @@ class Component extends DCLogic {
       m1: this.MATS.map(([n, v], i) => ({ name: n, style: chip(st.n1 === i), onClick: () => this.setState({ n1: i }) })),
       m2: this.MATS.map(([n, v], i) => ({ name: n, style: chip(st.n2 === i), onClick: () => this.setState({ n2: i }) })),
       toggles: (st.tab === 'ray' ? [['showAng', 'Hoeken'], ['showRefl', 'Teruggekaatste straal']] : [['showWl', 'Huygens-golfjes'], ['showReflH', 'Teruggekaatste golf']]).map(([k, n]) => ({ name: n, style: chip(st[k]), onClick: () => this.setState({ [k]: !st[k] }) })),
-      rows, msg, msgStyle: 'margin-top:4px;padding:7px 9px;border-radius:8px;font-weight:600;' + (ok ? 'background:#e6f2ea;color:#2f7a45' : 'background:#fbeeea;color:#8a3b2c'),
+      rows, msg, msgStyle: 'margin-top:4px;padding:7px 9px;border-radius:4px;font-weight:600;' + (ok ? 'background:#e6f2ea;color:#2f7a45' : 'background:#fbeeea;color:#8a3b2c'),
       noteText: st.tab === 'ray'
         ? 'Kies water of glas boven en lucht onder om totale reflectie te zien (glasvezel, luchtspiegeling, de schittering van diamant). Een deel van het licht wordt altijd teruggekaatst; bij scherende inval en vlak onder de grenshoek wordt dat deel groot.'
         : 'Volgens Huygens is elk punt van een golffront een bron van nieuwe golfjes. Elk punt van het grensvlak dat door het front geraakt wordt, zendt golfjes uit met de snelheid van middenstof 2. De raaklijn aan die golfjes is het nieuwe, gebroken golffront: omdat de golf trager gaat, liggen de fronten dichter op elkaar en buigt de golf naar de normaal.',
