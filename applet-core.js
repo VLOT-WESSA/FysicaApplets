@@ -134,13 +134,14 @@
       var name = parts.length >= 2 ? text(parts[0]) : text(row);
       var val = parts.slice(1).map(text).join(' ');
       if (name && !r.hasAttribute('aria-label')) r.setAttribute('aria-label', name);
+      if (r.dataset.valuetext === 'eigen') continue;   // de applet zet zelf een voorleestekst
       if (val) r.setAttribute('aria-valuetext', val); else r.removeAttribute('aria-valuetext');
     }
   }
 
   /* Schakelaars en segmentknoppen tonen hun toestand alleen met een vulling. Een knop in een
    * groep van gelijke knoppen die gevuld is (witte tekst op kleur) geldt als ingedrukt. */
-  var ACTION = /^(start|stop|pauze|loslaten|reset|nul|wis|opnieuw|meting noteren|kopieer|gekopieerd|gooi|scram|[▶■]|.*\b(kiezen|laden|opslaan|toevoegen|verwijderen|exporteren|plaats|plaatsen|zet|meten|ijken)\b|[+−-]\s?\d)/i;
+  var ACTION = /^(start|stop|pauze|loslaten|reset|nul|wis|opnieuw|meting noteren|kopieer|gekopieerd|gooi|scram|[▶■]|.*\b(kiezen|laden|opslaan|toevoegen|verwijderen|exporteren|afdrukken|pdf|verslag|plaats|plaatsen|zet|meten|ijken)\b|[+−-]\s?\d)/i;
   // De toestand staat in de inline stijl die de applet zelf zet. De berekende stijl loopt tijdens
   // een kleurovergang nog achter, dus die wordt alleen gebruikt als de inline stijl niets zegt.
   var probe = document.createElement('span');
@@ -173,7 +174,7 @@
     for (var i = 0; i < bs.length; i++) if (bs[i].parentElement) groups.add(bs[i].parentElement);
     groups.forEach(function (g) {
       var kids = Array.prototype.filter.call(g.children, function (k) { return k.tagName === 'BUTTON'; });
-      if (kids.length < 2 || kids.some(function (k) { return ACTION.test(text(k)); })) return;
+      if (kids.length < 2 || kids.some(function (k) { return ACTION.test(text(k)) || k.hasAttribute('aria-current'); })) return;
       kids.forEach(function (k) { k.setAttribute('aria-pressed', isFilled(k) ? 'true' : 'false'); });
     });
   }
@@ -195,7 +196,8 @@
       var b = bs[i], t = text(b);
       if (!/^(aan|uit|open|gesloten)$/i.test(t)) continue;
       var row = b.parentElement, lab = row && row.firstElementChild !== b ? text(row.firstElementChild) : '';
-      if (lab) b.setAttribute('aria-label', lab + ': ' + t.toLowerCase());
+      // met aria-pressed meldt de knop zijn toestand al zelf: dan alleen de naam van de rij
+      if (lab) b.setAttribute('aria-label', b.hasAttribute('aria-pressed') ? lab : lab + ': ' + t.toLowerCase());
     }
   }
 

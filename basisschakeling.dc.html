@@ -37,13 +37,13 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Basis schakeling</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Basis schakeling</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -53,16 +53,16 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:10px;box-shadow:var(--shadow)">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
       </div>
-      <div style="display:flex;gap:12px;flex:none">
-        <div style="flex:1;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+      <div style="display:flex;gap:12px;flex:none;flex-wrap:wrap">
+        <div style="flex:1 1 130px;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
           <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Stroom (totaal)</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#c0392b;margin-top:2px">{{ iStr }}</div>
         </div>
-        <div style="flex:1;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+        <div style="flex:1 1 130px;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
           <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Vervangingsweerstand</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#177368;margin-top:2px">{{ rTotStr }}</div>
         </div>
-        <div style="flex:1;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
+        <div style="flex:1 1 130px;background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 16px;box-shadow:var(--shadow)">
           <div style="font-size:11px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600">Vermogen (totaal)</div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#935c1a;margin-top:2px">{{ pStr }}</div>
         </div>

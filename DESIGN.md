@@ -239,8 +239,13 @@ Tastbaar en stevig, zoals een schakelaar op een labotafel.
 - **Hover / Focus:** primair wordt donkerder (`accent-hover`); focus toont een inktblauwe omlijning van 2 px met 2 px afstand.
 
 ### Toggles (segmentknoppen)
-- **Style:** rij van gelijke knoppen met kantlijn; actief is gevuld met het onderwerpaccent en witte tekst, inactief wit met potloodgrijze tekst.
-- **State:** aan/uit wordt waar mogelijk ook in woorden getoond ("Aan", "Open"), niet alleen met kleur.
+- **Style:** knoppen met hoeken van 4px en kantlijn; uit is wit met potloodgrijze tekst, aan is gevuld (onderwerpaccent of de vaste fysica-kleur van de laag) met witte tekst en een vinkje.
+- **State:** elke schakelaar zet `aria-pressed` vanuit zijn toestand; het vinkje komt uit `applet.css`. Moduskeuzes (zoals Satelliet/Kepler) zijn de enige uitzondering: actief in inkt.
+- **Defaults:** alle optionele lagen (vectoren, veldlijnen, sporen, omhullenden …) starten uit.
+
+### Legenda
+- Een legenda toont alleen wat de huidige modus kan tekenen. Staat een laag uit, dan wordt alleen het kleurstaafje lichter en staat er "(uit)" bij; de tekst blijft leesbaar.
+- Waar twee toestanden een kleur delen (stabiel/onstabiel), verschillen ze ook in vorm (stip/kruis).
 
 ### Cards / Containers
 - **Corner Style:** 4px.

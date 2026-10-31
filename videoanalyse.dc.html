@@ -29,7 +29,7 @@
   }
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
-<script src="./applet-core.js?v=6"></script>
+<script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -37,11 +37,11 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Videoanalyse</h1>
     <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
-        <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+        <button onClick="{{ t.onClick }}" style="{{ t.style }}" aria-current="{{ t.cur }}" aria-disabled="{{ t.locked }}" title="{{ t.tip }}">{{ t.label }}</button>
       </sc-for>
     </div>
   </div>
-  <video ref="{{ videoRef }}" muted playsinline preload="auto" onLoadedMetadata="{{ onMeta }}" onSeeked="{{ onSeeked }}" onError="{{ onVideoError }}" style="position:absolute;width:2px;height:2px;opacity:0;pointer-events:none"></video>
+  <video ref="{{ videoRef }}" tabindex="-1" aria-hidden="true" muted playsinline preload="auto" onLoadedMetadata="{{ onMeta }}" onSeeked="{{ onSeeked }}" onError="{{ onVideoError }}" style="position:absolute;width:2px;height:2px;opacity:0;pointer-events:none"></video>
   <input ref="{{ fileRef }}" type="file" accept="video/*,.mp4,.mov,.m4v,.webm" onChange="{{ onFile }}" style="display:none">
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
     <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
@@ -183,11 +183,11 @@
       <sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
         <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Horizontaal</span>
-            <sc-raw-select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:4px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+            <sc-raw-select value="{{ gx }}" onChange="{{ onGx }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:4px;padding:4px 8px;font-size:14px;background:#fff;min-width:150px">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
             </sc-raw-select></div>
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500">Verticaal</span>
-            <sc-raw-select value="{{ gy }}" onChange="{{ onGy }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:4px;padding:0 8px;font-size:14px;background:#fff;min-width:150px">
+            <sc-raw-select value="{{ gy }}" onChange="{{ onGy }}" style="min-height:34px;border:1px solid #d9d3c6;border-radius:4px;padding:4px 8px;font-size:14px;background:#fff;min-width:150px">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="8"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
             </sc-raw-select></div>
           <div style="font-size:14px;font-weight:500">Trendlijn</div>
@@ -841,6 +841,9 @@ class Component extends DCLogic {
       label, onClick: () => (i >= 2 && !this.calibrated())
         ? this.setState({ step: 2, tool: 'none', note: 'Eerst ijken: leg de ijkstok en de oorsprong vast, daarna kun je meten.' })
         : this.setState({ step: i + 1, tool: 'none', note: '' }),
+      cur: s.step === i + 1 ? 'step' : 'false',
+      locked: (i >= 2 && !this.calibrated()) ? 'true' : 'false',
+      tip: (i >= 2 && !this.calibrated()) ? 'Beschikbaar na de ijking (stap 2)' : '',
       style: 'min-height:34px;padding:0 14px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;white-space:pre;' + (s.step === i + 1 ? 'border:1px solid var(--accent);background:var(--accent);color:#fff' : (i >= 2 && !this.calibrated()) ? 'border:1px dashed var(--rule);background:transparent;color:var(--muted)' : 'border:1px solid var(--rule);background:var(--card);color:var(--ink-2)')
     }));
     const fpsPresets = [24, 30, 60, 120, 240].map(n => ({ name: String(n), onClick: () => this.onFps({ target: { value: String(n) } }), style: pill(fps === n) }));

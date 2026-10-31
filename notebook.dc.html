@@ -156,7 +156,7 @@
                   </div>
                 </sc-if>
                 <sc-if value="{{ c.showHeader }}" hint-placeholder-val="{{ true }}">
-                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:4px 11px 0 0">
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:4px 6px 4px 12px;border-bottom:1px solid #efe9dd;background:#faf7f0;border-radius:4px 11px 0 0">
                   <span draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" title="Sleep om te verplaatsen" style="cursor:grab;font-size:15px;color:#9b9384;padding:0 4px;user-select:none">&#8942;&#8942;</span>
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#4a453d">{{ c.kind }}</span>
                   <sc-if value="{{ c.collapsed }}" hint-placeholder-val="{{ false }}">

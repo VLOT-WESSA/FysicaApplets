@@ -37,13 +37,13 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Gelijkstroommotor</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Gelijkstroommotor</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -53,7 +53,7 @@
       <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px"></canvas>
       </div>
-      <div style="display:flex;gap:10px;flex:none;align-items:center">
+      <div style="display:flex;gap:10px;flex:none;align-items:center;flex-wrap:wrap">
         <button onClick="{{ onToggleRun }}" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid {{ runBorder }};background:{{ runBg }};color:{{ runFg }}">{{ runLabel }}</button>
         <button onClick="{{ onReverse }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:var(--ink)">&#8635; Polariteit bron</button>
         <button onClick="{{ onReverseMagnet }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #d9d3c6;background:#fff;color:var(--ink)">&#8635; Magneet omkeren <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted)">{{ magLabel }}</span></button>

@@ -37,13 +37,13 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Wet van Ohm</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Wet van Ohm</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -108,14 +108,12 @@
         <div style="display:flex;flex-direction:column;gap:9px">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:14px">Elektronenstroom</span>
-            <button onClick="{{ toggleElec }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:{{ elecFg }}">
-              <span style="width:8px;height:8px;border-radius:50%;background:{{ elecDot }}"></span>{{ elecLabel }}
+            <button onClick="{{ toggleElec }}" aria-pressed="{{ elecPressed }}" style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;min-width:64px;justify-content:center;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ elecBorder }};background:{{ elecBg }};color:{{ elecFg }}">{{ elecLabel }}
             </button>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between">
             <span style="font-size:14px">Conventionele stroomzin</span>
-            <button onClick="{{ toggleArrow }}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ arrowBorder }};background:{{ arrowBg }};color:{{ arrowFg }}">
-              <span style="width:8px;height:8px;border-radius:50%;background:{{ arrowDot }}"></span>{{ arrowLabel }}
+            <button onClick="{{ toggleArrow }}" aria-pressed="{{ arrowPressed }}" style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;min-width:64px;justify-content:center;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid {{ arrowBorder }};background:{{ arrowBg }};color:{{ arrowFg }}">{{ arrowLabel }}
             </button>
           </div>
         </div>
@@ -290,6 +288,7 @@ class Component extends DCLogic {
   }
 
   fmtI(I) {
+    if (!(I > 0)) return '0 A';   // open kring: geen stroom, geen µ-eenheid
     if (I >= 1) return I.toFixed(2).replace('.', ',') + ' A';
     if (I >= 0.001) return (I * 1000).toFixed(0) + ' mA';
     return (I * 1e6).toFixed(0) + ' \u00B5A';
@@ -322,12 +321,13 @@ class Component extends DCLogic {
       swBorder: on ? 'var(--accent)' : '#eccfca', swDot: on ? '#bff0e6' : '#c0392b',
       toggleElec: () => this.setState({ showElec: !this.state.showElec }),
       elecLabel: elec ? 'Aan' : 'Uit',
-      elecBg: elec ? '#2f6fb0' : '#f4f1ea', elecFg: elec ? '#fff' : '#4f5b69',
-      elecBorder: elec ? '#2f6fb0' : '#e7e1d5', elecDot: elec ? '#bcd8f2' : '#c3bcad',
+      elecBg: elec ? '#2f6fb0' : '#fff', elecFg: elec ? '#fff' : '#4f5b69',
+      elecPressed: elec ? 'true' : 'false', arrowPressed: arr ? 'true' : 'false',
+      elecBorder: elec ? '#2f6fb0' : 'var(--rule)', elecDot: elec ? '#bcd8f2' : '#c3bcad',
       toggleArrow: () => this.setState({ showArrow: !this.state.showArrow }),
       arrowLabel: arr ? 'Aan' : 'Uit',
-      arrowBg: arr ? '#975a23' : '#f4f1ea', arrowFg: arr ? '#fff' : '#4f5b69',
-      arrowBorder: arr ? '#d98a2b' : '#e7e1d5', arrowDot: arr ? '#f2d6ad' : '#c3bcad',
+      arrowBg: arr ? '#975a23' : '#fff', arrowFg: arr ? '#fff' : '#4f5b69',
+      arrowBorder: arr ? '#975a23' : 'var(--rule)', arrowDot: arr ? '#f2d6ad' : '#c3bcad',
     };
   }
 }

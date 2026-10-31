@@ -449,6 +449,465 @@
         ],
         "createdAt": "2026-10-30T15:51:21.157Z",
         "reason": "user confirmed: ruitjespapier #f7f3ea is de gekozen labschrift-achtergrond (DESIGN.md); uitbreiding naar alle applets goedgekeurd"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "8086.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:00.540Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "absorptie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:01.761Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "basisschakeling.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:02.886Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "booleanalgebra.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:03.841Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "breking.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:04.786Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "cirkelbeweging.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:05.769Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "condensator.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:06.766Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "cyclotron.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:07.762Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "diffractie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:08.763Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "dopplereffect.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:09.862Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "electromotor.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:10.936Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "foto.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:11.912Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "geigermarsden.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:12.992Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "geluidsanalyse.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:14.073Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "grafiekmatching.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:15.130Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "gravitatie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:16.053Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "inductie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:17.039Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "interferentie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:18.032Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "karakteristiek.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:19.035Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "karnaugh.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:20.026Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "kernreactor.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:21.039Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "ladingenvelden.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:22.083Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "lissajous.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:23.163Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "logischepoorten.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:24.160Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "looping.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:25.209Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "lorentzkracht.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:26.208Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "luchtkolom.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:27.177Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "magneetvelddraad.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:28.172Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "massaveer.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:29.240Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "millikan.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:30.258Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "notebook.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:31.255Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "nuclidenkaart.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:32.258Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "ohm.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:33.273Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "polarisatie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:34.193Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "potentiaal.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:35.136Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "rivieroversteek.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:36.173Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "slinger.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:37.177Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "snaar.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:38.178Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "spectraallijnen.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:39.181Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "staandegolf.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:40.186Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "superpositie.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:41.204Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "talstelsel.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:42.203Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "verval.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:43.164Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "videoanalyse.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:44.167Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "weerstanddraad.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:45.242Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "wielerpiste.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:46.344Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "wrijvinghelling.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:47.348Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "zwartestraler.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:04:48.350Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-31T11:04:49.388Z",
+        "reason": "user confirmed: koos richting A (ruitjespapier) als labschrift-achtergrond; vastgelegd in DESIGN.md"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "\\'jetbrains mono\\',\\'ibm plex mono\\',monospace",
+        "files": [
+          "notebook.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:49:38.927Z",
+        "reason": "documented: JetBrains Mono (code) en IBM Plex Mono (value) staan in DESIGN.md typography; detector leest de stack met andere hoofdletters"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "\\'ibm plex mono\\',monospace",
+        "files": [
+          "notebook.dc.html"
+        ],
+        "createdAt": "2026-10-31T11:49:39.943Z",
+        "reason": "documented: IBM Plex Mono is de value-letter in DESIGN.md"
       }
     ]
   }

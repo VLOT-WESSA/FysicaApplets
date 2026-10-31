@@ -26,9 +26,16 @@
     .applet-main{flex-direction:column !important;align-items:stretch !important}
     .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
+    /* gsm: slinger, knoppen en chronometer direct onder elkaar, zodat je kijkt en timet zonder te scrollen */
+    .applet-main>.col{display:contents !important}
+    .applet-main .col>*{order:5}
+    .applet-main .stage{order:1}
+    .applet-main .act{order:2}
+    .applet-main .meas{order:3}
+    .applet-main .legend{order:4}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -36,23 +43,23 @@
     <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">De slinger</h1>
   </div>
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
-    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
-      <div style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+    <div class="col" style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div class="stage" style="flex:1;min-height:0;background:#fbf8f1;border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
         <canvas ref="{{ stageRef }}" tabindex="0" aria-label="Slinger: pijltjes links en rechts om uit te wijken, Enter of spatie om los te laten" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
-      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span><span>zwaartekracht F<sub>z</sub></span></div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span><span>spankracht F<sub>s</sub></span></div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:3px dashed #93c4a3;display:inline-block"></span><span>terugroepende kracht F<sub>z</sub>&middot;sin&theta;</span></div>
+      <div class="legend" style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block;opacity:{{ legF }}"></span><span>zwaartekracht F<sub>z</sub></span><span style="color:var(--muted);font-size:12px">{{ legFOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block;opacity:{{ legF }}"></span><span>spankracht F<sub>s</sub></span><span style="color:var(--muted);font-size:12px">{{ legFOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:0;border-top:3px dashed #93c4a3;display:inline-block;opacity:{{ legF }}"></span><span>terugroepende kracht F<sub>z</sub>&middot;sin&theta;</span><span style="color:var(--muted);font-size:12px">{{ legFOff }}</span></div>
         <div style="display:flex;align-items:center;gap:8px">Sleep de massa om ze uit te wijken en los te laten.</div>
       </div>
     </div>
-    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
-      <div style="display:flex;gap:10px;flex:none">
+    <div class="col" style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div class="act" style="display:flex;gap:10px;flex:none">
         <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
         <button onClick="{{ onReset }}" style="flex:1;min-height:40px;font-size:14px;font-weight:500;border:1px solid var(--rule);border-radius:4px;cursor:pointer;background:#fff;color:var(--ink)">Reset</button>
       </div>
-      <div ref="{{ measRef }}" style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;scroll-margin:12px">
+      <div class="meas" ref="{{ measRef }}" style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;scroll-margin:12px">
         <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:var(--font-display);font-size:16px;font-weight:700">Chronometer</span><span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600">{{ chronoStr }}</span></div>
         <div style="font-size:13px;color:var(--ink-2);line-height:1.5">Start bij een doorgang door de evenwichtsstand, tel zelf het aantal volledige slingeringen (bv. 10), stop, vul n in en noteer. Zet daarna T&sup2; uit tegen L om g te bepalen.</div>
         <div style="display:flex;gap:8px">
@@ -61,7 +68,7 @@
         </div>
         <div style="display:flex;gap:8px">
           <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)">n =
-            <input type="number" min="1" max="100" step="1" value="{{ nIn }}" onInput="{{ onN }}" aria-label="Getelde volledige slingeringen n" style="width:56px;min-height:36px;padding:0 8px;border:1px solid var(--ink);border-radius:4px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" value="{{ nIn }}" onInput="{{ onN }}" aria-label="Getelde volledige slingeringen n" style="width:56px;min-height:36px;padding:0 8px;border:1px solid var(--ink);border-radius:4px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)">
           </label>
           <button onClick="{{ onRecord }}" style="flex:1;min-height:36px;font-size:13.5px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">Meting noteren</button>
         </div>
@@ -71,16 +78,17 @@
         </div>
         <div aria-live="polite" style="min-height:18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--accent)">{{ recMsg }}</div>
         <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ false }}">
-          <div style="display:grid;grid-template-columns:24px repeat(5,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink)">
-            <span style="color:var(--muted)">nr</span><span style="color:var(--muted)">L (m)</span><span style="color:var(--muted)">&theta;&#8320;</span><span style="color:var(--muted)">t (s)</span><span style="color:var(--muted)">n</span><span style="color:var(--muted)">T (s)</span>
+          <div role="table" aria-label="Meettabel" style="display:grid;grid-template-columns:24px repeat(5,1fr);gap:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink)">
+            <div role="row" style="display:contents"><span role="columnheader" style="color:var(--muted)">nr</span><span role="columnheader" style="color:var(--muted)">L (m)</span><span role="columnheader" style="color:var(--muted)">&theta;&#8320;</span><span role="columnheader" style="color:var(--muted)">t (s)</span><span role="columnheader" style="color:var(--muted)">n</span><span role="columnheader" style="color:var(--muted)">T (s)</span></div>
             <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
-              <span style="color:var(--muted)">{{ r.nr }}</span><span>{{ r.L }}</span><span>{{ r.th }}</span><span>{{ r.t }}</span><span>{{ r.n }}</span><span>{{ r.T }}</span>
+              <div role="row" style="display:contents"><span role="cell" style="color:var(--muted)">{{ r.nr }}</span><span role="cell">{{ r.L }}</span><span role="cell">{{ r.th }}</span><span role="cell">{{ r.t }}</span><span role="cell">{{ r.n }}</span><span role="cell">{{ r.T }}</span></div>
             </sc-for>
           </div>
           <div style="border-top:1px dashed var(--rule);padding-top:9px;margin-top:2px;display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)">
+            <div style="display:flex;justify-content:space-between;gap:10px"><span style="font-weight:700;color:var(--ink)">Jouw laatste meting</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;text-align:right">{{ myTStr }}</span></div>
             <div style="display:flex;justify-content:space-between"><span>T volgens 2&pi;&radic;(L/g)</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">{{ T0Str }}</span></div>
-            <div style="display:flex;justify-content:space-between"><span>T van deze slinger</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">{{ TmStr }}</span></div>
-            <div style="display:flex;justify-content:space-between"><span>Afwijking</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ devStr }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>T van deze slinger (model, grote hoek)</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600">{{ TmStr }}</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Model t.o.v. formule</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ devStr }}</span></div>
           </div>
         </sc-if>
         <sc-if value="{{ noRows }}" hint-placeholder-val="{{ true }}">
@@ -114,13 +122,13 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
 class Component extends DCLogic {
   stageRef = React.createRef();
-  W = 960; H = 560;
+  W = 960; H = 560; narrow = false;
   px = 320; py = 46;
   // pixels per meter: de slinger vult de hoogte van het podium (vaste schaal tot 1,2 m, zodat
   // kortere slingers zichtbaar korter blijven) en blijft bij grote uitwijking binnen zijn vak
   get ppm() {
     const st = this.state;
-    let s = 450 / Math.max(st.L, 1.2);
+    let s = (this.narrow ? 400 : 450) / Math.max(st.L, 1.2);
     const reach = st.L * Math.sin(Math.min(st.th0, 80) * Math.PI / 180);
     if (s * reach > 290) s = 290 / reach;
     return s;
@@ -155,7 +163,19 @@ class Component extends DCLogic {
     if (this.stageRef.current) this.stageRef.current.removeEventListener('keydown', this._key);
     clearTimeout(this._clrT);
   }
-  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  // smal scherm (gsm, smal venster): staande tekening met de grafieken onder de slinger,
+  // zodat niets tot onleesbaar klein krimpt
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const narrow = (c.parentElement ? c.parentElement.clientWidth : 1000) < 620;
+    if (narrow !== this.narrow) {
+      this.narrow = narrow;
+      this.W = narrow ? 600 : 960; this.H = narrow ? 900 : 560; this.px = narrow ? 300 : 320;
+      c.style.aspectRatio = this.W + ' / ' + this.H;
+      c.style.maxHeight = Math.round(AppletCore.MAX_W * this.H / this.W) + 'px';
+    }
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+  }
 
   acc(th, om) { return -(this.state.g / this.state.L) * Math.sin(th) - this.state.b * om; }
   stepRK(h) {
@@ -278,8 +298,8 @@ class Component extends DCLogic {
     ctx.textAlign = this.th > 0 ? 'right' : 'left';
     ctx.fillText('L = ' + this.fmt(st.L, 2) + ' m', lx + (this.th > 0 ? -12 : 12), ly);
 
-    this.drawGraph(ctx, 660, 36, 280, 250);
-    this.drawEnergy(ctx, 660, 330, 280, 190);
+    if (this.narrow) { this.drawGraph(ctx, 30, 500, 540, 200); this.drawEnergy(ctx, 30, 740, 540, 140); }
+    else { this.drawGraph(ctx, 660, 36, 280, 250); this.drawEnergy(ctx, 660, 330, 280, 190); }
   }
 
   drawGraph(ctx, x, y, w, h) {
@@ -319,16 +339,28 @@ class Component extends DCLogic {
     const Ek = 0.5 * st.m * Math.pow(st.L * this.om, 2);
     ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText('Energie', x, y - 8);
-    const bars = [['E\u209A', Ep, '#7a5ab8'], ['E\u2096', Ek, '#c8443a'], ['E\u209A + E\u2096', Ep + Ek, '#5f6b79']];
+    const bars = [['E_p', Ep, '#7a5ab8'], ['E_k', Ek, '#c8443a'], ['E_p + E_k', Ep + Ek, '#5f6b79']];
     const bw = 58, gap = (w - 3 * bw) / 4;
     ctx.strokeStyle = '#e7e1d5'; ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke();
     bars.forEach(([n, v, col], i) => {
       const bx = x + gap + i * (bw + gap); const bh = Math.max(0, Math.min(1.05, v / E0)) * (h - 20);
       ctx.fillStyle = col; ctx.fillRect(bx, y + h - bh, bw, bh);
       ctx.fillStyle = '#3a4757'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.fillText(n, bx + bw / 2, y + h + 5);
+      this.subLabel(ctx, n, bx + bw / 2, y + h + 5);
       ctx.font = "500 12.5px 'IBM Plex Mono',monospace"; ctx.textBaseline = 'bottom';
       ctx.fillText(v >= 0.1 ? this.fmt(v, 2) + ' J' : this.fmt(v * 1000, 0) + ' mJ', bx + bw / 2, y + h - bh - 3);
+    });
+  }
+
+  // "E_p + E_k" met echte, verlaagde subscripts: Atkinson heeft geen tekens voor ₚ en ₖ
+  subLabel(ctx, txt, cx, top) {
+    const parts = txt.split(/(_[a-z])/).filter(Boolean);
+    const big = "600 13px 'Atkinson Hyperlegible',sans-serif", small = "600 10px 'Atkinson Hyperlegible',sans-serif";
+    const w = parts.reduce((a, t) => { ctx.font = t[0] === '_' ? small : big; return a + ctx.measureText(t[0] === '_' ? t.slice(1) : t).width; }, 0);
+    let x = cx - w / 2; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    parts.forEach(t => {
+      const sub = t[0] === '_', str = sub ? t.slice(1) : t;
+      ctx.font = sub ? small : big; ctx.fillText(str, x, top + (sub ? 6 : 0)); x += ctx.measureText(str).width;
     });
   }
 
@@ -360,9 +392,15 @@ class Component extends DCLogic {
       onForces: () => this.setState({ forces: !st.forces }), onHarm: () => this.setState({ harm: !st.harm }),
       onPlay: () => { if (!this.running && this.t === 0) this.release(this.th); else this.running = !this.running; this.forceUpdate(); },
       onReset: () => { this.resetPend(); this.forceUpdate(); },
+      legF: st.forces ? 1 : 0.35, legFOff: st.forces ? '' : '(uit)',
       playLabel: this.running ? 'Pauze' : (this.t > 0 ? 'Verder' : 'Loslaten'),
       T0Str: this.fmt(T0, 3) + ' s',
       TmStr: Tm ? this.fmt(Tm, 3) + ' s' : '\u2013',
+      // de eigen meting naast de theorie, als percentage: de leerling beoordeelt zelf of ze klopt
+      myTStr: (() => {
+        const r = st.rows[st.rows.length - 1]; if (!r || !r.n) return '\u2013';
+        const T = r.t / r.n; return this.fmt(T, 3) + ' s · ' + this.fmt(T / T0 * 100, 0) + ' % van de formule';
+      })(),
       devStr: Tm ? (Tm >= T0 ? '+' : '') + this.fmt((Tm / T0 - 1) * 100, 1) + ' %' : '\u2013',
       chronoStr: this.fmt(this.chrono, 2) + ' s',
       chronoLabel: this.chronoOn ? 'Stop' : 'Start',

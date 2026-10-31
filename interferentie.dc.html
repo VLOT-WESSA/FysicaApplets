@@ -37,13 +37,13 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Interferentie van twee golven</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Interferentie van twee golven</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -53,10 +53,10 @@
         <canvas ref="{{ stageRef }}" tabindex="0" aria-label="Interferentiepatroon: pijltjestoetsen verplaatsen het meetpunt" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:4px;touch-action:none;cursor:grab"></canvas>
       </div>
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none">
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px solid #78cdff;display:inline-block"></span>golftop</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px dashed #b27edc;display:inline-block"></span>golfdal</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px;display:inline-block"></span>buiklijn &Delta;x = n&lambda;</div>
-        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#2e8b57;border-radius:2px;display:inline-block"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;</div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px solid #78cdff;display:inline-block;opacity:{{ legFronts }}"></span>golftop<span style="color:var(--muted);font-size:12px">{{ legFrontsOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:16px;height:0;border-top:2px dashed #b27edc;display:inline-block;opacity:{{ legFronts }}"></span>golfdal<span style="color:var(--muted);font-size:12px">{{ legFrontsOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#e8964c;border-radius:2px;display:inline-block;opacity:{{ legLines }}"></span>buiklijn &Delta;x = n&lambda;<span style="color:var(--muted);font-size:12px">{{ legLinesOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:14px;height:3px;background:#2e8b57;border-radius:2px;display:inline-block;opacity:{{ legLines }}"></span>knooplijn &Delta;x = (n+&frac12;)&lambda;<span style="color:var(--muted);font-size:12px">{{ legLinesOff }}</span></div>
         <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px #fff,0 0 0 3px #2a2723;display:inline-block"></span>meetpunt (sleepbaar)</div>
       </div>
     </div>
@@ -292,6 +292,8 @@ class Component extends DCLogic {
       ratioStr: Number(this.state.ratio).toFixed(2).replace('.', ','),
       verdict: this.state.verdict,
       verdBg: verdColors.bg, verdFg: verdColors.fg,
+      legFronts: this.state.showFronts ? 1 : 0.35, legFrontsOff: this.state.showFronts ? '' : '(uit)',
+      legLines: this.state.showLines ? 1 : 0.35, legLinesOff: this.state.showLines ? '' : '(uit)',
       playLbl: this.state.running ? 'Pauze' : 'Start',
       onLambda: (e) => this.setState({ lambdaCm: Number(e.target.value) }),
       onSep: (e) => this.setState({ sepCm: Number(e.target.value) }),

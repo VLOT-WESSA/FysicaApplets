@@ -26,7 +26,7 @@
   .card{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
   .out{background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--ink-2)}
   .out .row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink)}
-  .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+  .note{background:#f4f1ea;border:1px solid var(--rule);border-radius:4px;padding:12px 15px;font-size:13px;color:var(--ink-2);line-height:1.6;max-width:62ch}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
   .sl{height:30px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -42,7 +42,7 @@
     .applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}
   }
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=6"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
 </helmet>
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
@@ -55,9 +55,9 @@
         <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block;touch-action:none"></canvas>
       </div>
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block"></span><span>gravitatiekracht F<sub>g</sub></span></div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#d9822b;border-radius:2px;display:inline-block"></span>snelheid v</div>
-        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span>satelliet en baan</div>
+        <div style="display:flex;align-items:center;gap:8px;display:{{ legFDisp }}"><span style="width:18px;height:3px;background:#2f8a4e;border-radius:2px;display:inline-block;opacity:{{ legF }}"></span><span>gravitatiekracht F<sub>g</sub></span><span style="color:var(--muted);font-size:12px">{{ legFOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:8px;display:{{ legVDisp }}"><span style="width:18px;height:3px;background:#d9822b;border-radius:2px;display:inline-block;opacity:{{ legV }}"></span>snelheid v<span style="color:var(--muted);font-size:12px">{{ legVOff }}</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:3px;background:#3a6fb8;border-radius:2px;display:inline-block"></span>{{ legOrbit }}</div>
       </div>
     </div>
     <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
@@ -75,7 +75,7 @@
         <div class="card">
           <div class="row"><span class="lbl">Hoogte h boven het aardoppervlak</span></div>
           <div class="row"><span style="font-size:12px;color:var(--muted)">200 km &ndash; 400 000 km</span><span class="val">{{ hStr }}</span></div>
-          <div class="sl"><input type="range" min="0" max="1" step="0.0005" value="{{ hs }}" onInput="{{ onH }}"></div>
+          <div class="sl"><input type="range" min="0" max="1" step="0.0005" value="{{ hs }}" onInput="{{ onH }}" aria-label="Hoogte h boven het aardoppervlak"></div>
           <div class="row"><span class="lbl">Massa satelliet m</span><span class="val">{{ mStr }}</span></div>
           <div class="sl"><input type="range" min="100" max="5000" step="50" value="{{ m }}" onInput="{{ onM }}"></div>
           <div style="font-size:12px;color:var(--muted);margin-top:2px">Voorbeelden</div>
@@ -241,7 +241,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:760}}">
 class Component extends DCLogic {
   stageRef = React.createRef();
-  W = 920; H = 560;
+  W = 920; H = 560; portrait = false;
   GM = 3.986e14; RE = 6.371e6; TE = 86164;
   state = {
     tab: 'sat',
@@ -271,7 +271,25 @@ class Component extends DCLogic {
     this.forceUpdate();
   }
   componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); const c = this.stageRef.current; if (c) c.removeEventListener('pointerdown', this.onDown); }
-  setupCanvas() { const c = this.stageRef.current; if (!c) return; this.dpr = AppletCore.fitCanvas(c, this.W, this.H); }
+  // smal scherm: in Satelliet en Ontsnapping staat de grafiek onder de baan (staand canvas),
+  // zodat aslabels en titels niet tot onleesbaar klein krimpen
+  wantPortrait() {
+    const c = this.stageRef.current;
+    const narrow = c && c.parentElement ? c.parentElement.clientWidth < 620 : false;
+    return narrow && (this.state.tab === 'sat' || this.state.tab === 'esc');
+  }
+  setupCanvas() {
+    const c = this.stageRef.current; if (!c) return;
+    const portrait = this.wantPortrait();
+    if (portrait !== this.portrait) {
+      this.portrait = portrait;
+      this.W = portrait ? 600 : 920; this.H = portrait ? 1010 : 560;
+      c.style.aspectRatio = this.W + ' / ' + this.H;
+      c.style.maxHeight = Math.round(AppletCore.MAX_W * this.H / this.W) + 'px';
+    }
+    this.dpr = AppletCore.fitCanvas(c, this.W, this.H);
+  }
+  graphBox() { return this.portrait ? { X0: 130, Y0: 640, GW: 430, GH: 280 } : { X0: 620, Y0: 60, GW: 270, GH: 420 }; }
   toPx(e) {
     const c = this.stageRef.current; const r = c.getBoundingClientRect();
     const s = Math.min(r.width / this.W, r.height / this.H);
@@ -453,6 +471,7 @@ class Component extends DCLogic {
 
   draw() {
     const c = this.stageRef.current; if (!c) return;
+    if (this.wantPortrait() !== this.portrait) this.setupCanvas();
     const ctx = c.getContext('2d'); const s = this.dpr || 1;
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
     if (this.state.tab === 'sat') this.drawSat(ctx);
@@ -510,7 +529,7 @@ class Component extends DCLogic {
     ctx.fillText(st.escDir === 'vert' ? 'Verticale lancering' : 'Horizontale lancering', 14, 12);
 
     // energiediagram
-    const X0 = 620, Y0 = 60, GW = 270, GH = 420;
+    const { X0, Y0, GW, GH } = this.graphBox();
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
     ctx.strokeStyle = '#e7e1d5'; ctx.lineWidth = 1; ctx.strokeRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
     ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
@@ -614,7 +633,7 @@ class Component extends DCLogic {
     ctx.fillText(st.coRot ? 'Meedraaiend met de aarde (bovenaanzicht noordpool)' : 'Bovenaanzicht vanaf de noordpool', 14, 12);
     ctx.fillText('t = ' + this.dur(this.t), 14, 30);
     // T(h) graph
-    const X0 = 620, Y0 = 60, GW = 270, GH = 420;
+    const { X0, Y0, GW, GH } = this.graphBox();
     ctx.fillStyle = '#faf8f3'; ctx.fillRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
     ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(X0 - 10, Y0 - 40, GW + 24, GH + 86);
     ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'top'; ctx.fillText('Omlooptijd T in functie van h', X0, Y0 - 30);
@@ -708,8 +727,14 @@ class Component extends DCLogic {
     // L points
     Ls.forEach((L, i) => {
       const p = P(L.x, L.y);
-      ctx.strokeStyle = i >= 3 && mu < 0.0385 ? '#2f8a4e' : '#c8443a'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(p.X - 6, p.Y - 6); ctx.lineTo(p.X + 6, p.Y + 6); ctx.moveTo(p.X + 6, p.Y - 6); ctx.lineTo(p.X - 6, p.Y + 6); ctx.stroke();
+      // stabiel = gevulde stip, onstabiel = kruis: vorm én kleur, niet alleen kleur
+      if (i >= 3 && mu < 0.0385) {
+        ctx.fillStyle = '#2f8a4e'; ctx.beginPath(); ctx.arc(p.X, p.Y, 6, 0, 7); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      } else {
+        ctx.strokeStyle = '#c8443a'; ctx.lineWidth = 2.4;
+        ctx.beginPath(); ctx.moveTo(p.X - 6, p.Y - 6); ctx.lineTo(p.X + 6, p.Y + 6); ctx.moveTo(p.X + 6, p.Y - 6); ctx.lineTo(p.X - 6, p.Y + 6); ctx.stroke();
+      }
       ctx.fillStyle = '#1d2a3a'; ctx.font = "600 13.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textBaseline = 'bottom';
       ctx.fillText(L.n, p.X, p.Y - 8);
     });
@@ -723,7 +748,7 @@ class Component extends DCLogic {
       ctx.fillStyle = this.part.dead ? '#8c8576' : '#d9822b'; ctx.beginPath(); ctx.arc(p.X, p.Y, 5, 0, 7); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
     }
     ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText('Meedraaiend assenstelsel — groen × = stabiel, rood × = onstabiel', 14, 12);
+    ctx.fillText('Meedraaiend assenstelsel · groene stip = stabiel · rood kruis = onstabiel', 14, 12);
   }
   sysNames(mu) {
     if (Math.abs(mu - 0.01215) < 0.0004) return ['Aarde', 'Maan'];
@@ -792,7 +817,7 @@ class Component extends DCLogic {
 
     return {
       stageRef: this.stageRef,
-      tabs: [['sat', 'Satelliet'], ['kep', 'Kepler'], ['lag', 'Lagrange'], ['esc', 'Ontsnapping']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; this.trail = []; this.running = true; if (k === 'esc') this.escLaunch(); } })),
+      tabs: [['sat', 'Satelliet'], ['kep', 'Kepler'], ['lag', 'Lagrange'], ['esc', 'Ontsnapping']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => { this.setState({ tab: k }); this.t = 0; this.trail = []; if (k === 'esc') this.escLaunch(); this.running = false; /* elke modus start gepauzeerd */ } })),
       isSat: st.tab === 'sat', isKep: st.tab === 'kep', isLag: st.tab === 'lag', isEsc: st.tab === 'esc',
       // ontsnapping
       escBodies: Object.keys(this.bodies).map(n => ({ name: n, style: chip(st.escBody === n), onClick: () => relaunch({ escBody: n }) })),
@@ -804,6 +829,16 @@ class Component extends DCLogic {
       escEkStr: J(st.m * Math.pow(v0u * u1, 2) / 2), escEpStr: J(-eJ), escEStr: Math.abs(Eu) < 1e-9 ? '0 J' : J(Eu * eJ),
       escHmaxStr: hmax, escMsg, escMsgStyle,
       onPlay: () => { this.running = !this.running; this.forceUpdate(); },
+      // legenda per modus: alleen wat die modus kan tekenen, met "(uit)" bij lagen die uit staan
+      ...(() => {
+        const fOn = st.tab === 'sat' ? st.showF : st.tab === 'kep' ? st.showKF : false;
+        const vOn = st.tab === 'sat' ? st.showV : st.tab === 'kep' ? st.showKV : st.tab === 'esc';
+        return {
+          legF: fOn ? 1 : 0.35, legFOff: fOn ? '' : '(uit)', legFDisp: (st.tab === 'sat' || st.tab === 'kep') ? 'flex' : 'none',
+          legV: vOn ? 1 : 0.35, legVOff: vOn ? '' : '(uit)', legVDisp: st.tab === 'lag' ? 'none' : 'flex',
+          legOrbit: { sat: 'satelliet en baan', kep: 'planeet en baan', lag: 'Lagrangepunten: ● stabiel, ✕ onstabiel', esc: 'baan van het projectiel' }[st.tab],
+        };
+      })(),
       playLabel: this.running ? 'Pauze' : (this.t === 0 ? 'Start' : 'Verder'),
       onReset: resetAll,
       // sat

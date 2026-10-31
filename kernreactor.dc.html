@@ -23,14 +23,14 @@
   @media(max-width:760px){html,body{height:auto}.applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}.applet-main{flex-direction:column !important;align-items:stretch !important}.applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}.applet-main canvas{height:auto !important;width:100% !important;max-height:74vh}}
 </style>
 <script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script>
-<script src="./applet-core.js?v=6"></script>
+<script src="./applet-core.js?v=8"></script>
 </helmet>
 
 <div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
 
   <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
     <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
-    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap">Kernsplijtingsreactor</h1>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Kernsplijtingsreactor</h1>
   </div>
 
   <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
@@ -77,13 +77,13 @@
           <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a3b2c">{{ rodStr }}</span>
         </div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:9px">Verder inbrengen &rarr; meer neutronen weggevangen &rarr; k zakt</div>
-        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" style="width:100%;accent-color:var(--accent)">
+        <input type="range" min="0" max="100" step="1" value="{{ rodVal }}" onInput="{{ onRod }}" aria-label="Regelstaven" aria-valuetext="{{ rodStr }}" data-valuetext="eigen" style="width:100%;accent-color:var(--accent)">
         <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace"><span>0% (uit)</span><span>100% (in)</span></div>
       </div>
 
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
         <div style="font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:8px">Splijtstof</div>
-        <select value="{{ fuel }}" onChange="{{ onFuel }}" style="width:100%;font-family:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid #d9d3c6;border-radius:4px;padding:9px 10px;cursor:pointer">
+        <select value="{{ fuel }}" onChange="{{ onFuel }}" aria-label="Splijtstof" style="width:100%;font-family:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid #d9d3c6;border-radius:4px;padding:9px 10px;cursor:pointer">
           <option value="natuur">Natuurlijk uranium (0,7% U-235)</option>
           <option value="laag">Laagverrijkt uranium (3,5% U-235)</option>
           <option value="mox">MOX (uranium + plutonium)</option>
@@ -93,7 +93,7 @@
 
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow)">
         <div style="font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:8px">Moderator</div>
-        <select value="{{ moderator }}" onChange="{{ onModerator }}" style="width:100%;font-family:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid #d9d3c6;border-radius:4px;padding:9px 10px;cursor:pointer">
+        <select value="{{ moderator }}" onChange="{{ onModerator }}" aria-label="Moderator" style="width:100%;font-family:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid #d9d3c6;border-radius:4px;padding:9px 10px;cursor:pointer">
           <option value="licht">Licht water (H&#8322;O)</option>
           <option value="grafiet">Grafiet</option>
           <option value="zwaar">Zwaar water (D&#8322;O)</option>
@@ -909,7 +909,7 @@ class Component extends DCLogic {
     else if (k > 1.008) { status = 'Superkritisch \u2014 vermogen loopt op'; dot = '#c9a23f'; }
     else if (k < 0.992) { status = 'Subkritisch \u2014 dooft uit'; dot = '#3f6aa3'; }
     else { status = 'Kritisch \u2014 stabiel'; dot = '#5fae7a'; }
-    const kColor = k > 1.008 ? '#b8472f' : (k < 0.992 ? '#3f6aa3' : '#3a8a55');
+    const kColor = k > 1.008 ? '#b8472f' : (k < 0.992 ? '#3f6aa3' : '#317448');
     const tempColor = this.T > this.T_WARN ? '#b8311f' : (this.T > this.T_HI ? '#c9772f' : (this.T >= this.T_LO ? '#3a8a55' : '#2a2723'));
     const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
     const nn = pill(st.showNeutrons), ll = pill(st.showLabels), xx = pill(st.showExtra);
