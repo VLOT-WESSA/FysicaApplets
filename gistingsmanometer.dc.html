@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gistingsmanometer · Natuurkunde simulaties</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#4c88d3"/>
+  <path d="M30 22v46a8 8 0 0 0 16 0V22" fill="none" stroke="#fffdf9" stroke-width="5"/>
+  <path d="M46 30h14v40a6 6 0 0 0 12 0V18" fill="none" stroke="#fffdf9" stroke-width="5"/>
+</svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="icons/gistingsmanometer.svg">
+<link rel="stylesheet" href="applet.css?v=4">
+<style>:root{--h:255}input[type=range]{width:100%}</style>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  button{font-family:inherit}
+  button:disabled,input:disabled{opacity:.5;cursor:not-allowed}
+  .seg{display:grid;gap:6px}
+  .seg>button{min-height:34px;font-size:13px;padding:0 4px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--ink-2)}
+  .val{font-family:var(--font-mono);font-size:14px;color:var(--ink);font-weight:500;text-align:right}
+  @media (max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .applet-main canvas{height:auto !important;width:100% !important;max-height:80vh}
+    .applet-main>.col{display:contents !important}
+    .applet-main .col>*{order:5}
+    .applet-main .stage{order:1}
+    .applet-main .act{order:2}
+    .applet-main .meas{order:3}
+    .applet-main .legend{order:4}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script>
+</helmet>
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+  <div style="display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Gistingsmanometer</h1>
+    <sc-if value="{{ lk }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:#fff;background:var(--ink);border-radius:999px;padding:2px 10px">leerkrachtmodus</span></sc-if>
+  </div>
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div class="col" style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div class="stage" style="flex:1;min-height:0;background:var(--stage);border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center">
+        <canvas ref="{{ stageRef }}" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+      <div class="legend" style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:11px 18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);flex:none;font-size:13px;color:var(--ink-2)">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:2px;background:#4f86c6;display:inline-block"></span>manometervloeistof (gekleurd water)</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:2px;background:#e9dfa8;border:1px solid #b7a75a;display:inline-block"></span>gist + suikeroplossing</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:2px;background:#e1b23c;display:inline-block"></span>olielaagje</div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;border:2px solid #7c8794;display:inline-block"></span><span>CO<sub>2</sub>-belletjes</span></div>
+        <div><span>Lees elk niveau af aan de <b>onderkant</b> van de meniscus.</span></div>
+      </div>
+    </div>
+    <div class="col" style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div class="act action-row">
+        <button class="btn-accent" onClick="{{ onPlay }}" style="font-size:14px">{{ playLabel }}</button>
+        <button class="btn-secondary" onClick="{{ onReset }}" style="font-size:14px">Reset</button>
+      </div>
+
+      <div class="meas panel-card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="card-head">Chronometer</span><span style="font-family:var(--font-mono);font-size:22px;font-weight:600">{{ chronoStr }}</span></div>
+        <div class="help">{{ statusText }}</div>
+        <div class="sec-title" style="margin-top:2px">Tempo</div>
+        <div class="seg" style="grid-template-columns:repeat(3,1fr)">
+          <sc-for list="{{ tempoItems }}" as="it" hint-placeholder-count="3">
+            <button onClick="{{ it.onClick }}" style="{{ it.style }}">{{ it.name }}</button>
+          </sc-for>
+        </div>
+        <div class="help">Pauzeer telkens om de 2 minuten en lees dan op beide linialen <i>h</i><sub>links</sub> en <i>h</i><sub>rechts</sub> af tot op 1&nbsp;mm. De vergrootglazen rechts tonen de millimeterverdeling.</div>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Instellingen</span>
+        <div class="row"><span style="font-size:14px;font-weight:500;color:var(--ink)">Temperatuur waterbad</span><span class="val">{{ TStr }}</span></div>
+        <div style="height:30px;display:flex;align-items:center"><input type="range" min="4" max="50" step="1" value="{{ T }}" onInput="{{ onT }}" disabled="{{ locked }}"></div>
+        <div style="font-size:14px;font-weight:500">Soort suiker</div>
+        <div class="seg" style="grid-template-columns:repeat(2,1fr)">
+          <sc-for list="{{ sugarItems }}" as="it" hint-placeholder-count="4">
+            <button onClick="{{ it.onClick }}" style="{{ it.style }}" disabled="{{ locked }}">{{ it.name }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}"><div class="help">De proef loopt: druk op Reset om een andere temperatuur of suiker te kiezen.</div></sc-if>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Vaste gegevens</span>
+        <div class="row"><span>proefnummer</span><span class="val">{{ seedStr }}</span></div>
+        <div class="row"><span>gasvolume boven de vloeistof <i>V</i></span><span class="val">15 mL</span></div>
+        <div class="row"><span>manometervloeistof: water</span><span class="val">&rho; = 1000 kg/m&sup3;</span></div>
+        <div class="row"><span>mengsel in de proefbuis</span><span class="val">10 mL, 10 % suiker</span></div>
+        <div class="row"><span>gist</span><span class="val">0,5 g droge gist</span></div>
+        <div class="row"><span>beginstand beide niveaus</span><span class="val">15,0 cm</span></div>
+        <div class="help">Noteer het proefnummer bij je metingen. Na Reset krijg je een nieuwe proef: net als in het labo geeft geen enkele gistcultuur exact hetzelfde resultaat.</div>
+      </div>
+
+      <sc-if value="{{ lk }}" hint-placeholder-val="{{ false }}">
+        <div class="panel-card">
+          <span class="card-head">Leerkracht</span>
+          <div class="row"><span>&Delta;h nu (model)</span><span class="val">{{ dhStr }}</span></div>
+          <div class="row"><span>groeiconstante <i>k</i></span><span class="val">{{ kStr }}</span></div>
+          <div class="row"><span>afsterving <i>d</i></span><span class="val">{{ dStr }}</span></div>
+          <div class="row"><span><i>n</i><sub>0</sub></span><span class="val">{{ n0Str }}</span></div>
+          <canvas ref="{{ graphRef }}" style="width:100%;aspect-ratio:300/170;display:block;background:var(--stage);border:1px solid var(--rule);border-radius:4px"></canvas>
+          <div class="help">Lijn: model &Delta;h(t). Stippen: waarden om de 2 min, afgerond op 1 mm (wat een leerling zou moeten aflezen).</div>
+          <div class="action-row">
+            <button class="btn-secondary" onClick="{{ onCopy }}" style="font-size:13px">{{ copyLabel }}</button>
+            <button class="btn-secondary" onClick="{{ onDownload }}" style="font-size:13px">CSV opslaan</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:780}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+  graphRef = React.createRef();
+  W = 960; H = 640;
+
+  // ---------------- model ----------------
+  R = 8.314; G = 9.81; RHO = 1000; VGAS = 15e-6;   // SI
+  KOPT = 0.25;            // groeiconstante bij de optimumtemperatuur (1/min)
+  N0 = 4.1e-7;            // mol: schaal van de CO2-productie
+  TMIN = 3; TOPT = 33; TMAX = 48;
+  DH_MAX = 25;            // cm: daarna borrelt het gas door de U-buis
+  H0 = 15;                // cm: beginstand van beide niveaus
+  sugars = [
+    { id: 'glucose', name: 'Glucose', f: 1.0 },
+    { id: 'fructose', name: 'Fructose', f: 0.95 },
+    { id: 'sacharose', name: 'Sacharose', f: 0.8 },
+    { id: 'lactose', name: 'Lactose', f: 0 },
+  ];
+  tempos = [1, 10, 30];
+
+  constructor(p) {
+    super(p);
+    let lk = false, seed = null;
+    try {
+      const q = new URLSearchParams(location.search);
+      lk = q.has('lk');
+      if (q.has('proef')) { const v = parseInt(q.get('proef'), 10); if (v > 0) seed = v; }
+    } catch (e) {}
+    this.fixedSeed = seed;
+    this.state = { T: 30, sugar: 'glucose', tempo: 10, running: false, tmin: 0, lk, seed: seed || this.newSeed(), copied: false };
+    this.applySeed(this.state.seed);
+    this.bubbles = [];
+  }
+  newSeed() { return 1000 + Math.floor(Math.random() * 9000); }
+  rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  applySeed(seed) {
+    const r = this.rng(seed);
+    this.spreadK = 1 + 0.2 * (r() - 0.5);    // +-10 %
+    this.spreadN = 1 + 0.2 * (r() - 0.5);
+  }
+  ctmi(T) {
+    const a = this.TMIN, o = this.TOPT, b = this.TMAX;
+    if (T <= a || T >= b) return 0;
+    return ((T - b) * (T - a) * (T - a)) / ((o - a) * ((o - a) * (T - o) - (o - b) * (o + a - 2 * T)));
+  }
+  kOf() { const s = this.sugars.find(x => x.id === this.state.sugar); return this.KOPT * this.spreadK * s.f * this.ctmi(this.state.T); }
+  dOf() { return 0.06 * Math.max(0, this.state.T - 41); }
+  n0Of() { return this.N0 * this.spreadN; }
+  // stofhoeveelheid CO2 in de gasruimte na t minuten
+  nAt(t) {
+    const k = this.kOf(), d = this.dOf(), n0 = this.n0Of(), e = k - d;
+    if (k <= 0) return 0;
+    if (Math.abs(e) < 1e-6) return n0 * k * t;
+    return n0 * k / e * (Math.exp(e * t) - 1);
+  }
+  rateAt(t) { const k = this.kOf(), d = this.dOf(); return this.n0Of() * k * Math.exp((k - d) * t); }
+  dhAt(t) {   // cm
+    const TK = this.state.T + 273.15;
+    const dp = this.nAt(t) * this.R * TK / this.VGAS;
+    return Math.min(this.DH_MAX, dp / (this.RHO * this.G) * 100);
+  }
+  levels(t) { const x = this.dhAt(t) / 2; return { L: this.H0 - x, Rr: this.H0 + x }; }
+
+  // ---------------- levenscyclus ----------------
+  componentDidMount() {
+    this.setup();
+    this._rz = () => { this.setup(); this.draw(); };
+    this._acStop = AppletCore.observe(this.stageRef.current && this.stageRef.current.parentElement, this._rz);
+    this.last = performance.now();
+    this.raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); if (this._acStop) this._acStop(); clearTimeout(this._cpT); }
+  componentDidUpdate() { if (this.state.lk) this.drawGraph(); }
+  setup() {
+    const c = this.stageRef.current; if (!c) return;
+    this.s = AppletCore.fitCanvas(c, this.W, this.H);
+    const g = this.graphRef.current;
+    if (g) this.gs = AppletCore.fitCanvas(g, 300, 170, { maxWidth: 400 });
+  }
+  loop = (ts) => {
+    // ruime bovengrens: ook als de browser frames overslaat (achtergrondtabblad, trage Chromebook)
+    // blijft de chronometer gelijk lopen met de echte tijd x tempo
+    const dt = Math.min(1, Math.max(0, (ts - this.last) / 1000)); this.last = ts;
+    if (this.state.running) {
+      const tmin = this.state.tmin + dt * this.state.tempo / 60;
+      if (Math.floor(tmin * 10) !== Math.floor(this.state.tmin * 10)) this.setState({ tmin });
+      else this.state.tmin = tmin;   // geen herrender nodig voor elke frame
+    }
+    this.stepBubbles(dt);
+    this.draw();
+    this.raf = requestAnimationFrame(this.loop);
+  };
+  stepBubbles(dt) {
+    const run = this.state.running;
+    const t = this.state.tmin;
+    const full = this.dhAt(t) >= this.DH_MAX - 1e-9;
+    // productiesnelheid -> bellen per seconde (zichtbaar, niet kwantitatief)
+    const rate = this.rateAt(t) / (this.N0 * this.KOPT);   // ~1 bij start op optimum
+    if (run && this.kOf() > 0) {
+      this._acc = (this._acc || 0) + dt * Math.min(14, 1.5 * rate) * Math.sqrt(this.state.tempo);
+      while (this._acc > 1) { this._acc -= 1; this.bubbles.push({ x: 182 + Math.random() * 36, y: 505, r: 2 + Math.random() * 2.5, tube: true }); }
+    }
+    if (run && full) {
+      this._acc2 = (this._acc2 || 0) + dt * 3 * Math.sqrt(this.state.tempo);
+      while (this._acc2 > 1) { this._acc2 -= 1; this.bubbles.push({ x: 688 + Math.random() * 4, y: this.yOf(this.levels(t).L) + 6, r: 3 + Math.random() * 2, leg: true }); }
+    }
+    const oil = 340;
+    for (const b of this.bubbles) {
+      b.y -= dt * (b.leg ? 110 : 55);
+      if (b.tube && b.y < oil) b.dead = true;
+      if (b.leg && b.y < this.yOf(this.levels(t).Rr)) b.dead = true;
+    }
+    this.bubbles = this.bubbles.filter(b => !b.dead).slice(-120);
+  }
+
+  // ---------------- tekenen ----------------
+  // liniaal: h (cm) -> y (ontwerpcoordinaten)
+  Y0 = 548; PXCM = 15;
+  yOf(h) { return this.Y0 - h * this.PXCM; }
+  LX = 560; RX = 680; TW = 14;   // binnenkant linker- en rechterbeen (x van linkerwand), buisbreedte
+
+  draw() {
+    const c = this.stageRef.current; if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.setTransform(this.s, 0, 0, this.s, 0, 0);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, this.W, this.H);
+    const t = this.state.tmin, T = this.state.T;
+    const lv = this.levels(t);
+    this.drawBath(ctx, T);
+    this.drawTube(ctx);
+    this.drawU(ctx, lv);
+    this.drawRulers(ctx);
+    this.drawBubbles(ctx);
+    this.drawLoupe(ctx, 838, 150, lv.Rr, 'rechts', this.RX);
+    this.drawLoupe(ctx, 838, 420, lv.L, 'links', this.LX);
+    if (this.dhAt(t) >= this.DH_MAX - 1e-9) {
+      ctx.font = "600 14px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#a8352b'; ctx.textAlign = 'center';
+      ctx.fillText('U-buis vol: het gas borrelt door', 838, 600);
+    }
+  }
+  bathColor(T) {
+    const f = Math.max(0, Math.min(1, (T - 4) / 46));
+    const c1 = [190, 220, 240], c2 = [246, 206, 170];
+    const m = c1.map((v, i) => Math.round(v + (c2[i] - v) * f));
+    return 'rgb(' + m.join(',') + ')';
+  }
+  drawBath(ctx, T) {
+    // bak
+    ctx.fillStyle = this.bathColor(T); ctx.fillRect(60, 300, 290, 260);
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(60, 270); ctx.lineTo(60, 560); ctx.lineTo(350, 560); ctx.lineTo(350, 270); ctx.stroke();
+    ctx.strokeStyle = 'rgba(29,42,58,0.25)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(60, 300); ctx.lineTo(350, 300); ctx.stroke();
+    // thermometer
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 1.5;
+    this.rr(ctx, 92, 200, 16, 330, 8); ctx.fill(); ctx.stroke();
+    const top = 520 - (T - 0) / 55 * 300;
+    ctx.fillStyle = '#c8443a'; ctx.fillRect(96, top, 8, 520 - top + 2);
+    ctx.beginPath(); ctx.arc(100, 522, 9, 0, 6.283); ctx.fill(); ctx.stroke();
+    ctx.font = "600 16px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#1d2a3a'; ctx.textAlign = 'center';
+    ctx.fillText(T + ' °C', 100, 190);
+    ctx.font = "13px 'Atkinson Hyperlegible', sans-serif"; ctx.textAlign = 'left'; ctx.fillStyle = '#3a4757';
+    ctx.fillText('waterbad', 250, 548);
+  }
+  drawTube(ctx) {
+    // proefbuis x 175..225, bodem rond bij y 520
+    const x0 = 175, x1 = 225;
+    ctx.fillStyle = '#e9dfa8';
+    ctx.beginPath(); ctx.moveTo(x0, 345); ctx.lineTo(x0, 495); ctx.arc(200, 495, 25, Math.PI, 0, true); ctx.lineTo(x1, 345); ctx.closePath(); ctx.fill();
+    // gist (troebel)
+    ctx.fillStyle = 'rgba(160,130,60,0.25)';
+    ctx.beginPath(); ctx.moveTo(x0, 470); ctx.lineTo(x0, 495); ctx.arc(200, 495, 25, Math.PI, 0, true); ctx.lineTo(x1, 470); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#e1b23c'; ctx.fillRect(x0, 335, 50, 10);
+    // glas
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(x0, 180); ctx.lineTo(x0, 495); ctx.arc(200, 495, 25, Math.PI, 0, true); ctx.lineTo(x1, 180); ctx.stroke();
+    // stop
+    ctx.fillStyle = '#7c8794'; this.rr(ctx, 170, 168, 60, 28, 3); ctx.fill();
+    // leiding: van de stop omhoog, naar rechts, omlaag in het linkerbeen
+    const lx = this.LX + this.TW / 2;
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(195, 168); ctx.lineTo(195, 96); ctx.lineTo(lx - 7, 96); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(205, 168); ctx.lineTo(205, 106); ctx.lineTo(lx - 7, 106); ctx.stroke();
+    ctx.fillStyle = 'rgba(124,135,148,0.12)'; ctx.fillRect(195, 96, lx - 7 - 195, 10);
+    // labels
+    ctx.font = "13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#3a4757'; ctx.textAlign = 'left';
+    ctx.fillText('CO₂ + lucht', 236, 262);
+    ctx.fillText('olielaagje', 236, 344);
+    ctx.fillText('gist + suiker', 236, 420);
+    ctx.fillText('V = 15 mL', 236, 280);
+  }
+  drawU(ctx, lv) {
+    const L = this.LX, R = this.RX, w = this.TW, bot = 560;
+    const yl = this.yOf(lv.L), yr = this.yOf(lv.Rr);
+    const mid = (L + R + w) / 2, ro = (R + w - L) / 2, ri = (R - L - w) / 2;
+    // vloeistof
+    ctx.fillStyle = '#4f86c6';
+    ctx.fillRect(L, yl, w, bot - yl);
+    ctx.fillRect(R, yr, w, bot - yr);
+    ctx.beginPath(); ctx.arc(mid, bot, ro, 0, Math.PI); ctx.arc(mid, bot, ri, Math.PI, 0, true); ctx.closePath(); ctx.fill();
+    // menisci (hol): randen 3 px hoger
+    ctx.fillStyle = '#fbf8f1';
+    for (const [x, y] of [[L, yl], [R, yr]]) {
+      ctx.beginPath(); ctx.moveTo(x, y - 3); ctx.quadraticCurveTo(x + w / 2, y + 3, x + w, y - 3); ctx.lineTo(x + w, y); ctx.lineTo(x, y); ctx.closePath();
+      ctx.fillStyle = '#4f86c6'; ctx.fill();
+      ctx.fillStyle = '#fbf8f1';
+      ctx.beginPath(); ctx.moveTo(x, y - 3.2); ctx.quadraticCurveTo(x + w / 2, y + 3, x + w, y - 3.2); ctx.lineTo(x + w, y - 6); ctx.lineTo(x, y - 6); ctx.closePath(); ctx.fill();
+    }
+    // glas
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(L, 96); ctx.lineTo(L, bot); ctx.arc(mid, bot, ro, Math.PI, 0, true); ctx.lineTo(R + w, 66); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(L + w, 106); ctx.lineTo(L + w, bot); ctx.arc(mid, bot, ri, Math.PI, 0, true); ctx.lineTo(R, 66); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(L, 96); ctx.lineTo(L + w, 96); ctx.stroke();
+    ctx.font = "13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#3a4757'; ctx.textAlign = 'center';
+    ctx.fillText('open', R + w / 2, 56);
+  }
+  drawRulers(ctx) {
+    const draw = (x, side) => {   // side -1: schaal links van de buis, +1: rechts
+      const x0 = side < 0 ? x - 34 : x;
+      ctx.fillStyle = '#fffdf4'; ctx.strokeStyle = '#8a7f66'; ctx.lineWidth = 1;
+      ctx.fillRect(x0, this.yOf(30) - 6, 34, 30 * this.PXCM + 12); ctx.strokeRect(x0, this.yOf(30) - 6, 34, 30 * this.PXCM + 12);
+      ctx.strokeStyle = '#1d2a3a'; ctx.fillStyle = '#1d2a3a';
+      ctx.font = "500 11.5px 'IBM Plex Mono', monospace"; ctx.textAlign = side < 0 ? 'left' : 'right'; ctx.textBaseline = 'middle';
+      const edge = side < 0 ? x0 + 34 : x0;
+      for (let h = 0; h <= 30; h += 0.5) {
+        const y = this.yOf(h), len = h % 5 === 0 ? 14 : h % 1 === 0 ? 9 : 5;
+        ctx.lineWidth = h % 5 === 0 ? 1.3 : 0.8;
+        ctx.beginPath(); ctx.moveTo(edge, y); ctx.lineTo(edge + (side < 0 ? -len : len), y); ctx.stroke();
+        if (h % 2 === 0) ctx.fillText(String(h), side < 0 ? x0 + 2 : x0 + 32, y);
+      }
+      ctx.textBaseline = 'alphabetic';
+    };
+    draw(this.LX - 4, -1);
+    draw(this.RX + this.TW + 4, 1);
+    ctx.font = "600 13px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#1d2a3a'; ctx.textAlign = 'center';
+    ctx.fillText('links (cm)', this.LX - 21, this.yOf(30) - 14);
+    ctx.fillText('rechts (cm)', this.RX + this.TW + 21, this.yOf(30) - 14);
+  }
+  drawBubbles(ctx) {
+    ctx.strokeStyle = '#7c8794'; ctx.lineWidth = 1.3;
+    for (const b of this.bubbles) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 6.283); ctx.stroke(); }
+  }
+  // vergrootglas rond een meniscus: x10, toont mm-verdeling
+  drawLoupe(ctx, cx, cy, h, name, tubeX) {
+    const r = 92, pxcm = 90;   // 90 px per cm -> 9 px per mm
+    // verbindingslijn naar de meniscus
+    const my = this.yOf(h), mx = name === 'rechts' ? tubeX + this.TW + 38 : tubeX - 38;
+    ctx.strokeStyle = 'rgba(29,42,58,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(cx - r * 0.98, cy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.clip();
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+    // buis (vergroot): breedte 14 px -> 84 px
+    const bw = 70, bx = cx - 62;
+    const y = (hh) => cy - (hh - h) * pxcm;
+    // vloeistof onder het niveau
+    ctx.fillStyle = '#4f86c6'; ctx.fillRect(bx, y(h), bw, r + 10);
+    // holle meniscus (randen ~1 mm hoger)
+    ctx.beginPath(); ctx.moveTo(bx, y(h) - 10); ctx.quadraticCurveTo(bx + bw / 2, y(h) + 10, bx + bw, y(h) - 10); ctx.lineTo(bx + bw, y(h) + 1); ctx.lineTo(bx, y(h) + 1); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fbf8f1';
+    ctx.beginPath(); ctx.moveTo(bx, y(h) - 10.5); ctx.quadraticCurveTo(bx + bw / 2, y(h) + 9.5, bx + bw, y(h) - 10.5); ctx.lineTo(bx + bw, y(h) - 30); ctx.lineTo(bx, y(h) - 30); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(bx, cy - r); ctx.lineTo(bx, cy + r); ctx.moveTo(bx + bw, cy - r); ctx.lineTo(bx + bw, cy + r); ctx.stroke();
+    // liniaal met mm
+    const rx = bx + bw + 8;
+    ctx.fillStyle = '#fffdf4'; ctx.fillRect(rx, cy - r, 80, 2 * r);
+    ctx.strokeStyle = '#1d2a3a'; ctx.fillStyle = '#1d2a3a';
+    ctx.font = "600 15px 'IBM Plex Mono', monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const lo = Math.floor((h - 1.2) * 10), hi = Math.ceil((h + 1.2) * 10);
+    for (let mm = lo; mm <= hi; mm++) {
+      if (mm < 0 || mm > 300) continue;
+      const yy = y(mm / 10), len = mm % 10 === 0 ? 30 : mm % 5 === 0 ? 20 : 11;
+      ctx.lineWidth = mm % 10 === 0 ? 2 : 1.1;
+      ctx.beginPath(); ctx.moveTo(rx, yy); ctx.lineTo(rx + len, yy); ctx.stroke();
+      if (mm % 10 === 0) ctx.fillText(String(mm / 10), rx + 36, yy);
+    }
+    ctx.textBaseline = 'alphabetic';
+    ctx.restore();
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.stroke();
+    ctx.font = "600 14px 'Atkinson Hyperlegible', sans-serif"; ctx.fillStyle = '#1d2a3a'; ctx.textAlign = 'center';
+    ctx.fillText('vergrootglas ' + name, cx, cy + r + 20);
+  }
+  drawGraph() {
+    const c = this.graphRef.current; if (!c) return;
+    if (!this.gs) this.gs = AppletCore.fitCanvas(c, 300, 170, { maxWidth: 400 });
+    const ctx = c.getContext('2d'); ctx.setTransform(this.gs, 0, 0, this.gs, 0, 0);
+    ctx.fillStyle = '#fbf8f1'; ctx.fillRect(0, 0, 300, 170);
+    const x0 = 34, y0 = 145, w = 254, hgt = 128, tmax = 20, dmax = 26;
+    const X = t => x0 + t / tmax * w, Y = d => y0 - d / dmax * hgt;
+    ctx.strokeStyle = '#1d2a3a'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, y0 - hgt); ctx.lineTo(x0, y0); ctx.lineTo(x0 + w, y0); ctx.stroke();
+    ctx.font = "11.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#4f5b69'; ctx.textAlign = 'center';
+    for (let t = 0; t <= 20; t += 5) ctx.fillText(String(t), X(t), y0 + 13);
+    ctx.textAlign = 'right';
+    for (let d = 0; d <= 25; d += 5) ctx.fillText(String(d), x0 - 4, Y(d) + 4);
+    ctx.textAlign = 'left'; ctx.fillText('Δh (cm)', x0 + 4, 12); ctx.textAlign = 'right'; ctx.fillText('t (min)', x0 + w, y0 - 4);
+    ctx.strokeStyle = '#4f86c6'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const t = i / 200 * tmax; const p = [X(t), Y(this.dhAt(t))]; i ? ctx.lineTo(...p) : ctx.moveTo(...p); }
+    ctx.stroke();
+    ctx.fillStyle = '#1d2a3a';
+    for (let t = 0; t <= Math.min(tmax, this.state.tmin + 1e-9); t += 2) { ctx.beginPath(); ctx.arc(X(t), Y(Math.round(this.dhAt(t) * 10) / 10), 3, 0, 6.283); ctx.fill(); }
+    ctx.strokeStyle = '#a8352b'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(Math.min(tmax, this.state.tmin)), y0); ctx.lineTo(X(Math.min(tmax, this.state.tmin)), y0 - hgt); ctx.stroke(); ctx.setLineDash([]);
+  }
+  rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+  // ---------------- CSV (leerkracht) ----------------
+  csv() {
+    const rows = ['groep,proef,T_C,suiker,t_min,h_links_cm,h_rechts_cm'];
+    const tEnd = Math.max(20, Math.floor(this.state.tmin / 2) * 2);
+    for (let t = 0; t <= tEnd + 1e-9; t += 2) {
+      const lv = this.levels(t);
+      rows.push(['model', this.state.seed, this.state.T, this.state.sugar, t, lv.L.toFixed(1), lv.Rr.toFixed(1)].join(','));
+    }
+    return rows.join('\n') + '\n';
+  }
+  copyCsv() {
+    const txt = this.csv();
+    const done = () => { this.setState({ copied: true }); clearTimeout(this._cpT); this._cpT = setTimeout(() => this.setState({ copied: false }), 1600); };
+    try { navigator.clipboard.writeText(txt).then(done, () => {}); } catch (e) {}
+  }
+  downloadCsv() {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([this.csv()], { type: 'text/csv' }));
+    a.download = 'gisting_proef' + this.state.seed + '_' + this.state.T + 'C_' + this.state.sugar + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  reset() {
+    const seed = this.fixedSeed || this.newSeed();
+    this.applySeed(seed); this.bubbles = [];
+    this.setState({ running: false, tmin: 0, seed });
+  }
+
+  renderVals() {
+    const st = this.state, t = st.tmin;
+    const mm = Math.floor(t), ss = Math.floor((t - mm) * 60);
+    const locked = t > 0;
+    const full = this.dhAt(t) >= this.DH_MAX - 1e-9;
+    const status = st.running ? 'De proef loopt. Pauzeer om rustig af te lezen.'
+      : t === 0 ? 'Kies temperatuur en suiker, en druk op Start.'
+      : 'Gepauzeerd: lees nu beide niveaus af.';
+    const fmt = (v, d) => v.toFixed(d).replace('.', ',');
+    const seg = (on) => 'min-height:34px;font-size:13px;border-radius:4px;cursor:pointer;border:1px solid ' + (on ? 'var(--accent)' : 'var(--rule)') + ';background:' + (on ? 'var(--accent)' : '#fff') + ';color:' + (on ? '#fff' : 'var(--muted)') + ';font-weight:' + (on ? '600' : '500');
+    return {
+      stageRef: this.stageRef, graphRef: this.graphRef, lk: st.lk, locked,
+      chronoStr: String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'),
+      statusText: full ? 'De U-buis is vol: verdere metingen hebben geen zin. Reset voor een nieuwe proef.' : status,
+      playLabel: st.running ? 'Pauze' : (t > 0 ? 'Verder' : 'Start'),
+      tempoItems: this.tempos.map(v => ({ name: '×' + v, style: seg(st.tempo === v), onClick: () => this.setState({ tempo: v }) })),
+      sugarItems: this.sugars.map(s => ({ name: s.name, style: seg(st.sugar === s.id), onClick: () => { if (!locked) this.setState({ sugar: s.id }); } })),
+      T: st.T, TStr: st.T + ' °C',
+      seedStr: String(st.seed),
+      dhStr: fmt(this.dhAt(t), 2) + ' cm',
+      kStr: fmt(this.kOf(), 3) + ' /min',
+      dStr: fmt(this.dOf(), 3) + ' /min',
+      n0Str: this.n0Of().toExponential(2).replace('.', ',') + ' mol',
+      copyLabel: st.copied ? 'Gekopieerd' : 'CSV kopiëren',
+      onPlay: () => { if (full && !st.running) return; this.setState({ running: !st.running }); },
+      onReset: () => this.reset(),
+      onT: (e) => { if (!locked) this.setState({ T: Number(e.target.value) }); },
+      onCopy: () => this.copyCsv(),
+      onDownload: () => this.downloadCsv(),
+    };
+  }
+}
+</script>
+</body>
+</html>
