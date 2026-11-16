@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kernfusiereactor · Natuurkunde simulaties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="icons/kernfusie.svg">
+<link rel="stylesheet" href="applet.css?v=4">
+<style>:root{--h:28}</style>
+<style>
+/*ISO_CSS*/
+</style>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  a{color:var(--muted)} a:hover{color:var(--ink)}
+  button{font-family:inherit}
+  .applet-root{font-family:var(--font-body);color:var(--ink);height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden}
+  .top{display:flex;align-items:baseline;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap}
+  .back{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none}
+  h1{font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em}
+  .applet-main{flex:1;display:flex;gap:18px;min-height:0;align-items:stretch}
+  .left{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px}
+  .stage{position:relative;flex:1;min-height:0;background:var(--stage);border:1px solid var(--ink);border-radius:4px;padding:8px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .stage svg{width:100%;height:100%;max-width:1400px;display:block}
+  .corner{position:absolute;font-family:var(--font-mono);font-size:12px;color:var(--muted);pointer-events:none}
+  .corner.tl{top:10px;left:12px}.corner.tr{top:10px;right:12px}.corner.bl{bottom:10px;left:12px}.corner.br{bottom:10px;right:12px;color:var(--ink)}
+  .warn{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#b8311f;color:#fff;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;box-shadow:var(--shadow);max-width:90%;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
+  .warn[data-on]{opacity:1}
+  .legend{flex:none;background:var(--card);border:1px solid var(--ink);border-radius:4px;box-shadow:var(--shadow);padding:9px 14px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+  .legend i.bar{width:18px;height:4px;border-radius:2px}
+  .legend .off{opacity:.45}
+  .side{flex:none;width:358px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0}
+  .action-row button{padding:10px 14px;font-size:14px}
+  .btn-ink{background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:4px;font-weight:600;cursor:pointer}
+  .btn-ink:hover{background:#2c3b4f}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--muted)}
+  .row b{font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--ink);text-align:right;white-space:nowrap}
+  .sep{height:1px;background:#efe9dd;margin:2px 0}
+  .status{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+  .status i{width:12px;height:12px;border-radius:50%;flex:none;background:#9aa1a9}
+  .ctl{display:flex;flex-direction:column;gap:6px}
+  .ctl .row span{color:var(--ink-2)}
+  .ctl input{width:100%}
+  .meter{position:relative;height:8px;border-radius:6px;background:var(--track);overflow:hidden}
+  .meter>div{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+  .meter .mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+  .balance{display:grid;grid-template-columns:auto 1fr auto;gap:5px 8px;align-items:center;font-size:12.5px;color:var(--muted)}
+  .balance .b{height:8px;border-radius:2px}
+  .balance b{font-family:var(--font-mono);font-weight:500;color:var(--ink);font-size:12.5px;text-align:right}
+  .eq{font-family:var(--font-mono);font-size:13px;color:var(--ink);background:#f6f1e6;border:1px solid var(--rule);border-radius:4px;padding:7px 10px;text-align:center}
+  .side button{transition:none !important}
+  .toggles{display:flex;gap:8px}
+  .toggles button{padding:8px 12px;font-size:13px;min-height:36px}
+
+  /* tokamak: huisstijlpapier en inkt in plaats van de grijze kit-tinten */
+  .iso[data-theme="light"]{
+    --anatomy-paper:#fbf8f1;--anatomy-face:#fffdf7;--anatomy-top:#fffdf7;
+    --anatomy-shade-0:#d6d0c2;--anatomy-shade-1:#e2ddd1;--anatomy-shade-2:#ebe6dc;--anatomy-shade-3:#f4f0e7;
+    --anatomy-lit-top:#fffdf7;--anatomy-lit-shade:#efeadf;
+    --anatomy-hi:#1d2a3a;--anatomy-mid:#6e7783;--anatomy-lo:#a3a6a6;--anatomy-faint:#cfc9bc;--anatomy-lit:#1d2a3a;
+    --anatomy-halo:#8a826f;--anatomy-halo-opacity:.3;--anatomy-dot:#1d2a3a;--anatomy-weight:.7px;
+    --anatomy-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  .machine path[class^="m"],.machine path[class^="c"],.machine path.w,.machine path.b,.machine path.s,.machine path.k{stroke-width:.45;stroke-linejoin:round}
+  .m0{fill:var(--anatomy-shade-0);stroke:var(--anatomy-shade-0)}
+  .m1{fill:var(--anatomy-shade-1);stroke:var(--anatomy-shade-1)}
+  .m2{fill:var(--anatomy-shade-2);stroke:var(--anatomy-shade-2)}
+  .m3{fill:var(--anatomy-shade-3);stroke:var(--anatomy-shade-3)}
+  .mt{fill:var(--anatomy-top);stroke:var(--anatomy-top)}
+  /* binnenwand van het vat: donkerder, het is een holte */
+  .c0{fill:#b9b2a3;stroke:#b9b2a3}.c1{fill:#c4bdae;stroke:#c4bdae}.c2{fill:#cdc7b9;stroke:#cdc7b9}.c3{fill:#d6d0c3;stroke:#d6d0c3}.ct{fill:#ddd7ca;stroke:#ddd7ca}
+  .w{fill:#ece4d2;stroke:#ece4d2}
+  .b{fill:color-mix(in oklab,#dcd5c5,#e8742f var(--heat,0%));stroke:color-mix(in oklab,#dcd5c5,#e8742f var(--heat,0%))}
+  .s{fill:#cbc5b8;stroke:#cbc5b8}
+  .k{fill:#c9b79a;stroke:#c9b79a}
+  .machine .lh,.machine .lm,.machine .ll,.machine .lf{fill:none;stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+  .lh{stroke:var(--anatomy-hi)}.lm{stroke:var(--anatomy-mid)}.ll{stroke:var(--anatomy-lo)}.lf{stroke:var(--anatomy-faint)}
+  .dt{fill:var(--anatomy-dot);opacity:.5}
+  .dt[data-tone="hi"]{opacity:.85}.dt[data-tone="lo"]{opacity:.3}
+  .tag{font-family:var(--font-mono);font-size:13px;font-weight:600;fill:var(--ink)}
+  /* plasma: verzadigde gloed met een bleke kern op papier */
+  .pl{transition:none}
+  .pl0{fill:#ecb3dc}.pl1{fill:#d862b4}.pl2{fill:#e98bcb}.pl3{fill:#f6c4e6}.pl4{fill:#fff3fb}
+  .field{fill:none;stroke:#1f7f86;stroke-width:1.1;stroke-dasharray:3 3;opacity:0;transition:opacity .4s}
+  .field[data-on]{opacity:.9}
+  .needle{stroke-width:1.2}
+  .nuc{display:inline-flex;align-items:center;white-space:nowrap}
+  .az{display:inline-flex;flex-direction:column;align-items:flex-end;font-size:.66em;line-height:1;margin-right:1px}
+  .az sup,.az sub{vertical-align:baseline;font-size:1em;line-height:1.05}
+  .parts{display:flex;flex-wrap:wrap;gap:6px}
+  .parts button{padding:6px 10px;font-size:13px;min-height:34px}
+  .info{border-top:1px solid #efe9dd;padding-top:10px;display:flex;flex-direction:column;gap:6px}
+  .info-name{font-family:var(--font-display);font-weight:700;font-size:15px}
+  .info-text{font-size:13px;line-height:1.5;color:var(--ink-2)}
+  .info-fact{font-family:var(--font-mono);font-size:12.5px;color:var(--ink);background:#f6f1e6;border:1px solid var(--rule);border-radius:4px;padding:6px 9px}
+  .info-fact:empty{display:none}
+  /* gekozen onderdeel: de rest wordt blank papier, het onderdeel krijgt de onderwerptint */
+  #stage svg [data-p]{cursor:pointer}
+  #stage[data-sel] .machine > path:not(.sel):not([class^="l"]){fill:#f7f3ea;stroke:#f7f3ea}
+  #stage[data-sel] .machine > path[class^="l"]:not(.sel){stroke:#cdc6b7}
+  #stage[data-sel] .machine > circle:not(.sel),#stage[data-sel] .machine > g:not(.sel){opacity:.3}
+  #stage[data-sel] .back:not(.sel),#stage[data-sel] .front:not(.sel),#stage[data-sel] .tag:not(.sel),#stage[data-sel] .needle:not(.sel){opacity:.35}
+  #stage[data-sel]:not([data-sel="plasma"]) .plasma,#stage[data-sel]:not([data-sel="plasma"]) .live{opacity:.3}
+  #stage[data-sel] .machine > path.sel:not([class^="l"]){fill:var(--tint);stroke:var(--tint)}
+  #stage .machine .sel.m0,#stage .machine .sel.c0{--tint:oklch(0.80 0.08 28)}
+  #stage .machine .sel.m1,#stage .machine .sel.c1,#stage .machine .sel.s,#stage .machine .sel.k{--tint:oklch(0.85 0.07 28)}
+  #stage .machine .sel.m2,#stage .machine .sel.c2,#stage .machine .sel.b{--tint:oklch(0.89 0.055 28)}
+  #stage .machine .sel.m3,#stage .machine .sel.c3,#stage .machine .sel.w{--tint:oklch(0.93 0.04 28)}
+  #stage .machine .sel.mt,#stage .machine .sel.ct{--tint:oklch(0.96 0.025 28)}
+  #stage[data-sel] .machine path[class^="l"].sel{stroke:#7a2a20}
+  #stage[data-sel] :is(.machine > g.sel,.front.sel) :is(.iso-top,.iso-fill){fill:oklch(0.95 0.03 28)}
+  #stage[data-sel] :is(.machine > g.sel,.front.sel) .iso-shade{fill:oklch(0.86 0.06 28)}
+  #stage[data-sel] :is(.machine > g.sel,.front.sel) :is(.tb-body,.tb-shade){fill:oklch(0.84 0.07 28)}
+  #stage[data-sel] :is(.machine > g.sel,.front.sel) :is(.iso-edge,.iso-line){stroke:#7a2a20}
+
+  @media(max-width:760px){
+    html,body{height:auto}
+    .applet-root{height:auto;min-height:100vh;overflow:visible;padding:12px 14px 22px}
+    .applet-main{flex-direction:column}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .stage{aspect-ratio:880/600;flex:none}
+    .corner.bl,.corner.tr{display:none}
+    .corner.tl{font-size:11.5px}
+  }
+</style>
+</head>
+<body>
+<div class="applet-root">
+  <div class="top">
+    <a class="back" href="index.html">&larr; Alle simulaties</a>
+    <h1>Kernfusiereactor (tokamak)</h1>
+  </div>
+  <div class="applet-main">
+    <div class="left">
+      <div class="stage iso" data-theme="light" id="stage">
+        <!--SVG-->
+        <div class="corner tl">&sup2;H + &sup3;H &rarr; &#8308;He + n + 17,6 MeV</div>
+        <div class="corner tr">uitsnede van 112&deg;</div>
+        <div class="corner bl">deeltjes niet op schaal · tijd 2&times; versneld</div>
+        <div class="corner br" id="cornerRead">plasma uit</div>
+        <div class="warn" id="warn"></div>
+      </div>
+      <div class="legend" aria-label="Legenda">
+        <span><i style="background:#2f62c8"></i>deuterium &sup2;H</span>
+        <span><i style="background:#27894f"></i>tritium &sup3;H</span>
+        <span><i style="background:#d08a10"></i>heliumkern &#8308;He (3,5 MeV)</span>
+        <span><i style="background:#5b6573"></i>neutron n (14,1 MeV)</span>
+        <span><i class="bar" style="background:#d862b4"></i>plasma</span>
+        <span><i class="bar" style="background:#e8742f"></i>mantel warmt op</span>
+        <span id="legField" class="off"><i class="bar" style="background:#1f7f86"></i><em style="font-style:normal">magnetische veldlijn (uit)</em></span>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="action-row">
+        <button class="btn-accent" id="run">Plasma starten</button>
+        <button class="btn-secondary" id="reset">Reset</button>
+      </div>
+
+      <div class="panel-card">
+        <div class="status"><i id="dot"></i><span id="status">Plasma uit</span></div>
+        <div class="row"><span>Temperatuur</span><b id="rT">–</b></div>
+        <div class="row"><span>Fusievermogen</span><b id="rP" style="color:#a3471d">–</b></div>
+        <div class="row"><span>Versterking Q = P<sub>fusie</sub> / P<sub>verw</sub></span><b id="rQ">–</b></div>
+        <div class="row"><span>Reacties per seconde</span><b id="rR">–</b></div>
+        <div class="row"><span>Energieopsluitingstijd &tau;<sub>E</sub></span><b id="rTau">–</b></div>
+      </div>
+
+      <div class="panel-card" id="partsCard">
+        <div class="card-head">Onderdelen</div>
+        <div class="help">Kies een onderdeel of klik erop in de tekening.</div>
+        <div class="parts" id="parts" role="group" aria-label="Onderdelen van de tokamak"></div>
+        <div class="info" id="info" aria-live="polite">
+          <div class="info-name" id="infoName">Niets gekozen</div>
+          <div class="info-text" id="infoText">Elk onderdeel licht op in de tekening, met uitleg over wat het doet.</div>
+          <div class="info-fact" id="infoFact"></div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="card-head">Hoe werkt het?</div>
+        <div class="eq"><span class="nuc"><span class="az"><sup>2</sup><sub>1</sub></span>H</span> + <span class="nuc"><span class="az"><sup>3</sup><sub>1</sub></span>H</span> &rarr; <span class="nuc"><span class="az"><sup>4</sup><sub>2</sub></span>He</span> (3,5 MeV) + <span class="nuc"><span class="az"><sup>1</sup><sub>0</sub></span>n</span> (14,1 MeV)</div>
+        <div class="help">Kernen stoten elkaar af. Pas bij zo'n 100 miljoen kelvin bewegen ze snel genoeg om elkaar dicht te naderen en te versmelten. Geen wand houdt dat uit: het magneetveld van de spoelen houdt het hete, geladen plasma zwevend in een ring. Het tritium (&sup3;H) wordt gekweekt in de lithiummantel, door de neutronen.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="./applet-core.js?v=8"></script>
+<script>
+/*SCRIPT*/
+</script>
+</body>
+</html>

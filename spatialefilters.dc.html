@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spatiale filters · Natuurkunde simulaties</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="icons/spatialefilters.svg">
+<link rel="stylesheet" href="applet.css?v=4">
+<style>:root{--h:300}input[type=range]{width:100%}</style>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  button,input,select{font-family:inherit}
+  .seg{display:flex;flex-wrap:wrap;gap:5px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--ink-2)}
+  .val{font-family:var(--font-mono);font-size:14px;color:var(--ink);font-weight:500;text-align:right}
+  .lbl{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--muted)}
+  .cell{height:30px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12.5px;border:1px solid #e2dbcb;background:#fff;color:var(--ink);white-space:nowrap}
+  .num{width:100%;height:100%;border:0;background:transparent;text-align:center;font-family:var(--font-mono);font-size:15px;color:var(--ink);padding:0}
+  .num:focus{outline:2px solid var(--ink);outline-offset:-2px}
+  .formula{font-family:var(--font-mono);font-size:13.5px;color:var(--ink);line-height:1.7}
+  .imgbox{position:relative;aspect-ratio:1/1;width:min(100%, calc(100vh - 380px));min-width:200px;margin:0 auto;background:#1d2a3a;border-radius:2px}
+  .imgbox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;image-rendering:pixelated;cursor:crosshair;touch-action:none}
+  select.sel{width:100%;height:36px;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:4px;padding:0 10px;cursor:pointer}
+  @media (max-width:860px){
+    html,body{height:auto}
+    .applet-root{height:auto !important;min-height:100vh;overflow:visible !important;padding:12px 14px 22px !important}
+    .applet-main{flex-direction:column !important;align-items:stretch !important}
+    .applet-main>*{width:100% !important;flex:0 0 auto !important;min-width:0 !important;overflow:visible !important}
+    .imgbox{width:100%;min-width:0}
+  }
+</style>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script><script src="./beeld-core.js?v=1"></script>
+</helmet>
+<div class="applet-root" style="font-family:var(--font-body);color:var(--ink);background:transparent;height:100vh;display:flex;flex-direction:column;padding:16px 22px 18px;overflow:hidden">
+
+  <div style="display:flex;align-items:center;gap:14px;flex:none;margin-bottom:12px;flex-wrap:wrap">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none">&larr; Alle simulaties</a>
+    <h1 style="font-size:22px;font-weight:700;margin:0;letter-spacing:-.01em">Spatiale filters</h1>
+    <div class="seg" style="margin-left:6px">
+      <sc-for list="{{ viewBtns }}" as="b" hint-placeholder-count="2">
+        <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ isBeeld }}" hint-placeholder-val="{{ true }}">
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="panel-card" style="padding:10px 12px;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span class="card-head">Origineel {{ fLabel }}</span><span class="lbl">{{ sizeTxt }}</span></div>
+          <div class="imgbox"><canvas ref="{{ cA }}" width="512" height="512" tabindex="0" aria-label="Originele afbeelding; pijltjestoetsen verplaatsen de loep"></canvas></div>
+          <canvas ref="{{ hA }}" style="width:100%;height:56px;display:block" aria-label="Histogram van het origineel"></canvas>
+        </div>
+        <div class="panel-card" style="padding:10px 12px;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span class="card-head">Resultaat g(x, y)</span><span class="lbl">{{ outInfo }}</span></div>
+          <div class="imgbox"><canvas ref="{{ cB }}" width="512" height="512" tabindex="0" aria-label="Gefilterde afbeelding; pijltjestoetsen verplaatsen de loep"></canvas></div>
+          <canvas ref="{{ hB }}" style="width:100%;height:56px;display:block" aria-label="Histogram van het resultaat"></canvas>
+        </div>
+      </div>
+
+      <div class="panel-card" style="flex:none">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+          <span class="card-head">Loep op pixel (x, y) = ({{ lpX }}, {{ lpY }})</span>
+          <span class="help">Beweeg over een van beide beelden (of gebruik de pijltjestoetsen) om te zien hoe deze ene pixel berekend wordt.</span>
+        </div>
+        <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start">
+          <sc-for list="{{ blocks }}" as="bl" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span class="lbl">{{ bl.title }}</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <sc-if value="{{ bl.fac }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:13px;color:var(--ink)">{{ bl.fac }}</span></sc-if>
+                <div style="display:grid;grid-template-columns:repeat({{ bl.cols }},{{ bl.cw }}px)">
+                  <sc-for list="{{ bl.cells }}" as="c" hint-placeholder-count="9">
+                    <div class="cell" style="{{ c.st }}">{{ c.t }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:220px;flex:1">
+            <span class="lbl">Berekening</span>
+            <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="3">
+              <div class="formula">{{ ln.el }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div class="panel-card">
+        <span class="card-head">Afbeelding</span>
+        <select class="sel" value="{{ src }}" onChange="{{ onSrc }}" aria-label="Testbeeld">
+          <sc-for list="{{ srcOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
+        </select>
+        <label class="btn-secondary" style="display:block;text-align:center;font-size:13px;padding:8px;cursor:pointer">Eigen foto openen&hellip;<input type="file" accept="image/*" onChange="{{ onFile }}" style="display:none"></label>
+        <sc-if value="{{ msg }}" hint-placeholder-val="{{ false }}"><div class="help" style="color:#b8472f">{{ msg }}</div></sc-if>
+        <div class="row" style="margin-top:4px"><span>Resolutie</span></div>
+        <div class="seg"><sc-for list="{{ resBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Ruis toevoegen</span></div>
+        <div class="seg"><sc-for list="{{ noiseBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <sc-if value="{{ hasNoise }}" hint-placeholder-val="{{ false }}">
+          <div class="row"><span>{{ nLbl }}</span><span class="val">{{ nTxt }}</span></div>
+          <input type="range" min="1" max="{{ nMax }}" step="1" value="{{ nAmt }}" onChange="{{ onNAmt }}">
+        </sc-if>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Filter</span>
+        <sc-for list="{{ groups }}" as="gr" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span class="lbl">{{ gr.name }}</span>
+            <div class="seg"><sc-for list="{{ gr.items }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ hasSize }}" hint-placeholder-val="{{ false }}">
+          <div class="row" style="margin-top:4px"><span>Grootte van de kernel</span></div>
+          <div class="seg"><sc-for list="{{ sizeBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        </sc-if>
+        <sc-if value="{{ hasLap }}" hint-placeholder-val="{{ false }}">
+          <div class="row" style="margin-top:4px"><span>Laplacian-kernel</span></div>
+          <div class="seg"><sc-for list="{{ lapBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        </sc-if>
+        <sc-if value="{{ hasK }}" hint-placeholder-val="{{ false }}">
+          <div class="row" style="margin-top:4px"><span>Gewicht k van het masker</span><span class="val">{{ kTxt }}</span></div>
+          <input type="range" min="0" max="50" step="1" value="{{ kU }}" onChange="{{ onK }}">
+        </sc-if>
+        <sc-if value="{{ hasEig }}" hint-placeholder-val="{{ false }}">
+          <div class="row" style="margin-top:4px"><span>Gewichten (breuken mogen, bv. 1/9)</span></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="display:grid;grid-template-columns:repeat(3,52px)">
+              <sc-for list="{{ eigCells }}" as="c" hint-placeholder-count="9">
+                <div class="cell" style="height:38px;{{ c.st }}"><input class="num" value="{{ c.v }}" onChange="{{ c.on }}" aria-label="{{ c.aria }}" inputmode="decimal"></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start">
+              <span class="lbl">delen door</span>
+              <div class="cell" style="height:38px;width:60px"><input class="num" value="{{ eigDiv }}" onChange="{{ onEigDiv }}" aria-label="Delen door" inputmode="decimal"></div>
+            </div>
+          </div>
+          <div class="help">{{ eigSum }}</div>
+        </sc-if>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Instellingen</span>
+        <div class="row"><span>Bewerking</span></div>
+        <div class="seg"><sc-for list="{{ convBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Padding aan de randen</span></div>
+        <div class="seg"><sc-for list="{{ padBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Vooraf</span></div>
+        <div class="seg"><sc-for list="{{ preBtns }}" as="b" hint-placeholder-count="1"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Weergave van g</span></div>
+        <div class="seg"><sc-for list="{{ outBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Achteraf</span></div>
+        <div class="seg"><sc-for list="{{ thrBtns }}" as="b" hint-placeholder-count="1"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <sc-if value="{{ thr }}" hint-placeholder-val="{{ false }}">
+          <div class="row"><span>Drempelwaarde T</span><span class="val">{{ T }}</span></div>
+          <input type="range" min="1" max="254" step="1" value="{{ T }}" onChange="{{ onT }}">
+        </sc-if>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">{{ fName }}</span>
+        <div class="help">{{ tip }}</div>
+        <sc-for list="{{ formulas }}" as="fo" hint-placeholder-count="2"><div class="formula">{{ fo.el }}</div></sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isReken }}" hint-placeholder-val="{{ false }}">
+  <div class="applet-main" style="flex:1;display:flex;gap:18px;min-height:0;align-items:stretch">
+    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:12px;overflow:auto;padding:0 4px 4px 0">
+      <div class="panel-card" style="gap:12px">
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <span class="lbl">{{ rfTitle }}</span>
+            <div style="display:grid;grid-template-columns:repeat({{ rfCols }},48px)">
+              <sc-for list="{{ rfCells }}" as="c" hint-placeholder-count="25">
+                <div class="cell" style="height:48px;position:relative;{{ c.st }}">
+                  <sc-if value="{{ c.inp }}" hint-placeholder-val="{{ true }}"><input class="num" value="{{ c.v }}" onChange="{{ c.on }}" aria-label="{{ c.aria }}" inputmode="decimal"></sc-if>
+                  <sc-if value="{{ c.ro }}" hint-placeholder-val="{{ false }}"><span>{{ c.v }}</span></sc-if>
+                  <sc-if value="{{ c.wt }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:3px;bottom:1px;font-size:11px;color:oklch(0.45 0.14 300);pointer-events:none">{{ c.wt }}</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--ink)">{{ opSym }}</span>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <span class="lbl">kernel w</span>
+            <div style="display:grid;grid-template-columns:repeat(3,48px)">
+              <sc-for list="{{ rwCells }}" as="c" hint-placeholder-count="9">
+                <div class="cell" style="height:48px;{{ c.st }}"><input class="num" value="{{ c.v }}" onChange="{{ c.on }}" aria-label="{{ c.aria }}" inputmode="decimal"></div>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ showRot }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span class="lbl">w, 180° gedraaid</span>
+              <div style="display:grid;grid-template-columns:repeat(3,40px)">
+                <sc-for list="{{ rotCells }}" as="c" hint-placeholder-count="9">
+                  <div class="cell" style="height:40px;background:oklch(0.97 0.02 300)">{{ c.v }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--ink)">=</span>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <span class="lbl">{{ rgTitle }}</span>
+            <div style="display:grid;grid-template-columns:repeat({{ rgCols }},58px)">
+              <sc-for list="{{ rgCells }}" as="c" hint-placeholder-count="9">
+                <div class="cell" style="height:48px;{{ c.st }}">
+                  <sc-if value="{{ c.inp }}" hint-placeholder-val="{{ false }}"><input class="num" value="{{ c.v }}" onChange="{{ c.on }}" aria-label="{{ c.aria }}" inputmode="decimal"></sc-if>
+                  <sc-if value="{{ c.ro }}" hint-placeholder-val="{{ true }}"><span>{{ c.v }}</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div class="help">{{ rfHelp }}</div>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">{{ calcTitle }}</span>
+        <sc-for list="{{ rLines }}" as="ln" hint-placeholder-count="3">
+          <div class="formula" style="font-size:15px;overflow-x:auto;white-space:nowrap">{{ ln.el }}</div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex:none;width:340px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding:0 4px 4px 0">
+      <div class="action-row">
+        <button class="btn-secondary" aria-current="false" onClick="{{ onPrev }}" style="font-size:14px">&#9664; Vorige</button>
+        <button class="btn-accent" onClick="{{ onNext }}" style="font-size:14px">Volgende &#9654;</button>
+      </div>
+      <div class="action-row">
+        <button class="btn-secondary" aria-current="false" onClick="{{ onPlay }}" style="font-size:14px">{{ playLbl }}</button>
+        <button class="btn-secondary" onClick="{{ onAll }}" style="font-size:14px">Alles berekenen</button>
+        <button class="btn-secondary" onClick="{{ onRReset }}" style="font-size:14px">Reset</button>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Voorbeeld</span>
+        <div class="seg"><sc-for list="{{ presetBtns }}" as="b" hint-placeholder-count="4"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Grootte van f</span></div>
+        <div class="seg"><sc-for list="{{ rnBtns }}" as="b" hint-placeholder-count="5"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Instellingen</span>
+        <div class="row"><span>Bewerking</span></div>
+        <div class="seg"><sc-for list="{{ rconvBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <div class="row" style="margin-top:4px"><span>Padding</span></div>
+        <div class="seg"><sc-for list="{{ rpadBtns }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+      </div>
+
+      <div class="panel-card">
+        <span class="card-head">Zelf oefenen</span>
+        <div class="seg"><sc-for list="{{ selfBtns }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for></div>
+        <sc-if value="{{ rself }}" hint-placeholder-val="{{ false }}">
+          <div class="help">Reken g met de hand uit en vul je antwoorden in het rechtse raster in. Decimale komma en breuken mogen.</div>
+          <button class="btn-accent" onClick="{{ onCheck }}" style="min-height:38px;font-size:14px">Controleer</button>
+          <sc-if value="{{ chkTxt }}" hint-placeholder-val="{{ false }}"><div class="help" style="font-weight:700">{{ chkTxt }}</div></sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  state = {
+    view: 'beeld', src: 'stad', N: 256, noise: 'geen', nAmt: 20, filt: 'gem', ks: 3, lapVar: 4, kU: 15,
+    conv: true, pad: 'zero', pre: false, out: 'clamp', thr: false, T: 100,
+    eig: ['0', '-1', '0', '-1', '5', '-1', '0', '-1', '0'], eigDiv: '1', msg: '', rev: 0,
+    rn: 3, rf: ['-1', '-2', '-1', '0', '0', '0', '1', '2', '1'], rw: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    rconv: true, rpad: 'zero', rstep: -1, rself: false, rans: [], rchk: false, rplay: false,
+  };
+  cA = React.createRef(); cB = React.createRef(); hA = React.createRef(); hB = React.createRef();
+  lp = { a: 150, b: 110 };
+  upImg = null; upId = 0;
+  KER = {
+    gauss3: [1, 2, 1, 2, 4, 2, 1, 2, 1],
+    lap4: [0, -1, 0, -1, 4, -1, 0, -1, 0], lap8: [-1, -1, -1, -1, 8, -1, -1, -1, -1],
+    sx: [-1, 0, 1, -2, 0, 2, -1, 0, 1], sy: [1, 2, 1, 0, 0, 0, -1, -2, -1],
+    lh: [-1, -1, -1, 2, 2, 2, -1, -1, -1], lv: [-1, 2, -1, -1, 2, -1, -1, 2, -1],
+    l45: [-1, -1, 2, -1, 2, -1, 2, -1, -1], lm45: [2, -1, -1, -1, 2, -1, -1, -1, 2],
+  };
+  FILT = {
+    gem: { n: 'Gemiddelde', g: 'Afvlakken', sz: true, out: 'clamp' },
+    gauss: { n: 'Gaussisch', g: 'Afvlakken', sz: true, out: 'clamp' },
+    med: { n: 'Mediaan', g: 'Afvlakken', sz: true, out: 'clamp' },
+    lap: { n: 'Laplacian L', g: 'Verscherpen', lv: true, out: 'norm' },
+    sharp: { n: 'f + L', g: 'Verscherpen', lv: true, out: 'clamp' },
+    unsharp: { n: 'Unsharp masking', g: 'Verscherpen', out: 'clamp' },
+    sx: { n: 'Sobel G_x', g: 'Randdetectie (Sobel)', out: 'abs' },
+    sy: { n: 'Sobel G_y', g: 'Randdetectie (Sobel)', out: 'abs' },
+    sg: { n: '|G|', g: 'Randdetectie (Sobel)', out: 'norm' },
+    lh: { n: 'Horizontaal', g: 'Lijndetectie', out: 'abs' },
+    lv: { n: 'Verticaal', g: 'Lijndetectie', out: 'abs' },
+    l45: { n: '+45°', g: 'Lijndetectie', out: 'abs' },
+    lm45: { n: '−45°', g: 'Lijndetectie', out: 'abs' },
+    eig: { n: 'Eigen kernel', g: 'Zelf maken', out: 'clamp' },
+  };
+  get B() { return window.BeeldCore; }
+
+  /* ---------- levenscyclus ---------- */
+  componentDidMount() {
+    this.compute(); this.bind(); this.draw();
+    this._acStop = AppletCore.observe(document.body, () => this.draw());
+  }
+  componentDidUpdate() { if (this.state.view === 'beeld') { this.compute(); this.bind(); this.draw(); } }
+  componentWillUnmount() { if (this._acStop) this._acStop(); clearInterval(this.timer); }
+
+  bind() {
+    [this.cA.current, this.cB.current].forEach(cv => {
+      if (!cv || cv._bound) return;
+      cv._bound = true;
+      const mv = e => this.onPointer(e, cv);
+      cv.addEventListener('pointermove', mv);
+      cv.addEventListener('pointerdown', mv);
+      cv.addEventListener('keydown', e => {
+        const d = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[e.key];
+        if (!d) return;
+        e.preventDefault();
+        const N = this.state.N, st = e.shiftKey ? 10 : 1;
+        this.lp = { a: Math.max(0, Math.min(N - 1, this.lp.a + d[0] * st)), b: Math.max(0, Math.min(N - 1, this.lp.b + d[1] * st)) };
+        this.setState({ rev: this.state.rev + 1 });
+      });
+    });
+  }
+  onPointer(e, cv) {
+    const r = cv.getBoundingClientRect(), side = Math.min(r.width, r.height), N = this.state.N;
+    const ox = r.left + (r.width - side) / 2, oy = r.top + (r.height - side) / 2;
+    const b = Math.floor((e.clientX - ox) / side * N), a = Math.floor((e.clientY - oy) / side * N);
+    if (a < 0 || b < 0 || a >= N || b >= N) return;
+    if (a === this.lp.a && b === this.lp.b) return;
+    this.lp = { a, b };
+    this.setState({ rev: this.state.rev + 1 });
+  }
+
+  /* ---------- kernels ---------- */
+  kernelOf(id) {
+    const s = this.state, K = this.KER, B = this.B;
+    if (id === 'gem') { const k = s.ks; return { k, ints: new Array(k * k).fill(1), den: k * k }; }
+    if (id === 'gauss' || id === 'unsharp' || id === 'pre') {
+      if (id !== 'gauss' || s.ks === 3) return { k: 3, ints: K.gauss3, den: 16 };
+      const b = [1, 4, 6, 4, 1], ints = [];
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) ints.push(b[i] * b[j]);
+      return { k: 5, ints, den: 256 };
+    }
+    if (id === 'lap' || id === 'sharp') return { k: 3, ints: s.lapVar === 4 ? K.lap4 : K.lap8, den: 1 };
+    if (id === 'eig') {
+      const v = s.eig.map(B.parse), d = B.parse(s.eigDiv);
+      const ok = v.every(isFinite) && isFinite(d) && d !== 0;
+      return ok ? { k: 3, ints: v, den: d } : { k: 3, ints: [0, 0, 0, 0, 1, 0, 0, 0, 0], den: 1, bad: true };
+    }
+    return { k: 3, ints: K[id], den: 1 };
+  }
+  w(K) { return K.ints.map(v => v / K.den); }
+
+  /* ---------- rekenen ---------- */
+  compute() {
+    const s = this.state, B = this.B, N = s.N;
+    const bk = [s.src, N, s.noise, s.nAmt, this.upId].join('|');
+    if (bk !== this.bk) {
+      this.bk = bk;
+      let f = s.src === 'eigen' && this.upImg ? B.fromImage(this.upImg, N) : B.IMAGES[s.src].make(N);
+      if (s.noise !== 'geen') f = B.addNoise(f, N, s.noise, s.nAmt, 99);
+      for (let i = 0; i < f.length; i++) f[i] = Math.max(0, Math.min(255, Math.round(f[i])));
+      this.base = f; this.baseU8 = B.toU8(f, 'clamp'); this.baseH = B.histogram(this.baseU8);
+      this.rk = null;
+    }
+    const rk = [bk, s.filt, s.ks, s.lapVar, s.kU, s.conv, s.pad, s.pre, s.eig.join(','), s.eigDiv].join('|');
+    if (rk !== this.rk) {
+      this.rk = rk;
+      const f = this.base, cv = s.conv, pad = s.pad, id = s.filt;
+      const fin = s.pre ? B.filter(f, N, this.w(this.kernelOf('pre')), 3, cv, pad) : f;
+      let raw;
+      if (id === 'med') raw = B.median(fin, N, s.ks, pad);
+      else if (id === 'sharp') { const L = B.filter(fin, N, this.w(this.kernelOf('lap')), 3, cv, pad); raw = new Float32Array(N * N); for (let i = 0; i < raw.length; i++) raw[i] = fin[i] + L[i]; }
+      else if (id === 'unsharp') { const bl = B.filter(fin, N, this.w(this.kernelOf('unsharp')), 3, cv, pad), k = s.kU / 10; raw = new Float32Array(N * N); for (let i = 0; i < raw.length; i++) raw[i] = fin[i] + k * (fin[i] - bl[i]); }
+      else if (id === 'sg') { const gx = B.filter(fin, N, this.KER.sx, 3, cv, pad), gy = B.filter(fin, N, this.KER.sy, 3, cv, pad); raw = new Float32Array(N * N); for (let i = 0; i < raw.length; i++) raw[i] = Math.hypot(gx[i], gy[i]); }
+      else { const K = this.kernelOf(id); raw = B.filter(fin, N, this.w(K), K.k, cv, pad); }
+      this.fin = fin; this.raw = raw; this.mk = null;
+    }
+    const mk = [rk, s.out, s.thr, s.T].join('|');
+    if (mk !== this.mk) {
+      this.mk = mk;
+      const u = B.toU8(this.raw, s.out);
+      this.mn = u.min; this.mx = u.max;
+      if (s.out !== 'norm') { let mn = Infinity, mx = -Infinity; for (let i = 0; i < this.raw.length; i++) { const v = this.raw[i]; if (v < mn) mn = v; if (v > mx) mx = v; } this.rmn = mn; this.rmx = mx; }
+      else { this.rmn = u.min; this.rmx = u.max; }
+      this.mapH = B.histogram(u);
+      this.outU8 = s.thr ? B.threshold(u, s.T) : u;
+    }
+  }
+
+  draw() {
+    if (this.state.view !== 'beeld' || !this.base) return;
+    const B = this.B, N = this.state.N, s = this.state;
+    const k = this.loupeK(), r = (k - 1) >> 1, { a, b } = this.lp;
+    [[this.cA.current, this.baseU8], [this.cB.current, this.outU8]].forEach(([cv, u8]) => {
+      if (!cv) return;
+      B.drawGray(cv, u8, N);
+      const x = cv.getContext('2d'), sc = cv.width / N;
+      x.lineWidth = 3; x.strokeStyle = 'rgba(255,255,255,.9)';
+      x.strokeRect((b - r) * sc - 1.5, (a - r) * sc - 1.5, k * sc + 3, k * sc + 3);
+      x.lineWidth = 1.5; x.strokeStyle = '#e0452b';
+      x.strokeRect((b - r) * sc - 1.5, (a - r) * sc - 1.5, k * sc + 3, k * sc + 3);
+    });
+    B.drawHist(this.hA.current, this.baseH);
+    B.drawHist(this.hB.current, this.mapH, s.thr ? { T: s.T } : null);
+  }
+  loupeK() { const s = this.state; return (s.filt === 'gem' || s.filt === 'gauss' || s.filt === 'med') ? s.ks : 3; }
+
+  /* ---------- weergavehulpjes ---------- */
+  segStyle(on, extra) {
+    return 'min-height:32px;padding:0 11px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:600;border:1px solid ' + (on ? 'var(--accent)' : 'var(--rule)') +
+      ';background:' + (on ? 'var(--accent)' : '#fff') + ';color:' + (on ? '#fff' : 'var(--ink)') + ';' + (extra || '');
+  }
+  seg(list, cur, set) { return list.map(([v, l]) => ({ label: typeof l === 'string' && /[_^]/.test(l) ? this.B.fm(l) : l, onClick: () => set(v), style: this.segStyle(cur === v) })); }
+  num(v, d) { return this.B.nl(v, d == null ? 1 : d); }
+  par(v, d) { const t = this.num(v, d); return v < 0 ? '(' + t + ')' : t; }
+  kCells(K, rot) {
+    const ints = rot ? this.B.rot180(K.ints) : K.ints, isEig = this.state.filt === 'eig' && !K.bad;
+    return ints.map(v => ({ t: isEig ? this.num(v, 3) : this.num(v, 3), st: 'background:oklch(0.97 0.02 300)' }));
+  }
+  symmetric(ints) { const r = ints.slice().reverse(); return ints.every((v, i) => v === r[i]); }
+  facTxt(K) { return K.den === 1 ? '' : (Number.isInteger(K.den) ? '1/' + K.den + ' ·' : '1/' + this.num(K.den, 3) + ' ·'); }
+
+  loupe() {
+    const s = this.state, B = this.B, N = s.N, f = this.fin, id = s.filt;
+    if (!f) return { blocks: [], lines: [] };
+    const { a, b } = this.lp, k = this.loupeK(), r = (k - 1) >> 1, pad = s.pad;
+    const nb = [], cells = [];
+    for (let i = -r; i <= r; i++) for (let j = -r; j <= r; j++) {
+      const v = B.at(f, N, a + i, b + j, pad), out = a + i < 0 || b + j < 0 || a + i >= N || b + j >= N;
+      nb.push(v);
+      cells.push({ t: this.num(v, s.pre ? 1 : 0), st: (out ? 'color:#a39b88;font-style:italic;background:#f4f1ea;' : '') + (i === 0 && j === 0 ? 'border:2px solid #e0452b;' : '') });
+    }
+    const cw = k === 5 ? 40 : 46;
+    const blocks = [{ title: (s.pre ? 'f na voorafvlakken' : 'f') + ' rond (x, y)', cols: k, cw, cells, fac: '' }];
+    const lines = [], fx = B.at(f, N, a, b, pad), fm = B.fm;
+    const kernelBlock = (K, title) => {
+      const rot = s.conv && !this.symmetric(K.ints);
+      blocks.push({ title: title + (rot ? ', 180° gedraaid' : ''), cols: K.k, cw: K.k === 5 ? 40 : 46, fac: this.facTxt(K), cells: this.kCells(K, rot) });
+      const wu = s.conv ? B.rot180(this.w(K)) : this.w(K);
+      let sum = 0; nb.forEach((v, i) => sum += wu[i] * v);
+      return { wu, sum };
+    };
+    let raw = this.raw[a * N + b];
+    if (id === 'med') {
+      const srt = nb.slice().sort((p, q) => p - q), mid = srt.length >> 1;
+      blocks.push({ title: 'gesorteerd', cols: Math.min(srt.length, 13), cw: 42, fac: '',
+        cells: srt.map((v, i) => ({ t: this.num(v, s.pre ? 1 : 0), st: i === mid ? 'background:oklch(0.9 0.06 300);font-weight:700;border:2px solid oklch(0.5 0.12 300)' : '' })) });
+      lines.push({ el: fm('middelste van de ' + srt.length + ' waarden: g(x, y) = ' + this.num(srt[mid], 1)) });
+    } else if (id === 'sg') {
+      const gx = kernelBlock({ k: 3, ints: this.KER.sx, den: 1 }, 'G_x-kernel'), gy = kernelBlock({ k: 3, ints: this.KER.sy, den: 1 }, 'G_y-kernel');
+      blocks.forEach(bl => { if (typeof bl.title === 'string') bl.title = fm(bl.title); });
+      lines.push({ el: fm('G_x = Σ w·f = ' + this.num(gx.sum, 1)) });
+      lines.push({ el: fm('G_y = Σ w·f = ' + this.num(gy.sum, 1)) });
+      lines.push({ el: fm('|G| = √(G_x^2 + G_y^2) = ' + this.num(Math.hypot(gx.sum, gy.sum), 1)) });
+    } else if (id === 'sharp') {
+      const L = kernelBlock(this.kernelOf('lap'), 'L');
+      lines.push({ el: fm('(L ⊛ f)(x, y) = ' + this.num(L.sum, 1)) });
+      lines.push({ el: fm('g = f + L ⊛ f = ' + this.num(fx, 1) + ' + ' + this.par(L.sum, 1) + ' = ' + this.num(fx + L.sum, 1)) });
+    } else if (id === 'unsharp') {
+      const bl = kernelBlock(this.kernelOf('unsharp'), 'afvlakfilter (Gaussisch)'), kk = s.kU / 10, m = fx - bl.sum;
+      lines.push({ el: fm('afvlak(f) = ' + this.num(bl.sum, 1)) });
+      lines.push({ el: fm('m = f − afvlak(f) = ' + this.num(fx, 1) + ' − ' + this.num(bl.sum, 1) + ' = ' + this.num(m, 1)) });
+      lines.push({ el: fm('g = f + k·m = ' + this.num(fx, 1) + ' + ' + this.num(kk, 1) + '·' + this.par(m, 1) + ' = ' + this.num(fx + kk * m, 1)) });
+    } else {
+      const K = this.kernelOf(id), res = kernelBlock(K, 'kernel w');
+      blocks.push({ title: 'w · f', cols: K.k, cw: K.k === 5 ? 48 : 54, fac: '', cells: nb.map((v, i) => ({ t: this.num(res.wu[i] * v, 1), st: '' })) });
+      lines.push({ el: fm('g(x, y) = Σ w·f = ' + this.num(res.sum, 2)) });
+    }
+    const mapped = B.mapValue(raw, s.out, this.mn, this.mx);
+    const rng = ' (in het hele beeld loopt g van ' + this.num(this.rmn, 0) + ' tot ' + this.num(this.rmx, 0) + ')';
+    if (s.out === 'clamp') lines.push({ el: 'begrenzen tot 0…255 → ' + mapped + rng });
+    else if (s.out === 'abs') lines.push({ el: '|g| (begrensd tot 255) → ' + mapped + rng });
+    else lines.push({ el: 'normaliseren (min = ' + this.num(this.mn, 0) + ', max = ' + this.num(this.mx, 0) + ') → ' + mapped });
+    if (s.thr) lines.push({ el: 'drempel T = ' + s.T + ': ' + mapped + (mapped >= s.T ? ' ≥ T → 255 (wit)' : ' < T → 0 (zwart)') });
+    return { blocks, lines };
+  }
+
+  info(id) {
+    const s = this.state, op = s.conv ? '⊛' : '⊗';
+    const T = {
+      gem: ['Elke pixel wordt het gemiddelde van zijn buurt, zichzelf inbegrepen. Ruis wordt zwakker, maar randen worden ook wazig. Een grotere kernel vlakt sterker af.', ['g(x, y) = 1/' + (s.ks * s.ks) + ' · Σ f(x+i, y+j)']],
+      gauss: ['Een gewogen gemiddelde: het midden telt het zwaarst, de hoeken het minst. Dat vervaagt natuurlijker dan het gewone gemiddelde.', ['g = w ' + op + ' f']],
+      med: ['Sorteer alle waarden in de buurt en neem de middelste. Uitschieters (zout en peper) verdwijnen helemaal, terwijl randen scherp blijven. Vergelijk met het gemiddelde.', ['g(x, y) = mediaan van de buurt']],
+      lap: ['De Laplacian benadert de tweede afgeleide: 0 in vlakke gebieden, groot bij snelle overgangen. De uitkomst is vaak negatief, dus begrenzen toont weinig: kies normaliseren of |g|.', ['g = L ' + op + ' f']],
+      sharp: ['Tel de Laplacian op bij het origineel: overgangen worden benadrukt en het beeld lijkt scherper. Probeer het op de wazige stad, en daarna met ruis: verscherpen versterkt ook de ruis.', ['g(x, y) = f(x, y) + (L ' + op + ' f)(x, y)']],
+      unsharp: ['Maak een onscherpe kopie (Gaussisch 3×3) en trek die af van het origineel: het masker m bevat enkel de details. Tel k keer dat masker op bij het origineel.', ['m(x, y) = f(x, y) − afvlak(f(x, y))', 'g(x, y) = f(x, y) + k · m(x, y)']],
+      sx: ['G_x reageert op verticale randen: een verandering van links naar rechts. Negatieve en positieve randen: bekijk |g|.', ['G_x = w_x ' + op + ' f']],
+      sy: ['G_y reageert op horizontale randen: een verandering van boven naar onder.', ['G_y = w_y ' + op + ' f']],
+      sg: ['Combineer beide richtingen tot de grootte van de gradiënt. Met een drempel hou je enkel de sterkste randen over; voorafvlakken onderdrukt randjes door ruis.', ['|G| = √(G_x^2 + G_y^2)']],
+      lh: ['Reageert sterk op lichte horizontale lijnen van 1 pixel breed. Donkere lijnen geven een grote negatieve respons, die je met |g| ook ziet. Gebruik het testbeeld met dunne lijnen.', ['g = w ' + op + ' f']],
+      lv: ['Reageert sterk op lichte verticale lijnen van 1 pixel breed. Donkere lijnen geven een grote negatieve respons, die je met |g| ook ziet.', ['g = w ' + op + ' f']],
+      l45: ['Reageert op lijnen onder +45° (van linksonder naar rechtsboven).', ['g = w ' + op + ' f']],
+      lm45: ['Reageert op lijnen onder −45° (van linksboven naar rechtsonder).', ['g = w ' + op + ' f']],
+      eig: ['Vul zelf de gewichten in. Is de som van de gewichten 1, dan blijft de gemiddelde helderheid gelijk; is ze 0, dan worden vlakke gebieden zwart.', ['g = w ' + op + ' f']],
+    };
+    return T[id];
+  }
+
+  setFilt(id) { this.setState({ filt: id, out: this.FILT[id].out }); }
+
+  /* ---------- rekenvoorbeeld ---------- */
+  rCalc() {
+    const s = this.state, B = this.B, n = s.rn;
+    const F = s.rf.map(B.parse), W = s.rw.map(B.parse), pad = s.rpad;
+    const m = pad === 'none' ? n - 2 : n, off = pad === 'none' ? 1 : 0, Wu = s.rconv ? B.rot180(W) : W;
+    const fv = (a, b) => {
+      if (a < 0 || b < 0 || a >= n || b >= n) { if (pad === 'zero') return 0; a = Math.min(n - 1, Math.max(0, a)); b = Math.min(n - 1, Math.max(0, b)); }
+      return F[a * n + b];
+    };
+    const g = [];
+    for (let ti = 0; ti < m; ti++) for (let tj = 0; tj < m; tj++) {
+      let sum = 0;
+      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) sum += Wu[(i + 1) * 3 + j + 1] * fv(ti + off + i, tj + off + j);
+      g.push(sum);
+    }
+    return { F, W, Wu, g, m, off, fv };
+  }
+  rSet(p) { this.stopPlay(); this.setState(Object.assign({ rstep: -1, rchk: false, rans: [] }, p)); }
+  stopPlay() { if (this.timer) { clearInterval(this.timer); this.timer = null; } if (this.state.rplay) this.setState({ rplay: false }); }
+  preset(id) {
+    const rnd = (lo, hi) => String(lo + Math.floor(Math.random() * (hi - lo + 1)));
+    if (id === 'oef') this.rSet({ rn: 3, rf: ['-1', '-2', '-1', '0', '0', '0', '1', '2', '1'], rw: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], rconv: true, rpad: 'zero' });
+    if (id === 'gem') this.rSet({ rn: 5, rf: ['4', '5', '4', '6', '5', '5', '4', '5', '6', '4', '6', '5', '40', '5', '4', '4', '6', '5', '4', '6', '5', '4', '6', '5', '4'], rw: new Array(9).fill('1/9'), rconv: false, rpad: 'rep' });
+    if (id === 'rand') this.rSet({ rn: 6, rf: [].concat(...new Array(6).fill(['0', '0', '0', '9', '9', '9'])), rw: this.KER.sx.map(String), rconv: true, rpad: 'rep' });
+    if (id === 'toeval') this.rSet({ rn: 5, rf: Array.from({ length: 25 }, () => rnd(0, 9)), rw: Array.from({ length: 9 }, () => rnd(-2, 2)), rconv: true, rpad: 'zero' });
+  }
+  setRn(n) {
+    const s = this.state, rf = [];
+    for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) rf.push(a < s.rn && b < s.rn ? s.rf[a * s.rn + b] : '0');
+    const p = { rn: n, rf };
+    if (n === 3 && s.rpad === 'none') p.rpad = 'none';
+    this.rSet(p);
+  }
+
+  rRender() {
+    const s = this.state, B = this.B, n = s.rn, R = this.rCalc(), fm = B.fm;
+    const p = s.rpad === 'none' ? 0 : 1, D = n + 2 * p, m = R.m, tot = m * m;
+    const step = s.rself ? -1 : s.rstep;
+    const ta = step >= 0 ? Math.floor(step / m) + R.off : -9, tb = step >= 0 ? step % m + R.off : -9;
+    const rfCells = [];
+    for (let Rr = 0; Rr < D; Rr++) for (let Cc = 0; Cc < D; Cc++) {
+      const a = Rr - p, b = Cc - p, inside = a >= 0 && b >= 0 && a < n && b < n;
+      const inWin = Math.abs(a - ta) <= 1 && Math.abs(b - tb) <= 1, ctr = a === ta && b === tb;
+      let wt = '';
+      if (inWin) wt = '×' + this.num(R.Wu[(a - ta + 1) * 3 + (b - tb + 1)], 2);
+      let st = inWin ? 'background:oklch(0.93 0.05 300);' : '';
+      if (ctr) st += 'border:2px solid oklch(0.45 0.14 300);';
+      if (inside) {
+        const idx = a * n + b;
+        rfCells.push({ inp: true, ro: false, v: s.rf[idx], wt, aria: 'f rij ' + (a + 1) + ' kolom ' + (b + 1),
+          on: e => { const rf = s.rf.slice(); rf[idx] = e.target.value; this.setState({ rf, rchk: false }); },
+          st: st + (isFinite(R.F[idx]) ? '' : 'background:#fbe3dc;') });
+      } else {
+        rfCells.push({ inp: false, ro: true, v: this.num(R.fv(a, b), 2), wt, st: 'background:#efe9dd;color:#8a8270;font-style:italic;' + st });
+      }
+    }
+    const rwCells = s.rw.map((v, i) => ({ v, aria: 'w rij ' + (Math.floor(i / 3) + 1) + ' kolom ' + (i % 3 + 1),
+      on: e => { const rw = s.rw.slice(); rw[i] = e.target.value; this.setState({ rw, rchk: false }); },
+      st: 'background:oklch(0.97 0.02 300);' + (isFinite(R.W[i]) ? '' : 'background:#fbe3dc;') }));
+    const rotCells = B.rot180(R.W).map(v => ({ v: this.num(v, 2) }));
+    const near = (x, y) => isFinite(x) && isFinite(y) && Math.abs(x - y) < 0.051;
+    let good = 0;
+    const rgCells = R.g.map((v, t) => {
+      if (s.rself) {
+        const ans = B.parse(s.rans[t] || ''), ok = near(ans, v);
+        if (ok) good++;
+        return { inp: true, ro: false, v: s.rans[t] || '', aria: 'g rij ' + (Math.floor(t / m) + 1) + ' kolom ' + (t % m + 1),
+          on: e => { const rans = s.rans.slice(); rans[t] = e.target.value; this.setState({ rans }); },
+          st: s.rchk ? (ok ? 'background:oklch(0.93 0.07 150);border-color:oklch(0.6 0.12 150)' : 'background:#fbe3dc;border-color:#d6492f') : 'background:#fff' };
+      }
+      const shown = t <= step;
+      return { inp: false, ro: true, v: shown ? this.num(v, 2) : '', st: (t === step ? 'border:2px solid oklch(0.45 0.14 300);background:oklch(0.93 0.05 300);font-weight:700;' : '') + (shown ? '' : 'background:#f7f3ea;') };
+    });
+    let rLines = [], calcTitle = 'Berekening';
+    if (s.rself) {
+      calcTitle = 'Zelf oefenen';
+      rLines = [{ el: 'Bereken elke waarde van g met de hand. De berekening blijft verborgen tot je terugschakelt naar "Stap voor stap".' }];
+    } else if (step < 0) {
+      rLines = [{ el: 'Klik op Volgende ▶ om de kernel over f te schuiven.' }];
+    } else {
+      const ti = Math.floor(step / m), tj = step % m, a = ti + R.off, b = tj + R.off;
+      const sym = [], numl = [];
+      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+        const aa = a + i, bb = b + j, out = aa < 0 || bb < 0 || aa >= n || bb >= n;
+        const ca = Math.min(n - 1, Math.max(0, aa)) + 1, cb = Math.min(n - 1, Math.max(0, bb)) + 1;
+        const fs = out && s.rpad === 'zero' ? '0' : 'f_{' + ca + cb + '}';
+        const wi = s.rconv ? 1 - i : 1 + i, wj = s.rconv ? 1 - j : 1 + j;
+        sym.push(fs + '·w_{' + (wi + 1) + (wj + 1) + '}');
+        numl.push(this.par(R.fv(aa, bb), 2) + '·' + this.par(R.W[wi * 3 + wj], 3));
+      }
+      calcTitle = 'Berekening van g_{' + (ti + 1) + (tj + 1) + '}  (stap ' + (step + 1) + ' van ' + tot + ')';
+      rLines = [{ el: fm('g_{' + (ti + 1) + (tj + 1) + '} = ' + sym.join(' + ')) }, { el: '= ' + numl.join(' + ') }, { el: fm('= ' + this.num(R.g[step], 3)) }];
+    }
+    const padTxt = { zero: 'gepad met nullen (grijs)', rep: 'gepad door de randpixels te herhalen (grijs)', none: 'zonder padding' }[s.rpad];
+    return {
+      rfTitle: 'f (' + n + '×' + n + '), ' + padTxt, rfCols: D, rfCells, rwCells, rotCells, showRot: s.rconv,
+      opSym: s.rconv ? '⊛' : '⊗', rgTitle: 'g (' + m + '×' + m + ')', rgCols: m, rgCells,
+      rfHelp: s.rpad === 'none' ? 'Zonder padding is de uitkomst kleiner: een ' + n + '×' + n + '-beeld met een 3×3-kernel geeft (n − m + 1) × (n − m + 1) = ' + m + '×' + m + '.'
+        : 'Met padding heeft g dezelfde afmetingen als f. De kleine paarse getallen zijn de gewichten waarmee elke pixel vermenigvuldigd wordt.',
+      calcTitle: fm(calcTitle), rLines,
+      chkTxt: s.rchk ? good + ' van de ' + tot + ' waarden zijn juist.' + (good === tot ? ' Proficiat!' : '') : '',
+      rself: s.rself,
+    };
+  }
+
+  /* ---------- render ---------- */
+  renderVals() {
+    const s = this.state, B = this.B, F = this.FILT;
+    const viewBtns = [['beeld', 'Beeld'], ['reken', 'Rekenvoorbeeld']].map(([v, l]) => ({ label: l, onClick: () => { this.stopPlay(); this.setState({ view: v }); }, style: this.segStyle(s.view === v) }));
+    const base = { viewBtns, isBeeld: s.view === 'beeld', isReken: s.view === 'reken' };
+
+    if (s.view === 'reken') {
+      const r = this.rRender(), m = this.rCalc().m, tot = m * m;
+      return Object.assign(base, r, {
+        presetBtns: [['oef', 'Oefening 1 (4.4)'], ['gem', 'Gemiddelde'], ['rand', 'Rand (Sobel)'], ['toeval', 'Willekeurig']].map(([v, l]) => ({ label: l, onClick: () => this.preset(v), style: this.segStyle(false) })),
+        rnBtns: this.seg([3, 4, 5, 6, 7].map(k => [k, k + '×' + k]), s.rn, k => this.setRn(k)),
+        rconvBtns: this.seg([[false, 'Correlatie ⊗'], [true, 'Convolutie ⊛']], s.rconv, v => this.rSet({ rconv: v })),
+        rpadBtns: this.seg([['zero', 'Nullen'], ['rep', 'Randen herhalen'], ['none', 'Geen']], s.rpad, v => this.rSet({ rpad: v })),
+        selfBtns: this.seg([[false, 'Stap voor stap'], [true, 'Zelf invullen']], s.rself, v => this.rSet({ rself: v })),
+        onPrev: () => { this.stopPlay(); this.setState({ rstep: Math.max(-1, s.rstep - 1), rself: false }); },
+        onNext: () => { this.stopPlay(); this.setState({ rstep: Math.min(tot - 1, s.rstep + 1), rself: false }); },
+        onAll: () => { this.stopPlay(); this.setState({ rstep: tot - 1, rself: false }); },
+        onRReset: () => this.rSet({}),
+        playLbl: s.rplay ? '■ Stop' : '▶ Afspelen',
+        onPlay: () => {
+          if (s.rplay) { this.stopPlay(); return; }
+          this.setState({ rplay: true, rself: false, rstep: s.rstep >= tot - 1 ? -1 : s.rstep });
+          this.timer = setInterval(() => {
+            const t = this.rCalc().m ** 2;
+            if (this.state.rstep >= t - 1) { this.stopPlay(); return; }
+            this.setState({ rstep: this.state.rstep + 1 });
+          }, 900);
+        },
+        onCheck: () => this.setState({ rchk: true }),
+      });
+    }
+
+    this.compute();
+    const lp = this.loupe(), inf = this.info(s.filt), fd = F[s.filt];
+    const grpNames = [];
+    Object.keys(F).forEach(id => { if (!grpNames.includes(F[id].g)) grpNames.push(F[id].g); });
+    const groups = grpNames.map(gn => ({ name: gn, items: Object.keys(F).filter(id => F[id].g === gn).map(id => ({ label: B.fm(F[id].n), onClick: () => this.setFilt(id), style: this.segStyle(s.filt === id) })) }));
+    const srcOpts = Object.keys(B.IMAGES).filter(k => !['strepen', 'schuin', 'zoneplaat', 'balk'].includes(k)).map(k => ({ id: k, name: B.IMAGES[k].name }));
+    if (this.upImg) srcOpts.push({ id: 'eigen', name: 'Eigen foto' });
+    const K = s.filt === 'eig' ? this.kernelOf('eig') : null;
+    const eigSum = K ? (K.bad ? 'Ongeldige invoer: gebruik getallen of breuken zoals 1/9. Er wordt nu niets gefilterd.' : 'Som van de gewichten: ' + this.num(K.ints.reduce((p, q) => p + q, 0) / K.den, 3)) : '';
+    const outInfo = s.thr ? 'drempel T = ' + s.T : (s.out === 'norm' ? 'genormaliseerd' : s.out === 'abs' ? '|g|' : 'begrensd');
+    return Object.assign(base, {
+      cA: this.cA, cB: this.cB, hA: this.hA, hB: this.hB,
+      fLabel: 'f(x, y)', sizeTxt: s.N + ' × ' + s.N + ' pixels', outInfo,
+      lpX: this.lp.a, lpY: this.lp.b, blocks: lp.blocks, lines: lp.lines,
+      src: s.src, srcOpts, msg: s.msg,
+      onSrc: e => this.setState({ src: e.target.value, msg: '' }),
+      onFile: e => {
+        const file = e.target.files && e.target.files[0]; e.target.value = '';
+        if (!file) return;
+        B.loadFile(file).then(img => { this.upImg = img; this.upId++; this.setState({ src: 'eigen', msg: '' }); })
+          .catch(er => this.setState({ msg: er.message }));
+      },
+      resBtns: this.seg([[256, '256 × 256'], [512, '512 × 512']], s.N, v => { this.lp = { a: Math.min(v - 1, Math.round(this.lp.a * v / s.N)), b: Math.min(v - 1, Math.round(this.lp.b * v / s.N)) }; this.setState({ N: v }); }),
+      noiseBtns: this.seg([['geen', 'Geen'], ['gauss', 'Gaussisch'], ['zp', 'Zout en peper']], s.noise, v => this.setState({ noise: v, nAmt: v === 'zp' ? 8 : 20 })),
+      hasNoise: s.noise !== 'geen', nAmt: s.nAmt, nMax: s.noise === 'zp' ? 40 : 60,
+      nLbl: s.noise === 'zp' ? 'Aandeel getroffen pixels' : 'Sterkte (standaardafwijking σ)', nTxt: s.noise === 'zp' ? s.nAmt + ' %' : String(s.nAmt),
+      onNAmt: e => this.setState({ nAmt: Number(e.target.value) }),
+      groups, hasSize: !!fd.sz, hasLap: !!fd.lv, hasK: s.filt === 'unsharp', hasEig: s.filt === 'eig',
+      sizeBtns: this.seg([[3, '3 × 3'], [5, '5 × 5']], s.ks, v => this.setState({ ks: v })),
+      lapBtns: this.seg([[4, '4 buren (0, −1, 4)'], [8, '8 buren (−1, 8)']], s.lapVar, v => this.setState({ lapVar: v })),
+      kU: s.kU, kTxt: this.num(s.kU / 10, 1), onK: e => this.setState({ kU: Number(e.target.value) }),
+      eigCells: s.eig.map((v, i) => ({ v, aria: 'Gewicht rij ' + (Math.floor(i / 3) + 1) + ' kolom ' + (i % 3 + 1), st: isFinite(B.parse(v)) ? 'background:oklch(0.97 0.02 300)' : 'background:#fbe3dc',
+        on: e => { const eig = s.eig.slice(); eig[i] = e.target.value; this.setState({ eig }); } })),
+      eigDiv: s.eigDiv, onEigDiv: e => this.setState({ eigDiv: e.target.value }), eigSum,
+      convBtns: this.seg([[false, 'Correlatie ⊗'], [true, 'Convolutie ⊛']], s.conv, v => this.setState({ conv: v })),
+      padBtns: this.seg([['zero', 'Nullen'], ['rep', 'Randpixels herhalen']], s.pad, v => this.setState({ pad: v })),
+      preBtns: [{ label: 'Eerst afvlakken (Gaussisch 3×3)', onClick: () => this.setState({ pre: !s.pre }), style: this.segStyle(s.pre) }],
+      outBtns: this.seg([['clamp', 'Begrenzen'], ['norm', 'Normaliseren'], ['abs', '|g|']], s.out, v => this.setState({ out: v })),
+      thrBtns: [{ label: 'Drempel (thresholding)', onClick: () => this.setState({ thr: !s.thr }), style: this.segStyle(s.thr) }],
+      thr: s.thr, T: s.T, onT: e => this.setState({ T: Number(e.target.value) }),
+      fName: B.fm(fd.n === 'f + L' ? 'Verscherpen met de Laplacian' : fd.n === '|G|' ? 'Sobel: gradiëntgrootte |G|' : (fd.g === 'Lijndetectie' ? 'Lijndetectie ' + fd.n : fd.n)),
+      tip: B.fm(inf[0]), formulas: inf[1].map(t => ({ el: B.fm(t) })),
+    });
+  }
+}
+</script>
+</body>
+</html>

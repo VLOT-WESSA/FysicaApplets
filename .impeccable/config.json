@@ -908,6 +908,33 @@
         ],
         "createdAt": "2026-10-31T11:49:39.943Z",
         "reason": "documented: IBM Plex Mono is de value-letter in DESIGN.md"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "gistingsmanometer.dc.html"
+        ],
+        "createdAt": "2026-11-13T13:27:14.916Z",
+        "reason": "Project design system: DESIGN.md defines paper #f7f3ea and stage #fbf8f1 ('labschrift' on ruitjespapier) for all applets"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "spatialefilters.dc.html"
+        ],
+        "createdAt": "2026-11-13T15:49:34.809Z",
+        "reason": "Claude: paper background #f7f3ea is the project's documented design system (DESIGN.md, applet.css), shared by all applets"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "frequentiefilters.dc.html"
+        ],
+        "createdAt": "2026-11-13T15:49:35.742Z",
+        "reason": "Claude: paper background #f7f3ea is the project's documented design system (DESIGN.md, applet.css), shared by all applets"
       }
     ]
   }
