@@ -167,7 +167,7 @@ class Component extends DCLogic {
     ctx.strokeStyle = '#cfc7b6'; ctx.lineWidth = 1; ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'IBM Plex Mono',monospace"; ctx.textAlign = 'right';
     for (let d = -10; d <= 10; d += 2) { const y = this.eqY() + d / 100 * this.ppm * 1.5; ctx.beginPath(); ctx.moveTo(cx - 60, y); ctx.lineTo(cx - 52, y); ctx.stroke(); if (d % 4 === 0) ctx.fillText((d > 0 ? '+' : '') + d + ' cm', cx - 64, y); }
     // terugroepende kracht
-    if (st.showF) this.arrow(ctx, cx + 42, my, -st.k * this.x * 120, '#2f8a4e', 'F = −k·u');
+    if (st.showF) this.arrow(ctx, cx + 42, my, -st.k * this.x * 120, '#2f8a4e', 'F = −k·Δx');
     if (!this.running && st.tab === 'free' && !this.dragging) { ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Sleep de massa omlaag of omhoog en laat los', cx, 525); }
     // energie
     if (st.showEn) {

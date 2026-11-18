@@ -227,6 +227,9 @@ const legend = `
         <span><i class="bar" style="background:#8f98a3"></i>weekijzer</span>`;
 
 const css = `
+  .now{flex:none;display:flex;gap:10px;align-items:flex-start;min-height:58px;background:var(--accent-soft);border:1px solid var(--ink);border-radius:4px;box-shadow:var(--shadow);padding:9px 14px;font-size:14px;line-height:1.4;color:var(--ink)}
+  .now b{font-family:var(--font-mono);font-weight:600;font-size:12px;flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff}
+  .now b:empty{display:none}
   .wood>.iso-top{fill:#f3e6cf}.wood>.iso-shade[data-shade="0"]{fill:#d9c29d}.wood>.iso-shade[data-shade="1"]{fill:#e2cda9}.wood>.iso-shade[data-shade="2"]{fill:#e9d7b6}.wood>.iso-shade[data-shade="3"]{fill:#efdfc2}
   .brass>.iso-top{fill:#f1dfa8}.brass>.iso-shade{fill:#dcc27c}.brass>.iso-shade[data-shade="3"],.brass>.iso-shade[data-shade="2"]{fill:#e7d08f}
   .copper>.iso-top,.copper>.iso-shade{fill:#d99a68}.copper>.iso-shade[data-shade="0"]{fill:#b8733a}.copper>.iso-shade[data-shade="1"]{fill:#c4834b}.copper>.iso-shade[data-shade="2"]{fill:#cf8f59}
@@ -246,7 +249,7 @@ const PARTS = [
   { id: "kern", name: "E · weekijzeren kern", text: "Een U-vormige kern van weekijzer. Zonder stroom is hij niet magnetisch. Loopt er stroom door de spoelen, dan worden de twee benen een noord- en een zuidpool. Weekijzer verliest zijn magnetisme meteen weer als de stroom stopt; staal zou magnetisch blijven.", fact: "weekijzer: groot μr, kleine remanentie" },
   { id: "spoelen", name: "Spoelen", text: "Twee spoelen van gelakt koperdraad rond de benen van de kern, in serie geschakeld en in tegengestelde zin gewonden, zodat het ene been noord en het andere zuid wordt. Hoe meer windingen en hoe groter de stroom, hoe sterker de magneet.", fact: "B ~ N · I" },
   { id: "anker", name: "A · anker met hamer", text: "Een ijzeren strip met een plaatje weekijzer onder de polen en een kogeltje (de hamer) aan het eind. De magneet trekt het anker aan; de hamer beweegt dan naar de bel.", fact: "hefboom: de hamer beweegt ruim 2× verder dan het weekijzer" },
-  { id: "klem", name: "Bladveer en klem", text: "Het anker zit met een verende strip vast in een koperen klem. De veer trekt het anker terug zodra de magneet loslaat. Via deze klem loopt ook de stroom het anker in.", fact: "veerkracht F = −k · u" },
+  { id: "klem", name: "Bladveer en klem", text: "Het anker zit met een verende strip vast in een koperen klem. De veer trekt het anker terug zodra de magneet loslaat. Via deze klem loopt ook de stroom het anker in.", fact: "veerkracht F = k · Δx" },
   { id: "schroef", name: "T · contactschroef", text: "De punt van de schroef raakt het anker in rust. Zo is de kring gesloten. Trekt de magneet het anker weg, dan komt er een spleetje en is de kring open: de bel onderbreekt zelf haar stroom. Met de schroef stel je in hoe snel ze rinkelt.", fact: "zelfonderbreker: vonkjes slijten de punt" },
   { id: "knop", name: "K · drukknop", text: "Een schakelaar die alleen sluit zolang je drukt. Laat je los, dan is de kring open en stopt de bel.", fact: "" },
   { id: "batterij", name: "U · batterij", text: "Een platte batterij van 4,5 V levert de spanning die de stroom door de kring drijft.", fact: "I = U / R = 4,5 V / 3 Ω = 1,5 A" },

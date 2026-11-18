@@ -1079,7 +1079,6 @@ function setupParts(PARTS, svg, onSelect) {
     if (s.on) s.t += sim;
     const wave = Math.sin(phase);
     fieldPath.style.opacity = (amp * (0.3 + 0.7 * Math.abs(wave))).toFixed(2);
-    fieldPath.style.strokeDashoffset = (-phase * 9 * Math.sign(Math.cos(phase))).toFixed(1);
     fieldPath.style.strokeDashoffset = ((Math.cos(phase) >= 0 ? -1 : 1) * (now / 40 % 9)).toFixed(1);
     // wervelstromen: alleen in een geleider; tegengesteld aan de spoelstroom (Lenz)
     const eddyA = s.mat === "glas" ? 0 : amp * Math.abs(Math.cos(phase)) * (s.mat === "koper" ? 1 : 0.9);

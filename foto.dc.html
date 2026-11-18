@@ -82,11 +82,11 @@
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
         <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Doelplaat</div>
         <select value="{{ materialIndex }}" onChange="{{ onMaterial }}" style="width:100%;padding:9px 10px;border:1px solid var(--rule);border-radius:4px;background:#fff;font-size:14px;color:var(--ink)">
-          <option value="0">Natrium &mdash; 2.28 eV</option>
-          <option value="1">Calcium &mdash; 2.90 eV</option>
-          <option value="2">Zink &mdash; 4.30 eV</option>
-          <option value="3">Koper &mdash; 4.70 eV</option>
-          <option value="4">Platina &mdash; 6.35 eV</option>
+          <option value="0">Natrium &mdash; 2,28 eV</option>
+          <option value="1">Calcium &mdash; 2,90 eV</option>
+          <option value="2">Zink &mdash; 4,30 eV</option>
+          <option value="3">Koper &mdash; 4,70 eV</option>
+          <option value="4">Platina &mdash; 6,35 eV</option>
         </select>
         <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:13px">
           <span style="color:var(--muted)">Uittree-energie W</span>
@@ -483,14 +483,14 @@ class Component extends DCLogic {
       wavelength: this.state.wavelength,
       intensity: this.state.intensity,
       voltage: this.state.voltage,
-      voltageStr: this.state.voltage.toFixed(1),
+      voltageStr: this.state.voltage.toFixed(1).replace('.', ','),
       regionStr: region,
       markerPct: ((wl - 100) / 750 * 100).toFixed(1) + '%',
-      workFnStr: m.W.toFixed(2) + ' eV',
-      eStr: E.toFixed(2) + ' eV',
-      keStr: KE > 0 ? KE.toFixed(2) + ' eV' : '0 (geen emissie)',
-      vstopStr: KE > 0 ? '\u2212' + KE.toFixed(2) + ' V' : '\u2014',
-      currentStr: I.toFixed(3),
+      workFnStr: m.W.toFixed(2).replace('.', ',') + ' eV',
+      eStr: E.toFixed(2).replace('.', ',') + ' eV',
+      keStr: KE > 0 ? KE.toFixed(2).replace('.', ',') + ' eV' : '0 (geen emissie)',
+      vstopStr: KE > 0 ? '\u2212' + KE.toFixed(2).replace('.', ',') + ' V' : '\u2014',
+      currentStr: I.toFixed(3).replace('.', ',') + ' (relatief)',
       showGraph: this.state.showGraph,
       toggleLabel: this.state.showGraph ? 'verberg' : 'toon',
       cvBg: cv.bg, cvFg: cv.fg, ciBg: ci.bg, ciFg: ci.fg, efBg: ef.bg, efFg: ef.fg,

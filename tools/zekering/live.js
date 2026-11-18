@@ -6,8 +6,9 @@
   const q = (name) => svg.querySelector('[data-part="' + name + '"]');
   const movG = q("moving"), pathI = q("pathI"), arcG = q("arc");
   const P = DATA.P;
-  const w3 = ([x, z], y) => [x + DATA.MX, y, z + DATA.MZ];
+  const w3 = ([x, z], y) => [x * DATA.K + DATA.MX, y * DATA.K + DATA.MY, z * DATA.K + DATA.MZ];
   const prism = eval("(" + prismSrc.toString() + ")");
+  const amp = (I) => (I >= 100 ? fmt(I, 0) : fmt(I, 1)) + " A";
   const fmt = (v, d = 1) => v.toLocaleString("nl-BE", { minimumFractionDigits: d, maximumFractionDigits: d });
   const setText = (id, t) => { const n = $(id); if (n.textContent !== t) n.textContent = t; };
   const sp = (p, y = -16) => iso(w3(p, y), P);
@@ -23,8 +24,8 @@
     return p;
   };
   const LOADS = [["Waterkoker", 2000], ["Kachel", 2000], ["Microgolf", 1200], ["Stofzuiger", 900]];
-  const s = { type: "veer", iTrip: 20, closed: false, open: 1, lift: 0, theta: 0, loads: [true, false, false, false], shortT: 0, arc: 0, msg: "", tripT: -9 };
-  let last = 0, frame = 0, visible = true, drawn = "", flowOff = 0, why = "", t = 0;
+  const s = { type: "veer", iTrip: 20, closed: false, open: 1, lift: 0, theta: 0, loads: [true, false, false, false], shortT: 0, arc: 0, msg: "", tripT: -9, tripI: 0 };
+  let last = 0, frame = 0, visible = true, drawn = "", flowOff = 0, why = "", t = 0, dir = 1, shownStep = -1;
 
   function current() {
     if (!s.closed) return 0;
@@ -34,7 +35,7 @@
   function draw(I) {
     const bend = s.type === "thermisch" ? Math.min(1.4, s.theta / TRIP_T) : 0;
     const fieldA = Math.min(1, I / magTrip());
-    const key = [s.open.toFixed(3), s.lift.toFixed(3), bend.toFixed(2), s.type, fieldA.toFixed(2)].join(",");
+    const key = [s.open.toFixed(3), s.lift.toFixed(3), bend.toFixed(2), s.type, fieldA.toFixed(2), fieldA > 0.02 ? dir : 0].join(",");
     if (key === drawn) return;
     drawn = key;
     const m = mechanism(s.open, s.lift);
@@ -66,9 +67,17 @@
     extra += `<path data-p="spoel" class="wire" d="${pathD([[topTab[0], topTab[1] - 2], [topTab[0], topTab[1] + 4]], -14)}"/><path data-p="spoel" class="wire" d="${pathD([[botTab[0] - 6, botTab[1]], [botTab[0], botTab[1]]], -14)}"/>`;
     if (fieldA > 0.02) {
       const C = COIL, lp = (dx) => [[C.cx, C.z1 + 4], [C.cx + dx * 0.4, C.z1 + 26], [C.cx + dx, C.z1 + 10], [C.cx + dx * 1.05, (C.z0 + C.z1) / 2], [C.cx + dx, C.z0 - 6], [C.cx + dx * 0.4, m.plateTop[1] - 10], [C.cx, m.plateTop[1] + 2]];
-      let d = "";
-      for (const dx of [-34, -48, 34, 48]) d += pathD(lp(dx), -4);
-      extra += `<path data-p="spoel" class="bfield" d="${d}" style="opacity:${(0.25 + 0.75 * fieldA).toFixed(2)}"/>`;
+      // veldlijnen met een pijl halverwege; de zin keert om met de wisselstroom
+      let d = "", heads = "";
+      const f1 = (v) => v.toFixed(1);
+      for (const dx of [-34, -48, 34, 48]) {
+        const pts = lp(dx); d += pathD(pts, -4);
+        const a = sp(pts[2], -4), b = sp(pts[4], -4), c = sp(pts[3], -4), l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+        const ux = dir * (b[0] - a[0]) / l, uy = dir * (b[1] - a[1]) / l;
+        heads += `M${f1(c[0] + ux * 7)} ${f1(c[1] + uy * 7)}L${f1(c[0] - ux * 4 - uy * 4.5)} ${f1(c[1] - uy * 4 + ux * 4.5)}L${f1(c[0] - ux * 4 + uy * 4.5)} ${f1(c[1] - uy * 4 - ux * 4.5)}Z`;
+      }
+      const op = (0.25 + 0.75 * fieldA).toFixed(2);
+      extra += `<path data-p="spoel" class="bfield" d="${d}" style="opacity:${op}"/><path data-p="spoel" class="bhead" d="${heads}" style="opacity:${op}"/>`;
     }
     const kTag = sp([m.knob[1][0] - 14, m.knob[1][1] + 12], -9), sTag = sp([COIL.cx + 30, COIL.z1 - 24], -8), pTag = sp([m.plateTop[0] + 26, m.plateTop[1] - 8], -8);
     extra += `<text class="tagk" x="${kTag[0].toFixed(1)}" y="${kTag[1].toFixed(1)}">(k)</text><text class="tagk" x="${sTag[0].toFixed(1)}" y="${sTag[1].toFixed(1)}">(s)</text><text class="tagk" x="${pTag[0].toFixed(1)}" y="${pTag[1].toFixed(1)}">(p)</text>`;
@@ -80,7 +89,7 @@
     const path = [[344, 270], [212, 269], m.tip, ...along(4).slice(1), ...leadPts.slice(1), [COIL.cx, COIL.z1], [COIL.cx, COIL.z0], botTab, ...out.slice(1), ...(s.type === "thermisch" ? bmFoot.slice(1) : []), [344, 54]];
     pathI.setAttribute("d", pathD(path, -2));
   }
-  function trip(kind) { why = kind; s.closed = false; s.tripT = t; s.arc = 1; syncLever(); }
+  function trip(kind, I) { why = kind; s.tripI = I; s.closed = false; s.tripT = t; s.arc = 1; syncLever(); }
   const magTrip = () => s.type === "thermisch" ? 5 * IN : s.iTrip;
   function tick(now) {
     const dt = last ? Math.min((now - last) / 1000, 1 / 20) : 1 / 60;
@@ -91,12 +100,15 @@
     if (s.type === "thermisch") s.theta += (ratio * ratio - s.theta) * dt / TAU; else s.theta += (0 - s.theta) * dt / TAU;
     const wantLift = s.closed ? Math.min(0.3, 0.3 * (I / magTrip()) ** 2) : (t - s.tripT < 0.5 && why === "magnetisch" ? 1 : 0);
     s.lift += (wantLift - s.lift) * (1 - Math.exp(-dt / (wantLift > s.lift ? 0.03 : 0.25)));
-    if (s.closed && I > magTrip()) trip("magnetisch");
-    else if (s.closed && s.type === "thermisch" && s.theta > TRIP_T) trip("thermisch");
+    if (s.closed && I > magTrip()) trip("magnetisch", I);
+    else if (s.closed && s.type === "thermisch" && s.theta > TRIP_T) trip("thermisch", I);
     s.open += ((s.closed ? 0 : 1) - s.open) * (1 - Math.exp(-dt / (s.closed ? 0.15 : 0.04)));
     s.arc = Math.max(0, s.arc - dt / 0.45);
+    // wisselstroom, sterk vertraagd getoond: stroom en veld keren elke seconde om
+    const ac = Math.sin(Math.PI * t);
+    dir = ac >= 0 ? 1 : -1;
     draw(I);
-    flowOff -= dt * Math.min(80, 8 + I * 1.5);
+    flowOff -= dt * 1.5 * ac * Math.min(80, 8 + I * 1.5);
     pathI.style.opacity = I > 0 ? Math.min(1, 0.4 + I / 25).toFixed(2) : "0";
     pathI.style.strokeDashoffset = flowOff.toFixed(1);
     const hot = Math.min(1, s.theta / TRIP_T), hq = Math.round(hot * 25) * 4;
@@ -104,7 +116,7 @@
     setVar(fig, "--bm-side", `color-mix(in oklab, #aeb5bd, #9c3f26 ${hq}%)`);
     if (s.arc > 0.02) { const c = sp([206 - 10 * (1 - s.arc), 262 - 14 * (1 - s.arc)], -10); arcG.innerHTML = `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${(14 + 26 * s.arc).toFixed(1)}" opacity="${s.arc.toFixed(2)}"/>`; }
     else if (arcG.innerHTML) arcG.innerHTML = "";
-    setText("rI", s.closed ? (I >= 100 ? fmt(I, 0) : fmt(I, 1)) + " A" : "0 A");
+    setText("rI", s.closed ? amp(I) : why ? "0 A · was " + amp(s.tripI) : "0 A");
     const pct = Math.min(100, 100 * (I / magTrip()) ** 2);
     setText("rBl", s.type === "thermisch" ? "Spoel / bimetaal" : "Kracht van de spoel op het anker");
     setText("rB", s.type === "thermisch" ? fmt(pct, 0) + " % van de veer · bimetaal " + (hot >= 1 ? "heet" : hot > 0.6 ? "warm" : hot > 0.2 ? "lauw" : "koud") : fmt(pct, 0) + " % van de veerkracht");
@@ -113,38 +125,46 @@
     if (s.type === "thermisch" && s.closed && eq > TRIP_T && I <= magTrip()) tt = "bimetaal: na ≈ " + fmt(Math.max(0, -TAU * Math.log((eq - TRIP_T) / (eq - s.theta))), 0) + " s";
     setText("rT", tt);
     let st, col, step = 0;
-    if (s.closed && pct > 8) { st = "Ingeschakeld: de spoel trekt aan het anker, de veer houdt het nog tegen"; col = "#c9822c"; step = 2; }
+    if (s.closed && pct > 50) { st = "Ingeschakeld: de spoel trekt aan het anker, de veer houdt het nog tegen"; col = "#c9822c"; step = 2; }
+    else if (s.closed && s.type === "thermisch" && eq > TRIP_T) { st = "Ingeschakeld: overbelasting, het bimetaal warmt op"; col = "#c9822c"; step = 1; }
     else if (s.closed) { st = "Ingeschakeld: de stroom loopt"; col = "#27894f"; step = 1; }
     else if (t - s.tripT < 2.5 && why) { st = why === "thermisch" ? "Uitgeschakeld door het bimetaal (overbelasting)" : "Uitgeschakeld: de spoel won het van de veer"; col = "#b8311f"; step = 3; }
     else { st = why ? (why === "thermisch" ? "Uitgeschakeld door het bimetaal" : "Uitgeschakeld door de spoel") : "Uitgeschakeld"; col = why ? "#b8311f" : "#9aa1a9"; step = 0; }
     if (s.msg) { st = s.msg; col = "#c9822c"; }
     setText("status", st); $("dot").style.background = col;
     [...$("steps").children].forEach((li, i) => { if (i === step) li.setAttribute("data-on", ""); else li.removeAttribute("data-on"); });
+    if (step !== shownStep) { shownStep = step; nowNum.textContent = String(step + 1); nowText.textContent = $("steps").children[step].textContent; }
     setText("cornerRead", s.closed ? fmt(I, 1) + " A · ingeschakeld" : "uit");
     frame = visible ? requestAnimationFrame(tick) : 0;
   }
   const run = () => { if (!frame && visible) { last = 0; frame = requestAnimationFrame(tick); } };
   new IntersectionObserver((en) => { visible = en[en.length - 1].isIntersecting; if (visible) run(); }).observe($("stage"));
   document.addEventListener("visibilitychange", () => { visible = !document.hidden; if (visible) run(); });
+  let msgTimer = 0;
+  function flash(text) { s.msg = text; clearTimeout(msgTimer); msgTimer = setTimeout(() => (s.msg = ""), 2500); run(); }
   function syncLever() { const b = $("lever"); b.textContent = s.closed ? "Knop uittrekken (uitschakelen)" : "Knop indrukken (inschakelen)"; b.className = s.closed ? "btn-ink" : "btn-accent"; }
   $("lever").addEventListener("click", () => {
     s.msg = "";
     if (s.closed) { s.closed = false; why = ""; }
-    else if (s.type === "thermisch" && s.theta > 1.05) { s.msg = "Het bimetaal is nog te warm: wacht even"; setTimeout(() => (s.msg = ""), 2500); }
+    else if (s.type === "thermisch" && s.theta > 1.05) flash("Het bimetaal is nog te warm: wacht even");
     else { s.closed = true; why = ""; }
     syncLever(); run();
   });
-  $("short").addEventListener("click", () => { if (s.closed) s.shortT = 0.3; });
+  $("short").addEventListener("click", () => { if (s.closed) s.shortT = 0.3; else flash("Schakel eerst de zekering in: zonder stroom is er geen kortsluiting"); });
   LOADS.forEach(([name, p], i) => {
     const b = document.createElement("button"); b.className = "toggle"; b.textContent = name + " " + p + " W";
     b.addEventListener("click", () => { s.loads[i] = !s.loads[i]; syncLoads(); });
     $("loads").appendChild(b);
   });
   function syncLoads() { [...$("loads").children].forEach((b, i) => { pressBtn(b, s.loads[i]); q("plug" + i).setAttribute("opacity", s.loads[i] ? "1" : "0"); }); }
-  function syncType() { [...$("type").children].forEach((b) => pressBtn(b, b.dataset.t === s.type)); $("springCtl").style.display = s.type === "veer" ? "" : "none"; drawn = ""; }
+  function syncType() { [...$("type").children].forEach((b) => pressBtn(b, b.dataset.t === s.type)); $("springCtl").style.display = s.type === "veer" ? "" : "none"; $("bmInfo").style.display = s.type === "thermisch" ? "" : "none"; drawn = ""; }
   [...$("type").children].forEach((b) => { b.className = "toggle"; b.addEventListener("click", () => { s.type = b.dataset.t; syncType(); }); });
   $("itrip").addEventListener("input", (e) => { s.iTrip = +e.target.value; setText("vTrip", fmt(s.iTrip, 0) + " A"); });
-  $("reset").addEventListener("click", () => { Object.assign(s, { type: "veer", iTrip: 20, closed: false, open: 1, lift: 0, theta: 0, loads: [true, false, false, false], shortT: 0, arc: 0, msg: "", tripT: -9 }); why = ""; $("itrip").value = 20; setText("vTrip", "20 A"); syncType(); syncLoads(); syncLever(); parts.select(null); });
+  $("reset").addEventListener("click", () => { Object.assign(s, { type: "veer", iTrip: 20, closed: false, open: 1, lift: 0, theta: 0, loads: [true, false, false, false], shortT: 0, arc: 0, msg: "", tripT: -9, tripI: 0 }); why = ""; $("itrip").value = 20; setText("vTrip", "20 A"); syncType(); syncLoads(); syncLever(); parts.select(null); });
+  // de actieve stap staat ook onder de tekening, zodat hij zichtbaar blijft als de zijbalk gescrold is
+  const now = document.createElement("div"), nowNum = document.createElement("b"), nowText = document.createElement("span");
+  now.className = "now"; now.setAttribute("aria-live", "polite"); now.append(nowNum, nowText);
+  document.querySelector(".legend").before(now);
   const parts = setupParts(PARTS, svg);
   syncType(); syncLoads(); syncLever(); run();
   window.__mcb = s;

@@ -265,11 +265,13 @@ class Component extends DCLogic {
       }
     } else {
       const br = fracRad;
-      ratio = Math.sqrt((1 + br) / (1 - br));
+      // relativistisch dopplereffect, ook dwars op de beweging: f'/f = √(1 − β²) / (1 − β·cos θ)
+      ratio = Math.sqrt(1 - fr * fr) / (1 - br);
       fp = this.state.freq * ratio; z = 1 / ratio - 1;
-      if (br > 0.004) { near = 'con'; verdict = 'bron nadert \u2192 blauwverschuiving'; }
+      if (ratio > 1.004) { near = 'con'; verdict = 'bron nadert \u2192 blauwverschuiving'; }
       else if (br < -0.004) { near = 'des'; verdict = 'bron verwijdert \u2192 roodverschuiving'; }
-      else { near = 'mid'; verdict = this.state.beta < 0.005 ? 'bron in rust' : 'dwars \u2192 geen verschuiving'; }
+      else if (ratio < 0.996) { near = 'des'; verdict = 'dwars \u2192 roodverschuiving door tijdsdilatatie'; }
+      else { near = 'mid'; verdict = this.state.beta < 0.005 ? 'bron in rust' : 'geen merkbare verschuiving'; }
     }
     const rNow = isNaN(ratio) ? 'x' : ratio.toFixed(3);
     const rOld = isNaN(Number(this.state.ratio)) ? 'x' : Number(this.state.ratio).toFixed(3);
@@ -431,15 +433,15 @@ class Component extends DCLogic {
       legendFrontLbl: sound ? 'golffront' : 'blauwverschuiving (voor)',
       vms: this.state.vms, beta: this.state.beta, freq: this.state.freq,
       speedReadout: sound
-        ? this.state.vms + ' m/s \u00b7 M ' + (this.state.vms / this.vSound).toFixed(2)
-        : 'v = ' + this.state.beta.toFixed(2) + ' c',
-      machStr: this.state.vms + ' m/s \u00b7 M ' + (this.state.vms / this.vSound).toFixed(2),
-      lamFrontStr: lamF <= 0 ? '\u2014' : lamF.toFixed(2) + ' m',
-      lamBackStr: lamB.toFixed(2) + ' m',
+        ? this.state.vms + ' m/s \u00b7 M ' + (this.state.vms / this.vSound).toFixed(2).replace('.', ',')
+        : 'v = ' + this.state.beta.toFixed(2).replace('.', ',') + ' c',
+      machStr: this.state.vms + ' m/s \u00b7 M ' + (this.state.vms / this.vSound).toFixed(2).replace('.', ','),
+      lamFrontStr: lamF <= 0 ? '\u2014' : lamF.toFixed(2).replace('.', ',') + ' m',
+      lamBackStr: lamB.toFixed(2).replace('.', ',') + ' m',
       freqStr: this.state.freq + ' Hz',
       fpStr: isNaN(fpVal) ? '\u2014' : Math.round(fpVal) + ' Hz',
-      ratioStr: isNaN(Number(this.state.ratio)) ? '\u2014' : Number(this.state.ratio).toFixed(3),
-      zStr: isNaN(zVal) ? '\u2014' : (zVal >= 0 ? '+' : '') + zVal.toFixed(3),
+      ratioStr: isNaN(Number(this.state.ratio)) ? '\u2014' : Number(this.state.ratio).toFixed(3).replace('.', ','),
+      zStr: isNaN(zVal) ? '\u2014' : (zVal >= 0 ? '+' : '') + zVal.toFixed(3).replace('.', ','),
       fpColor,
       soundTabBg: ts.bg, soundTabFg: ts.fg, soundTabSh: ts.sh,
       lightTabBg: tl.bg, lightTabFg: tl.fg, lightTabSh: tl.sh,

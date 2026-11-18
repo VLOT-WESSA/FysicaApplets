@@ -62,7 +62,7 @@
   }
   function disrupt(beta) {
     s.on = false; s.disrupt = 1; s.T = 0.05; s.nEff *= 0.3;
-    warn("Disruptie: β = " + fmt(beta * 100, 1) + " %. De plasmadruk werd te groot voor het magneetveld. Verhoog B of verwarm minder.");
+    warn("Disruptie: β = " + fmt(beta * 100, 1) + " %. De plasmadruk werd te groot voor het magneetveld.");
     syncRun();
   }
   function warn(text) {

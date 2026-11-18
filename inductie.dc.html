@@ -85,44 +85,12 @@
         <div class="out">
           <div class="row"><span>Snelheid magneet</span><span>{{ vStr }}</span></div>
           <div class="row"><span>Flux N&middot;&Phi; door de spoel</span><span>{{ phiStr }}</span></div>
-          <div class="row"><span>Inductiespanning &epsilon;</span><span style="color:#c8443a;font-weight:600">{{ emfStr }}</span></div>
-          <div class="row"><span>Grootste |&epsilon;| deze worp</span><span>{{ peakStr }}</span></div>
+          <div class="row"><span>Inductiespanning U</span><span style="color:#c8443a;font-weight:600">{{ emfStr }}</span></div>
+          <div class="row"><span>Grootste |U| deze worp</span><span>{{ peakStr }}</span></div>
         </div>
         <div class="note">
-          <div class="mono">&epsilon; = &minus;N&middot;&Delta;&Phi;/&Delta;t</div>
-          <div style="margin-top:4px">Sleep de magneet met de muis door de spoel of laat hem vallen. Alleen een <b>veranderende</b> flux wekt spanning op: hoe sneller, hoe groter &epsilon;. Volgens de <b>wet van Lenz</b> werkt de inductiestroom de oorzaak tegen: de spoel krijgt een pool die de naderende magneet afstoot en de vertrekkende magneet aantrekt. De LED's geven pas licht vanaf ongeveer 1,8 V.</div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;gap:10px;flex:none">
-          <button onClick="{{ onPlay }}" style="flex:1;min-height:40px;font-size:14px;font-weight:600;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#fff">{{ playLabel }}</button>
-        </div>
-        <div class="card">
-          <div class="row"><span class="lbl">Aantal windingen N</span><span class="val">{{ gNStr }}</span></div>
-          <div class="sl"><input type="range" min="10" max="500" step="10" value="{{ gN }}" onInput="{{ onGN }}"></div>
-          <div class="row"><span class="lbl">Magnetische inductie B</span><span class="val">{{ gBStr }}</span></div>
-          <div class="sl"><input type="range" min="0.05" max="1" step="0.05" value="{{ gB }}" onInput="{{ onGB }}"></div>
-          <div class="row"><span class="lbl">Oppervlak spoel A</span><span class="val">{{ gAStr }}</span></div>
-          <div class="sl"><input type="range" min="10" max="200" step="5" value="{{ gA }}" onInput="{{ onGA }}"></div>
-          <div class="row"><span class="lbl">Toerental f</span><span class="val">{{ gfStr }}</span></div>
-          <div class="sl"><input type="range" min="0.2" max="3" step="0.1" value="{{ gf }}" onInput="{{ onGf }}"></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Aansluiting</div>
-          <div class="chips">
-            <sc-for list="{{ collectors }}" as="p" hint-placeholder-count="2">
-              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.name }}</button>
-            </sc-for>
-          </div>
-        </div>
-        <div class="out">
-          <div class="row"><span>Hoeksnelheid &omega; = 2&pi;f</span><span>{{ gwStr }}</span></div>
-          <div class="row"><span>Maximale flux N&middot;B&middot;A</span><span>{{ gPhiStr }}</span></div>
-          <div class="row"><span>Topspanning &epsilon;<sub>max</sub> = N&middot;B&middot;A&middot;&omega;</span><span style="color:#c8443a;font-weight:600">{{ gEmaxStr }}</span></div>
-          <div class="row"><span>Spanning nu</span><span>{{ gNowStr }}</span></div>
-        </div>
-        <div class="note">
-          <div class="mono">&Phi; = B&middot;A&middot;cos(&omega;t) &nbsp;&nbsp; &epsilon; = N&middot;B&middot;A&middot;&omega;&middot;sin(&omega;t)</div>
-          <div style="margin-top:4px">De flux is maximaal als de spoel loodrecht op het veld staat, maar dan is de spanning nul: de flux verandert daar het traagst. Met <b>sleepringen</b> krijg je wisselspanning; een <b>commutator</b> keert elke halve omwenteling de aansluiting om, zodat de spanning altijd hetzelfde teken heeft (pulserende gelijkspanning, zoals bij de dynamo of de gelijkstroommotor).</div>
+          <div class="mono">U = &minus;N&middot;&Delta;&Phi;/&Delta;t</div>
+          <div style="margin-top:4px">Sleep de magneet met de muis door de spoel of laat hem vallen. Alleen een <b>veranderende</b> flux wekt spanning op: hoe sneller, hoe groter U. Volgens de <b>wet van Lenz</b> werkt de inductiestroom de oorzaak tegen: de spoel krijgt een pool die de naderende magneet afstoot en de vertrekkende magneet aantrekt. De LED's geven pas licht vanaf ongeveer 1,8 V.</div>
         </div>
       </sc-if>
 
@@ -238,7 +206,6 @@ class Component extends DCLogic {
     const rdt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
     const st = this.state;
     if (st.tab === 'mag') this.stepMag(rdt);
-    else if (st.tab === 'gen') this.stepGen(rdt);
     else this.stepTr(rdt);
     this.draw();
     this._r = (this._r || 0) + rdt; if (this._r > 0.15) { this._r = 0; this.forceUpdate(); }
@@ -269,11 +236,6 @@ class Component extends DCLogic {
     while (this.hist.length && this.hist[0].t < this.tSim - keep) this.hist.shift();
     this.ledR = Math.max(0, this.ledR - rdt * 2.5); this.ledY = Math.max(0, this.ledY - rdt * 2.5);
   }
-  stepGen(rdt) {
-    const st = this.state; if (!st.gRun) return;
-    this.gT += rdt; this.gTh += 2 * Math.PI * st.gf * rdt;
-    this.gHist.push({ t: this.gT, th: this.gTh }); while (this.gHist.length && this.gHist[0].t < this.gT - 4) this.gHist.shift();
-  }
   stepTr(rdt) {
     this.trT += rdt; this.dcT += rdt;
     this.trHist.push({ t: this.trT, up: this.trUp(this.trT), us: this.trUs(this.trT) });
@@ -294,7 +256,6 @@ class Component extends DCLogic {
     const ctx = c.getContext('2d'); const s = this.dpr || 1;
     ctx.setTransform(s, 0, 0, s, 0, 0); ctx.clearRect(0, 0, this.W, this.H);
     if (this.state.tab === 'mag') this.drawMag(ctx);
-    else if (this.state.tab === 'gen') this.drawGen(ctx);
     else this.drawTr(ctx);
   }
   graph(ctx, x, y, w, h, title, data, key, col, unit, tWin, tNow, fixedMax) {
@@ -394,56 +355,10 @@ class Component extends DCLogic {
     // graphs
     const tw = st.slow ? 0.6 : 3;
     this.graph(ctx, 560, 20, 345, 245, 'Flux N·Φ (mWb)', this.hist, 'p', '#3a6fb8', v => this.fmt(v * 1000, 2), tw, this.tSim);
-    this.graph(ctx, 560, 285, 345, 255, 'Inductiespanning ε', this.hist, 'e', '#c8443a', v => this.uStr(v), tw, this.tSim);
+    this.graph(ctx, 560, 285, 345, 255, 'Inductiespanning U', this.hist, 'e', '#c8443a', v => this.uStr(v), tw, this.tSim);
     ctx.fillStyle = '#4f5b69'; ctx.font = "500 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(st.slow ? 'Slow motion (×0,12)' : 'Echte tijd', 14, 12);
     if (this.mode === 'idle' && !this.dragging) ctx.fillText('Sleep de magneet', 14, 30);
-  }
-
-  drawGen(ctx) {
-    const st = this.state; const th = this.gTh; const cx = 250, cy = 270;
-    // poles
-    ctx.fillStyle = '#c8443a'; ctx.fillRect(40, cy - 110, 70, 220); ctx.fillStyle = '#3a6fb8'; ctx.fillRect(390, cy - 110, 70, 220);
-    ctx.fillStyle = '#fff'; ctx.font = "700 26px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('N', 75, cy); ctx.fillText('Z', 425, cy);
-    // field lines
-    ctx.strokeStyle = 'rgba(58,111,184,0.3)'; ctx.lineWidth = 1.2;
-    for (let i = -4; i <= 4; i++) { const y = cy + i * 24; ctx.beginPath(); ctx.moveTo(112, y); ctx.lineTo(388, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(388, y); ctx.lineTo(380, y - 4); ctx.lineTo(380, y + 4); ctx.closePath(); ctx.fillStyle = 'rgba(58,111,184,0.4)'; ctx.fill(); }
-    // coil: rectangle rotating about vertical axis; normal makes angle th with B (horizontal)
-    const half = 40 + Math.sqrt(st.gA) * 3.2, hh = 70 + Math.sqrt(st.gA) * 2;
-    const wproj = half * Math.sin(th); // breedte zichtbaar
-    const front = Math.cos(th) > 0;
-    ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 2 + Math.min(6, st.gN / 80);
-    ctx.fillStyle = 'rgba(232,170,90,' + (0.12 + 0.18 * Math.abs(Math.cos(th))) + ')';
-    ctx.beginPath(); ctx.rect(cx - Math.abs(wproj), cy - hh, 2 * Math.abs(wproj), 2 * hh); ctx.fill(); ctx.stroke();
-    // flux shading text
-    ctx.strokeStyle = '#4f5b69'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx, cy - hh - 30); ctx.lineTo(cx, cy + hh + 50); ctx.stroke(); ctx.setLineDash([]);
-    // normal vector (top view inset)
-    const ix = 250, iy = 485;
-    ctx.fillStyle = '#faf8f3'; ctx.fillRect(ix - 80, iy - 55, 160, 100); ctx.strokeStyle = '#e7e1d5'; ctx.strokeRect(ix - 80, iy - 55, 160, 100);
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('bovenaanzicht', ix - 74, iy - 51);
-    // spoel als lijnstuk loodrecht op de normaal n = (cos th, sin th)
-    ctx.strokeStyle = '#a9743a'; ctx.lineWidth = 4;
-    const nx = Math.cos(th), ny = Math.sin(th);
-    ctx.beginPath(); ctx.moveTo(ix - 34 * ny, iy + 5 + 34 * nx); ctx.lineTo(ix + 34 * ny, iy + 5 - 34 * nx); ctx.stroke();
-    this.arrowS(ctx, ix, iy + 5, nx * 30, -ny * 30, '#2f8a4e');
-    ctx.fillStyle = '#2f8a4e'; ctx.font = "600 12.5px 'Atkinson Hyperlegible',sans-serif"; ctx.fillText('n', ix + nx * 36 - 3, iy + 5 - ny * 36 - 6);
-    ctx.fillStyle = '#3a6fb8'; ctx.fillText('B →', ix + 44, iy + 26);
-    // collector + lamp
-    const e = st.gN * st.gB * st.gA * 1e-4 * 2 * Math.PI * st.gf * Math.sin(th);
-    const out = st.coll === 'ring' ? e : Math.abs(e);
-    ctx.fillStyle = '#4f5b69'; ctx.font = "500 13px 'Atkinson Hyperlegible',sans-serif"; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(st.coll === 'ring' ? 'sleepringen → wisselspanning' : 'commutator → gelijkgerichte spanning', cx, cy + hh + 56);
-    // graphs
-    const N = st.gN, BA = st.gB * st.gA * 1e-4, w = 2 * Math.PI * st.gf, emax = N * BA * w;
-    const data = this.gHist.map(d => { const ee = N * BA * w * Math.sin(d.th); return { t: d.t, p: N * BA * Math.cos(d.th), e: st.coll === 'ring' ? ee : Math.abs(ee) }; });
-    this.graph(ctx, 520, 20, 385, 245, 'Flux N·Φ (mWb)', data, 'p', '#3a6fb8', v => this.fmt(v * 1000, 1), 4, this.gT, N * BA);
-    this.graph(ctx, 520, 285, 385, 255, 'Inductiespanning ε', data, 'e', '#c8443a', v => this.uStr(v), 4, this.gT, Math.max(emax, 1e-9));
-  }
-  arrowS(ctx, x, y, dx, dy, col) {
-    const L = Math.hypot(dx, dy); if (L < 2) return; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke();
-    const a = Math.atan2(dy, dx); ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - 8 * Math.cos(a - 0.45), y + dy - 8 * Math.sin(a - 0.45)); ctx.lineTo(x + dx - 8 * Math.cos(a + 0.45), y + dy - 8 * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill();
   }
 
   drawTr(ctx) {
@@ -511,8 +426,8 @@ class Component extends DCLogic {
     const I = (x) => x >= 1 ? this.fmt(x, 2) + ' A' : this.fmt(x * 1000, 1) + ' mA';
     return {
       stageRef: this.stageRef,
-      tabs: [['mag', 'Magneet & spoel'], ['gen', 'Generator'], ['tr', 'Transformator']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => this.setState({ tab: k }) })),
-      isMag: st.tab === 'mag', isGen: st.tab === 'gen', isTr: st.tab === 'tr',
+      tabs: [['mag', 'Magneet & spoel'], ['tr', 'Transformator']].map(([k, n]) => ({ name: n, style: tabStyle(st.tab === k), onClick: () => this.setState({ tab: k }) })),
+      isMag: st.tab === 'mag', isTr: st.tab === 'tr',
       // magneet
       N: st.N, h0: st.h0, nm: st.nm,
       NStr: st.N, hStr: this.fmt(st.h0 * 100, 0) + ' cm', nmStr: st.nm === 1 ? '1 magneet' : '2 magneten',

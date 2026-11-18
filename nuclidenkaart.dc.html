@@ -422,6 +422,7 @@ class Component extends DCLogic {
       else if (sel.mode === 'bplus' || sel.mode === 'ec' || sel.mode === 'b2plus') note = 'Protonrijk: een proton verandert in een neutron (\u03B2\u207A of elektronvangst).';
       else if (sel.mode === 'alfa') note = 'Zware kern: stoot een \u03B1-deeltje (2 protonen + 2 neutronen) uit.';
       else if (sel.mode === 'splijting') note = 'Zware kern: splijt spontaan in twee lichtere kernen.';
+      else if (sel.mode === 'it') note = 'Isomeer: een aangeslagen toestand van de kern. Ze valt terug naar een lagere toestand en zendt daarbij \u03B3-straling uit; Z en N blijven gelijk.';
       else note = 'Voorbij de drip-lijn: de kern stoot direct een nucleon uit.';
       selVals = {
         selHas: true, selSym: this.SYM[sel.Z], selName: this.SYM[sel.Z] + '-' + sel.A,

@@ -21,8 +21,8 @@
   a{color:var(--muted);text-decoration:none}
   a:hover{color:var(--ink)}
 </style>
-<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script><script src="./boolean-core.js"></script>
-<script src="boolean-core.js"></script>
+<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var h=a.getAttribute('href');if(h==='index.html'||h==='./index.html'){e.preventDefault();e.stopImmediatePropagation();window.location.href='index.html';}}},true);</script><script src="./applet-core.js?v=8"></script><script src="./boolean-core.js?v=2"></script>
+<script src="boolean-core.js?v=2"></script>
 </helmet>
 <div style="font-family:var(--font-body);color:var(--ink);background:transparent;min-height:100vh;padding:16px 22px 28px">
 <div style="display:flex;flex-direction:column;gap:14px">
@@ -67,6 +67,9 @@
             <div style="min-width:0">
               <div style="font-size:13px;font-weight:600;color:oklch(0.45 0.13 300)">{{ s.name }}</div>
               <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);margin-top:3px;padding-top:3px">{{ s.fel }}</div>
+              <sc-if value="{{ s.sub }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;font-style:italic">{{ s.sub }}</div>
+              </sc-if>
             </div>
           </div>
         </sc-for>
@@ -156,7 +159,8 @@ class Component extends DCLogic {
       res.steps.forEach((s, i) => {
         if (s.id) used.add(s.id);
         steps.push({ n: String(i), el: B.view(s.node, h),
-          name: s.id ? B.RULES[s.id][0] : 'Gegeven', fel: s.id ? B.formula(B.RULES[s.id][1], h) : '' });
+          name: s.id ? B.RULES[s.id][0] : 'Gegeven', fel: s.inst ? B.chain(s.inst, h) : (s.id ? B.formula(B.RULES[s.id][1], h) : ''),
+          sub: s.id === 'qm' ? 'meerdere stappen, gecontroleerd met de waarheidstabel/Karnaugh' : '' });
       });
       finEl = B.view(res.fin, h);
       heads = res.vars.map(v => ({ t: v })).concat([{ t: 'invoer' }, { t: 'resultaat' }]);

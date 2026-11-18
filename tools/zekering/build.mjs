@@ -13,11 +13,11 @@ import * as PT from "./parts.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = join(HERE, "..", "..", "zekering.dc.html");
 const W = 900, H = 620;
-const MX = -150, MZ = 130;                                // plaats van de zekering op het paneel
+const K = 1.3, MX = -240, MY = 10.8, MZ = 36;             // schaal en plaats van de zekering op het paneel (MY houdt de rug tegen het paneel)
 const TABLE = { x: [-260, 330], y: [-60, 230] };
 const P = k.fitProjection([[TABLE.x[0], TABLE.y[0], -14], [TABLE.x[1], TABLE.y[0], -14], [TABLE.x[0], TABLE.y[1], -14], [TABLE.x[1], TABLE.y[1], -14], [TABLE.x[0], -46, 520], [TABLE.x[1], -46, 520]], W, H, { pad: 14, azimuth: 70, elevation: 20 });
 const S0 = painter(P), S = painter(P);
-const w3 = ([x, z], y) => [x + MX, y, z + MZ];
+const w3 = ([x, z], y) => [x * K + MX, y * K + MY, z * K + MZ];
 
 function prism(Sx, poly, y0, y1, cls, { front = cls, bias = 0 } = {}) {
   let area = 0; for (let i = 0; i < poly.length; i++) { const [a, b] = poly[i], [c, d] = poly[(i + 1) % poly.length]; area += a * d - c * b; }
@@ -75,18 +75,19 @@ S.setPart("spoel");
 {
   const C = PT.COIL, cen = w3([C.cx, C.z0], -18);
   const F = G.frameOf([cen[0], cen[1], cen[2]], [0, 0, 1], [1, 0, 0], [0, 1, 0]);
-  const coil = k.solidSvg(G.disc(0, C.z1 - C.z0, C.r, F, P), { tone: "hi", className: "copper" });
-  const fl = (s0) => k.solidSvg(G.disc(s0, s0 + 5, C.r + 5, F, P), { tone: "mid", className: "bob" });
-  const wind = k.lineSvg(Array.from({ length: 22 }, (_, i) => G.arcOf(F, 6 + (C.z1 - C.z0 - 12) * i / 21, C.r + 0.2, P)).join(""), { tone: "lo", className: "wind" });
-  S.raw(fl(-5) + coil + wind + fl(C.z1 - C.z0), S.depth(w3([C.cx, (C.z0 + C.z1) / 2], -18)) + 60);
+  const len = (C.z1 - C.z0) * K;
+  const coil = k.solidSvg(G.disc(0, len, C.r * K, F, P), { tone: "hi", className: "copper" });
+  const fl = (s0) => k.solidSvg(G.disc(s0, s0 + 5 * K, (C.r + 5) * K, F, P), { tone: "mid", className: "bob" });
+  const wind = k.lineSvg(Array.from({ length: 22 }, (_, i) => G.arcOf(F, 6 * K + (len - 12 * K) * i / 21, (C.r + 0.2) * K, P)).join(""), { tone: "lo", className: "wind" });
+  S.raw(fl(-5 * K) + coil + wind + fl(len), S.depth(w3([C.cx, (C.z0 + C.z1) / 2], -18)) + 60);
 }
 // ------------------------------------------------------------ snoeren en stekkerdoos
 const cableR = 3;
 const cab = (pts, cls, part) => { S.setPart(part); const route = G.fillet(pts, 36, 12); for (const pc of tubePieces(route, cableR, P, { maxLength: 20 })) S.raw(`<g class="cable ${cls}">${tubeSvg(pc, { tone: "hi" })}</g>`, G.dot3(pc.mid, S.V) + 2); return route; };
 const tTop = w3([368, 270], -18), tBot = w3([368, 54], -18);
-cab([tTop, [tTop[0] + 60, tTop[1], tTop[2]], [tTop[0] + 90, tTop[1], tTop[2] + 30], [tTop[0] + 90, tTop[1], 470]], "brown", "snoeren");
+cab([tTop, [tTop[0] + 35, tTop[1], tTop[2]], [tTop[0] + 60, tTop[1], tTop[2] + 30], [tTop[0] + 60, tTop[1], 470]], "brown", "snoeren");
 const STRIP = { x: [90, 320], y: [120, 166], z: [0, 22] };
-cab([tBot, [tBot[0] + 50, tBot[1], tBot[2] - 6], [tBot[0] + 80, tBot[1] + 30, 3], [STRIP.x[0] + 40, STRIP.y[0] - 50, 3], [STRIP.x[0] + 30, STRIP.y[0] - 6, 6], [STRIP.x[0] + 30, STRIP.y[0] + 1, 11]], "grey", "snoeren");
+cab([tBot, [tBot[0] + 30, tBot[1], tBot[2] - 6], [tBot[0] + 55, tBot[1] + 30, 3], [STRIP.x[0] + 40, STRIP.y[0] - 50, 3], [STRIP.x[0] + 30, STRIP.y[0] - 6, 6], [STRIP.x[0] + 30, STRIP.y[0] + 1, 11]], "grey", "snoeren");
 S.setPart("stekkerdoos");
 box(S, STRIP.x, STRIP.y, STRIP.z, "sd");
 const SOCK = [140, 190, 240, 290];
@@ -107,11 +108,10 @@ const fig = `<g data-p="tafel">${back.join("")}</g><g class="s">${S0.render()}</
 <path data-part="pathI" class="flowI" d=""/>
 <g data-part="arc" class="arc"></g>`;
 const svg = `<svg class="iso-svg" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="t d" xmlns="http://www.w3.org/2000/svg"><title id="t">Automatische zekering</title><desc id="d">Een opengewerkte automatische zekering op een paneel. Links steekt de knop uit het huis, rechts zitten de aansluitklemmen. Binnenin: de contactarm met een openveer, een scharnierstangetje naar de knop, een spoel met eronder een ijzeren anker op een vergrendelhefboom met een terugtrekveer. Een snoer gaat naar een stekkerdoos op tafel.</desc>
-<defs><radialGradient id="arcGrad"><stop offset="0" stop-color="#fffbe6"/><stop offset=".3" stop-color="#ffd24a" stop-opacity=".9"/><stop offset="1" stop-color="#ff8a1e" stop-opacity="0"/></radialGradient>
-<marker id="arrM" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f7f86"/></marker></defs>
+<defs><radialGradient id="arcGrad"><stop offset="0" stop-color="#fffbe6"/><stop offset=".3" stop-color="#ffd24a" stop-opacity=".9"/><stop offset="1" stop-color="#ff8a1e" stop-opacity="0"/></radialGradient></defs>
 <g class="fig">${fig}</g></svg>`;
 
-const DATA = { P, MX, MZ };
+const DATA = { P, K, MX, MY, MZ };
 const side = `
       <div class="action-row">
         <button class="btn-accent" id="lever">Knop indrukken (inschakelen)</button>
@@ -121,7 +121,8 @@ const side = `
         <div class="status"><i id="dot"></i><span id="status">Uitgeschakeld</span></div>
         <div class="row"><span>Uitvoering</span></div>
         <div class="toggles" id="type"><button data-t="veer">spoel + veer</button><button data-t="thermisch">spoel + veer + bimetaal</button></div>
-        <div class="ctl" id="springCtl"><div class="row"><span>Veerspanning: anker wordt aangetrokken boven</span><b id="vTrip">20 A</b></div><input type="range" id="itrip" min="16" max="40" step="1" value="20" aria-label="Uitschakelstroom in ampère"></div>
+        <div class="ctl" id="springCtl"><div class="row"><span>Uitschakelstroom (sterkte van de terugtrekveer)</span><b id="vTrip">20 A</b></div><input type="range" id="itrip" min="16" max="40" step="1" value="20" aria-label="Uitschakelstroom in ampère"></div>
+        <div class="help" id="bmInfo">Nominale stroom 16 A. Het bimetaal schakelt traag uit bij een aanhoudende stroom boven ≈ 18 A, de spoel meteen boven 80 A. De opwarming is hier versneld: in het echt duurt ze minuten.</div>
         <div class="row"><span>Toestellen op de stekkerdoos</span></div>
         <div class="toggles" id="loads"></div>
         <button class="btn-secondary" id="short" style="min-height:38px;border-color:#b8311f;color:#b8311f;font-weight:600">Kortsluiting maken</button>
@@ -133,15 +134,15 @@ const side = `
         <div class="card-head">Hoe werkt het?</div>
         <ol class="steps" id="steps">
           <li><span>Je drukt de knop (k) in. Via het stangetje duwt hij de contactarm tegen het vaste contact; de hefboom vergrendelt het stangetje. De openveer staat gespannen.</span></li>
-          <li><span>De stroom loopt van de bovenste klem over de contacten, door de spoel (s) naar de onderste klem en zo naar de toestellen.</span></li>
+          <li><span>De stroom loopt via de bovenste klem over de contacten, door de spoel (s) en de onderste klem naar de toestellen. Het is wisselstroom: hij keert voortdurend van zin.</span></li>
           <li><span>De spoel is een elektromagneet: ze trekt aan het ijzeren anker (p). De terugtrekveer houdt de hefboom tegen. Bij een te grote stroom wint de magneet: het anker schiet omhoog en de hefboom kantelt.</span></li>
           <li><span>De vergrendeling laat los: de openveer trekt de contactarm weg, de stroom is onderbroken en de knop springt naar buiten.</span></li>
         </ol>
       </div>
 ${PARTS_CARD}`;
 const legend = `
-        <span><i class="bar" style="background:#e0a020"></i>stroom</span>
-        <span><i class="bar" style="background:#1f7f86"></i>magnetisch veld van de spoel</span>
+        <span><i class="bar" style="background:#e0a020"></i>stroom (wisselt van zin, hier sterk vertraagd)</span>
+        <span><i class="bar" style="background:#1f7f86"></i>magnetisch veld van de spoel (keert mee om)</span>
         <span><i class="bar" style="background:#b8733a"></i>spoel (s)</span>
         <span><i class="bar" style="background:#5b6573"></i>ijzeren anker (p)</span>
         <span><i class="bar" style="background:#ff9a2a"></i>vonk</span>`;
@@ -169,20 +170,23 @@ const css = `
   .cable .tb-body{fill:#7b8692}.cable .tb-shine{fill:#a7b0ba}.cable .tb-shade{fill:#5d6772}
   .cable.brown .tb-body{fill:#8a5a3a}.cable.brown .tb-shine{fill:#b07e5c}.cable.brown .tb-shade{fill:#6a4228}
   .cable.white .tb-body{fill:#e3e5e7}.cable.white .tb-shine{fill:#fafafa}.cable.white .tb-shade{fill:#c7cbcf}
-  .flowI{fill:none;stroke:#f2b631;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 7;opacity:0;vector-effect:non-scaling-stroke}
+  .flowI{fill:none;stroke:#e0a020;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 7;opacity:0;vector-effect:non-scaling-stroke}
   .arc circle{fill:url(#arcGrad);mix-blend-mode:multiply}
   .s path.spring{fill:none;stroke:#1d2a3a;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
   .s path.lead{fill:none;stroke:#b8733a;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6 0.9;vector-effect:non-scaling-stroke}
   .s path.wire{fill:none;stroke:#2a3442;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
   .s path.bfield{fill:none;stroke:#1f7f86;stroke-width:1.4;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+  .s path.bhead{fill:#1f7f86;stroke:none}
+  .now{flex:none;display:flex;gap:10px;align-items:flex-start;min-height:58px;background:var(--accent-soft);border:1px solid var(--ink);border-radius:4px;box-shadow:var(--shadow);padding:9px 14px;font-size:14px;line-height:1.4;color:var(--ink)}
+  .now b{font-family:var(--font-mono);font-weight:600;font-size:12px;flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff}
   .tagk{font-family:var(--font-mono);font-size:13px;font-weight:600;fill:#1d2a3a;paint-order:stroke;stroke:#fbf8f1;stroke-width:3px}
   .fig{--bm:#c9ced4;--bm-side:#aeb5bd}
 `;
 const PARTS = [
   { id: "knop", name: "k · knop", text: "Met de knop schakel je de zekering in. Een stangetje duwt de contactarm tegen het vaste contact en spant zo de openveer. Na het uitschakelen steekt de knop naar buiten: zo zie je welke zekering 'gesprongen' is.", fact: "" },
   { id: "contact", name: "Contacten en contactarm", text: "Een vast contact (aan de bovenste klem) en een beweegbare contactarm. Zolang ze tegen elkaar drukken, is de kring gesloten.", fact: "" },
-  { id: "veren", name: "Openveer en terugtrekveer", text: "De openveer (linksboven) trekt de contactarm altijd naar de open stand: hij wacht alleen tot de vergrendeling loslaat. De terugtrekveer (linksonder) houdt de hefboom in de vergrendelde stand, tegen de kracht van de spoel in. Hoe sterker die veer, hoe groter de stroom moet zijn om uit te schakelen.", fact: "veerkracht F = k · u" },
-  { id: "spoel", name: "s · spoel", text: "Alle stroom van de kring loopt door deze spoel. Ze werkt als een elektromagneet: hoe groter de stroom, hoe sterker ze het ijzeren anker aantrekt.", fact: "magnetische kracht groeit met I²" },
+  { id: "veren", name: "Openveer en terugtrekveer", text: "De openveer (linksboven) trekt de contactarm altijd naar de open stand: hij wacht alleen tot de vergrendeling loslaat. De terugtrekveer (linksonder) houdt de hefboom in de vergrendelde stand, tegen de kracht van de spoel in. Hoe sterker die veer, hoe groter de stroom moet zijn om uit te schakelen.", fact: "veerkracht F = k · Δx" },
+  { id: "spoel", name: "s · spoel", text: "Alle stroom van de kring loopt door deze spoel. Ze werkt als een elektromagneet: hoe groter de stroom, hoe sterker ze het ijzeren anker aantrekt. Het is wisselstroom: stroom en veld keren 50 keer per seconde om, maar het ijzeren anker wordt in beide zinnen aangetrokken.", fact: "magnetische kracht groeit met I²" },
   { id: "anker", name: "p · anker en hefboom", text: "Het ijzeren anker (p) zit op de voet van de vergrendelhefboom, net onder de spoel. Wordt de magneetkracht groter dan de kracht van de terugtrekveer, dan wordt het anker omhoog getrokken, kantelt de hefboom en laat het stangetje van de knop los.", fact: "" },
   { id: "bimetaal", name: "Bimetaal (optie)", text: "In de uitvoering met bimetaal loopt de stroom ook door een strip van twee metalen die verschillend uitzetten. Bij een kleine, aanhoudende overbelasting wordt de strip warm, buigt hij door en duwt hij na een tijdje de hefboom om, ook al is de spoel nog niet sterk genoeg.", fact: "traag bij kleine overbelasting, de spoel meteen bij kortsluiting" },
   { id: "stekkerdoos", name: "Stekkerdoos", text: "Alle toestellen op één kring tellen samen: de stromen tellen op. Een waterkoker van 2000 W trekt alleen al I = P / U = 2000 W / 230 V ≈ 8,7 A.", fact: "I = P / U" },

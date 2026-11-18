@@ -195,9 +195,9 @@ class Component extends DCLogic {
     if (v === 0) return '0';
     const a = Math.abs(v);
     if (a >= 1000) return Math.round(v).toLocaleString('nl-NL');
-    if (a >= 1) return (Math.round(v * 100) / 100).toString();
-    if (a >= 0.01) return v.toPrecision(2);
-    return v.toExponential(1);
+    if (a >= 1) return (Math.round(v * 100) / 100).toString().replace('.', ',');
+    if (a >= 0.01) return v.toPrecision(2).replace('.', ',');
+    return v.toExponential(1).replace('.', ',');
   }
 
   tempColor(T) {
@@ -392,7 +392,7 @@ class Component extends DCLogic {
       starColor: this.tempColor(T),
       starOp: starOp.toFixed(2),
       bOp: bN.toFixed(2), gOp: gN.toFixed(2), rOp: rN.toFixed(2),
-      peakLamStr: (lp < 1 ? lp.toFixed(3) : lp.toFixed(2)) + ' \u00B5m',
+      peakLamStr: (lp < 1 ? lp.toFixed(3) : lp.toFixed(2)).replace('.', ',') + ' \u00B5m',
       peakValStr: this.fmtNum(peak) + ' MW/m\u00B2/\u00B5m',
       intensityStr: this.fmtNum(this.totalIntensity(T)) + ' MW/m\u00B2',
       windowStr: this.fmtNum(this.state.xMax) + ' \u00B5m \u00B7 ' + this.fmtNum(this.state.yMax),

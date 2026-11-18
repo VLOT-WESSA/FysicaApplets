@@ -558,16 +558,16 @@ class Component extends DCLogic {
   renderVals() {
     const seg = a => ({ bg: a ? 'var(--accent)' : '#fff', fg: a ? '#fff' : 'var(--ink)' });
     const d = n => seg(this.state.duur === n), li = seg(!this.state.logAs), lo = seg(this.state.logAs);
-    const sr = this.sr, fmtT = t => t < 1 ? (t * 1000).toFixed(1) + ' ms' : t.toFixed(3) + ' s';
+    const sr = this.sr, fmtT = t => (t < 1 ? (t * 1000).toFixed(1) + ' ms' : t.toFixed(3) + ' s').replace('.', ',');
     let selTxt = '';
-    if (this.samples) selTxt = 'van ' + fmtT(this.selA / sr) + ' tot ' + fmtT(this.selB / sr) + '  (' + ((this.selB - this.selA) / sr * 1000).toFixed(1) + ' ms)';
+    if (this.samples) selTxt = 'van ' + fmtT(this.selA / sr) + ' tot ' + fmtT(this.selB / sr) + '  (' + ((this.selB - this.selA) / sr * 1000).toFixed(1).replace('.', ',') + ' ms)';
     let cursorTxt = 'A: –   B: –';
     if (this.curA !== null) cursorTxt = 'A: ' + fmtT(this.curA) + '   B: ' + (this.curB !== null ? fmtT(this.curB) : '–');
     if (this.curA !== null && this.curB !== null) {
       const dt = Math.abs(this.curB - this.curA), n = this.state.nPer;
-      cursorTxt += '\nΔt = ' + fmtT(dt) + '\nT = Δt / ' + n + ' = ' + fmtT(dt / n) + '\nf = 1/T = ' + (n / dt).toFixed(1) + ' Hz';
+      cursorTxt += '\nΔt = ' + fmtT(dt) + '\nT = Δt / ' + n + ' = ' + fmtT(dt / n) + '\nf = 1/T = ' + (n / dt).toFixed(1).replace('.', ',') + ' Hz';
     }
-    const piekTxt = this.piek ? 'Gekozen piek: ' + this.piek.f.toFixed(1) + ' Hz (' + this.piek.db.toFixed(0) + ' dB)' : 'Nog geen piek gekozen.';
+    const piekTxt = this.piek ? 'Gekozen piek: ' + this.piek.f.toFixed(1).replace('.', ',') + ' Hz (' + this.piek.db.toFixed(0) + ' dB)' : 'Nog geen piek gekozen.';
     const herteken = () => setTimeout(() => this.draw(), 0);
     const mid = Math.round((this.selA + this.selB) / 2), h = Math.round(0.025 * sr);
     return {
@@ -578,7 +578,7 @@ class Component extends DCLogic {
       selTxt, cursorTxt, piekTxt, nPer: this.state.nPer, fmax: this.state.fmax, kopieerLbl: this.state.kopieerLbl,
       heeftF0: this.f0 !== null && this.harm.length > 0,
       harm: this.harm.map(x => x.db < -60 ? { n: x.n, f: '–', r: '–', db: 'geen' }
-        : { n: x.n, f: x.f.toFixed(1), r: x.r.toFixed(3), db: x.db.toFixed(0) }),
+        : { n: x.n, f: x.f.toFixed(1).replace('.', ','), r: x.r.toFixed(3).replace('.', ','), db: x.db.toFixed(0) }),
       onD1: () => this.setState({ duur: 1 }), onD2: () => this.setState({ duur: 2 }), onD4: () => this.setState({ duur: 4 }), onD8: () => this.setState({ duur: 8 }),
       onRec: () => { if (this.state.opnemen) this.stopOpname(); else this.startOpname(); },
       onFile: e => this.openBestand(e),

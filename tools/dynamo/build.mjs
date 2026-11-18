@@ -195,7 +195,7 @@ const side = `
           <g stroke="#e9e2d2" stroke-width="1">${Array.from({ length: 11 }, (_, i) => `<path d="M${15 + i * 27} 8V102"/>`).join("")}${Array.from({ length: 5 }, (_, i) => `<path d="M15 ${8 + i * 23.5}H285"/>`).join("")}</g>
           <path d="M15 55H285" stroke="#cfc6b3" stroke-width="1"/>
           <path id="scopeTrace" d="" fill="none" stroke="#c9822c" stroke-width="2"/>
-          <text x="18" y="18" font-family="IBM Plex Mono" font-size="11" fill="#4f5b69">±10 V</text>
+          <text x="18" y="18" font-family="IBM Plex Mono" font-size="11" fill="#4f5b69">±12 V</text>
           <text x="282" y="98" font-family="IBM Plex Mono" font-size="11" fill="#4f5b69" text-anchor="end">20 ms</text>
         </svg>
         <div class="help">Een wisselspanning: telkens als een noordpool en daarna een zuidpool langs de spoel draait, keert de spanning om.</div>
@@ -204,7 +204,7 @@ const side = `
         <div class="card-head">Hoe werkt het?</div>
         <ol class="steps" id="steps">
           <li><span>Het wiel draait het rolletje rond. Het rolletje is klein, dus de magneet draait veel sneller dan het wiel.</span></li>
-          <li><span>De magneet draait in de spoel: de magnetische flux door de spoel verandert voortdurend van grootte en richting.</span></li>
+          <li><span>De magneet draait in de spoel: de magnetische flux door de spoel verandert voortdurend van grootte en zin.</span></li>
           <li><span>Een veranderende flux wekt een inductiespanning op (wet van Faraday): U = −N·ΔΦ/Δt.</span></li>
           <li><span>Sneller fietsen: de flux verandert sneller, dus de spanning en de frequentie worden groter en de lamp brandt feller.</span></li>
         </ol>
@@ -246,7 +246,7 @@ const PARTS = [
   { id: "magneet", name: "Draaiende magneet", text: "Een cilindermagneet op de as van het rolletje, met afwisselend noord- en zuidpolen rondom. Hij draait mee en is het bewegende deel: de rotor.", fact: "2 poolparen: 2 spanningsperiodes per omwenteling" },
   { id: "stator", name: "IJzeren stator", text: "Weekijzeren klauwpolen rond de magneet leiden zijn veld door de spoel. Draait er een noordpool voorbij, dan loopt de flux door de spoel de ene kant op; bij een zuidpool de andere kant op.", fact: "" },
   { id: "spoel", name: "Spoel", text: "Een spoel met veel windingen dun koperdraad, vast in de behuizing. De veranderende flux wekt er een inductiespanning in op.", fact: "U = −N · ΔΦ / Δt" },
-  { id: "draden", name: "Draden", text: "Eén draad gaat van de aansluiting van de dynamo naar de lamp; de stroom komt terug via het metalen frame (hier de zwarte draad vanaf de vork). De gele streepjes keren telkens van richting: wisselstroom.", fact: "" },
+  { id: "draden", name: "Draden", text: "Eén draad gaat van de aansluiting van de dynamo naar de lamp; de stroom komt terug via het metalen frame (hier de zwarte draad vanaf de vork). De gele streepjes keren telkens van zin: wisselstroom.", fact: "" },
   { id: "lamp", name: "Koplamp", text: "Een gloeilampje van 6 V en 3 W. Hoe groter de spanning, hoe meer vermogen en hoe feller het brandt. De zelfinductie van de spoel begrenst de stroom bij hoge snelheid, zodat het lampje niet doorbrandt.", fact: "P = U · I = U² / R" },
   { id: "velg", name: "Velg", text: "Het rolletje van de dynamo wrijft tegen de zijkant van de draaiende velg en wordt zo meegenomen. Het rolt zonder te slippen: de omtreksnelheid van het rolletje is gelijk aan die van de velg.", fact: "v = ω · r, dus ω_rol = ω_wiel · R_velg / r_rol" },
 ];

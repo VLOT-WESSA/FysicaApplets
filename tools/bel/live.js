@@ -76,6 +76,13 @@
     }
     setText("status", status); $("dot").style.background = col;
     [...$("steps").children].forEach((li, i) => { if (i === step) li.setAttribute("data-on", ""); else li.removeAttribute("data-on"); });
+    // de actieve stap staat ook onder de tekening, zodat hij zichtbaar blijft als de zijbalk gescrold is
+    const cap = !s.pressed ? -1 : slow || still.matches ? step : -2;
+    if (cap !== shownStep) {
+      shownStep = cap;
+      nowNum.textContent = cap >= 0 ? String(cap + 1) : "";
+      nowText.textContent = cap >= 0 ? $("steps").children[cap].textContent : cap === -1 ? "Druk op de knop K om de kring te sluiten." : "Zet ‘Vertraagd’ aan om de vier stappen één voor één te volgen.";
+    }
     setText("cornerRead", !s.pressed ? "kring open" : (s.closed ? "kring gesloten · " : "kring onderbroken · ") + fmt(s.I, 2) + " A");
   }
 
@@ -123,6 +130,10 @@
   pressBtn($("slow"), slow);
   cap.addEventListener("click", (ev) => { ev.stopPropagation(); press(!s.pressed); });
   document.addEventListener("keydown", (ev) => { if (ev.key === " " && ev.target === document.body) { ev.preventDefault(); press(!s.pressed); } });
+  const now = document.createElement("div"), nowNum = document.createElement("b"), nowText = document.createElement("span");
+  now.className = "now"; now.setAttribute("aria-live", "polite"); now.append(nowNum, nowText);
+  document.querySelector(".legend").before(now);
+  let shownStep = null;
   const parts = setupParts(PARTS, svg);
   press(false);
   window.__bel = { get s() { return s; } };

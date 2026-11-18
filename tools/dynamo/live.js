@@ -62,7 +62,7 @@
     for (let i = 0; i <= 120; i++) {
       const t = i / 120 * 0.02;
       const u = Upk * Math.sin(2 * Math.PI * st.f * spin * t - DATA.POLE * thM);
-      d += (i ? "L" : "M") + (15 + 270 * i / 120).toFixed(1) + " " + (55 - Math.max(-10, Math.min(10, u)) * 4.7).toFixed(1);
+      d += (i ? "L" : "M") + (15 + 270 * i / 120).toFixed(1) + " " + (55 - Math.max(-12, Math.min(12, u)) * 47 / 12).toFixed(1);
     }
     $("scopeTrace").setAttribute("d", d);
   }

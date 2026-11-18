@@ -59,14 +59,14 @@
   function lorentzCard(I) {
     // B wijst naar beneden (naar de as), I uit of in het blad, F naar links of rechts (langs de as)
     const g = $("lfig");
-    const out = I >= 0, mag = Math.min(1, Math.abs(I) * 1.4);
-    const fx = out ? -1 : 1;                // F = I·ℓ × B: stroom uit het blad en B naar de as → F naar achter (naar de magneet)
+    const out = I < 0, mag = Math.min(1, Math.abs(I) * 1.4);
+    const fx = out ? 1 : -1;                // F = I·ℓ × B: stroom uit het blad (naar de kijker) en B naar de as → F naar voor (naar de conus)
     g.querySelector("#lI").innerHTML = mag < 0.05 ? "" : out ? '<circle cx="150" cy="62" r="11" class="ci"/><circle cx="150" cy="62" r="3.2" fill="#b07a10"/>' : '<circle cx="150" cy="62" r="11" class="ci"/><path d="M143 55l14 14M157 55l-14 14" stroke="#b07a10" stroke-width="2.2"/>';
     const L = 70 * mag;
     g.querySelector("#lF").setAttribute("d", mag < 0.05 ? "" : `M${150 + fx * 16} 62L${(150 + fx * (16 + L)).toFixed(1)} 62`);
     g.querySelector("#lFt").setAttribute("x", (150 + fx * (24 + L)).toFixed(1));
     g.querySelector("#lFt").style.opacity = mag < 0.05 ? 0 : 1;
-    setText("lText", mag < 0.05 ? "Geen stroom: geen kracht." : out ? "Stroom uit het blad (⊙), B naar de as: F duwt de spoel naar achter." : "Stroom in het blad (⊗), B naar de as: F duwt de spoel naar voor.");
+    setText("lText", mag < 0.05 ? "Geen stroom: geen kracht." : out ? "Stroom uit het blad (⊙), B naar de as: F duwt de spoel naar voor." : "Stroom in het blad (⊗), B naar de as: F duwt de spoel naar achter.");
   }
 
   function tick(now) {
@@ -79,7 +79,7 @@
     const r = response(ctl.U, dc ? 5 : ctl.f);
     const big = ctl.U > 0 ? Math.min(7, 7 * Math.pow(r.x / 1.445e-3, 0.35)) : 0;
     const s = dc ? dcVal : Math.sin(phase);
-    const I = amp * s;                         // + : stroom uit het blad bovenaan (⊙)
+    const I = amp * s;                         // + : stroom in het blad bovenaan (⊗)
     const d = -amp * big * s;                  // de conus volgt de kracht (F = −I·ℓ·B langs de as)
     drawMoving(d);
     // lucht: longitudinale golf (bij gelijkstroom alleen een eenmalige duw)
@@ -96,7 +96,7 @@
     if (amp > 0.02 && vis > 0.03) {
       for (const psi of [0, Math.PI]) {
         const c = at(onPlane(29.4 + d, 16.3, psi));
-        const out = (I >= 0) === (psi === 0);
+        const out = (I < 0) === (psi === 0);
         m += `<g opacity="${vis.toFixed(2)}"><circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="6"/>` + (out ? `<circle class="dotc" cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="1.9"/>` : `<path class="sym" d="M${(c[0] - 3.6).toFixed(1)} ${(c[1] - 3.6).toFixed(1)}l7.2 7.2M${(c[0] + 3.6).toFixed(1)} ${(c[1] - 3.6).toFixed(1)}l-7.2 7.2"/>`) + `</g>`;
         const f0 = at(onPlane(29.4 + d, 22.5, psi)), f1 = at(onPlane(29.4 + d - I * 30, 22.5, psi));
         if (Math.abs(I) > 0.12) m += `<path class="force" marker-end="url(#arrF)" d="M${pp(f0)}L${pp(f1)}"/><text class="flab" x="${(f1[0] + (I > 0 ? -12 : 6)).toFixed(1)}" y="${(f1[1] + 4).toFixed(1)}">F</text>`;

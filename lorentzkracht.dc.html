@@ -78,7 +78,7 @@
           <span style="font-size:14px;font-weight:600">{{ statusLabel }}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Stroom I</span><span style="font-family:'IBM Plex Mono',monospace;color:#8a3b2c">{{ iStr }}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Stroomrichting</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ curDirStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Stroomzin</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ curDirStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Veld B</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ fieldDirStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Kracht F</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ forceStr }}</span></div>
       </div>
@@ -86,7 +86,7 @@
       <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px">
         <span style="font-size:12px;font-weight:600;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted)">Weergave (uit bij start)</span>
         <button onClick="{{ toggleCurrent }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ curBorder }};background:{{ curBg }};color:var(--ink)">
-          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomrichting <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ curState }}</span>
+          <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#e0503a"></span>Stroomzin <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ curState }}</span>
         </button>
         <button onClick="{{ toggleField }}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;border:1px solid {{ fieldBorder }};background:{{ fieldBg }};color:var(--ink)">
           <span style="width:11px;height:11px;border-radius:3px;flex:none;background:#3a6fb8"></span>Magneetveld <span style="margin-left:auto;font-size:12px;color:var(--muted)">{{ fieldState }}</span>
@@ -456,7 +456,7 @@ class Component extends DCLogic {
       ? 'Zet de stroom aan en schuif de stroomsterkte omhoog. Zet daarna de lagen aan. Met \u201cOmpolen stroom\u201d of \u201cMagneet draaien\u201d keert de kracht om.'
       : (st.amps === 0
         ? 'De stroom staat aan, maar de sterkte is 0 A \u2014 er werkt geen kracht. Verhoog de stroomsterkte.'
-        : 'De Lorentzkracht (paars) duwt de draad zijwaarts uit het veld. Let op de rechterhandregel.');
+        : 'De lorentzkracht (paars) duwt de draad zijwaarts uit het veld. Let op de rechterhandregel.');
     const pill = (o) => ({ bg: o ? '#f4efe6' : '#fff', border: o ? '#d8cdb8' : '#e7e1d5', state: o ? 'aan' : 'uit' });
     const f = pill(st.showField), cu = pill(st.showCurrent), fo = pill(st.showForce);
     return {
@@ -476,7 +476,7 @@ class Component extends DCLogic {
       statusDot: on ? '#5fae7a' : (st.powered ? '#c9a23f' : '#b8b1a2'),
       statusLabel: on ? 'Draad zwaait uit' : (st.powered ? 'Aan \u2014 0 A' : 'Geen stroom'),
       iStr: (st.powered ? st.amps : 0).toFixed(1) + ' A',
-      curDirStr: st.curDir === 1 ? 'naar achter' : 'naar voor',
+      curDirStr: st.curDir === 1 ? 'naar voor' : 'naar achter',
       fieldDirStr: st.fieldDir === 1 ? 'omlaag (N\u2192S)' : 'omhoog (S\u2192N)',
       forceStr: !on ? 'geen' : (s > 0 ? 'naar rechts' : 'naar links'),
       toggleField: () => this.setState(s => ({ showField: !s.showField })),

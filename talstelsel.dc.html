@@ -63,6 +63,9 @@
           </sc-for>
         </div>
         <input type="text" value="{{ cText }}" onInput="{{ onConvInput }}" spellcheck="false" autocomplete="off" style="flex:1;min-width:200px;height:38px;border-radius:4px;border:1.5px solid {{ cBorder }};background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:var(--ink)">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--ink);min-height:36px">
+          <input type="checkbox" checked="{{ showDiv }}" onChange="{{ toggleDiv }}" style="width:17px;height:17px;accent-color:oklch(0.64 0.13 300);cursor:pointer">Restdelingmethode tonen
+        </label>
       </div>
       <sc-if value="{{ cErr }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:13px;color:#b8472f">{{ cErr }}</div>
@@ -99,6 +102,26 @@
         </div>
       </sc-for>
     </div>
+
+    <sc-if value="{{ showDiv }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--card);border:1px solid var(--ink);border-radius:4px;padding:14px 16px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;letter-spacing:.01em;font-family:var(--font-mono);color:var(--muted);font-weight:600;margin-bottom:10px">Restdelingmethode</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 28px">
+          <sc-for list="{{ divCols }}" as="dc" hint-placeholder-count="2">
+            <div style="min-width:0">
+              <div style="font-size:13.5px;font-weight:600;color:oklch(0.45 0.13 300);margin-bottom:6px">{{ dc.title }}</div>
+              <div style="overflow-x:auto">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.75;width:max-content">
+                  <sc-for list="{{ dc.lines }}" as="ln" hint-placeholder-count="4">
+                    <div style="{{ ln.css }}">{{ ln.text }}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
   </div>
   </sc-if>
 
@@ -164,7 +187,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { tab: 'conv', n: 8, signed: true, cBase: 'dec', cText: '5', u: 5, cErr: '',
+  state = { tab: 'conv', n: 8, signed: true, cBase: 'dec', cText: '5', u: 5, cErr: '', showDiv: false,
     calcBase: 'bin', op: '+', aText: '1011', bText: '110', aErr: '', bErr: '' };
 
   ACC = 'oklch(0.64 0.13 300)';
@@ -222,6 +245,55 @@ class Component extends DCLogic {
     const s = !this.state.signed, n = this.state.n;
     this.setState({ signed: s, cErr: '', cText: this.fmtText(this.state.u, this.state.cBase, n, s) });
   };
+  toggleDiv = () => this.setState({ showDiv: !this.state.showDiv });
+
+  // restdeling: opeenvolgend delen door de basis, resten van onder naar boven lezen
+  divLines(a, base) {
+    const L = [], mono = "'IBM Plex Mono',monospace", body = 'var(--font-body)';
+    const S = (text, o) => L.push(Object.assign({ text, color: 'var(--ink)', weight: '400', font: mono, size: '14px', rule: 'none' }, o || {}));
+    const rows = [];
+    let q = a;
+    do { rows.push([q, Math.floor(q / base), q % base]); q = Math.floor(q / base); } while (q > 0);
+    const w = String(a).length, wq = String(rows[0][1]).length;
+    rows.forEach(([d, qq, r]) => {
+      const rs = base === 16 && r >= 10 ? r + ' \u2192 ' + r.toString(16).toUpperCase() : String(r);
+      S(String(d).padStart(w, ' ') + ' : ' + base + ' = ' + String(qq).padStart(wq, ' ') + '   rest ' + rs);
+    });
+    S('\u2191 lees de resten van onder naar boven', { color: 'oklch(0.55 0.13 300)', font: body, size: '13px' });
+    return { L, S, digits: rows.map(r => r[2].toString(base).toUpperCase()).reverse().join('') };
+  }
+  divCols(u, v, n, signed) {
+    const neg = signed && v < 0, M = this.M(n);
+    const note = { color: '#6f685c', font: 'var(--font-body)', size: '13px' };
+    // binair
+    const b = this.divLines(neg ? -v : v, 2);
+    b.S((neg ? '|' + this.fi(v) + '| = ' + (-v) + ' = ' : v + ' = ') + b.digits, { weight: '600', rule: '1.5px solid #cfc7b6' });
+    if (b.digits.length < n) b.S('aanvullen tot ' + n + ' bits: ' + this.bin(neg ? -v : v, n, true));
+    if (neg) {
+      b.S('inverteren: ' + this.bin(M - 1 + v, n, true), { color: '#6f685c' });
+      b.S('plus 1:     ' + this.bin(u, n, true) + '  (= ' + this.fi(v) + ')', { weight: '600' });
+    }
+    // hexadecimaal
+    let hx;
+    const digs = Math.ceil(n / 4);
+    if (!neg) {
+      hx = this.divLines(v, 16);
+      hx.S(v + ' = 0x' + hx.digits, { weight: '600', rule: '1.5px solid #cfc7b6' });
+      if (hx.digits.length < digs) hx.S('aanvullen tot ' + digs + ' cijfers: 0x' + this.hex(u).padStart(digs, '0'));
+    } else {
+      const L = [];
+      const S = (text, o) => L.push(Object.assign({ text, color: 'var(--ink)', weight: '400', font: "'IBM Plex Mono',monospace", size: '14px', rule: 'none' }, o || {}));
+      S('Voor negatieve getallen: eerst 2-complement, dan per 4 bits groeperen.', note);
+      const bs = this.bin(u, n, false), groups = bs.match(/.{4}/g);
+      S('2-complement: ' + groups.join(' '));
+      S('per 4 bits:   ' + groups.map(g => parseInt(g, 2).toString(16).toUpperCase().padStart(4, ' ')).join(' '));
+      S(this.fi(v) + ' = 0x' + this.hex(u).padStart(digs, '0'), { weight: '600', rule: '1.5px solid #cfc7b6' });
+      hx = { L };
+    }
+    // stijl als \u00e9\u00e9n string: zo wordt hij ook bij hergebruikte rijen correct bijgewerkt
+    const css = L => L.map(l => ({ text: l.text, css: 'white-space:pre;color:' + l.color + ';font-weight:' + l.weight + ';font-family:' + l.font + ';font-size:' + l.size + ';border-top:' + l.rule }));
+    return [{ title: 'Decimaal \u2192 binair (delen door 2)', lines: css(b.L) }, { title: 'Decimaal \u2192 hexadecimaal (delen door 16)', lines: css(hx.L) }];
+  }
   setCBase = (b) => () => this.setState({ cBase: b, cErr: '', cText: this.fmtText(this.state.u, b, this.state.n, this.state.signed) });
   onConvInput = (e) => {
     const text = e.target.value, { cBase, n, signed } = this.state;
@@ -362,6 +434,7 @@ class Component extends DCLogic {
       isConv: tab === 'conv', isCalc: tab === 'calc',
       cBaseBtns, cText: st.cText, onConvInput: this.onConvInput, cErr: st.cErr, cBorder: st.cErr ? '#d6492f' : '#d9d1bf',
       nibbles, cellW, sumStr, negSteps: neg, negLine1, negLine2, negLine3, convOut,
+      showDiv: st.showDiv, toggleDiv: this.toggleDiv, divCols: st.showDiv ? this.divCols(u, v, n, signed) : [],
       calcBaseBtns, opBtns, aText: st.aText, bText: st.bText, onA: this.onA, onB: this.onB,
       aBorder: pa.err && st.aText.trim() ? '#d6492f' : '#d9d1bf', bBorder: pb.err && st.bText.trim() ? '#d6492f' : '#d9d1bf',
       aNote: note(pa, st.aText), bNote: note(pb, st.bText),

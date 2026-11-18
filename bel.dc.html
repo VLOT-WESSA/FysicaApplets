@@ -195,6 +195,9 @@
     .corner.bl,.corner.tr{display:none}
   }
 
+  .now{flex:none;display:flex;gap:10px;align-items:flex-start;min-height:58px;background:var(--accent-soft);border:1px solid var(--ink);border-radius:4px;box-shadow:var(--shadow);padding:9px 14px;font-size:14px;line-height:1.4;color:var(--ink)}
+  .now b{font-family:var(--font-mono);font-weight:600;font-size:12px;flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff}
+  .now b:empty{display:none}
   .wood>.iso-top{fill:#f3e6cf}.wood>.iso-shade[data-shade="0"]{fill:#d9c29d}.wood>.iso-shade[data-shade="1"]{fill:#e2cda9}.wood>.iso-shade[data-shade="2"]{fill:#e9d7b6}.wood>.iso-shade[data-shade="3"]{fill:#efdfc2}
   .brass>.iso-top{fill:#f1dfa8}.brass>.iso-shade{fill:#dcc27c}.brass>.iso-shade[data-shade="3"],.brass>.iso-shade[data-shade="2"]{fill:#e7d08f}
   .copper>.iso-top,.copper>.iso-shade{fill:#d99a68}.copper>.iso-shade[data-shade="0"]{fill:#b8733a}.copper>.iso-shade[data-shade="1"]{fill:#c4834b}.copper>.iso-shade[data-shade="2"]{fill:#cf8f59}
@@ -940,7 +943,7 @@ const ISO_CSS = `
 `;
 
 const DATA = {"P":{"origin":[440,274.13579956098897],"scale":2.01707812791912,"azimuth":-40,"elevation":34},"PIVOT":[-92,-5],"BAR":{"s0":4,"s1":181,"w0":-0.6,"w1":1.4,"z0":13,"z1":23},"KEEP":{"s0":39,"s1":107,"w0":1.4,"w1":3.6,"z0":11,"z1":25},"BALL":{"s":181,"w":1.4,"z":18,"r":6},"RIVET":{"s":122,"r":1.6},"LEGS":[-43,5],"LEG_HW":7,"POLE_Y":5.2,"CORE_Z":18,"CORE_HZ":7,"GONG":[89,43.9],"HIT":12,"BTN":[62,-62],"SCREW":{"x":30,"post":[-26,-16]}};
-const PARTS = [{"id":"bel","name":"B · bel","text":"Een schaal van belbrons op een stang. Als de hamer ertegen slaat, trilt de schaal en dat hoor je als geluid.","fact":"toonhoogte hangt af van grootte en dikte van de schaal"},{"id":"kern","name":"E · weekijzeren kern","text":"Een U-vormige kern van weekijzer. Zonder stroom is hij niet magnetisch. Loopt er stroom door de spoelen, dan worden de twee benen een noord- en een zuidpool. Weekijzer verliest zijn magnetisme meteen weer als de stroom stopt; staal zou magnetisch blijven.","fact":"weekijzer: groot μr, kleine remanentie"},{"id":"spoelen","name":"Spoelen","text":"Twee spoelen van gelakt koperdraad rond de benen van de kern, in serie geschakeld en in tegengestelde zin gewonden, zodat het ene been noord en het andere zuid wordt. Hoe meer windingen en hoe groter de stroom, hoe sterker de magneet.","fact":"B ~ N · I"},{"id":"anker","name":"A · anker met hamer","text":"Een ijzeren strip met een plaatje weekijzer onder de polen en een kogeltje (de hamer) aan het eind. De magneet trekt het anker aan; de hamer beweegt dan naar de bel.","fact":"hefboom: de hamer beweegt ruim 2× verder dan het weekijzer"},{"id":"klem","name":"Bladveer en klem","text":"Het anker zit met een verende strip vast in een koperen klem. De veer trekt het anker terug zodra de magneet loslaat. Via deze klem loopt ook de stroom het anker in.","fact":"veerkracht F = −k · u"},{"id":"schroef","name":"T · contactschroef","text":"De punt van de schroef raakt het anker in rust. Zo is de kring gesloten. Trekt de magneet het anker weg, dan komt er een spleetje en is de kring open: de bel onderbreekt zelf haar stroom. Met de schroef stel je in hoe snel ze rinkelt.","fact":"zelfonderbreker: vonkjes slijten de punt"},{"id":"knop","name":"K · drukknop","text":"Een schakelaar die alleen sluit zolang je drukt. Laat je los, dan is de kring open en stopt de bel.","fact":""},{"id":"batterij","name":"U · batterij","text":"Een platte batterij van 4,5 V levert de spanning die de stroom door de kring drijft.","fact":"I = U / R = 4,5 V / 3 Ω = 1,5 A"},{"id":"draden","name":"Draden","text":"Geïsoleerde koperdraden verbinden alles tot één kring: + → drukknop → spoelen → klem → anker → contactschroef → −. De gele streepjes tonen de (conventionele) stroomzin.","fact":"één onderbreking waar ook en de stroom stopt overal"}];
+const PARTS = [{"id":"bel","name":"B · bel","text":"Een schaal van belbrons op een stang. Als de hamer ertegen slaat, trilt de schaal en dat hoor je als geluid.","fact":"toonhoogte hangt af van grootte en dikte van de schaal"},{"id":"kern","name":"E · weekijzeren kern","text":"Een U-vormige kern van weekijzer. Zonder stroom is hij niet magnetisch. Loopt er stroom door de spoelen, dan worden de twee benen een noord- en een zuidpool. Weekijzer verliest zijn magnetisme meteen weer als de stroom stopt; staal zou magnetisch blijven.","fact":"weekijzer: groot μr, kleine remanentie"},{"id":"spoelen","name":"Spoelen","text":"Twee spoelen van gelakt koperdraad rond de benen van de kern, in serie geschakeld en in tegengestelde zin gewonden, zodat het ene been noord en het andere zuid wordt. Hoe meer windingen en hoe groter de stroom, hoe sterker de magneet.","fact":"B ~ N · I"},{"id":"anker","name":"A · anker met hamer","text":"Een ijzeren strip met een plaatje weekijzer onder de polen en een kogeltje (de hamer) aan het eind. De magneet trekt het anker aan; de hamer beweegt dan naar de bel.","fact":"hefboom: de hamer beweegt ruim 2× verder dan het weekijzer"},{"id":"klem","name":"Bladveer en klem","text":"Het anker zit met een verende strip vast in een koperen klem. De veer trekt het anker terug zodra de magneet loslaat. Via deze klem loopt ook de stroom het anker in.","fact":"veerkracht F = k · Δx"},{"id":"schroef","name":"T · contactschroef","text":"De punt van de schroef raakt het anker in rust. Zo is de kring gesloten. Trekt de magneet het anker weg, dan komt er een spleetje en is de kring open: de bel onderbreekt zelf haar stroom. Met de schroef stel je in hoe snel ze rinkelt.","fact":"zelfonderbreker: vonkjes slijten de punt"},{"id":"knop","name":"K · drukknop","text":"Een schakelaar die alleen sluit zolang je drukt. Laat je los, dan is de kring open en stopt de bel.","fact":""},{"id":"batterij","name":"U · batterij","text":"Een platte batterij van 4,5 V levert de spanning die de stroom door de kring drijft.","fact":"I = U / R = 4,5 V / 3 Ω = 1,5 A"},{"id":"draden","name":"Draden","text":"Geïsoleerde koperdraden verbinden alles tot één kring: + → drukknop → spoelen → klem → anker → contactschroef → −. De gele streepjes tonen de (conventionele) stroomzin.","fact":"één onderbreking waar ook en de stroom stopt overal"}];
 // Model van de elektrische bel (zelfonderbreker). Eenheden: wereldeenheden (≈ mm) en seconden.
 const U = 4.5, R = 3, L_IND = 0.012;         // bron (V), weerstand spoelen (Ω), zelfinductie (H)
 const HIT = 12;                              // uitwijking van de hamer tot hij de bel raakt
@@ -1096,6 +1099,13 @@ function setupParts(PARTS, svg, onSelect) {
     }
     setText("status", status); $("dot").style.background = col;
     [...$("steps").children].forEach((li, i) => { if (i === step) li.setAttribute("data-on", ""); else li.removeAttribute("data-on"); });
+    // de actieve stap staat ook onder de tekening, zodat hij zichtbaar blijft als de zijbalk gescrold is
+    const cap = !s.pressed ? -1 : slow || still.matches ? step : -2;
+    if (cap !== shownStep) {
+      shownStep = cap;
+      nowNum.textContent = cap >= 0 ? String(cap + 1) : "";
+      nowText.textContent = cap >= 0 ? $("steps").children[cap].textContent : cap === -1 ? "Druk op de knop K om de kring te sluiten." : "Zet ‘Vertraagd’ aan om de vier stappen één voor één te volgen.";
+    }
     setText("cornerRead", !s.pressed ? "kring open" : (s.closed ? "kring gesloten · " : "kring onderbroken · ") + fmt(s.I, 2) + " A");
   }
 
@@ -1143,6 +1153,10 @@ function setupParts(PARTS, svg, onSelect) {
   pressBtn($("slow"), slow);
   cap.addEventListener("click", (ev) => { ev.stopPropagation(); press(!s.pressed); });
   document.addEventListener("keydown", (ev) => { if (ev.key === " " && ev.target === document.body) { ev.preventDefault(); press(!s.pressed); } });
+  const now = document.createElement("div"), nowNum = document.createElement("b"), nowText = document.createElement("span");
+  now.className = "now"; now.setAttribute("aria-live", "polite"); now.append(nowNum, nowText);
+  document.querySelector(".legend").before(now);
+  let shownStep = null;
   const parts = setupParts(PARTS, svg);
   press(false);
   window.__bel = { get s() { return s; } };

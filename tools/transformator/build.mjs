@@ -121,26 +121,26 @@ const side = `
       </div>
       <div class="panel-card">
         <div class="status"><i id="dot"></i><span id="status">Voeding uit</span></div>
-        <div class="ctl"><div class="row"><span>Primaire spanning U₁</span><b id="vU">12,0 V</b></div><input type="range" id="u1" min="0" max="24" step="0.5" value="12" aria-label="Primaire spanning"></div>
-        <div class="row"><span>Primaire windingen N₁</span></div>
+        <div class="ctl"><div class="row"><span>Primaire spanning Uₚ</span><b id="vU">12,0 V</b></div><input type="range" id="u1" min="0" max="24" step="0.5" value="12" aria-label="Primaire spanning"></div>
+        <div class="row"><span>Primaire windingen Nₚ</span></div>
         <div class="toggles" id="n1"></div>
-        <div class="row"><span>Secundaire windingen N₂</span></div>
+        <div class="row"><span>Secundaire windingen Nₛ</span></div>
         <div class="toggles" id="n2"></div>
         <div class="toggles"><button class="toggle" id="dc" aria-pressed="false">Gelijkspanning</button></div>
       </div>
       <div class="panel-card">
-        <div class="row"><span>Secundaire spanning U₂</span><b id="rU2">–</b></div>
-        <div class="row"><span>Stroom secundair I₂</span><b id="rI2">–</b></div>
-        <div class="row"><span>Stroom primair I₁</span><b id="rI1">–</b></div>
-        <div class="row"><span>Vermogen P₁ = P₂</span><b id="rP">–</b></div>
-        <div class="eq">U₂ / U₁ = N₂ / N₁ &nbsp;·&nbsp; I₁ / I₂ = N₂ / N₁</div>
+        <div class="row"><span>Secundaire spanning Uₛ</span><b id="rU2">–</b></div>
+        <div class="row"><span>Stroom secundair Iₛ</span><b id="rI2">–</b></div>
+        <div class="row"><span>Stroom primair Iₚ</span><b id="rI1">–</b></div>
+        <div class="row"><span>Vermogen Pₚ = Pₛ</span><b id="rP">–</b></div>
+        <div class="eq">Uₛ / Uₚ = Nₛ / Nₚ &nbsp;·&nbsp; Iₚ / Iₛ = Nₛ / Nₚ</div>
       </div>
       <div class="panel-card">
         <div class="card-head">Hoe werkt het?</div>
         <ol class="steps">
-          <li><span>Een wisselstroom in de primaire spoel maakt een magnetisch veld dat steeds van grootte en richting verandert.</span></li>
+          <li><span>Een wisselstroom in de primaire spoel maakt een magnetisch veld dat steeds van grootte en zin verandert.</span></li>
           <li><span>De gesloten ijzeren kern leidt die wisselende flux ook door de secundaire spoel.</span></li>
-          <li><span>In elke winding wekt de veranderende flux dezelfde spanning op. Meer windingen: meer spanning, U₂ = U₁ · N₂ / N₁.</span></li>
+          <li><span>In elke winding wekt de veranderende flux dezelfde spanning op. Meer windingen: meer spanning, Uₛ = Uₚ · Nₛ / Nₚ.</span></li>
           <li><span>Bij gelijkspanning verandert de flux niet: dan is er geen inductiespanning en blijft het lampje uit.</span></li>
         </ol>
       </div>
@@ -173,10 +173,10 @@ const css = `
 `;
 const PARTS = [
   { id: "kern", name: "Weekijzeren kern", text: "Een gesloten ring van weekijzer. Het ijzer bundelt de magnetische flux van de primaire spoel en leidt ze bijna volledig door de secundaire spoel. De kern bestaat uit dunne, geïsoleerde plaatjes (lamellen): zo kunnen er geen grote wervelstromen rondlopen die de kern zouden opwarmen.", fact: "gelamelleerd tegen wervelstroomverliezen" },
-  { id: "primair", name: "Primaire spoel", text: "De spoel die op de voeding is aangesloten. De wisselstroom erin maakt een wisselend magnetisch veld in de kern.", fact: "N₁ windingen" },
-  { id: "secundair", name: "Secundaire spoel", text: "De spoel waarin de spanning opgewekt wordt. Ze is niet elektrisch verbonden met de primaire spoel: alleen via de flux in de kern.", fact: "U₂ = U₁ · N₂ / N₁" },
+  { id: "primair", name: "Primaire spoel", text: "De spoel die op de voeding is aangesloten. De wisselstroom erin maakt een wisselend magnetisch veld in de kern.", fact: "Nₚ windingen" },
+  { id: "secundair", name: "Secundaire spoel", text: "De spoel waarin de spanning opgewekt wordt. Ze is niet elektrisch verbonden met de primaire spoel: alleen via de flux in de kern.", fact: "Uₛ = Uₚ · Nₛ / Nₚ" },
   { id: "voeding", name: "Voeding", text: "Levert een instelbare wisselspanning van 50 Hz, of als je wilt een gelijkspanning.", fact: "50 Hz: de flux keert 100 keer per seconde om" },
-  { id: "lamp", name: "Lampje", text: "Een lampje van 6 V en 3 W op de secundaire kring. Is U₂ veel groter dan 6 V, dan brandt het door.", fact: "R = 12 Ω" },
+  { id: "lamp", name: "Lampje", text: "Een lampje van 6 V en 3 W op de secundaire kring. Is Uₛ veel groter dan 6 V, dan brandt het door.", fact: "R = 12 Ω" },
 ];
 const page = pageHtml({
   title: "Transformator", h1: "Transformator", hue: 150, icon: "transformator", W, H, svg, legend, side, css,

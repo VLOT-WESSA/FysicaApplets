@@ -236,8 +236,8 @@ class Component extends DCLogic {
     return {
       stageRef: this.stageRef,
       lambdaCm: this.state.lambdaCm, ampCm: this.state.ampCm, speedCm: this.state.speedCm,
-      lambdaStr: this.state.lambdaCm + ' cm',
-      ampStr: this.state.ampCm + ' cm',
+      lambdaStr: String(this.state.lambdaCm).replace('.', ',') + ' cm',
+      ampStr: String(this.state.ampCm).replace('.', ',') + ' cm',
       speedStr: this.state.speedCm + ' cm/s',
       fixedBg: fx.bg, fixedFg: fx.fg, looseBg: ls.bg, looseFg: ls.fg,
       incBg: ti.bg, incFg: ti.fg, incDot: ti.dot,

@@ -113,7 +113,7 @@ const side = `
         <div class="toggles" id="field"><button data-b="1.5">1,5 T</button><button data-b="3">3 T</button></div>
         <div class="row"><span>Weefsel in het fantoom</span></div>
         <div class="toggles" id="tissue"><button data-t="water">water</button><button data-t="vet">vet</button><button data-t="grijs">grijze stof</button></div>
-        <div class="row"><span>Larmorfrequentie f = γ·B₀</span><b id="rF">63,9 MHz</b></div>
+        <div class="row"><span>Larmorfrequentie f = (γ/2π)·B₀</span><b id="rF">63,9 MHz</b></div>
         <div class="row"><span>Relaxatietijden T₁ / T₂</span><b id="rR">–</b></div>
         <div class="row"><span>Tijd na de puls</span><b id="rT">–</b></div>
       </div>
@@ -139,7 +139,7 @@ const side = `
       <div class="panel-card">
         <div class="card-head">Hoe werkt het?</div>
         <ol class="steps">
-          <li><span>In het sterke veld B₀ richten de spins van de waterstofkernen zich een beetje langs het veld en tollen er rond (precessie) met de larmorfrequentie f = γ·B₀.</span></li>
+          <li><span>In het sterke veld B₀ richten de spins van de waterstofkernen zich een beetje langs het veld en tollen er rond (precessie) met de larmorfrequentie f = (γ/2π)·B₀.</span></li>
           <li><span>Een korte radiogolf met precies die frequentie (resonantie) kantelt ze 90°: ze draaien nu samen in het vlak loodrecht op B₀.</span></li>
           <li><span>Die draaiende magnetisatie wekt een spanning op in de RF-spoel: het MRI-signaal (inductie!).</span></li>
           <li><span>De gradiëntspoelen maken het veld een beetje plaatsafhankelijk: elke plaats zendt dan op een eigen frequentie. Zo krijgt het signaal een plaats. Elk weefsel keert in zijn eigen tempo terug (T₁, T₂): dat geeft het contrast in het beeld.</span></li>
@@ -179,7 +179,7 @@ const PARTS = [
   { id: "spoelen", name: "Supergeleidende spoelen", text: "De hoofdspoelen maken het sterke, homogene veld B₀ in de tunnel. Ze zijn gewikkeld uit niobium-titaandraad, dat onder −264 °C supergeleidend is: zonder weerstand blijft de stroom eeuwig rondlopen, ook zonder voeding. De buitenste spoelen schermen het veld buiten de scanner af.", fact: "B₀ = 1,5 T of 3 T: 30 000 tot 60 000 keer het aardmagnetisch veld" },
   { id: "helium", name: "Vloeibaar helium", text: "De spoelen liggen in een bad van vloeibaar helium van −269 °C (4 K). Alleen zo blijven ze supergeleidend.", fact: "kookpunt helium: 4,2 K" },
   { id: "gradient", name: "Gradiëntspoelen", text: "Drie extra spoelen die het veld in de x-, y- of z-richting een beetje laten toenemen. Dan heeft elke plaats een iets andere larmorfrequentie, en kan de computer uit het signaal afleiden waar het vandaan komt. Ze schakelen heel snel: daarom maakt een MRI zo'n lawaai (lorentzkracht op de spoelen).", fact: "" },
-  { id: "rf", name: "RF-spoel", text: "Een antenne vlak rond de tunnel. Ze zendt de korte radiopuls met de larmorfrequentie uit en vangt daarna het zwakke signaal van de draaiende spins op.", fact: "1,5 T → 63,9 MHz, ongeveer de frequentie van FM-radio" },
+  { id: "rf", name: "RF-spoel", text: "Een antenne vlak rond de tunnel. Ze zendt de korte radiopuls met de larmorfrequentie uit en vangt daarna het zwakke signaal van de draaiende spins op.", fact: "1,5 T → 63,9 MHz: radiogolven, net onder de FM-band (88 tot 108 MHz)" },
   { id: "fantoom", name: "Fantoom", text: "Een fles water om de scanner mee te testen. Elk watermolecule heeft twee waterstofkernen (protonen); hun spin maakt van elk een minimagneetje.", fact: "γ / 2π = 42,58 MHz per tesla (proton)" },
 ];
 const page = pageHtml({

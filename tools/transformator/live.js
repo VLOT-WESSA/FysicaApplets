@@ -72,12 +72,12 @@
     setText("rI1", live ? fmt(s.dc ? s.U1 / 2 : v.I1, 2) + " A" + (s.dc ? " (alleen weerstand)" : "") : "–");
     setText("rP", live ? (s.dc ? "0 W naar de lamp" : fmt(v.P, 1) + " W") : "–");
     let st = "Voeding uit", col = "#9aa1a9";
-    if (s.broken) { st = "Lampje doorgebrand: U₂ was te groot"; col = "#b8311f"; }
+    if (s.broken) { st = "Lampje doorgebrand: Uₛ was te groot"; col = "#b8311f"; }
     else if (live && s.dc) { st = "Gelijkspanning: flux constant, geen inductie"; col = "#c9822c"; }
     else if (live && v.U2 < 3) { st = "Lampje gloeit zwak"; col = "#27894f"; }
     else if (live) { st = v.U2 > 7 ? "Lampje brandt fel" : "Lampje brandt"; col = "#27894f"; }
     setText("status", st); $("dot").style.background = col;
-    setText("cornerRead", live ? (s.dc ? fmt(s.U1, 1) + " V = · U₂ = 0 V" : fmt(s.U1, 1) + " V → " + fmt(v.U2, 1) + " V") : "voeding uit");
+    setText("cornerRead", live ? (s.dc ? fmt(s.U1, 1) + " V = · Uₛ = 0 V" : fmt(s.U1, 1) + " V → " + fmt(v.U2, 1) + " V") : "voeding uit");
     frame = visible ? requestAnimationFrame(tick) : 0;
   }
   const run = () => { if (!frame && visible) { last = 0; frame = requestAnimationFrame(tick); } };

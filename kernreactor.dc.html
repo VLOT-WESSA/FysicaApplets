@@ -64,7 +64,7 @@
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Elektrisch vermogen</span><span style="font-family:'IBM Plex Mono',monospace;color:#317448">{{ elecStr }}</span></div>
         <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Rendement</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--muted)">{{ etaStr }}</span></div>
         <div style="height:1px;background:#efe9dd;margin:2px 0"></div>
-        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Kerntemperatuur</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ tempColor }}">{{ tempStr }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Temperatuur reactorkern</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ tempColor }}">{{ tempStr }}</span></div>
         <div style="position:relative;height:9px;border-radius:5px;margin-top:3px;background:linear-gradient(90deg,#87a9d4 0%,#87a9d4 27%,#5fae7a 31%,#5fae7a 46%,#c9a23f 51%,#d98b3a 61%,#b8311f 83%,#8f1f12 100%)">
           <div style="position:absolute;top:-4px;width:3px;height:17px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 1.5px #fffdf9;left:{{ tempPct }}"></div>
         </div>
@@ -138,7 +138,7 @@
               </div>
             </sc-for>
           </div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.45">Elk getal is de richting en de sterkte waarmee die keuze aan k trekt: plus duwt k omhoog, min omlaag. Het zijn geen factoren om te vermenigvuldigen &mdash; k zelf wordt bovenaan gemeten aan de neutronen in de kern.</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.45">Elk getal is de richting en de sterkte waarmee die keuze aan k trekt: plus duwt k omhoog, min omlaag. Het zijn geen factoren om te vermenigvuldigen &mdash; k zelf wordt bovenaan gemeten aan de neutronen in de reactorkern.</div>
           <div style="height:1px;background:#efe9dd"></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Reactiviteit &rho; = (k&minus;1)/k</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ kColor }}">{{ rhoStr }}</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Tijdconstante &tau;</span><span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">{{ tauStr }}</span></div>
@@ -946,7 +946,7 @@ class Component extends DCLogic {
       { name: 'Splijting', value: pc(tt.fis), color: '#ffd24a' },
       { name: 'Invang in regelstaaf', value: pc(tt.rod), color: '#262626' },
       { name: 'Invang zonder splijting', value: pc(tt.cap), color: '#8a6f4a' },
-      { name: 'Ontsnapt uit de kern', value: pc(tt.leak), color: '#6f9bd8' },
+      { name: 'Ontsnapt uit de reactorkern', value: pc(tt.leak), color: '#6f9bd8' },
     ];
     const popTot = Math.max(1, this.nFast + this.nTh);
 
@@ -971,7 +971,7 @@ class Component extends DCLogic {
       etaStr: this.nl((this.eta || 0) * 100, 0) + ' %',
       tempStr: this.nl(this.T, 0) + ' \u00B0C', tempColor, tempPct: tempPct.toFixed(1) + '%',
       showWarn: on && this.T > this.T_WARN,
-      warnText: this.T > this.T_CLAD ? 'Brandstofmantel beschadigd \u2014 SCRAM' : 'Kern oververhit \u2014 breng regelstaven in',
+      warnText: this.T > this.T_CLAD ? 'Splijtstofhuls beschadigd \u2014 SCRAM' : 'Reactorkern oververhit \u2014 breng regelstaven in',
       toggleNeutrons: () => this.setState(s => ({ showNeutrons: !s.showNeutrons })),
       toggleLabels: () => this.setState(s => ({ showLabels: !s.showLabels })),
       toggleExtra: () => this.setState(s => ({ showExtra: !s.showExtra })),

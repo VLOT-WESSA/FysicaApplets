@@ -117,31 +117,31 @@
   function rewriteAt(node) {
     if (node.t === 'not') {
       const x = node.x;
-      if (x.t === 'not') return { node: x.x, id: 'dubbel' };
-      if (x.t === 'const') return { node: C(x.v ? 0 : 1), id: x.v ? 'not1' : 'not0' };
-      if (x.t === 'or') return { node: mk('and', x.xs.map(N)), id: 'dm1' };
-      if (x.t === 'and') return { node: mk('or', x.xs.map(N)), id: 'dm2' };
+      if (x.t === 'not') return { node: x.x, id: 'dubbel', inst: [node, x.x] };
+      if (x.t === 'const') return { node: C(x.v ? 0 : 1), id: x.v ? 'not1' : 'not0', inst: [node, C(x.v ? 0 : 1)] };
+      if (x.t === 'or') { const r = mk('and', x.xs.map(N)); return { node: r, id: 'dm1', inst: [node, r] }; }
+      if (x.t === 'and') { const r = mk('or', x.xs.map(N)); return { node: r, id: 'dm2', inst: [node, r] }; }
       return null;
     }
     if (node.t !== 'and' && node.t !== 'or') return null;
     const t = node.t, and = t === 'and', xs = node.xs, od = and ? 'or' : 'and';
     const ab = and ? 0 : 1, idc = and ? 1 : 0;
-    if (xs.some(c => c.t === 'const' && c.v === ab)) return { node: C(ab), id: and ? 'nul1' : 'een1' };
+    if (xs.some(c => c.t === 'const' && c.v === ab)) return { node: C(ab), id: and ? 'nul1' : 'een1', inst: [node, C(ab)] };
     const ci = xs.findIndex(c => c.t === 'const' && c.v === idc);
-    if (ci >= 0) return { node: mk(t, xs.filter((_, i) => i !== ci)), id: and ? 'id1' : 'id2' };
+    if (ci >= 0) { const r = mk(t, xs.filter((_, i) => i !== ci)); return { node: r, id: and ? 'id1' : 'id2', inst: [node, r] }; }
     for (let i = 0; i < xs.length; i++) for (let j = i + 1; j < xs.length; j++)
-      if (eq(xs[i], xs[j])) return { node: mk(t, xs.filter((_, k) => k !== j)), id: and ? 'her1' : 'her2' };
+      if (eq(xs[i], xs[j])) return { node: mk(t, xs.filter((_, k) => k !== j)), id: and ? 'her1' : 'her2', inst: [mk(t, [xs[i], xs[j]]), xs[i]] };
     for (let i = 0; i < xs.length; i++) for (let j = i + 1; j < xs.length; j++)
-      if (isNegOf(xs[i], xs[j])) return { node: C(ab), id: and ? 'nul2' : 'een2' };
+      if (isNegOf(xs[i], xs[j])) return { node: C(ab), id: and ? 'nul2' : 'een2', inst: [mk(t, [xs[i], xs[j]]), C(ab)] };
     for (let i = 0; i < xs.length; i++) for (let j = 0; j < xs.length; j++) {
       if (i === j || xs[j].t !== od) continue;
       const x = xs[i], ys = xs[j].xs;
       const k = ys.findIndex(y => isNegOf(y, x));
       if (k >= 0) {
         const nx = xs.slice(); nx[j] = mk(od, ys.filter((_, m) => m !== k));
-        return { node: mk(t, nx), id: and ? (x.t === 'not' ? 'abs4' : 'abs3') : (x.t === 'not' ? 'abs2' : 'abs1') };
+        return { node: mk(t, nx), id: and ? (x.t === 'not' ? 'abs4' : 'abs3') : (x.t === 'not' ? 'abs2' : 'abs1'), inst: [mk(t, [x, xs[j]]), mk(t, [x, nx[j]])] };
       }
-      if (ys.some(y => eq(y, x))) return { node: mk(t, xs.filter((_, m) => m !== j)), id: and ? 'abs6' : 'abs5' };
+      if (ys.some(y => eq(y, x))) return { node: mk(t, xs.filter((_, m) => m !== j)), id: and ? 'abs6' : 'abs5', inst: [mk(t, [x, xs[j]]), x] };
     }
     const ls = xs.map(c => c.t === od ? c.xs : [c]);
     for (let i = 0; i < xs.length; i++) for (let j = i + 1; j < xs.length; j++) {
@@ -152,7 +152,8 @@
       if (d1.length === 1 && d2.length === 1 && isNegOf(d1[0], d2[0])) {
         const common = L1.filter(x => k2.has(key(x)));
         const nx = xs.filter((_, m) => m !== i && m !== j); nx.splice(i, 0, mk(od, common));
-        return { node: mk(t, nx), id: and ? 'combo2' : 'combo1' };
+        const inst = [mk(t, [xs[i], xs[j]]), mk(od, common.concat([mk(t, [d1[0], d2[0]])])), mk(od, common.concat([C(ab)])), mk(od, common)];
+        return { node: mk(t, nx), id: and ? 'combo2' : 'combo1', inst };
       }
     }
     return null;
@@ -160,10 +161,10 @@
   function find(node) {
     const r = rewriteAt(node);
     if (r) return r;
-    if (node.t === 'not') { const s = find(node.x); return s && { node: N(s.node), id: s.id }; }
+    if (node.t === 'not') { const s = find(node.x); return s && { node: N(s.node), id: s.id, inst: s.inst }; }
     if (node.xs) for (let i = 0; i < node.xs.length; i++) {
       const s = find(node.xs[i]);
-      if (s) { const nx = node.xs.slice(); nx[i] = s.node; return { node: mk(node.t, nx), id: s.id }; }
+      if (s) { const nx = node.xs.slice(); nx[i] = s.node; return { node: mk(node.t, nx), id: s.id, inst: s.inst }; }
     }
     return null;
   }
@@ -243,14 +244,14 @@
       const r = find(cur);
       if (!r) break;
       cur = flatten(r.node);
-      steps.push({ id: r.id, node: cur });
+      steps.push({ id: r.id, node: cur, inst: r.inst });
     }
     const N2 = 1 << vars.length;
     const rows = [];
     const ov = [];
     for (let i = 0; i < N2; i++) ov.push(B.evalNode(orig, B.envOf(vars, i)));
     const mn = vars.length ? B.minimal(vars, ov) : C(B.evalNode(orig, {}));
-    if (B.lits(mn) < B.lits(cur) && !(cur.t === 'const')) steps.push({ id: 'qm', node: mn });
+    if (B.lits(mn) < B.lits(cur) && !(cur.t === 'const')) steps.push({ id: 'qm', node: mn, inst: [cur, mn] });
     const fin = steps[steps.length - 1].node;
     let ok = true;
     for (let i = 0; i < N2; i++) {
@@ -281,6 +282,12 @@
     const parts = str.split('=').map(s => B.view(B.parse(s.trim()), h));
     const out = [];
     parts.forEach((p, i) => { if (i) out.push(' = '); out.push(p); });
+    return h('span', null, ...out);
+  };
+  // ingevulde regel: knopen gescheiden door ' = '
+  B.chain = function (nodes, h) {
+    const out = [];
+    nodes.forEach((n, i) => { if (i) out.push(' = '); out.push(B.view(n, h)); });
     return h('span', null, ...out);
   };
   window.BoolCore = B;
